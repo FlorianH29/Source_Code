@@ -36,6 +36,13 @@ class Mapper (AbstractContextManager, ABC):
 
         return self
 
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Was soll geschehen, wenn wir (evtl. vorübergehend) aufhören, mit dem Mapper zu arbeiten?"""
+        self._cnx.close()
+
+    """Formuliere nachfolgend sämtliche Auflagen, die instanzierbare Mapper-Subklassen mind. erfüllen müssen."""
+
+
     @abstractmethod
     def find_by_key(self, key):
         """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""

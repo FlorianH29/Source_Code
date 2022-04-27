@@ -25,15 +25,19 @@ class PersonMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, firstname FROM Person WHERE id={}".format(key)
+        command = "SELECT id, firstname, lastname, mailaddress, username FROM Person WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, firstname) = tuples[0]
+            (id, firstname, lastname, mailaddress, username) = tuples[0]
             person = Person()
             person.set_person_id(id)
-            person.set_name(firstname)
+            person.set_firstname(firstname)
+            person.set_lastname(lastname)
+            person.set_mailaddress(mailaddress)
+            person.set_username(username)
+
             result = person
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
