@@ -1,6 +1,5 @@
 from server.bo import BusinessObject
 
-
 class TimeInterval(BusinessObject):
     def __int__(self, interval):
         super().__init__()
@@ -9,7 +8,6 @@ class TimeInterval(BusinessObject):
         """Start der Zeiterfassung"""
         self.__end_event = None
         self.__interval = interval
-
 
     def get_start_event(self):
         """Auslesen vom start des Zeitstempels"""
@@ -28,4 +26,14 @@ class TimeInterval(BusinessObject):
         self.__end_event = end_event
 
     def calculate_period(self):
+        print(end_event - start_event)
 
+
+
+   @staticmethod
+    def from_dict(dictionary=dict()):
+        """Umwandeln eines Python dict() in eine zeitintervall()."""
+        obj = TimeInterval()
+        obj.set_start_event(dictionary["start_event"])
+        obj.set_end_event(dictionary["end_event"])
+        return obj

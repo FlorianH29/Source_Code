@@ -30,3 +30,5 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 print("Hallo")
+
+timerinterval1 = hwa.create_interval

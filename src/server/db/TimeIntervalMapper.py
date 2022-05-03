@@ -5,7 +5,6 @@ class TimeIntervalMapper(Mapper):
     def __init__(self):
         super().__init__()
 
-
     def find_all(self):
 
         result = []
@@ -25,7 +24,6 @@ class TimeIntervalMapper(Mapper):
         cursor.close()
 
         return result
-
 
     def find_by_key(self, key):
 
@@ -54,7 +52,6 @@ class TimeIntervalMapper(Mapper):
         cursor.close()
 
         return result
-
 
     def insert(self, timeinterval):
 
@@ -88,9 +85,6 @@ class TimeIntervalMapper(Mapper):
         self._cnx.commit()
         cursor.close()
 
-
-
-
     def delete(self, timeinterval):
         """Löschen der Daten eines Zeitinterval aus der Datenbank.
         """
@@ -107,4 +101,3 @@ if (__name__ == "__main__"):
         result = mapper.find_all()
         for k in result:
             print(k)
-
