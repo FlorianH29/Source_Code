@@ -1,0 +1,1 @@
+from server.bo import BusinessObject as bo
