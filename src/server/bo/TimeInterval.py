@@ -1,11 +1,15 @@
 from server.bo import BusinessObject
 
-class TimeInterval(BusinessObject):
 
-    def __int__(self):
+class TimeInterval(BusinessObject):
+    def __int__(self, interval):
         super().__init__()
-        self.__start_event = ""         """ Start der Zeiterfassung"""
-        self.__end_event = ""           """ Ende der Zeiterfassung"""
+        """Start der Zeiterfassung"""
+        self.__start_event = None
+        """Start der Zeiterfassung"""
+        self.__end_event = None
+        self.__interval = interval
+
 
     def get_start_event(self):
         """Auslesen vom start des Zeitstempels"""
