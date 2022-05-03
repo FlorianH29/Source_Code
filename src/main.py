@@ -22,9 +22,12 @@ person = api.inherit('Person', bo, {
 })
 
 hwa = HdMWebAppAdministration()
-person1 = hwa.get_person_by_id(1)
+# person1 = hwa.get_person_by_id(1)
 
-print(person1)
+event1 = hwa.get_event_by_id(1)
+
+# print(person1)
+print(event1)
 
 if __name__ == '__main__':
     app.run(debug=True)

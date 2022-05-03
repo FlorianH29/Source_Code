@@ -1,5 +1,7 @@
 from .bo.Person import Person
 from .db.PersonMapper import PersonMapper
+from .db.EventMapper import EventMapper
+
 
 class HdMWebAppAdministration(object):
 
@@ -10,3 +12,9 @@ class HdMWebAppAdministration(object):
         """Den Benutzer mit der gegebenen ID auslesen."""
         with PersonMapper() as mapper:
             return mapper.find_by_key(number)
+
+    def get_event_by_id(self, number):
+        """Das Ereignis mit der gegebenen ID auslesen"""
+        with EventMapper() as mapper:
+            return mapper.find_by_key(number)
+
