@@ -28,7 +28,14 @@ class TimeInterval(BusinessObject):
     def calculate_period(self):
         print(end_event - start_event)
 
-
+    def __str__(self):
+        """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
+        return "TimeInterval: {}, {}, {}, {},{},{}".format(self.get_id(),
+                                                     self.__firstname,
+                                                     self.__lastname,
+                                                     self.__username,
+                                                     self.__mailaddress,
+                                                     self.__person_id)
 
    @staticmethod
     def from_dict(dictionary=dict()):
