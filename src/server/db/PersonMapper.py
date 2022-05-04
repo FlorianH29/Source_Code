@@ -91,9 +91,9 @@ class PersonMapper(Mapper):
         """
         INSERT-Befehl um ein Personen Objekt in die Datenbank zu schreiben
         """
-        command = "INSERT INTO Person (id, firstName, lastName, username, mailadress, person_id) VALUES (%s,%s,%s,%s,%s,%s)"
+        command = "INSERT INTO Person (id, firstName, lastName, username, mailadress) VALUES (%s,%s,%s,%s,%s,%s)"
         data = (employee.get_id(), employee.get_first_name(), employee.get_last_name(), employee.get_username,
-                employee.get_mailaddress, employee.get_person_id)
+                employee.get_mailaddress)
         cursor.execute(command, data)
 
         self._cnx.commit()

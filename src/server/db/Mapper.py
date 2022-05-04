@@ -4,7 +4,7 @@ from contextlib import AbstractContextManager
 from abc import ABC, abstractmethod
 
 
-class Mapper (AbstractContextManager, ABC):
+class Mapper(AbstractContextManager, ABC):
     """Abstrakte Basisklasse aller Mapper-Klassen"""
 
     def __init__(self):
@@ -30,9 +30,9 @@ class Mapper (AbstractContextManager, ABC):
             installierten mySQL-Datenbank her."""
 
             self._cnx = connector.connect(user='root', password='passwort123',
-                                  host='127.0.0.1',
-                                  database='SoPraTestDB',
-                                auth_plugin='mysql_native_password')
+                                          host='127.0.0.1',
+                                          database='SoPraTestDB',
+                                          auth_plugin='mysql_native_password')
 
         return self
 
@@ -42,9 +42,10 @@ class Mapper (AbstractContextManager, ABC):
 
     """Formuliere nachfolgend sämtliche Auflagen, die instanzierbare Mapper-Subklassen mind. erfüllen müssen."""
 
-
     @abstractmethod
     def find_by_key(self, key):
         """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
         pass
 
+    def find_all(self, key):
+        pass

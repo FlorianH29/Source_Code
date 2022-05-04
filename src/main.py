@@ -2,6 +2,7 @@ from server.HdMWebAppAdministration import HdMWebAppAdministration
 from flask import Flask
 from flask_restx import Api, Resource, fields
 from flask_cors import CORS
+import datetime
 
 app = Flask(__name__)
 
@@ -22,7 +23,10 @@ person = api.inherit('Person', bo, {
 })
 
 hwa = HdMWebAppAdministration()
+
 person1 = hwa.get_person_by_id(1)
+person2 = hwa.get_all_persons()
+personkreation= hwa.create_person({0, "Jesus", "Lebt", "bösemail", "usern"})
 
 print(person1)
 
