@@ -1,8 +1,8 @@
-from server.bo.ProjectWork import ProjectWork
+from server.bo.Project import Project
 from server.db.Mapper import Mapper
 
 
-class ProjectWorkMapper (Mapper):
+class ProjectMapper (Mapper):
     """Mapper-Klasse, die User-Objekte auf eine relationale
     Datenbank abbildet. Hierzu wird eine Reihe von Methoden zur Verfügung
     gestellt, mit deren Hilfe z.B. Objekte gesucht, erzeugt, modifiziert und
@@ -14,7 +14,7 @@ class ProjectWorkMapper (Mapper):
         super().__init__()
 
     def find_by_key(self, key):
-        """Suchen eines ProjectWorks mit vorgegebener ID. Da diese eindeutig ist,
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
         wird genau ein Objekt zurückgegeben.
 
         :param key Primärschlüsselattribut (->DB)
@@ -25,19 +25,19 @@ class ProjectWorkMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, name, description, activityid FROM projektarbeit WHERE id={}".format(key)
+        command = "SELECT id, name, client, project_term_id FROM Projekt WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, name, description, activityid) = tuples[0]
-            project_work = ProjectWork()
-            project_work.set_id(id)
-            project_work.set_name(name)
-            project_work.set_description(description)
-            project_work.set_affiliated_activity(activityid)
+            (id, name, client, project_term) = tuples[0]
+            project = Project()
+            project.set_id(id)
+            project.set_name(name)
+            project.set_client(client)
+            project.set_project_term(project_term)
 
-            result = project_work
+            result = project
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""

@@ -26,6 +26,14 @@ person1 = hwa.get_person_by_id(1)
 
 print(person1)
 
+# Test und Ausgabe eines Projekts (mit der ID 0)
+project_one = hwa.get_project_by_id(0)
+print(project_one)
+
+# Test und Ausgabe eines ProjektWorks (mit der ID 0)
+project_work_one = hwa.get_projectwork_by_id(0)
+print(project_work_one)
+
 if __name__ == '__main__':
     app.run(debug=True)
 

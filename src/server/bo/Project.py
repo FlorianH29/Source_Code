@@ -1,12 +1,13 @@
 from server.bo import BusinessObject as bo
 
+
 class Project (bo.BusinessObject):
 
     def __init__(self):
         super().__init__()
         self.__name = ""    # The name of the project.
         self.__client = ""  # The name of the client.
-        self.poject_term: None  # The project term is an object of TimeInterval
+        self.poject_term = None  # The project term is an object of TimeInterval
 
     def set_name(self, name):
         self.__name = name
@@ -27,4 +28,14 @@ class Project (bo.BusinessObject):
         return self.project_term
 
     def __str__(self):
-        return "Project: \n name: {}\n client: {}\n project_term: {}".format(self.get_name(), self.get_client, self.get_project_term)
+        return "Project: \n  name: {}\n  client: {}\n  project_term: {}".format(self.get_name(), self.get_client(), self.get_project_term())
+
+    @staticmethod
+    def from_dict(dictionary=dict()):
+        """Umwandeln eines Python dict() in ein Project()."""
+        obj = Project()
+        obj.set_id(dictionary["id"])  # Usually part of the business object.
+        obj.set_name(dictionary["name"])  # Sets the name from the dict as the name of the object.
+        obj.set_client(dictionary["client"])  # Sets the client from the dict as the client of the object.
+        obj.set_project_term(dictionary["project_term"])  # Sets the client from the dict as the client of the object.
+        return obj
