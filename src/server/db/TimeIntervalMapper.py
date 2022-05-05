@@ -13,14 +13,14 @@ class TimeIntervalMapper(Mapper):
         cursor.execute("SELECT * from TimeInterval")
         tuples = cursor.fetchall()
 
-        for (id, last_edit, start_event, end_event, time_stamp) in tuples:
-            timeinterval = TimeInterval()
-            timeinterval.set_id(id)
-            timeinterval.set_last_edit(last_edit)
-            timeinterval.set_start_event(start_event)
-            timeinterval.set_end_event(end_event)
-            timeinterval.set_time_stamp(time_stamp)
-            result.append(timeinterval)
+        for (id, last_edit, start_event, end_event, time_interval) in tuples:
+            time_interval = TimeInterval()
+            time_interval.set_id(id)
+            time_interval.set_last_edit(last_edit)
+            time_interval.set_start_event(start_event)
+            time_interval.set_end_event(end_event)
+            time_interval.set_time_interval(time_interval)
+            result.append(time_interval)
 
         self._cnx.commit()
         cursor.close()
@@ -32,20 +32,20 @@ class TimeIntervalMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, last_edit, start_event, end_event, time_stamp FROM TimeInterval WHERE id={}".format(key)
+        command = "SELECT id, last_edit, start_event, end_event, time_interval FROM TimeInterval WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, last_edit, start_event, end_event, time_stamp) = tuples[0]
-            timeinterval = TimeInterval()
-            timeinterval.set.id(id)
-            timeinterval.set.last_edit(last_edit)
-            timeinterval.set.start_event(start_event)
-            timeinterval.set_end_event(end_event)
-            timeinterval.set_time_stamp(time_stamp)
+            (id, last_edit, start_event, end_event, time_interval) = tuples[0]
+            time_interval = TimeInterval()
+            time_interval.set.id(id)
+            time_interval.set.last_edit(last_edit)
+            time_interval.set.start_event(start_event)
+            time_interval.set_end_event(end_event)
+            time_interval.set_time_interval(time_interval)
 
-            result = timeinterval
+            result = time_interval
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
@@ -56,46 +56,46 @@ class TimeIntervalMapper(Mapper):
 
         return result
 
-    def insert(self, timeinterval):
+    def insert(self, time_interval):
 
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM TimeInterval ")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            timeinterval.set_id(maxid[0] + 1)
+            time_interval.set_id(maxid[0] + 1)
 
-        command = "INSERT INTO TimeInterval (id, last_edit, start_event, end_event, time_stamp) VALUES (%s,%s,%s,%s)"
-        data = (timeinterval.get_id(),
-                timeinterval.get_last_edit(),
-                timeinterval.get_start_event(),
-                timeinterval.get_end_event(),
-                timeinterval.egt_time_stamp())
+        command = "INSERT INTO TimeInterval (id, last_edit, start_event, end_event, time_interval) VALUES (%s,%s,%s,%s,%s)"
+        data = (time_interval.get_id(),
+                time_interval.get_last_edit(),
+                time_interval.get_start_event(),
+                time_interval.get_end_event(),
+                time_interval.egt_time_interval())
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
 
-        return timeinterval
+        return time_interval
 
-    def update(self, timeinterval):
+    def update(self, time_interval):
 
         cursor = self._cnx.cursor()
 
-        command = "UPDATE timeinterval " + "SET id=%s, last_edit=%s, start_event=%s, end_event=%s, time_stamp=%s, WHERE id=%s"
-        data = (timeinterval.get_id(), timeinterval.get_last_edit(), timeinterval.get_start_event(),
-                timeinterval.get_end_event(), timeinterval.get_time_stamp())
+        command = "UPDATE time_interval " + "SET id=%s, last_edit=%s, start_event=%s, end_event=%s, time_interval=%s, WHERE id=%s"
+        data = (time_interval.get_id(), time_interval.get_last_edit(), time_interval.get_start_event(),
+                time_interval.get_end_event(), time_interval.get_time_interval())
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
 
-    def delete(self, timeinterval):
+    def delete(self, time_interval):
         """Löschen der Daten eines Zeitinterval aus der Datenbank.
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM TimeInterval WHERE id={}".format(timeinterval.get_id())
+        command = "DELETE FROM TimeInterval WHERE id={}".format(time_interval.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
