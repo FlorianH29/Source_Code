@@ -24,7 +24,7 @@ person = api.inherit('Person', bo, {
 hwa = HdMWebAppAdministration()
 # person1 = hwa.get_person_by_id(1)
 
-event1 = hwa.get_event_by_id(1)
+event1 = hwa.get_all_events()
 
 # print(person1)
 print(event1)

@@ -1,3 +1,5 @@
+import datetime
+
 from server.bo.Event import Event
 from server.db.Mapper import Mapper
 
@@ -57,11 +59,13 @@ class EventMapper (Mapper):
         cursor.execute("SELECT * from Event")
         tuples = cursor.fetchall()
 
-        for (id, name, lastName) in tuples:
+        for (id, last_edit, time_stamp, buchungsid, name) in tuples:
             event = Event()
             event.set_id(id)
             event.set_name(name)
-            event.set_time_stamp(lastName)
+            event.set_time_stamp(time_stamp)
+            event.set_last_edit(last_edit)
+            event.set_buchugnsid(buchungsid)
             result.append(event)
 
         self._cnx.commit()

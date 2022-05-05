@@ -18,3 +18,7 @@ class HdMWebAppAdministration(object):
         with EventMapper() as mapper:
             return mapper.find_by_key(number)
 
+    def get_all_events (self):
+        """Alle in der Datenbank gespeicherten Events auslesen."""
+        with EventMapper() as mapper:
+            return mapper.find_all()
