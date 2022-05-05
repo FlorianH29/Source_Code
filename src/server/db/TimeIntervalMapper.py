@@ -13,12 +13,12 @@ class TimeIntervalMapper(Mapper):
         cursor.execute("SELECT * from TimeInterval")
         tuples = cursor.fetchall()
 
-        for (id, last_edit, start_event, end_event, time_interval) in tuples:
+        for (id, last_edit, start_time, end_time, time_interval) in tuples:
             time_interval = TimeInterval()
             time_interval.set_id(id)
             time_interval.set_last_edit(last_edit)
-            time_interval.set_start_event(start_event)
-            time_interval.set_end_event(end_event)
+            time_interval.set_start_time(start_time)
+            time_interval.set_end_time(end_time)
             time_interval.set_time_interval(time_interval)
             result.append(time_interval)
 
@@ -32,17 +32,17 @@ class TimeIntervalMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, last_edit, start_event, end_event, time_interval FROM TimeInterval WHERE id={}".format(key)
+        command = "SELECT id, last_edit, start_time, end_time, time_interval FROM TimeInterval WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, last_edit, start_event, end_event, time_interval) = tuples[0]
+            (id, last_edit, start_time, end_time, time_interval) = tuples[0]
             time_interval = TimeInterval()
-            time_interval.set.id(id)
-            time_interval.set.last_edit(last_edit)
-            time_interval.set.start_event(start_event)
-            time_interval.set_end_event(end_event)
+            time_interval.set_id(id)
+            time_interval.set_last_edit(last_edit)
+            time_interval.set_start_time(start_time)
+            time_interval.set_end_time(end_time)
             time_interval.set_time_interval(time_interval)
 
             result = time_interval
@@ -65,11 +65,11 @@ class TimeIntervalMapper(Mapper):
         for (maxid) in tuples:
             time_interval.set_id(maxid[0] + 1)
 
-        command = "INSERT INTO TimeInterval (id, last_edit, start_event, end_event, time_interval) VALUES (%s,%s,%s,%s,%s)"
+        command = "INSERT INTO TimeInterval (id, last_edit, start_time, end_time, time_interval) VALUES (%s,%s,%s,%s,%s)"
         data = (time_interval.get_id(),
                 time_interval.get_last_edit(),
-                time_interval.get_start_event(),
-                time_interval.get_end_event(),
+                time_interval.get_start_time(),
+                time_interval.get_end_time(),
                 time_interval.egt_time_interval())
         cursor.execute(command, data)
 
@@ -82,9 +82,9 @@ class TimeIntervalMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "UPDATE time_interval " + "SET id=%s, last_edit=%s, start_event=%s, end_event=%s, time_interval=%s, WHERE id=%s"
-        data = (time_interval.get_id(), time_interval.get_last_edit(), time_interval.get_start_event(),
-                time_interval.get_end_event(), time_interval.get_time_interval())
+        command = "UPDATE time_interval " + "SET id=%s, last_edit=%s, start_time=%s, end_time=%s, time_interval=%s, WHERE id=%s"
+        data = (time_interval.get_id(), time_interval.get_last_edit(), time_interval.get_start_time(),
+                time_interval.get_end_time(), time_interval.get_time_interval())
         cursor.execute(command, data)
 
         self._cnx.commit()
