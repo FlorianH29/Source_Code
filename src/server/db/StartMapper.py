@@ -1,10 +1,8 @@
-import datetime
-
-from server.bo.Event import Event
+from server.bo.Start import Start
 from server.db.Mapper import Mapper
 
 
-class EventMapper (Mapper):
+class StartMapper (Mapper):
     """Mapper-Klasse, die Ereignis-Objekte auf eine relationale
     Datenbank abbildet. Hierzu wird eine Reihe von Methoden zur Verfügung
     gestellt, mit deren Hilfe z.B. Objekte gesucht, erzeugt, modifiziert und
@@ -27,18 +25,18 @@ class EventMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, last_edit, time_stamp , buchungsid, name FROM Event WHERE id={}".format(key)
+        command = "SELECT id, last_edit, time_stamp FROM Start WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, last_edit, time_stamp, buchungsid, name) = tuples[0]
-            event = Event()
-            event.set_id(id)
-            event.set_name(name)
-            event.set_time_stamp(time_stamp)
+            (id, last_edit, time_stamp) = tuples[0]
+            start = Start()
+            start.set_id(id)
+            start.set_last_edit(last_edit)
+            start.set_time_stamp(time_stamp)
 
-            result = event
+            result = start
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
@@ -50,30 +48,28 @@ class EventMapper (Mapper):
         return result
 
     def find_all(self):
-        """Auslesen aller Ereignisse.
+        """Auslesen aller Start-Ereignisse.
 
-        :return Eine Sammlung mit Ereignis-Objekten, die sämtliche Ereignisse repräsentieren.
+        :return Eine Sammlung mit Start-Ereignis-Objekten, die sämtliche Ereignisse repräsentieren.
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT * from Event")
+        cursor.execute("SELECT * from Start")
         tuples = cursor.fetchall()
 
-        for (id, last_edit, time_stamp, buchungsid, name) in tuples:
-            event = Event()
-            event.set_id(id)
-            event.set_name(name)
-            event.set_time_stamp(time_stamp)
-            event.set_last_edit(last_edit)
-            event.set_buchugnsid(buchungsid)
-            result.append(event)
+        for (id, last_edit, time_stamp) in tuples:
+            start = Start()
+            start.set_id(id)
+            start.set_last_edit(last_edit)
+            start.set_time_stamp(time_stamp)
+            result.append(start)
 
         self._cnx.commit()
         cursor.close()
 
         return result
 
-    def insert(self, event):
+    def insert(self, start):
         """Einfügen eines Ereignis-Objekts in die Datenbank.
 
         Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
@@ -83,11 +79,11 @@ class EventMapper (Mapper):
         :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
         """
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(id) AS maxid FROM Event ")
+        cursor.execute("SELECT MAX(id) AS maxid FROM Start")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            event.set_id(maxid[0]+1)
+            start.set_id(maxid[0]+1)
 
         """
         Eine Möglichkeit, ein INSERT zu erstellen, ist diese:
@@ -98,37 +94,38 @@ class EventMapper (Mapper):
         """
         Eine andere Möglichkeit, ist diese:
         """
-        command = "INSERT INTO Event (id, time_stamp, name) VALUES (%s,%s,%s,%s,%s)"
-        data = (event.get_id(), event.get_time_stamp(), event.get_name())
+        command = "INSERT INTO Start (id, last_edit, time_stamp) VALUES (%s,%s,%s)"
+        data = (start.get_id(), start.get_last_edit(), start.get_time_stamp())
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
 
-        return event
+        return start
 
-    def update(self, event):
+    def update(self, start):
         """Wiederholtes Schreiben eines Objekts in die Datenbank.
 
-        :param event das Objekt, das in die DB geschrieben werden soll
+        :param start:
+        :param start das Objekt, das in die DB geschrieben werden soll
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE Event " + "SET id=%s, time_stamp=%s, name=%s WHERE id=%s"
-        data = (event.get_id(), event.get_time_stamp(), event.get_name())
+        command = "UPDATE Start " + "SET id=%s, last_edit=%s, time_stamp=%s WHERE id=%s"
+        data = (start.get_id(), start.get_last_edit(), start.get_time_stamp())
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
 
-    def delete(self, event):
+    def delete(self, start):
         """Löschen der Daten eines Ereignis-Objekts aus der Datenbank.
 
         :param event das aus der DB zu löschende "Objekt"
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM Event WHERE id={}".format(event.get_id())
+        command = "DELETE FROM Start WHERE id={}".format(start.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
