@@ -2,6 +2,7 @@ from server.HdMWebAppAdministration import HdMWebAppAdministration
 from flask import Flask
 from flask_restx import Api, Resource, fields
 from flask_cors import CORS
+import datetime
 
 app = Flask(__name__)
 
@@ -22,9 +23,14 @@ person = api.inherit('Person', bo, {
 })
 
 hwa = HdMWebAppAdministration()
-person1 = hwa.get_person_by_id(1)
+# person1 = hwa.get_person_by_id(1)
 
-print(person1)
+# event1 = hwa.get_all_start_events()
+# event3 = hwa.get_start_event_by_id(1)
+# hwa.delete_start(event3) # nochmal checken warum versucht wird versucht wird 2 mal zu deleten, dann kommt Fehler dass
+                           # Id nicht mehr da weil schon gelöscht
+
+hwa.create_activity(1, '20220202', 'TestAktivität', 10, 1)
 
 if __name__ == '__main__':
     app.run(debug=True)

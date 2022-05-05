@@ -1,0 +1,8 @@
+Änderungen Ben:
+
+- Table Aktivität in Activity geändert
+- Columns in Activity: id (INT), last_edit(DATE), name (VARCHAR), capacity(INT), affiliated_project(INT)
+- Fremdschlüssel bei affiliated_project(INT) raus
+
+- Start Table erstellt mit id(INT), last_edit(DATE), time_stamp(DATE)
+- End Table erstellt mit gleichen Spalten
