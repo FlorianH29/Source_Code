@@ -12,7 +12,7 @@ class WorkTimeAccountMapper (Mapper):
 
         result = []
         cursor = self._cnx.cursor() #cursor erlaubt uns SQL befehle hier auszuführen (siehe Verb. Mapper Klasse)
-        cursor.execute("SELECT id, owner FROM worktimeaccount") #tabelle worktimeaccount noch nicht existent
+        cursor.execute("SELECT id, owner FROM worktimeaccounts") #tabelle worktimeaccount noch nicht existent
         tuples = cursor.fetchall()
 
         for (id, owner) in tuples:
@@ -32,7 +32,7 @@ class WorkTimeAccountMapper (Mapper):
     def find_by_owner_id(self, owner_id):
         result = []
         cursor = self._cnx.cursor()
-        command =("SELECT id, owner FROM worktimeaccount WHERE owner={} ORDER BY id".format(owner_id))
+        command =("SELECT id, owner FROM worktimeaccounts WHERE owner={} ORDER BY id".format(owner_id))
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -49,4 +49,47 @@ class WorkTimeAccountMapper (Mapper):
 
     """
 
-    """Hiermit kann ein Arbeitszeitkonto-Objekt in die Datenbank eingefügt werden."""
+    """Hiermit kann ein Arbeitszeitkonto-Objekt in die Datenbank eingefügt werden.
+    In zuge dessen wird auch der Primärachlüssel des zu übergebenden Objekts überprüft 
+    und wenn erforerlich korrigiert."""
+    #Hätte heir gerne ein Bsp wann der Primärschlüssel angepasst wird
+
+    def insert(self, worktimeaccount):
+        cursor = self._cnx.cursor()
+        cursor.execute("SELECT MAX(id) AS maxid FROM worktimeaccounts")
+        tuples = cursor.fetchall()
+
+        for (maxid) in tuples:
+            worktimeaccount.set_id(maxid[0]+1)
+
+        command = ("INSERT INTO worktimeaccounts (id, owner) VALUES (%s,%s)") #%s als Platzhalter und gibt einen formatierten string zurück
+        newdata = (worktimeaccount.get_id(), worktimeaccount.get_owner())
+        cursor.execute(command, newdata)
+
+        self._cnx.commit()
+        cursor.close()
+        return worktimeaccount
+
+    """Im Folgenden werden Objekte in die Datenbank aktualisiert also wiederholt rein geschrieben und eine alte Version 
+     überschrieben."""
+    def update(self, worktimeaccount):
+        cursor = self._cnx.cursor()
+        command = ("UPDATE worktimeaccounts" + "SET owner=%s WHERE is=%s")
+        newdata = (worktimeaccount.get_owner(), worktimeaccount.get_id())
+        cursor.execute(command, newdata)
+
+        self._cnx.commit()
+        cursor.close()
+
+    """Löschen von Arbeitszeitkonto Daten aus der Datenbank."""
+    def delete(self, worktimeaccount):
+        cursor = self._cnx.cursor()
+        command = ("DELETE FROM worktimeaccounts WHERE id={}".format(worktimeaccount.get_id()))
+        cursor.execute(command)
+
+        self._cnx.commit()
+        cursor.close()
+
+
+
+
