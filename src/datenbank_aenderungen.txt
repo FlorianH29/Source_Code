@@ -6,3 +6,13 @@
 
 - Start Table erstellt mit id(INT), last_edit(DATE), time_stamp(DATE)
 - End Table erstellt mit gleichen Spalten
+
+
+Änderungen Milena:
+
+- Tabelle Buchung umbenennen in EventTransaction
+- Columns in EventTransaction: id(INT), last_edit(DATE), affiliated_work_time_account_id(INT), event(INT)
+
+- Tabelle TimeIntervalTransasction erstellen
+- Columns in TimeIntervalTransaction: id(INT), last_edit(DATE), affiliated_work_time_account_id(INT), time_interval(INT)
+

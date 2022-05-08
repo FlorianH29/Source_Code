@@ -42,9 +42,9 @@ class TimeIntervalTransactionMapper (Mapper):
         return result
 
     def find_all(self):
-        """Auslesen aller Buchungen.
+        """Auslesen aller TimeIntervalTransactions.
 
-        :return Eine Sammlung mit Transaction-Objekten, die sämtliche Buchungen
+        :return Eine Sammlung mit TimeIntervalTransaction-Objekten, die sämtliche TimeIntervalTransactions
                 des Systems repräsentieren.
         """
         result = []
@@ -67,10 +67,10 @@ class TimeIntervalTransactionMapper (Mapper):
         return result
 
     def find_by_worktimeaccount_id(self, worktimeaccount_id):
-        """Auslesen aller Buchungen eines durch Fremdschlüssel (Kontonr.) gegebenen Ziel-Kontos.
+        """Auslesen aller TimeIntervalTransactions eines durch Fremdschlüssel (worktimeaccountid) gegebenen WorkTimeAccounts.
 
-        :param account_id Schlüssel des zugehörigen Kontos.
-        :return Eine Sammlung mit Transaction-Objekten.
+        :param worktimeaccount_id Schlüssel des zugehörigen Kontos.
+        :return Eine Sammlung mit TimeIntervalTransaction-Objekten.
         """
         result = []
         cursor = self._cnx.cursor()
@@ -93,12 +93,12 @@ class TimeIntervalTransactionMapper (Mapper):
         return result
 
     def insert(self, time_interval_transaction):
-        """Einfügen eines Transaction-Objekts in die Datenbank.
+        """Einfügen eines TimeIntervalTransaction-Objekts in die Datenbank.
 
         Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
         berichtigt.
 
-        :param transaction das zu speichernde Objekt
+        :param timeintervaltransaction das zu speichernde Objekt
         :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
         """
         cursor = self._cnx.cursor()
@@ -123,7 +123,7 @@ class TimeIntervalTransactionMapper (Mapper):
     def update(self, time_interval_transaction):
         """Wiederholtes Schreiben eines Objekts in die Datenbank.
 
-        :param transaction das Objekt, das in die DB geschrieben werden soll
+        :param timeintervaltransaction das Objekt, das in die DB geschrieben werden soll
         """
         cursor = self._cnx.cursor()
 
@@ -138,9 +138,9 @@ class TimeIntervalTransactionMapper (Mapper):
         cursor.close()
 
     def delete(self, time_interval_transaction):
-        """Löschen der Daten eines Transaction-Objekts aus der Datenbank.
+        """Löschen der Daten eines TimeIntervalTransaction-Objekts aus der Datenbank.
 
-        :param transaction das aus der DB zu löschende "Objekt"
+        :param timeintervaltransaction das aus der DB zu löschende "Objekt"
         """
         cursor = self._cnx.cursor()
 

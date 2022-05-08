@@ -8,7 +8,7 @@ class EventTransactionMapper (Mapper):
         super().__init__()
 
     def find_by_key(self, key):
-        """Suchen einer Event-Buchung mit vorgegebener Nummer. Da diese eindeutig ist,
+        """Suchen einer EventTransaction mit vorgegebener Nummer. Da diese eindeutig ist,
         wird genau ein Objekt zurückgegeben.
 
         :param key Primärschlüsselattribut (->DB)
@@ -42,9 +42,9 @@ class EventTransactionMapper (Mapper):
         return result
 
     def find_all(self):
-        """Auslesen aller Buchungen.
+        """Auslesen aller EventTransactions.
 
-        :return Eine Sammlung mit Transaction-Objekten, die sämtliche Buchungen
+        :return Eine Sammlung mit EventTransaction-Objekten, die sämtliche Buchungen
                 des Systems repräsentieren.
         """
         result = []
@@ -67,10 +67,10 @@ class EventTransactionMapper (Mapper):
         return result
 
     def find_by_worktimeaccount_id(self, worktimeaccount_id):
-        """Auslesen aller Buchungen eines durch Fremdschlüssel (Kontonr.) gegebenen Ziel-Kontos.
+        """Auslesen aller EventTransactions eines durch Fremdschlüssel (Worktimeaccountid) gegebenen WorkTimeAccounts.
 
-        :param account_id Schlüssel des zugehörigen Kontos.
-        :return Eine Sammlung mit Transaction-Objekten.
+        :param worktimeaccount_id Schlüssel des zugehörigen Kontos.
+        :return Eine Sammlung mit EventTransaction-Objekten.
         """
         result = []
         cursor = self._cnx.cursor()
@@ -93,12 +93,12 @@ class EventTransactionMapper (Mapper):
         return result
 
     def insert(self, event_transaction):
-        """Einfügen eines Transaction-Objekts in die Datenbank.
+        """Einfügen eines EventTransaction-Objekts in die Datenbank.
 
         Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
         berichtigt.
 
-        :param transaction das zu speichernde Objekt
+        :param eventtransaction das zu speichernde Objekt
         :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
         """
         cursor = self._cnx.cursor()
@@ -123,7 +123,7 @@ class EventTransactionMapper (Mapper):
     def update(self, event_transaction):
         """Wiederholtes Schreiben eines Objekts in die Datenbank.
 
-        :param transaction das Objekt, das in die DB geschrieben werden soll
+        :param eventtransaction das Objekt, das in die DB geschrieben werden soll
         """
         cursor = self._cnx.cursor()
 
@@ -138,9 +138,9 @@ class EventTransactionMapper (Mapper):
         cursor.close()
 
     def delete(self, event_transaction):
-        """Löschen der Daten eines Transaction-Objekts aus der Datenbank.
+        """Löschen der Daten eines EventTransaction-Objekts aus der Datenbank.
 
-        :param transaction das aus der DB zu löschende "Objekt"
+        :param eventtransaction das aus der DB zu löschende "Objekt"
         """
         cursor = self._cnx.cursor()
 

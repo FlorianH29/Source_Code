@@ -68,12 +68,12 @@ class HdMWebAppAdministration(object):
         with EventTransactionMapper() as mapper:
             return mapper.find_by_key(number)
 
-    def create_event_transaction(self, id, last_edit, affiliated_work_time_account, event):
+    def create_event_transaction(self, id, last_edit, affiliated_work_time_account_id, event):
         """Eine Buchung erstellen."""
         t = EventTransaction()
         t.set_id(id)
         t.set_last_edit(last_edit)
-        t.set_affiliated_work_time_account(affiliated_work_time_account)
+        t.set_affiliated_work_time_account(affiliated_work_time_account_id)
         t.set_event(event)
 
         with EventTransactionMapper() as mapper:
