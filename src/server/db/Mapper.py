@@ -32,7 +32,7 @@ class Mapper (AbstractContextManager, ABC):
             self._cnx = connector.connect(user='root', password='passwort123',
                                   host='127.0.0.1',
                                   database='SoPraTestDB',
-                                auth_plugin='mysql_native_password')
+                                        auth_plugin='mysql_native_password')
 
         return self
 
