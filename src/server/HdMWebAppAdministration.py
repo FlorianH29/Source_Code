@@ -4,6 +4,9 @@ from .bo.Activity import Activity
 from .db.PersonMapper import PersonMapper
 from .db.StartMapper import StartMapper
 from .db.ActivityMapper import ActivityMapper
+from .db.TimeIntervalTransactionMapper import TimeIntervalTransactionMapper
+from .db.EventTransactionMapper import EventTransactionMapper
+from .bo.EventTransaction import EventTransaction
 
 
 class HdMWebAppAdministration(object):
@@ -57,3 +60,28 @@ class HdMWebAppAdministration(object):
 
         with ActivityMapper() as mapper:
             return mapper.insert(activity)
+
+    """Methoden für EventTransaktionen"""
+
+    def get_event_transaction_by_id(self, number):
+        """Die Buchung mit der gegebenen Buchungs-ID auslesen."""
+        with EventTransactionMapper() as mapper:
+            return mapper.find_by_key(number)
+
+    def create_event_transaction(self, id, last_edit, affiliated_work_time_account, event):
+        """Eine Buchung erstellen."""
+        t = EventTransaction()
+        t.set_id(id)
+        t.set_last_edit(last_edit)
+        t.set_affiliated_work_time_account(affiliated_work_time_account)
+        t.set_event(event)
+
+        with EventTransactionMapper() as mapper:
+            return mapper.insert(t)
+
+    """Methoden für TimeIntervalTransaktionen"""
+    def get_time_interval_transaction_by_id(self, number):
+        """Die Buchung mit der gegebenen Buchungs-ID auslesen."""
+        with TimeIntervalTransactionMapper() as mapper:
+            return mapper.find_by_key(number)
+

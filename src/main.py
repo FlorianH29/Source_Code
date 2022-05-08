@@ -29,8 +29,13 @@ hwa = HdMWebAppAdministration()
 # event3 = hwa.get_start_event_by_id(1)
 # hwa.delete_start(event3) # nochmal checken warum versucht wird versucht wird 2 mal zu deleten, dann kommt Fehler dass
                            # Id nicht mehr da weil schon gelöscht
+test = hwa.get_time_interval_transaction_by_id(1)
+hwa.create_event_transaction(2, '20220101', 4, 5) #nochmal checken, wieso es doppelt angelegt wird
+test2 = hwa.get_event_transaction_by_id(2)
+print(test2)
 
-hwa.create_activity(1, '20220202', 'TestAktivität', 10, 1)
+
+#hwa.create_activity(1, '20220202', 'TestAktivität', 10, 1)
 
 if __name__ == '__main__':
     app.run(debug=True)
