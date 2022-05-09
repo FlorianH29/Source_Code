@@ -1,0 +1,29 @@
+Änderungen Ben:
+
+- Table Aktivität in Activity geändert
+- Columns in Activity: id (INT), last_edit(DATE), name (VARCHAR), capacity(INT), affiliated_project(INT)
+- Fremdschlüssel bei affiliated_project(INT) raus
+
+- Start Table erstellt mit id(INT), last_edit(DATE), time_stamp(DATE)
+- End Table erstellt mit gleichen Spalten
+
+
+Änderungen Milena:
+
+- Tabelle Buchung umbenennen in EventTransaction
+- Columns in EventTransaction: id(INT), last_edit(DATE), affiliated_work_time_account_id(INT), event(INT)
+
+- Tabelle TimeIntervalTransasction erstellen
+- Columns in TimeIntervalTransaction: id(INT), last_edit(DATE), affiliated_work_time_account_id(INT), time_interval(INT)
+
+Änderungen Marie:
+
+- Tabelle Arbeitszeitkonto umbenennen in worktimeaccounts
+- vorher war user_id drin aber wir verwenden owner für den Fremdschlüssel ansonsten
+
+CREATE TABLE worktimeaccounts(
+        id int not null primary key,
+            last_edit date not null default,
+            owner int not null default,
+            foreign key (owner) REFERENCES Person(id)
+);
