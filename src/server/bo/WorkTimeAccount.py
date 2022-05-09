@@ -14,13 +14,14 @@ class WorkTimeAccount (bo.BusinessObject):
         self._owner = None
 
     """Getter (= auslesen) und Setter (= setzen) für die Fremdschlüsselbeziehung."""
-    def __get_owner (self):
+    def get_owner (self):
         return self._owner
 
-    def __set_owner (self, person):
+    def set_owner (self, person):
         self._owner = person
 
-    # @Milena im Bankbeispiel haben die folgende textuelle Repräsentation aber Brauchen wir die überhaupt?
+    """Textuelle Beschreibung des Arbeitszeitkontos - wird benötigt für den Fall, dass eine andere Klasse auf das 
+    Arbeitszeitkonto zugreift und einen Print Befehl ausführt."""
     def __str__(self):
         return "WorkTimeAccount: {}, owned by {}".format(self.get_id(), self._owner)
 
