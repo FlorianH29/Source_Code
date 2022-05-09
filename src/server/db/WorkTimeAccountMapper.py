@@ -26,9 +26,8 @@ class WorkTimeAccountMapper (Mapper):
 
         return result
 
-    """Hier wird das Konto eines Inhabers ausgelesen anhand des Fremdschlüssels. 
-        (-> Noch nicht im Klassendiagramm aber auf jedenfall sinnvoll)
-    
+    """Hier wird das Konto eines Inhabers ausgelesen anhand des Fremdschlüssels.  """
+
     def find_by_owner_id(self, owner_id):
         result = []
         cursor = self._cnx.cursor()
@@ -46,8 +45,6 @@ class WorkTimeAccountMapper (Mapper):
         cursor.close()
 
         return result
-
-    """
 
     """Hiermit kann ein Arbeitszeitkonto-Objekt in die Datenbank eingefügt werden.
     In zuge dessen wird auch der Primärachlüssel des zu übergebenden Objekts überprüft 
