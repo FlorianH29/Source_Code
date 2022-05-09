@@ -16,7 +16,6 @@ class Person (bo.BusinessObject):
         self.__mailaddress = ""  # Die E-Mail-Adresse des Benutzers.
         self.__person_id = ""  # Die extern verwaltete Person ID.
 
-
     def get_firstname(self):
         """Auslesen des Benutzernamens."""
         return self.__firstname
