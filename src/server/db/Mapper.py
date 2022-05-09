@@ -4,7 +4,7 @@ from contextlib import AbstractContextManager
 from abc import ABC, abstractmethod
 
 
-class Mapper(AbstractContextManager, ABC):
+class Mapper (AbstractContextManager, ABC):
     """Abstrakte Basisklasse aller Mapper-Klassen"""
 
     def __init__(self):
@@ -21,7 +21,8 @@ class Mapper(AbstractContextManager, ABC):
             Die App befindet sich somit im **Production Mode** und zwar im *Standard Environment*.
             Hierbei handelt es sich also um die Verbindung zwischen Google App Engine und Cloud SQL."""
 
-            self._cnx = connector.connect(user='demo', password='demo',
+            self._cnx = connector.connect(user='demo',
+                                          password='demo',
                                           unix_socket='/cloudsql/python-bankprojekt-thies:europe-west3:bank-db-thies',
                                           database='bankproject')
         else:
@@ -29,10 +30,12 @@ class Mapper(AbstractContextManager, ABC):
             also auf einem Local Development Server. Hierbei stellen wir eine einfache Verbindung zu einer lokal
             installierten mySQL-Datenbank her."""
 
-            self._cnx = connector.connect(user='root', password='passwort123',
-                                          host='127.0.0.1',
-                                          database='SoPraTestDB',
-                                          auth_plugin='mysql_native_password')
+            self._cnx = connector.connect(
+                user='root',
+                password='passwort123',
+                host='127.0.0.1',
+                database='SoPraTestDB',
+                auth_plugin='mysql_native_password')
 
         return self
 
@@ -42,10 +45,13 @@ class Mapper(AbstractContextManager, ABC):
 
     """Formuliere nachfolgend sämtliche Auflagen, die instanzierbare Mapper-Subklassen mind. erfüllen müssen."""
 
+
     @abstractmethod
     def find_by_key(self, key):
         """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
         pass
 
-    def find_all(self, key):
+    @abstractmethod
+    def find_all(self):
+        """Lies alle Tupel aus und gib sie als Objekte zurück."""
         pass

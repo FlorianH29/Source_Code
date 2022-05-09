@@ -11,7 +11,7 @@ class BusinessObject(ABC):
 
     def __init__(self):
         self._id = 0  # Die eindeutige Identifikationsnummer einer Instanz dieser Klasse.
-        self._last_edit = None
+        self._last_edit = None  # Datum der letzten Änderung
 
     def set_last_edit(self, value: datetime):
         """Hier sollte ein Value vom Typ Datetime übergeben werden, genauer datetime.datetime.now()"""
@@ -27,11 +27,3 @@ class BusinessObject(ABC):
     def set_id(self, value):
         """Setzen der ID."""
         self._id = value
-
-
-
-
-test = BusinessObject()
-test.set_last_edit(datetime.datetime.now())
-a= test.get_last_edit()
-print(a)
