@@ -18,7 +18,7 @@ class EventTransactionMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT  id, last_edit, affiliated_work_time_account_id, event FROM EventTransaction WHERE id={}".format(key)
+        command = "SELECT  id, last_edit, affiliated_work_time_account_id, event FROM Eventtransaction WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -50,7 +50,7 @@ class EventTransactionMapper (Mapper):
         result = []
         cursor = self._cnx.cursor()
 
-        cursor.execute("SELECT id, last_edit, affiliated_work_time_account_id, event from EventTransaction")
+        cursor.execute("SELECT id, last_edit, affiliated_work_time_account_id, event from Eventtransaction")
         tuples = cursor.fetchall()
 
         for (id, last_edit, affiliated_work_time_account_id, event) in tuples:
@@ -74,7 +74,7 @@ class EventTransactionMapper (Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        command = "SELECT id, last_edit, affiliated_work_time_account_id, event FROM EventTransaction WHERE affiliatedworktimeaccountid={} ORDER BY id".format(
+        command = "SELECT id, last_edit, affiliated_work_time_account_id, event FROM Eventtransaction WHERE affiliatedworktimeaccountid={} ORDER BY id".format(
             worktimeaccount_id)
         cursor.execute(command)
         tuples = cursor.fetchall()
@@ -102,13 +102,13 @@ class EventTransactionMapper (Mapper):
         :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
         """
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(id) AS maxid FROM EventTransaction ")
+        cursor.execute("SELECT MAX(id) AS maxid FROM Eventtransaction ")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
             event_transaction.set_id(maxid[0] + 1)
 
-        command = "INSERT INTO EventTransaction (id, last_edit, affiliated_work_time_account_id, event) VALUES (%s,%s,%s,%s)"
+        command = "INSERT INTO Eventtransaction (id, last_edit, affiliated_work_time_account_id, event) VALUES (%s,%s,%s,%s)"
         data = (event_transaction.get_id(),
                 event_transaction.get_last_edit(),
                 event_transaction.get_affiliated_work_time_account(),
@@ -127,7 +127,7 @@ class EventTransactionMapper (Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE EventTransaction " + "SET id=%s, last_edit=%s, affiliated_work_time_account_id=%s, event=%s WHERE id=%s"
+        command = "UPDATE Eventtransaction " + "SET id=%s, last_edit=%s, affiliated_work_time_account_id=%s, event=%s WHERE id=%s"
         data = (event_transaction.get_id(),
                 event_transaction.get_last_edit(),
                 event_transaction.get_affiliated_work_time_account(),
@@ -144,7 +144,7 @@ class EventTransactionMapper (Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM EventTransaction WHERE id={}".format(event_transaction.get_id())
+        command = "DELETE FROM Eventtransaction WHERE id={}".format(event_transaction.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
