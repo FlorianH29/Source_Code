@@ -33,5 +33,5 @@ class WorkTimeAccount (bo.BusinessObject):
     def from_dict(dictionary=dict()):
         wta = WorkTimeAccount()
         wta.set_id(dictionary["id"])
-        wta.__set_owner(dictionary["owner"])
+        wta.set_owner(dictionary["owner"])
         return wta
