@@ -47,3 +47,61 @@ class ProjectMapper (Mapper):
         cursor.close()
 
         return result
+
+    def find_all(self):
+        all_projects = []
+        cursor = self._cnx.cursor()
+        cursor.execute("SELECT id, last_edit, name, client, project_term_id FROM project")
+        tuples = cursor.fetchall()
+
+        for (id, last_edit, name, client, project_term_id) in tuples:
+            project = Project()
+            project.set_id(id)
+            project.set_last_edit(last_edit)
+            project.set_name(name)
+            project.set_client(client)
+            project.set_project_term(get_time_interval_by_id(project_term_id))  # muss hier das time_interval via get übergeben werden?
+            all_projects.append(project)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return all_projects
+
+    def insert(self, object):
+        cursor = self._cnx.cursor()
+        cursor.execute("SELECT MAX(id) AS maxid FROM accounts ")
+        tuples = cursor.fetchall()
+
+        for (maxid) in tuples:
+            if maxid[0] in tuples is not None:  # Die Liste beinhaltet min. ein Projekt -> die Id ist somit n+1
+                Project.set_id(maxid[0] + 1)
+            else:  # Die Liste ist leer, somit wird dem neuen Projekt die Id "1" zugewiesen
+                Project.set_id(1)
+
+        command = "INSERT INTO accounts (id, last_edit, name, client, project_term_id) VALUES (%s,%s,%s,%a,%s)"
+        data = (Project.get_id(), Project.get_last_edit(), Project.get_name(), Project.get_client(), Project.get_project_term())
+        cursor.execute(command, data)
+
+        self._cnx.commit()
+        cursor.close()
+        return Project
+
+    def delete(self, in_project):  # Projekt, welches gelöscht werden soll wird übergeben
+        cursor = self._cnx.cursor()
+
+        command = "DELETE FROM project WHERE id={}".format(in_project.get_id())
+        cursor.execute(command)
+
+        self._cnx.commit()
+        cursor.close()
+
+    def update(self, in_project):  # Projekt, welches geupdatet werden soll wird übergeben
+        cursor = self._cnx.cursor()
+
+        command = "UPDATE project " + "SET name=%s, client=%s, project_term_id WHERE project_id=%s"
+        data = (in_project.get_name(), in_project.get_email(), in_project.get_project_term(), in_project.get_id())
+        cursor.execute(command, data)
+
+        self._cnx.commit()
+        cursor.close()

@@ -7,7 +7,7 @@ class Project (bo.BusinessObject):
         super().__init__()
         self.__name = ""    # The name of the project.
         self.__client = ""  # The name of the client.
-        self.poject_term = None  # The project term is an object of TimeInterval
+        self.__project_term = None  # The project term is an object of TimeInterval
 
     def set_name(self, name):
         self.__name = name
@@ -22,10 +22,16 @@ class Project (bo.BusinessObject):
         return self.__client
 
     def set_project_term(self, project_term):
-        self.project_term = project_term
+        self.__project_term = project_term
 
     def get_project_term(self):
-        return self.project_term
+        return self.__project_term
+
+    def set_last_edit(self, last_edit):
+        self.__last_edit = last_edit
+
+    def get_last_edit(self):
+        return self.__last_edit
 
     def __str__(self):
         return "Project: \n  name: {}\n  client: {}\n  project_term: {}".format(self.get_name(), self.get_client(), self.get_project_term())

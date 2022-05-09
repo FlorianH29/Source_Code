@@ -10,8 +10,9 @@ class Mapper (AbstractContextManager, ABC):
     def __init__(self):
         self._cnx = None
 
-    def __enter__(self):
+
         """Was soll geschehen, wenn wir beginnen, mit dem Mapper zu arbeiten?"""
+    def __enter__(self):
 
         """Wir testen, ob der Code im Kontext der lokalen Entwicklungsumgebung oder in der Cloud ausgeführt wird.
         Dies ist erforderlich, da die Modalitäten für den Verbindungsaufbau mit der Datenbank kontextabhängig sind."""
@@ -48,3 +49,18 @@ class Mapper (AbstractContextManager, ABC):
         """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
         pass
 
+    @abstractmethod
+    def find_all(self):
+        pass
+
+    @abstractmethod
+    def insert(self, object):
+        pass
+
+    @abstractmethod
+    def update(self, object):
+        pass
+
+    @abstractmethod
+    def delete(self, object):
+        pass
