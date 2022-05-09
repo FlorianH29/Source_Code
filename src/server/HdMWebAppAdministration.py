@@ -23,6 +23,24 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             return mapper.find_by_key(number)
 
+    def create_person(self, id, firstname, lastname, username, mailadress, last_edit, person_id):
+        person = Person()
+        person.set_person_id(person_id)
+        person.set_id(id)
+        person.set_firstname(firstname)
+        person.set_lastname(lastname)
+        person.set_mailaddress(mailadress)
+        person.set_username(username)
+        person.set_last_edit(last_edit)
+
+        with PersonMapper as mapper:
+            mapper.insert(person)
+
+    def delete_person(self, person):
+        "Gegebene Person aus System löschen"
+        with PersonMapper() as mapper:
+            mapper.delete(person)
+
     """Methoden für Start:"""
 
     def create_start(self, id, last_edit, time_stamp):

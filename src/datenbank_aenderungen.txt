@@ -16,3 +16,7 @@
 - Tabelle TimeIntervalTransasction erstellen
 - Columns in TimeIntervalTransaction: id(INT), last_edit(DATE), affiliated_work_time_account_id(INT), time_interval(INT)
 
+Änderungen Bene:
+
+- Zu den Columns kommt noch person_id
+- allg. sollten die Columns klein geschrieben werden

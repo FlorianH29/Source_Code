@@ -92,9 +92,9 @@ class PersonMapper(Mapper):
         INSERT-Befehl um ein Personen Objekt in die Datenbank zu schreiben
         FRAGE: ob die externe Personen ID hier dazukommt noch klären!
         """
-        command = "INSERT INTO Person (id, firstName, lastName, username, mailadress) VALUES (%s,%s,%s,%s,%s,%s)"
+        command = "INSERT INTO Person (id, firstName, lastName, username, mailadress, person_id) VALUES (%s,%s,%s,%s,%s,%s,%s)"
         data = (employee.get_id(), employee.get_first_name(), employee.get_last_name(), employee.get_username,
-                employee.get_mailaddress)
+                employee.get_mailaddress, employee.get_person_id)
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -112,7 +112,7 @@ class PersonMapper(Mapper):
         command = "UPDATE Person " + "SET firstName=%s, lastName=%s, username=%s, mailaddress=%s," \
                                      "person_id=%s WHERE id=%s"
         data = (employee.get_first_name(), employee.get_last_name(), employee.get_username, employee.get_mailadress,
-                employee.get_id())
+                employee.get_id(), employee.get_person_id)
         cursor.execute(command, data)
 
         self._cnx.commit()
