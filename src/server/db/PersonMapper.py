@@ -48,12 +48,12 @@ class PersonMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, firstname, lastname, mailaddress, username FROM Person WHERE id={}".format(key)
+        command = "SELECT id, firstname, lastname, mailaddress, username, person_id FROM Person WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, firstname, lastname, mailaddress, username) = tuples[0]
+            (id, firstname, lastname, mailaddress, username, person_id) = tuples[0]
             employee = Person()
             employee.set_person_id(id)
             employee.set_firstname(firstname)
@@ -90,6 +90,7 @@ class PersonMapper(Mapper):
 
         """
         INSERT-Befehl um ein Personen Objekt in die Datenbank zu schreiben
+        FRAGE: ob die externe Personen ID hier dazukommt noch klären!
         """
         command = "INSERT INTO Person (id, firstName, lastName, username, mailadress) VALUES (%s,%s,%s,%s,%s,%s)"
         data = (employee.get_id(), employee.get_first_name(), employee.get_last_name(), employee.get_username,
