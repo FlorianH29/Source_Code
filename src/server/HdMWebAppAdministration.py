@@ -7,6 +7,8 @@ from .db.ActivityMapper import ActivityMapper
 from .db.TimeIntervalTransactionMapper import TimeIntervalTransactionMapper
 from .db.EventTransactionMapper import EventTransactionMapper
 from .bo.EventTransaction import EventTransaction
+from .bo.WorkTimeAccount import WorkTimeAccount
+from .db.WorkTimeAccountMapper import WorkTimeAccountMapper
 
 
 class HdMWebAppAdministration(object):
@@ -85,3 +87,38 @@ class HdMWebAppAdministration(object):
         with TimeIntervalTransactionMapper() as mapper:
             return mapper.find_by_key(number)
 
+    """Methoden für WorkTimeAccount:"""
+    def get_all_work_time_accounts(self):
+        """Arbeitszeitkont anhand der id auslesen"""
+        with WorkTimeAccountMapper() as mapper:
+            return mapper.find_all()
+
+    def get_work_time_account_by_id(self, number):
+        """Arbeitszeitkonto anhand des Key auslesen"""
+        with WorkTimeAccountMapper() as mapper:
+            return mapper.find_by_key(number)
+
+    def get_work_time_account_of_owner(self, owner):
+        """Alle Konten des gegebenen Kunden auslesen."""
+        with WorkTimeAccountMapper() as mapper:
+            return mapper.find_by_owner_id(owner.get_id())
+
+    def create_work_time_account(self, id, last_edit, user_id):
+        """Arbeitszeitkonto anlegen"""
+        work_time_account = WorkTimeAccount()
+        work_time_account.set_id(id)
+        work_time_account.set_last_edit(last_edit)
+        work_time_account.set_owner(user_id)
+
+        with WorkTimeAccountMapper() as mapper:
+            return mapper.insert(work_time_account)
+
+    def save_work_time_account(self, work_time_account):
+        with WorkTimeAccountMapper as mapper:
+            mapper.update(work_time_account)
+
+    def delete_work_time_account(self, work_time_account):
+        """Arbeitszeitkonto löschen"""
+        with WorkTimeAccountMapper() as mapper:
+            #wenn es transactions gibt, müssen die mit if abfrage gelöscht werden
+            mapper.delete(work_time_account)
