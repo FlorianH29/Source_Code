@@ -66,7 +66,7 @@ class TimeIntervalTransactionMapper (Mapper):
 
         return result
 
-    def find_by_worktimeaccount_id(self, worktimeaccount_id):
+    def find_by_affiliated_work_time_account_id(self, affiliated_work_time_account_id):
         """Auslesen aller TimeIntervalTransactions eines durch Fremdschlüssel (worktimeaccountid) gegebenen WorkTimeAccounts.
 
         :param worktimeaccount_id Schlüssel des zugehörigen Kontos.
@@ -75,7 +75,7 @@ class TimeIntervalTransactionMapper (Mapper):
         result = []
         cursor = self._cnx.cursor()
         command = "SELECT id, last_edit, affiliated_work_time_account_id, time_interval FROM TimeIntervalTransaction WHERE affiliatedworktimeaccountid={} ORDER BY id".format(
-            worktimeaccount_id)
+            affiliated_work_time_account_id)
         cursor.execute(command)
         tuples = cursor.fetchall()
 

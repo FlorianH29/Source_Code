@@ -4,6 +4,7 @@ from .bo.Activity import Activity
 from .db.PersonMapper import PersonMapper
 from .db.StartMapper import StartMapper
 from .db.ActivityMapper import ActivityMapper
+from .bo.TimeIntervalTransaction import TimeIntervalTransaction
 from .db.TimeIntervalTransactionMapper import TimeIntervalTransactionMapper
 from .db.EventTransactionMapper import EventTransactionMapper
 from .bo.EventTransaction import EventTransaction
@@ -62,11 +63,31 @@ class HdMWebAppAdministration(object):
             return mapper.insert(activity)
 
     """Methoden für EventTransaktionen"""
-
     def get_event_transaction_by_id(self, number):
-        """Die Buchung mit der gegebenen Buchungs-ID auslesen."""
+        """Die EventTransaction mit der gegebenen EventTransaction-ID auslesen."""
         with EventTransactionMapper() as mapper:
             return mapper.find_by_key(number)
+
+    def get_all_event_transactions (self):
+        """Alle in der Datenbank gespeicherten EventTransactions auslesen."""
+        with EventTransactionMapper() as mapper:
+            return mapper.find_all()
+
+    def get_event_transaction_by_affiliated_work_time_account_id(self, affiliated_work_time_account_id):
+        """Die EventTransaction mit der gegebenen WorkTimeAccount-ID auslesen."""
+        with EventTransactionMapper() as mapper:
+            return mapper.find_by_affiliated_work_time_account_id(affiliated_work_time_account_id)
+
+    def save_event_transaction(self, event_transaction):
+        """Die gegebene EventTransaction speichern."""
+        with EventTransactionMapper() as mapper:
+            mapper.update(event_transaction)
+
+    def delete_event_transaction(self, event_transaction):
+        """Die gegebene EventTransaction löschen."""
+        with EventTransactionMapper() as mapper:
+
+            mapper.delete(event_transaction)
 
     def create_event_transaction(self, id, last_edit, affiliated_work_time_account_id, event):
         """Eine Buchung erstellen."""
@@ -81,7 +102,38 @@ class HdMWebAppAdministration(object):
 
     """Methoden für TimeIntervalTransaktionen"""
     def get_time_interval_transaction_by_id(self, number):
-        """Die Buchung mit der gegebenen Buchungs-ID auslesen."""
+        """Die TimeIntervalTransaction mit der gegebenen TimeIntervalTransaction-ID auslesen."""
         with TimeIntervalTransactionMapper() as mapper:
             return mapper.find_by_key(number)
+
+    def get_all_time_interval_transactions(self):
+        """Alle in der Datenbank gespeicherten TimeIntervalTransactions auslesen."""
+        with TimeIntervalTransactionMapper() as mapper:
+            return mapper.find_all()
+
+    def get_time_interval_transaction_by_affiliated_work_time_account_id(self, affiliated_work_time_account_id):
+        """Die TimeIntervalTransaction mit der gegebenen WorkTimeAccount-ID auslesen."""
+        with TimeIntervalTransactionMapper() as mapper:
+            return mapper.find_by_affiliated_work_time_account_id(affiliated_work_time_account_id)
+
+    def save_time_interval_transaction(self, time_interval_transaction):
+        """Die gegebene TimeIntervalTransaction speichern."""
+        with TimeIntervalTransactionMapper() as mapper:
+            mapper.update(time_interval_transaction)
+
+    def delete_time_interval_transaction(self, time_interval_transaction):
+        """Die gegebene TimeIntervalTransaction löschen."""
+        with TimeIntervalTransactionMapper() as mapper:
+            mapper.delete(time_interval_transaction)
+
+    def create_time_interval_transaction(self, id, last_edit, affiliated_work_time_account_id, time_interval):
+        """Eine TimeIntervalTransaction erstellen."""
+        t = TimeIntervalTransaction()
+        t.set_id(id)
+        t.set_last_edit(last_edit)
+        t.set_affiliated_work_time_account(affiliated_work_time_account_id)
+        t.set_time_interval(time_interval)
+
+        with TimeIntervalTransactionMapper() as mapper:
+            return mapper.insert(t)
 
