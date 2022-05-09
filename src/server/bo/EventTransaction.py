@@ -2,7 +2,8 @@ from server.bo import Transaction as TA
 
 
 class EventTransaction (TA.Transaction):
-
+    """Realisierung einer exemplarischen EventTransaction-klasse.
+    """
     def __init__(self):
         super().__init__()
         self.__event = None

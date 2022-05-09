@@ -2,7 +2,8 @@ from server.bo import Transaction as TA
 
 
 class TimeIntervalTransaction(TA.Transaction):
-
+    """Realisierung einer exemplarischen TimeIntervalTransaction-klasse.
+    """
     def __init__(self):
         super().__init__()
         self.__time_interval = None
