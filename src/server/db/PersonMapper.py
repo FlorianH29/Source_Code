@@ -18,12 +18,12 @@ class PersonMapper(Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT * from Person")
+        cursor.execute("SELECT * from person")
         tuples = cursor.fetchall()
 
-        for (id, last_edit, firstName, lastName, username, mailaddress, firebase_id) in tuples:
+        for (person_id, last_edit, firstName, lastName, username, mailaddress, firebase_id) in tuples:
             employee = p.Person()
-            employee.set_id(id)
+            employee.set_id(person_id)
             employee.set_last_edit(last_edit)
             employee.set_firstname(firstName)
             employee.set_lastname(lastName)
@@ -49,19 +49,21 @@ class PersonMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, last_edit, firstname, lastname, mailaddress, username, firebase_id FROM Person WHERE id={}".format(key)
+        command = "SELECT person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id FROM person " \
+                  "WHERE person_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, last_edit, firstname, lastname, mailaddress, username, firebase_id) = tuples[0]
+            (person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id) = tuples[0]
             employee = p.Person()
-            employee.set_firebase_id(id)
+            employee.set_firebase_id(person_id)
             employee.set_last_edit(last_edit)
             employee.set_firstname(firstname)
             employee.set_lastname(lastname)
             employee.set_mailaddress(mailaddress)
             employee.set_username(username)
+            employee.set_firebase_id(firebase_id)
 
             result = employee
         except IndexError:
@@ -84,7 +86,7 @@ class PersonMapper(Mapper):
         :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
         """
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(id) AS maxid FROM Person ")
+        cursor.execute("SELECT MAX(person_id) AS maxid FROM person ")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
@@ -101,7 +103,8 @@ class PersonMapper(Mapper):
         INSERT-Befehl um ein Personen Objekt in die Datenbank zu schreiben
         FRAGE: ob die externe Personen ID hier dazukommt noch klären!
         """
-        command = "INSERT INTO Person (id, last_edit, firstname, lastname, username, mailaddress, firebase_id) VALUES (%s,%s,%s,%s,%s,%s,%s)"
+        command = "INSERT INTO person (person_id, last_edit, firstname, lastname, username, mailaddress, firebase_id) " \
+                  "VALUES (%s,%s,%s,%s,%s,%s,%s)"
         data = (employee.get_id(),
                 employee.get_last_edit(),
                 employee.get_firstname(),
@@ -123,8 +126,8 @@ class PersonMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE Person " + "SET firstName=%s, last_edit=%s, lastName=%s, username=%s, mailaddress=%s," \
-                                     "firebase_id=%s WHERE id=%s"
+        command = "UPDATE person " + "SET firstName=%s, last_edit=%s, lastName=%s, username=%s, mailaddress=%s," \
+                                     "firebase_id=%s WHERE person_id=%s"
         data = (employee.get_first_name(), employee.get_last_edit(), employee.get_username, employee.get_mailadress,
                 employee.get_id(), employee.get_firebase_id)
         cursor.execute(command, data)
@@ -139,7 +142,7 @@ class PersonMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM Person WHERE id={}".format(employee.get_id())
+        command = "DELETE FROM person WHERE person_id={}".format(employee.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

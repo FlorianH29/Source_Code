@@ -9,12 +9,12 @@ class TimeIntervalMapper(Mapper):
     def find_all(self):
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT * from TimeInterval")
+        cursor.execute("SELECT * from timeinterval")
         tuples = cursor.fetchall()
 
-        for (id, last_edit, start_time, end_time, time_interval) in tuples:
+        for (time_interval_id, last_edit, start_time, end_time, time_interval) in tuples:
             time_interval = TimeInterval()
-            time_interval.set_id(id)
+            time_interval.set_id(time_interval_id)
             time_interval.set_last_edit(last_edit)
             time_interval.set_start_time(start_time)
             time_interval.set_end_time(end_time)
@@ -31,14 +31,15 @@ class TimeIntervalMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, last_edit, start_time, end_time, time_interval FROM TimeInterval WHERE id={}".format(key)
+        command = "SELECT time_interval_id, last_edit, start_time, end_time, time_interval FROM timenterval " \
+                  "WHERE time_interval_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, last_edit, start_time, end_time, time_interval) = tuples[0]
+            (time_interval_id, last_edit, start_time, end_time, time_interval) = tuples[0]
             time_interval = TimeInterval()
-            time_interval.set_id(id)
+            time_interval.set_id(time_interval_id)
             time_interval.set_last_edit(last_edit)
             time_interval.set_start_time(start_time)
             time_interval.set_end_time(end_time)
@@ -58,7 +59,7 @@ class TimeIntervalMapper(Mapper):
     def insert(self, time_interval):
 
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(id) AS maxid FROM TimeInterval ")
+        cursor.execute("SELECT MAX(time_interval_id) AS maxid FROM timeinterval ")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
@@ -67,7 +68,8 @@ class TimeIntervalMapper(Mapper):
             else:  # Die Liste ist leer, somit wird dem neuen Projekt die Id "1" zugewiesen
                 time_interval.set_id(1)
 
-        command = "INSERT INTO TimeInterval (id, last_edit, start_time, end_time, time_interval) VALUES (%s,%s,%s,%s,%s)"
+        command = "INSERT INTO timeinterval (time_interval_id, last_edit, start_time, end_time, time_interval)" \
+                  " VALUES (%s,%s,%s,%s,%s)"
         data = (time_interval.get_id(),
                 time_interval.get_last_edit(),
                 time_interval.get_start_time(),
@@ -84,7 +86,8 @@ class TimeIntervalMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "UPDATE time_interval " + "SET id=%s, last_edit=%s, start_time=%s, end_time=%s, time_interval=%s, WHERE id=%s"
+        command = "UPDATE timeinterval " + "SET time_interval_id=%s, last_edit=%s, start_time=%s, end_time=%s, " \
+                                           "time_interval=%s, WHERE time_interval_id=%s"
         data = (time_interval.get_id(), time_interval.get_last_edit(), time_interval.get_start_time(),
                 time_interval.get_end_time(), time_interval.get_time_interval())
         cursor.execute(command, data)
@@ -97,7 +100,7 @@ class TimeIntervalMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM TimeInterval WHERE id={}".format(time_interval.get_id())
+        command = "DELETE FROM timeinterval WHERE time_interval_id={}".format(time_interval.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
