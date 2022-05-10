@@ -3,6 +3,8 @@ from .bo.End import End
 from .bo.Person import Person
 from .bo.Activity import Activity
 from .bo.TimeInterval import TimeInterval
+from .bo.Project import Project
+from .bo.ProjectWork import ProjectWork
 from .db.PersonMapper import PersonMapper
 from .db.StartMapper import StartMapper
 from .db.EndMapper import EndMapper
@@ -274,9 +276,17 @@ class HdMWebAppAdministration(object):
         with ProjectMapper() as mapper:
             return mapper.find_all()
 
-    def create_project(self, id, last_edit, project_name, client, project_term_id):
+    def create_project(self, project_id, last_edit, project_name, client, project_term_id):
+        """Erstellen eines neuen Projekts"""
+        project = Project()
+        project.set_id(project_id)
+        project.set_last_edit(last_edit)
+        project.set_project_name(project_name)
+        project.set_client(client)
+        project.set_project_term_id(project_term_id)
+
         with ProjectMapper() as mapper:
-            return mapper.insert()
+            return mapper.insert(project)
 
     def delete_project(self):
         with ProjectMapper() as mapper:
@@ -296,9 +306,16 @@ class HdMWebAppAdministration(object):
         with ProjectWorkMapper() as mapper:
             return mapper.find_all()
 
-    def create_project_work(self, id, last_edit, project_work_name, description):
+    def create_project_work(self, project_work_id, last_edit, project_work_name, description):
+        """Erstellen eines neuen ProjektWorks"""
+        project_work = ProjectWork()
+        project_work.set_id(project_work)
+        project_work.set_last_edit(last_edit)
+        project_work.set_projekt_work_name(project_work_name)
+        project_work.set_description(description)
+
         with ProjectWorkMapper() as mapper:
-            return mapper.insert()
+            return mapper.insert(project_work)
 
     def delete_project_work(self):
         with ProjectWorkMapper() as mapper:

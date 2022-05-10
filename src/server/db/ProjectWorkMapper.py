@@ -25,17 +25,16 @@ class ProjectWorkMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT project_work_id, name, description, activityid FROM projectwork WHERE project_work_id={}".format(key)
+        command = "SELECT project_work_id, project_work_name, description, activityid FROM projectwork WHERE project_work_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (project_work_id, name, description, activityid) = tuples[0]
+            (project_work_id, project_work_name, description) = tuples[0]
             project_work = ProjectWork()
             project_work.set_id(project_work_id)
-            project_work.set_name(name)
+            project_work.set_project_work_name(project_work_name)
             project_work.set_description(description)
-            project_work.set_affiliated_activity(activityid)
 
             result = project_work
         except IndexError:
@@ -52,14 +51,14 @@ class ProjectWorkMapper (Mapper):
     def find_all(self):
         all_project_works = []  # Liste mit allen "project_works
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT project_work_id, last_edit, name, description FROM projectwork")
+        cursor.execute("SELECT project_work_id, last_edit, project_work_name, description FROM projectwork")
         tuples = cursor.fetchall()
 
-        for (project_work_id, last_edit, name, description) in tuples:
+        for (project_work_id, last_edit, project_work_name, description) in tuples:
             project_work = ProjectWork()
             project_work.set_id(project_work_id)
             project_work.set_last_edit(last_edit)
-            project_work.set_name(name)
+            project_work.set_project_work_name(project_work_name)
             project_work.set_description(description)
             all_project_works.append(project_work)
 
