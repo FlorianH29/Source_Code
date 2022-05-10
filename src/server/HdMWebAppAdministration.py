@@ -1,6 +1,8 @@
 from .bo.Person import Person
 from .bo.Start import Start
 from .bo.Activity import Activity
+from .bo.TimeInterval import TimeInterval
+from .db import TimeIntervalMapper
 from .db.PersonMapper import PersonMapper
 from .db.StartMapper import StartMapper
 from .db.ActivityMapper import ActivityMapper
@@ -10,6 +12,8 @@ from .db.EventTransactionMapper import EventTransactionMapper
 from .bo.EventTransaction import EventTransaction
 from .bo.WorkTimeAccount import WorkTimeAccount
 from .db.WorkTimeAccountMapper import WorkTimeAccountMapper
+from.db.TimeIntervalMapper import  TimeIntervalMapper
+
 
 
 class HdMWebAppAdministration(object):
@@ -192,3 +196,36 @@ class HdMWebAppAdministration(object):
         with WorkTimeAccountMapper() as mapper:
             #wenn es transactions gibt, müssen die mit if abfrage gelöscht werden
             mapper.delete(work_time_account)
+
+
+    """Methoden von TimeInterval"""
+
+
+    """Zeit Interval konto anlegen"""
+    def create_time_interval(self, id, last_edit, start_time, end_time, time_interval):
+        interval = TimeInterval()
+        interval.set_id(id)
+        interval.set_last_edit(last_edit)
+        interval.set_start_time(start_time)
+        interval.set_end_time(end_time)
+        interval.set_time_interval(time_interval)
+
+        with TimeIntervalMapper as mapper:
+            return mapper.insert(time_interval)
+
+
+    def delete_time_interval(self, time_interval):
+        """Zeitinterval löschen"""
+        with TimeIntervalMapper() as mapper:
+            mapper.delete(time_interval)
+
+    def get_time_interval_by_id(self, number):
+        """Zeitinterval suchen über eine Id"""
+        with TimeIntervalMapper() as mapper:
+            return mapper.find_by_key(number)
+
+
+    def get_all_time_interval(self):
+        """Zeitinterval alle suchen"""
+        with TimeIntervalMapper () as mapper:
+            return mapper.find_all()
