@@ -31,9 +31,9 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             return mapper.find_by_key(number)
 
-    def create_person(self, id, last_edit, firstname, lastname, username, mailaddress,  firebase_id):
+    def create_person(self, person_id, last_edit, firstname, lastname, username, mailaddress,  firebase_id):
         person = Person()
-        person.set_id(id)
+        person.set_id(person_id)
         person.set_last_edit(last_edit)
         person.set_firstname(firstname)
         person.set_lastname(lastname)
@@ -56,10 +56,10 @@ class HdMWebAppAdministration(object):
 
     """Methoden für Start:"""
 
-    def create_start(self, id, last_edit, time_stamp):
+    def create_start(self, start_id, last_edit, time_stamp):
         """Start-Ereignis anlegen"""
         start = Start()
-        start.set_id(id)
+        start.set_id(start_id)
         start.set_last_edit(last_edit)
         start.set_time_stamp(time_stamp)
 
@@ -89,10 +89,10 @@ class HdMWebAppAdministration(object):
 
     """Methoden für End:"""
 
-    def create_end(self, id, last_edit, time_stamp):
+    def create_end(self, end_id, last_edit, time_stamp):
         """End-Ereignis anlegen"""
         end = End()
-        end.set_id(id)
+        end.set_id(end_id)
         end.set_last_edit(last_edit)
         end.set_time_stamp(time_stamp)
 
@@ -121,10 +121,10 @@ class HdMWebAppAdministration(object):
 
     """Methoden für Aktivität:"""
 
-    def create_activity(self, id, last_edit, name, capacity, affiliated_project):
+    def create_activity(self, activity_id, last_edit, name, capacity, affiliated_project):
         """Aktivität anlegen"""
         activity = Activity()
-        activity.set_id(id)
+        activity.set_id(activity_id)
         activity.set_last_edit(last_edit)
         activity.set_name(name)
         activity.set_capacity(capacity)
@@ -180,10 +180,10 @@ class HdMWebAppAdministration(object):
 
             mapper.delete(event_transaction)
 
-    def create_event_transaction(self, id, last_edit, affiliated_work_time_account_id, event):
+    def create_event_transaction(self, event_transcation_id, last_edit, affiliated_work_time_account_id, event):
         """Eine EventTransaction erstellen."""
         t = EventTransaction()
-        t.set_id(id)
+        t.set_id(event_transcation_id)
         t.set_last_edit(last_edit)
         t.set_affiliated_work_time_account(affiliated_work_time_account_id)
         t.set_event(event)
@@ -217,10 +217,10 @@ class HdMWebAppAdministration(object):
         with TimeIntervalTransactionMapper() as mapper:
             mapper.delete(time_interval_transaction)
 
-    def create_time_interval_transaction(self, id, last_edit, affiliated_work_time_account_id, time_interval):
+    def create_time_interval_transaction(self, time_intervall_id, last_edit, affiliated_work_time_account_id, time_interval):
         """Eine TimeIntervalTransaction erstellen."""
         t = TimeIntervalTransaction()
-        t.set_id(id)
+        t.set_id(time_intervall_id)
         t.set_last_edit(last_edit)
         t.set_affiliated_work_time_account(affiliated_work_time_account_id)
         t.set_time_interval(time_interval)
@@ -244,10 +244,10 @@ class HdMWebAppAdministration(object):
         with WorkTimeAccountMapper() as mapper:
             return mapper.find_by_owner_id(owner.get_id())
 
-    def create_work_time_account(self, id, last_edit, user_id):
+    def create_work_time_account(self, work_time_account_id, last_edit, user_id):
         """Arbeitszeitkonto anlegen"""
         work_time_account = WorkTimeAccount()
-        work_time_account.set_id(id)
+        work_time_account.set_id(work_time_account_id)
         work_time_account.set_last_edit(last_edit)
         work_time_account.set_owner(user_id)
 
@@ -314,9 +314,9 @@ class HdMWebAppAdministration(object):
 
 
     """Zeit Interval konto anlegen"""
-    def create_time_interval(self, id, last_edit, start_time, end_time, time_interval):
+    def create_time_interval(self, time_interval_id, last_edit, start_time, end_time, time_interval):
         interval = TimeInterval()
-        interval.set_id(id)
+        interval.set_id(time_interval_id)
         interval.set_last_edit(last_edit)
         interval.set_start_time(start_time)
         interval.set_end_time(end_time)

@@ -21,14 +21,14 @@ class EndMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, last_edit, time_stamp FROM End WHERE id={}".format(key)
+        command = "SELECT end_id, last_edit, time_stamp FROM end WHERE end_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, last_edit, time_stamp) = tuples[0]
+            (end_id, last_edit, time_stamp) = tuples[0]
             end = End()
-            end.set_id(id)
+            end.set_id(end_id)
             end.set_last_edit(last_edit)
             end.set_time_stamp(time_stamp)
 
@@ -50,12 +50,12 @@ class EndMapper (Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT * from End")
+        cursor.execute("SELECT * from end")
         tuples = cursor.fetchall()
 
-        for (id, last_edit, time_stamp) in tuples:
+        for (end_id, last_edit, time_stamp) in tuples:
             end = End()
-            end.set_id(id)
+            end.set_id(end_id)
             end.set_last_edit(last_edit)
             end.set_time_stamp(time_stamp)
             result.append(end)
@@ -74,7 +74,7 @@ class EndMapper (Mapper):
         :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
         """
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(id) AS maxid FROM End")
+        cursor.execute("SELECT MAX(end_id) AS maxid FROM end")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
@@ -87,16 +87,8 @@ class EndMapper (Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 end.set_id(1)
 
-        """
-        Eine Möglichkeit, ein INSERT zu erstellen, ist diese:
-            cursor.execute("INSERT INTO persons (id, firstName, lastName) VALUES ('{}','{}','{}')"
-                           .format(person.get_id(),person.get_first_name(),person.get_last_name()))
-        Dabei wird auf String-Formatierung zurückgegriffen.
-        """
-        """
-        Eine andere Möglichkeit, ist diese:
-        """
-        command = "INSERT INTO End (id, last_edit, time_stamp) VALUES (%s,%s,%s)"
+
+        command = "INSERT INTO end (end_id, last_edit, time_stamp) VALUES (%s,%s,%s)"
         data = (end.get_id(), end.get_last_edit(), end.get_time_stamp())
         cursor.execute(command, data)
 
@@ -113,7 +105,7 @@ class EndMapper (Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE End " + "SET id=%s, last_edit=%s, time_stamp=%s WHERE id=%s"
+        command = "UPDATE end " + "SET end_id=%s, last_edit=%s, time_stamp=%s WHERE end_id=%s"
         data = (end.get_id(), end.get_last_edit(), end.get_time_stamp())
         cursor.execute(command, data)
 
@@ -127,7 +119,7 @@ class EndMapper (Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM End WHERE id={}".format(end.get_id())
+        command = "DELETE FROM end WHERE end_id={}".format(end.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
