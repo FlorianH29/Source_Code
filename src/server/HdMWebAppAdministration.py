@@ -40,7 +40,7 @@ class HdMWebAppAdministration(object):
             mapper.insert(person)
 
     def delete_person(self, person):
-        "Gegebene Person aus System löschen"
+        """Gegebene Person aus System löschen"""
         with PersonMapper() as mapper:
             mapper.delete(person)
 
@@ -62,7 +62,7 @@ class HdMWebAppAdministration(object):
             mapper.delete(start)
 
     def save_start(self, start):
-        """Eine End-Ereignis-Instanz speichern."""
+        """Eine Start-Ereignis-Instanz speichern."""
         with StartMapper() as mapper:
             mapper.update(start)
 
@@ -143,6 +143,7 @@ class HdMWebAppAdministration(object):
             return mapper.find_all()
 
     """Methoden für EventTransaktionen"""
+
     def get_event_transaction_by_id(self, number):
         """Die EventTransaction mit der gegebenen EventTransaction-ID auslesen."""
         with EventTransactionMapper() as mapper:
