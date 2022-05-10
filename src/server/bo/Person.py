@@ -1,13 +1,14 @@
 from server.bo import BusinessObject as bo
 
 
-class Person (bo.BusinessObject):
-    """Realisierung einer exemplarischen Benutzerklasse.
+class Person(bo.BusinessObject):
+    """Realisierung der Personenklasse.
 
-    Aus Gründen der Vereinfachung besitzt der Kunden in diesem Demonstrator
-    lediglich einen einfachen Namen, eine E_Mail-Adresse sowie eine außerhalb
-    unseres Systems verwaltete Person ID (z.B. die Google ID).
+    Eine Person besitzt einen Vor- und Nachname sowie einen Benutzernamen. Des Weiteren
+    hat eine Person eine E-Mail-Adresse und eine ID, welche in diesem Fall von Firebase
+    verwaltet wird.
     """
+
     def __init__(self):
         super().__init__()
         self.__firstname = ""  # Der Vorname des Benutzers.
@@ -17,11 +18,11 @@ class Person (bo.BusinessObject):
         self.__person_id = ""  # Die extern verwaltete Person ID.
 
     def get_firstname(self):
-        """Auslesen des Benutzernamens."""
+        """Auslesen des Vornamens."""
         return self.__firstname
 
     def get_lastname(self):
-        """Auslesen des Benutzernamens."""
+        """Auslesen des Nachnamens."""
         return self.__lastname
 
     def get_username(self):
@@ -29,11 +30,11 @@ class Person (bo.BusinessObject):
         return self.__username
 
     def set_firstname(self, value):
-        """Setzen des Benutzernamens."""
+        """Setzen des Vornamens."""
         self.__firstname = value
 
     def set_lastname(self, value):
-        """Setzen des Benutzernamens."""
+        """Setzen des Nachnamens."""
         self.__lastname = value
 
     def set_username(self, value):
@@ -53,13 +54,13 @@ class Person (bo.BusinessObject):
         return self.__person_id
 
     def set_person_id(self, value):
-        """Setzen der externen User ID (z.B. Google ID)."""
+        """Setzen der externen User ID (z.B. Google ID per Firebase)."""
         self.__person_id = value
 
-
     def __str__(self):
-        """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
-        return "Person: {}, {}, {}, {},{},{}".format(self.get_id(), self.__firstname, self.__lastname, self.__username, self.__mailaddress, self.__person_id)
+        """Erzeugen einer textuellen Darstellung der jeweiligen Instanz."""
+        return "Person: {}, {}, {}, {},{},{}".format(self.get_id(), self.__firstname, self.__lastname, self.__username,
+                                                     self.__mailaddress, self.__person_id)
 
     @staticmethod
     def from_dict(dictionary=dict()):
