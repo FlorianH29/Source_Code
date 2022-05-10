@@ -31,7 +31,7 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             return mapper.find_by_key(number)
 
-    def create_person(self, id, last_edit, firstname, lastname, username, mailaddress,  person_id):
+    def create_person(self, id, last_edit, firstname, lastname, username, mailaddress,  firebase_id):
         person = Person()
         person.set_id(id)
         person.set_last_edit(last_edit)
@@ -39,7 +39,7 @@ class HdMWebAppAdministration(object):
         person.set_lastname(lastname)
         person.set_username(username)
         person.set_mailaddress(mailaddress)
-        person.set_person_id(person_id)
+        person.set_firebase_id(firebase_id)
 
         with PersonMapper() as mapper:
             mapper.insert(person)

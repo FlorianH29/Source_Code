@@ -21,7 +21,7 @@ class PersonMapper(Mapper):
         cursor.execute("SELECT * from Person")
         tuples = cursor.fetchall()
 
-        for (id, last_edit, firstName, lastName, username, mailaddress, person_id) in tuples:
+        for (id, last_edit, firstName, lastName, username, mailaddress, firebase_id) in tuples:
             employee = p.Person()
             employee.set_id(id)
             employee.set_last_edit(last_edit)
@@ -29,7 +29,7 @@ class PersonMapper(Mapper):
             employee.set_lastname(lastName)
             employee.set_username(username)
             employee.set_mailaddress(mailaddress)
-            employee.set_person_id(person_id)
+            employee.set_firebase_id(firebase_id)
             result.append(employee)
 
         self._cnx.commit()
@@ -49,14 +49,14 @@ class PersonMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, last_edit, firstname, lastname, mailaddress, username, person_id FROM Person WHERE id={}".format(key)
+        command = "SELECT id, last_edit, firstname, lastname, mailaddress, username, firebase_id FROM Person WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, last_edit, firstname, lastname, mailaddress, username, person_id) = tuples[0]
+            (id, last_edit, firstname, lastname, mailaddress, username, firebase_id) = tuples[0]
             employee = p.Person()
-            employee.set_person_id(id)
+            employee.set_firebase_id(id)
             employee.set_last_edit(last_edit)
             employee.set_firstname(firstname)
             employee.set_lastname(lastname)
@@ -101,14 +101,14 @@ class PersonMapper(Mapper):
         INSERT-Befehl um ein Personen Objekt in die Datenbank zu schreiben
         FRAGE: ob die externe Personen ID hier dazukommt noch klären!
         """
-        command = "INSERT INTO Person (id, last_edit, firstname, lastname, username, mailaddress, person_id) VALUES (%s,%s,%s,%s,%s,%s,%s)"
+        command = "INSERT INTO Person (id, last_edit, firstname, lastname, username, mailaddress, firebase_id) VALUES (%s,%s,%s,%s,%s,%s,%s)"
         data = (employee.get_id(),
                 employee.get_last_edit(),
                 employee.get_firstname(),
                 employee.get_lastname(),
                 employee.get_username(),
                 employee.get_mailaddress(),
-                employee.get_person_id())
+                employee.get_firebase_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -124,9 +124,9 @@ class PersonMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE Person " + "SET firstName=%s, last_edit=%s, lastName=%s, username=%s, mailaddress=%s," \
-                                     "person_id=%s WHERE id=%s"
+                                     "firebase_id=%s WHERE id=%s"
         data = (employee.get_first_name(), employee.get_last_edit(), employee.get_username, employee.get_mailadress,
-                employee.get_id(), employee.get_person_id)
+                employee.get_id(), employee.get_firebase_id)
         cursor.execute(command, data)
 
         self._cnx.commit()
