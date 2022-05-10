@@ -79,9 +79,13 @@ class StartMapper (Mapper):
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            if maxid[0] in tuples is not None:  # Die Liste beinhaltet min. ein Projekt -> die Id ist somit n+1
+            if maxid[0] is not None:
+                """Wenn wir eine maximale ID festellen konnten, zählen wir diese
+                um 1 hoch und weisen diesen Wert als ID dem Start-Objekt zu."""
                 start.set_id(maxid[0] + 1)
-            else:  # Die Liste ist leer, somit wird dem neuen Projekt die Id "1" zugewiesen
+            else:
+                """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
+                davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 start.set_id(1)
 
         command = "INSERT INTO start (start_id, last_edit, time_stamp) VALUES (%s,%s,%s)"

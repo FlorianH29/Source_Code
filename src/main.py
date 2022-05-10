@@ -23,6 +23,12 @@ person = api.inherit('Person', bo, {
 })
 
 hwa = HdMWebAppAdministration()
+test5 = hwa.get_work_time_account_of_owner(2)
+print(test5)
+
+#hwa.delete_event_transaction(test)
+#hwa.delete_person(test5)
+
 
 #hier könnt ihr eure Tests reinschreiben, bitte bevor ihr auf den Main-pushed löschen!!!
 

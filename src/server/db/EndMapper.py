@@ -80,7 +80,7 @@ class EndMapper (Mapper):
         for (maxid) in tuples:
             if maxid[0] is not None:
                 """Wenn wir eine maximale ID festellen konnten, zählen wir diese
-                um 1 hoch und weisen diesen Wert als ID dem User-Objekt zu."""
+                um 1 hoch und weisen diesen Wert als ID dem End-Objekt zu."""
                 end.set_id(maxid[0] + 1)
             else:
                 """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir

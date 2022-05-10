@@ -92,9 +92,13 @@ class WorkTimeAccountMapper (Mapper):
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            if maxid[0] in tuples is not None:  # Die Liste beinhaltet min. ein Projekt -> die Id ist somit n+1
+            if maxid[0] is not None:
+                """Wenn wir eine maximale ID festellen konnten, zählen wir diese
+                um 1 hoch und weisen diesen Wert als ID dem WorkTimeAccount-Objekt zu."""
                 work_time_account.set_id(maxid[0] + 1)
-            else:  # Die Liste ist leer, somit wird dem neuen Projekt die Id "1" zugewiesen
+            else:
+                """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
+                davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 work_time_account.set_id(1)
 
         command = "INSERT INTO worktimeaccount (work_time_account_id, last_edit, person_id) VALUES (%s,%s,%s)" #%s als Platzhalter und gibt einen formatierten string zurück
@@ -109,7 +113,7 @@ class WorkTimeAccountMapper (Mapper):
      überschrieben."""
     def update(self, work_time_account):
         cursor = self._cnx.cursor()
-        command = "UPDATE Worktimeaccount" + "SET person_id=%s, last_edit=%s, person_id=%s WHERE work_time_account_id=%s"
+        command = "UPDATE worktimeaccount" + "SET person_id=%s, last_edit=%s, work_time_account_id=%s WHERE work_time_account_id=%s"
         data = (work_time_account.get_owner(), work_time_account.get_last_edit(), work_time_account.get_id())
         cursor.execute(command, data)
 

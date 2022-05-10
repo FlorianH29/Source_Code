@@ -1,4 +1,4 @@
-from server.bo.Project import Project
+from server.bo import Project as p
 from server.db.Mapper import Mapper
 
 
@@ -30,12 +30,12 @@ class ProjectMapper (Mapper):
         tuples = cursor.fetchall()
 
         try:
-            (project_id, name, client, project_term) = tuples[0]
-            project = Project()
+            (project_id, project_name, client, project_term) = tuples[0]
+            project = p.Project()
             project.set_id(project_id)
-            project.set_project_name(name)
+            project.set_project_name(project_name)
             project.set_client(client)
-            project.set_project_term(project_term)
+            project.set_project_term_id(project_term)
 
             result = project
         except IndexError:
@@ -55,7 +55,7 @@ class ProjectMapper (Mapper):
         tuples = cursor.fetchall()
 
         for (project_id, last_edit, project_name, client, project_term_id) in tuples:
-            project = Project()
+            project = p.Project()
             project.set_id(project_id)
             project.set_last_edit(last_edit)
             project.set_project_name(project_name)
@@ -74,33 +74,42 @@ class ProjectMapper (Mapper):
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            if maxid[0] in tuples is not None:  # Die Liste beinhaltet min. ein Projekt -> die Id ist somit n+1
+            if maxid[0] is not None:
+                """Wenn wir eine maximale ID festellen konnten, zählen wir diese
+                um 1 hoch und weisen diesen Wert als ID dem Project-Objekt zu."""
                 object.set_id(maxid[0] + 1)
-            else:  # Die Liste ist leer, somit wird dem neuen Projekt die Id "1" zugewiesen
+            else:
+                """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
+                davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 object.set_id(1)
 
-        command = "INSERT INTO project (id, last_edit, name, client, project_term_id) VALUES (%s,%s,%s,%a,%s)"
-        data = (object.get_id(), object.get_last_edit(), in_project.get_project_name(), in_project.get_client(), in_project.get_project_term())
+        command = "INSERT INTO project (project_id, last_edit, project_name, client, project_term_id)" \
+                  " VALUES (%s,%s,%s,%s,%s)"
+        data = (object.get_id(),
+                object.get_last_edit(),
+                object.get_project_name(),
+                object.get_client(),
+                object.get_project_term_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
         return object
 
-    def delete(self, in_project):  # Projekt, welches gelöscht werden soll wird übergeben
+    def delete(self, project):  # Projekt, welches gelöscht werden soll wird übergeben
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM project WHERE project_id={}".format(in_project.get_id())
+        command = "DELETE FROM project WHERE project_id={}".format(project.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
         cursor.close()
 
-    def update(self, in_project):  # Projekt, welches geupdatet werden soll wird übergeben
+    def update(self, project):  # Projekt, welches geupdatet werden soll wird übergeben
         cursor = self._cnx.cursor()
 
-        command = "UPDATE project " + "SET project_name=%s, client=%s, project_term_id WHERE project_id=%s"
-        data = (in_project.get_project_name(), in_project.get_email(), in_project.get_project_term(), in_project.get_id())
+        command = "UPDATE project " + "SET project_id=%s, last_edit=%s, project_name=%s, client=%s, project_term_id=%s WHERE project_id=%s"
+        data = (project.get_id(), project.get_last_edit(), project.get_project_name(), project.get_client(), project.get_project_term_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

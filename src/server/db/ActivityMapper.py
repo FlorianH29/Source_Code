@@ -21,19 +21,19 @@ class ActivityMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT activity_id, last_edit, name, capacity, affiliated_project FROM activity " \
+        command = "SELECT activity_id, last_edit, name, capacity, affiliated_project_id FROM activity " \
                   "WHERE activity_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (activity_id, last_edit, name, capacity, affiliated_project) = tuples[0]
+            (activity_id, last_edit, name, capacity, affiliated_project_id) = tuples[0]
             activity = Activity()
             activity.set_id(activity_id)
             activity.set_last_edit(last_edit)
             activity.set_name(name)
             activity.set_capacity(capacity)
-            activity.set_affiliated_project(affiliated_project)
+            activity.set_affiliated_project(affiliated_project_id)
 
             result = activity
         except IndexError:
@@ -56,13 +56,13 @@ class ActivityMapper (Mapper):
         cursor.execute("SELECT * from activity")
         tuples = cursor.fetchall()
 
-        for (activity_id, last_edit, name, capacity, affiliated_project) in tuples:
+        for (activity_id, last_edit, name, capacity, affiliated_project_id) in tuples:
             activity = Activity()
             activity.set_id(activity_id)
             activity.set_last_edit(last_edit)
             activity.set_name(name)
             activity.set_capacity(capacity)
-            activity.set_affiliated_project(affiliated_project)
+            activity.set_affiliated_project(affiliated_project_id)
             result.append(activity)
 
         self._cnx.commit()
@@ -86,14 +86,14 @@ class ActivityMapper (Mapper):
         for (maxid) in tuples:
             if maxid[0] is not None:
                 """Wenn wir eine maximale ID festellen konnten, zählen wir diese
-                um 1 hoch und weisen diesen Wert als ID dem User-Objekt zu."""
+                um 1 hoch und weisen diesen Wert als ID dem Activity-Objekt zu."""
                 activity.set_id(maxid[0] + 1)
             else:
                 """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 activity.set_id(1)
 
-        command = "INSERT INTO activity (activity_id, last_edit, name, capacity, affiliated_project)" \
+        command = "INSERT INTO activity (activity_id, last_edit, name, capacity, affiliated_project_id)" \
                   " VALUES (%s,%s,%s,%s,%s)"
         data = (activity.get_id(), activity.get_last_edit(), activity.get_name(), activity.get_capacity(),
                 activity.get_affiliated_project())
@@ -112,7 +112,7 @@ class ActivityMapper (Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE activity " + "SET activity_id=%s, last_edit=%s, name=%s, capacity=%s, " \
-                                       "affiliated_project=%s WHERE activity_id=%s"
+                                       "affiliated_project_id=%s WHERE activity_id=%s"
         data = (activity.get_id(), activity.get_last_edit(), activity.get_name(), activity.get_capacity(),
                 activity.get_affiliated_project())
         cursor.execute(command, data)

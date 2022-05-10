@@ -1,4 +1,4 @@
-from server.bo.TimeInterval import TimeInterval
+from server.bo import TimeInterval as ti
 from server.db.Mapper import Mapper
 
 
@@ -12,9 +12,9 @@ class TimeIntervalMapper(Mapper):
         cursor.execute("SELECT * from timeinterval")
         tuples = cursor.fetchall()
 
-        for (time_interval_id, last_edit, start_time, end_time, time_interval) in tuples:
-            time_interval = TimeInterval()
-            time_interval.set_id(time_interval_id)
+        for (timeinterval_id, last_edit, start_time, end_time, time_interval) in tuples:
+            time_interval = ti.TimeInterval()
+            time_interval.set_id(timeinterval_id)
             time_interval.set_last_edit(last_edit)
             time_interval.set_start_time(start_time)
             time_interval.set_end_time(end_time)
@@ -31,15 +31,15 @@ class TimeIntervalMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT time_interval_id, last_edit, start_time, end_time, time_interval FROM timenterval " \
+        command = "SELECT timeinterval_id, last_edit, start_time, end_time, time_interval FROM timenterval " \
                   "WHERE time_interval_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (time_interval_id, last_edit, start_time, end_time, time_interval) = tuples[0]
-            time_interval = TimeInterval()
-            time_interval.set_id(time_interval_id)
+            (timeinterval_id, last_edit, start_time, end_time, time_interval) = tuples[0]
+            time_interval = ti.TimeInterval()
+            time_interval.set_id(timeinterval_id)
             time_interval.set_last_edit(last_edit)
             time_interval.set_start_time(start_time)
             time_interval.set_end_time(end_time)
@@ -59,16 +59,20 @@ class TimeIntervalMapper(Mapper):
     def insert(self, time_interval):
 
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(time_interval_id) AS maxid FROM timeinterval ")
+        cursor.execute("SELECT MAX(timeinterval_id) AS maxid FROM timeinterval ")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            if maxid[0] in tuples is not None:  # Die Liste beinhaltet min. ein Projekt -> die Id ist somit n+1
+            if maxid[0] is not None:
+                """Wenn wir eine maximale ID festellen konnten, zählen wir diese
+                um 1 hoch und weisen diesen Wert als ID dem TimeInterval-Objekt zu."""
                 time_interval.set_id(maxid[0] + 1)
-            else:  # Die Liste ist leer, somit wird dem neuen Projekt die Id "1" zugewiesen
+            else:
+                """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
+                davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 time_interval.set_id(1)
 
-        command = "INSERT INTO timeinterval (time_interval_id, last_edit, start_time, end_time, time_interval)" \
+        command = "INSERT INTO timeinterval (timeinterval_id, last_edit, start_time, end_time, time_interval)" \
                   " VALUES (%s,%s,%s,%s,%s)"
         data = (time_interval.get_id(),
                 time_interval.get_last_edit(),
@@ -86,7 +90,7 @@ class TimeIntervalMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "UPDATE timeinterval " + "SET time_interval_id=%s, last_edit=%s, start_time=%s, end_time=%s, " \
+        command = "UPDATE timeinterval " + "SET timeinterval_id=%s, last_edit=%s, start_time=%s, end_time=%s, " \
                                            "time_interval=%s, WHERE time_interval_id=%s"
         data = (time_interval.get_id(), time_interval.get_last_edit(), time_interval.get_start_time(),
                 time_interval.get_end_time(), time_interval.get_time_interval())
@@ -100,7 +104,7 @@ class TimeIntervalMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM timeinterval WHERE time_interval_id={}".format(time_interval.get_id())
+        command = "DELETE FROM timeinterval WHERE timeinterval_id={}".format(time_interval.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

@@ -78,10 +78,8 @@ class PersonMapper(Mapper):
 
     def insert(self, employee):
         """Einfügen eines Person-Objekts in die Datenbank.
-
         Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
         berichtigt.
-
         :param employee das zu speichernde Objekt
         :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
         """
@@ -92,7 +90,7 @@ class PersonMapper(Mapper):
         for (maxid) in tuples:
             if maxid[0] is not None:
                 """Wenn wir eine maximale ID festellen konnten, zählen wir diese
-                um 1 hoch und weisen diesen Wert als ID dem User-Objekt zu."""
+                um 1 hoch und weisen diesen Wert als ID dem Person-Objekt zu."""
                 employee.set_id(maxid[0] + 1)
             else:
                 """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir

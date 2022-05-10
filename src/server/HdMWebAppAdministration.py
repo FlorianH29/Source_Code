@@ -33,6 +33,11 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             return mapper.find_by_key(number)
 
+    def get_all_persons (self):
+        """Alle in der Datenbank gespeicherten Personen auslesen."""
+        with PersonMapper() as mapper:
+            return mapper.find_all()
+
     def create_person(self, person_id, last_edit, firstname, lastname, username, mailaddress,  firebase_id):
         person = Person()
         person.set_id(person_id)
@@ -58,7 +63,7 @@ class HdMWebAppAdministration(object):
 
     """Methoden für Start:"""
 
-    def create_start(self, start_id, last_edit, time_stamp):
+    def create_start_event(self, start_id, last_edit, time_stamp):
         """Start-Ereignis anlegen"""
         start = Start()
         start.set_id(start_id)
@@ -68,13 +73,13 @@ class HdMWebAppAdministration(object):
         with StartMapper() as mapper:
             return mapper.insert(start)
 
-    def delete_start(self, start):
+    def delete_start_event(self, start):
         """Die gegebene Person aus unserem System löschen."""
 
         with StartMapper() as mapper:
             mapper.delete(start)
 
-    def save_start(self, start):
+    def save_start_event(self, start):
         """Eine End-Ereignis-Instanz speichern."""
         with StartMapper() as mapper:
             mapper.update(start)
@@ -91,7 +96,7 @@ class HdMWebAppAdministration(object):
 
     """Methoden für End:"""
 
-    def create_end(self, end_id, last_edit, time_stamp):
+    def create_end_event(self, end_id, last_edit, time_stamp):
         """End-Ereignis anlegen"""
         end = End()
         end.set_id(end_id)
@@ -101,12 +106,12 @@ class HdMWebAppAdministration(object):
         with EndMapper() as mapper:
             return mapper.insert(end)
 
-    def delete_end(self, end):
+    def delete_end_event(self, end):
         """Das gegebene End-Ereignis aus unserem System löschen."""
         with EndMapper() as mapper:
             mapper.delete(end)
 
-    def save_end(self, end):
+    def save_end_event(self, end):
         """Eine End-Ereignis-Instanz speichern."""
         with EndMapper() as mapper:
             mapper.update(end)
@@ -118,7 +123,7 @@ class HdMWebAppAdministration(object):
 
     def get_all_end_events(self):
         """Alle in der Datenbank gespeicherten End-Ereignisse auslesen."""
-        with StartMapper() as mapper:
+        with EndMapper() as mapper:
             return mapper.find_all()
 
     """Methoden für Aktivität:"""
@@ -288,13 +293,13 @@ class HdMWebAppAdministration(object):
         with ProjectMapper() as mapper:
             return mapper.insert(project)
 
-    def delete_project(self):
+    def delete_project(self, project):
         with ProjectMapper() as mapper:
-            return mapper.delete()
+            return mapper.delete(project)
 
-    def save_project(self):
+    def save_project(self, project):
         with ProjectMapper() as mapper:
-            return mapper.update()
+            return mapper.update(project)
 
     """ProjectWork Methoden"""
     def get_projectwork_by_id(self, number):
@@ -311,29 +316,29 @@ class HdMWebAppAdministration(object):
         project_work = ProjectWork()
         project_work.set_id(project_work)
         project_work.set_last_edit(last_edit)
-        project_work.set_projekt_work_name(project_work_name)
+        project_work.set_project_work_name(project_work_name)
         project_work.set_description(description)
 
         with ProjectWorkMapper() as mapper:
             return mapper.insert(project_work)
 
-    def delete_project_work(self):
+    def delete_project_work(self, project_work):
         with ProjectWorkMapper() as mapper:
-            return mapper.delete()
+            return mapper.delete(project_work)
 
-    def save_project_work(self):
+    def save_project_work(self, project_work):
         with ProjectWorkMapper() as mapper:
-            return mapper.update()
+            return mapper.update(project_work)
 
 
 
     """Methoden von TimeInterval"""
 
 
-    """Zeit Interval konto anlegen"""
-    def create_time_interval(self, time_interval_id, last_edit, start_time, end_time, time_interval):
+    """ZeitIntervalkonto anlegen"""
+    def create_time_interval(self, timeinterval_id, last_edit, start_time, end_time, time_interval):
         interval = TimeInterval()
-        interval.set_id(time_interval_id)
+        interval.set_id(timeinterval_id)
         interval.set_last_edit(last_edit)
         interval.set_start_time(start_time)
         interval.set_end_time(end_time)
