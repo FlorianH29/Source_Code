@@ -3,7 +3,6 @@ from .bo.End import End
 from .bo.Person import Person
 from .bo.Activity import Activity
 from .bo.TimeInterval import TimeInterval
-from .db import TimeIntervalMapper
 from .db.PersonMapper import PersonMapper
 from .db.StartMapper import StartMapper
 from .db.EndMapper import EndMapper
@@ -16,7 +15,7 @@ from .bo.WorkTimeAccount import WorkTimeAccount
 from .db.WorkTimeAccountMapper import WorkTimeAccountMapper
 from .db.ProjectMapper import ProjectMapper
 from .db.ProjectWorkMapper import ProjectWorkMapper
-from.db.TimeIntervalMapper import  TimeIntervalMapper
+from .db.TimeIntervalMapper import  TimeIntervalMapper
 
 
 

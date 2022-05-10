@@ -1,8 +1,8 @@
-from server.bo import Event as e
+from server.bo import Event as ev
 import datetime
 
 
-class End (e.Event):
+class End (ev.Event):
 
     def __init__(self):
         super().__init__()
