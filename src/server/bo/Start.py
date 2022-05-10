@@ -3,15 +3,13 @@ import datetime
 
 
 class Start (ev.Event):
-    """Realisierung einer exemplarischen Event-Startklasse.
-    """
 
     def __init__(self):
         super().__init__()
         self.__time_stamp = datetime.datetime.now()  # Der Zeitpunkt des Eintretens des Ereignisses
 
     def get_time_stamp(self):
-        """Auslesen des Zeitpunktes."""
+        """Auslesen des Zeitpunktes (inklusive Datum)."""
         return self.__time_stamp
 
     def set_time_stamp(self, value: datetime) -> datetime:

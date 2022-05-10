@@ -4,10 +4,6 @@ from abc import ABC, abstractmethod
 
 
 class Event(bo.BusinessObject, ABC):
-    """ Realisierung einer examplarischen Ereignis Klasse.
-
-    Jedes Ereignis verfügt über einen Zeitpunkt, an dem es eingetreten ist und einen Namen.
-    """
 
     def __init__(self):
         super().__init__()

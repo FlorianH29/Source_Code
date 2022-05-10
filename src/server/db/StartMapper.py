@@ -3,23 +3,19 @@ from server.db.Mapper import Mapper
 
 
 class StartMapper (Mapper):
-    """Mapper-Klasse, die Ereignis-Objekte auf eine relationale
-    Datenbank abbildet. Hierzu wird eine Reihe von Methoden zur Verfügung
-    gestellt, mit deren Hilfe z.B. Objekte gesucht, erzeugt, modifiziert und
-    gelöscht werden können. Das Mapping ist bidirektional. D.h., Objekte können
-    in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
+    """Mapper-Klasse, die Start-Ereignis-Objekte auf eine relationale Datenbank abbildet.
+    Dazu mehrere Methoden, mit deren Hilfe Objekte gesucht, erzeugt, modifiziert und gelöscht werden können.
+    Ist bidirektional, Objekte können in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
     """
 
     def __init__(self):
         super().__init__()
 
     def find_by_key(self, key):
-        """Suchen eines Ereignisses mit vorgegebener Ereignis ID. Da diese eindeutig ist,
-        wird genau ein Objekt zurückgegeben.
+        """Suchen eines Start-Ereignisses mit vorgegebener Ereignis ID. Rückgabe von genau einem Objekt.
 
-        :param key Primärschlüsselattribut (->DB)
-        :return User-Objekt, das dem übergebenen Schlüssel entspricht, None bei
-            nicht vorhandenem DB-Tupel.
+        :param key: Primärschlüsselattribut (->DB)
+        :return Start-Ereignis-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
         """
 
         result = None
@@ -50,7 +46,7 @@ class StartMapper (Mapper):
     def find_all(self):
         """Auslesen aller Start-Ereignisse.
 
-        :return Eine Sammlung mit Start-Ereignis-Objekten, die sämtliche Ereignisse repräsentieren.
+        :return Sammlung mit Start-Ereignis-Objekten, die sämtliche Start-Ereignisse repräsentieren.
         """
         result = []
         cursor = self._cnx.cursor()
@@ -75,7 +71,7 @@ class StartMapper (Mapper):
         Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
         berichtigt.
 
-        :param event: das zu speichernde Objekt
+        :param start: das zu speichernde Objekt
         :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
         """
         cursor = self._cnx.cursor()
@@ -106,7 +102,6 @@ class StartMapper (Mapper):
     def update(self, start):
         """Wiederholtes Schreiben eines Objekts in die Datenbank.
 
-        :param start:
         :param start das Objekt, das in die DB geschrieben werden soll
         """
         cursor = self._cnx.cursor()
@@ -119,9 +114,9 @@ class StartMapper (Mapper):
         cursor.close()
 
     def delete(self, start):
-        """Löschen der Daten eines Ereignis-Objekts aus der Datenbank.
+        """Löschen der Daten eines Start-Ereignis-Objekts aus der Datenbank.
 
-        :param event das aus der DB zu löschende "Objekt"
+        :param start: das aus der DB zu löschende "Objekt"
         """
         cursor = self._cnx.cursor()
 
