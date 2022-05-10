@@ -25,7 +25,7 @@ class ProjectWorkMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, name, description, activityid FROM projektarbeit WHERE id={}".format(key)
+        command = "SELECT id, name, description, activityid FROM project_work WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -70,7 +70,7 @@ class ProjectWorkMapper (Mapper):
 
     def insert(self, object):
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(id) AS maxid FROM accounts ")
+        cursor.execute("SELECT MAX(id) AS maxid FROM project_work ")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:

@@ -25,7 +25,7 @@ class ProjectMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, name, client, project_term_id FROM Projekt WHERE id={}".format(key)
+        command = "SELECT id, name, client, project_term_id FROM project WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -70,7 +70,7 @@ class ProjectMapper (Mapper):
 
     def insert(self, object):
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(id) AS maxid FROM accounts ")
+        cursor.execute("SELECT MAX(id) AS maxid FROM project ")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
@@ -79,7 +79,7 @@ class ProjectMapper (Mapper):
             else:  # Die Liste ist leer, somit wird dem neuen Projekt die Id "1" zugewiesen
                 Project.set_id(1)
 
-        command = "INSERT INTO accounts (id, last_edit, name, client, project_term_id) VALUES (%s,%s,%s,%a,%s)"
+        command = "INSERT INTO project (id, last_edit, name, client, project_term_id) VALUES (%s,%s,%s,%a,%s)"
         data = (Project.get_id(), Project.get_last_edit(), Project.get_name(), Project.get_client(), Project.get_project_term())
         cursor.execute(command, data)
 
