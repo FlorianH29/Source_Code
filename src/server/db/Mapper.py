@@ -55,3 +55,15 @@ class Mapper (AbstractContextManager, ABC):
     def find_all(self):
         """Lies alle Tupel aus und gib sie als Objekte zurück."""
         pass
+
+    @abstractmethod
+    def insert(self, object):
+        pass
+
+    @abstractmethod
+    def update(self, object):
+        pass
+
+    @abstractmethod
+    def delete(self, object):
+        pass

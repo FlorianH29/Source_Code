@@ -3,23 +3,19 @@ from server.db.Mapper import Mapper
 
 
 class EndMapper (Mapper):
-    """Mapper-Klasse, die Ereignis-Objekte auf eine relationale
-    Datenbank abbildet. Hierzu wird eine Reihe von Methoden zur Verfügung
-    gestellt, mit deren Hilfe z.B. Objekte gesucht, erzeugt, modifiziert und
-    gelöscht werden können. Das Mapping ist bidirektional. D.h., Objekte können
-    in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
+    """Mapper-Klasse, die End-Ereignis-Objekte auf eine relationale Datenbank abbildet.
+    Dazu mehrere Methoden, mit deren Hilfe Objekte gesucht, erzeugt, modifiziert und gelöscht werden können.
+    Ist bidirektional, Objekte können in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
     """
 
     def __init__(self):
         super().__init__()
 
     def find_by_key(self, key):
-        """Suchen eines Ereignisses mit vorgegebener Ereignis ID. Da diese eindeutig ist,
-        wird genau ein Objekt zurückgegeben.
+        """Suchen eines End-Ereignisses mit vorgegebener Ereignis ID. Rückgabe von genau einem Objekt.
 
         :param key Primärschlüsselattribut (->DB)
-        :return User-Objekt, das dem übergebenen Schlüssel entspricht, None bei
-            nicht vorhandenem DB-Tupel.
+        :return End-Ereignis-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
         """
 
         result = None
@@ -48,9 +44,9 @@ class EndMapper (Mapper):
         return result
 
     def find_all(self):
-        """Auslesen aller Start-Ereignisse.
+        """Auslesen aller End-Ereignisse.
 
-        :return Eine Sammlung mit Start-Ereignis-Objekten, die sämtliche Ereignisse repräsentieren.
+        :return  Sammlung mit End-Ereignis-Objekten, die sämtliche End-Ereignisse repräsentieren.
         """
         result = []
         cursor = self._cnx.cursor()
@@ -70,12 +66,11 @@ class EndMapper (Mapper):
         return result
 
     def insert(self, end):
-        """Einfügen eines Ereignis-Objekts in die Datenbank.
+        """Einfügen eines End-Ereignis-Objekts in die Datenbank.
 
-        Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
-        berichtigt.
+        Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf. berichtigt.
 
-        :param event: das zu speichernde Objekt
+        :param end: das zu speichernde Objekt
         :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
         """
         cursor = self._cnx.cursor()
@@ -106,8 +101,8 @@ class EndMapper (Mapper):
     def update(self, end):
         """Wiederholtes Schreiben eines Objekts in die Datenbank.
 
-        :param end:
-        :param start das Objekt, das in die DB geschrieben werden soll
+        :param end
+        :param end das Objekt, das in die DB geschrieben werden soll
         """
         cursor = self._cnx.cursor()
 
@@ -121,7 +116,7 @@ class EndMapper (Mapper):
     def delete(self, end):
         """Löschen der Daten eines Ereignis-Objekts aus der Datenbank.
 
-        :param event das aus der DB zu löschende "Objekt"
+        :param end das aus der DB zu löschende "Objekt"
         """
         cursor = self._cnx.cursor()
 

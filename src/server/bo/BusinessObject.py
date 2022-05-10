@@ -18,6 +18,7 @@ class BusinessObject(ABC):
         self._last_edit = value
 
     def get_last_edit(self):
+        """Auslesen des letzten Bearbeitungszeitpunkts"""
         return self._last_edit
 
     def get_id(self):
@@ -27,3 +28,4 @@ class BusinessObject(ABC):
     def set_id(self, value):
         """Setzen der ID."""
         self._id = value
+
