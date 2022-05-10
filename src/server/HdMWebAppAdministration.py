@@ -274,7 +274,7 @@ class HdMWebAppAdministration(object):
         with ProjectMapper() as mapper:
             return mapper.find_all()
 
-    def insert_project(self):
+    def create_project(self, id, last_edit, project_name, client, project_term_id):
         with ProjectMapper() as mapper:
             return mapper.insert()
 
@@ -282,7 +282,7 @@ class HdMWebAppAdministration(object):
         with ProjectMapper() as mapper:
             return mapper.delete()
 
-    def update_project(self):
+    def save_project(self):
         with ProjectMapper() as mapper:
             return mapper.update()
 
@@ -296,7 +296,7 @@ class HdMWebAppAdministration(object):
         with ProjectWorkMapper() as mapper:
             return mapper.find_all()
 
-    def insert_project_work(self):
+    def create_project_work(self, id, last_edit, project_work_name, description):
         with ProjectWorkMapper() as mapper:
             return mapper.insert()
 
@@ -304,7 +304,7 @@ class HdMWebAppAdministration(object):
         with ProjectWorkMapper() as mapper:
             return mapper.delete()
 
-    def update_project_work(self):
+    def save_project_work(self):
         with ProjectWorkMapper() as mapper:
             return mapper.update()
 

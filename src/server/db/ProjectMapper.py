@@ -25,7 +25,7 @@ class ProjectMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT project_id, name, client, project_term_id FROM project WHERE project_id={}".format(key)
+        command = "SELECT project_id, project_name, client, project_term_id FROM project WHERE project_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -33,7 +33,7 @@ class ProjectMapper (Mapper):
             (project_id, name, client, project_term) = tuples[0]
             project = Project()
             project.set_id(project_id)
-            project.set_name(name)
+            project.set_project_name(name)
             project.set_client(client)
             project.set_project_term(project_term)
 
@@ -51,14 +51,14 @@ class ProjectMapper (Mapper):
     def find_all(self):
         all_projects = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT project_id, last_edit, name, client, project_term_id FROM project")
+        cursor.execute("SELECT project_id, last_edit, project_name, client, project_term_id FROM project")
         tuples = cursor.fetchall()
 
-        for (project_id, last_edit, name, client, project_term_id) in tuples:
+        for (project_id, last_edit, project_name, client, project_term_id) in tuples:
             project = Project()
             project.set_id(project_id)
             project.set_last_edit(last_edit)
-            project.set_name(name)
+            project.set_project_name(project_name)
             project.set_client(client)
             project.set_project_term_id(project_term_id)  # muss hier das time_interval via get übergeben werden?
             all_projects.append(project)
@@ -79,8 +79,8 @@ class ProjectMapper (Mapper):
             else:  # Die Liste ist leer, somit wird dem neuen Projekt die Id "1" zugewiesen
                 object.set_id(1)
 
-        command = "INSERT INTO project (project_id, last_edit, name, client, project_term_id) VALUES (%s,%s,%s,%a,%s)"
-        data = (object.get_id(), object.get_last_edit(), object.get_name(), object.get_client(), object.get_project_term())
+        command = "INSERT INTO project (id, last_edit, name, client, project_term_id) VALUES (%s,%s,%s,%a,%s)"
+        data = (object.get_id(), object.get_last_edit(), in_project.get_project_name(), in_project.get_client(), in_project.get_project_term())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -99,8 +99,8 @@ class ProjectMapper (Mapper):
     def update(self, in_project):  # Projekt, welches geupdatet werden soll wird übergeben
         cursor = self._cnx.cursor()
 
-        command = "UPDATE project " + "SET name=%s, client=%s, project_term_id WHERE project_id=%s"
-        data = (in_project.get_name(), in_project.get_email(), in_project.get_project_term(), in_project.get_id())
+        command = "UPDATE project " + "SET project_name=%s, client=%s, project_term_id WHERE project_id=%s"
+        data = (in_project.get_project_name(), in_project.get_email(), in_project.get_project_term(), in_project.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
