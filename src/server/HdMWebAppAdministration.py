@@ -45,6 +45,11 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             mapper.delete(person)
 
+    def save_person(self, person):
+        """Die gegebene Person speichern."""
+        with PersonMapper() as mapper:
+            mapper.update(person)
+
     """Methoden für Start:"""
 
     def create_start(self, id, last_edit, time_stamp):
