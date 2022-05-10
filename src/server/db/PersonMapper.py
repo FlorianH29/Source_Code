@@ -86,15 +86,27 @@ class PersonMapper(Mapper):
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            employee.set_id(maxid[0] + 1)
+            if maxid[0] is not None:
+                """Wenn wir eine maximale ID festellen konnten, zählen wir diese
+                um 1 hoch und weisen diesen Wert als ID dem User-Objekt zu."""
+                employee.set_id(maxid[0] + 1)
+            else:
+                """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
+                davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
+                employee.set_id(1)
 
         """
         INSERT-Befehl um ein Personen Objekt in die Datenbank zu schreiben
         FRAGE: ob die externe Personen ID hier dazukommt noch klären!
         """
-        command = "INSERT INTO Person (id, firstName, lastName, username, mailadress, person_id) VALUES (%s,%s,%s,%s,%s,%s,%s)"
-        data = (employee.get_id(), employee.get_first_name(), employee.get_last_name(), employee.get_username,
-                employee.get_mailaddress, employee.get_person_id)
+        command = "INSERT INTO Person (id, last_edit, firstname, lastname, username, mailaddress, person_id) VALUES (%s,%s,%s,%s,%s,%s,%s)"
+        data = (employee.get_id(),
+                employee.get_last_edit(),
+                employee.get_firstname(),
+                employee.get_lastname(),
+                employee.get_username(),
+                employee.get_mailaddress(),
+                employee.get_person_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -130,3 +142,10 @@ class PersonMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
+
+
+"""if (__name__ == "__main__"):
+    with PersonMapper() as mapper:
+        result = mapper.find_all()
+        for t in result:
+            print(t)"""

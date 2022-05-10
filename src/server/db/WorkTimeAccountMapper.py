@@ -91,7 +91,10 @@ class WorkTimeAccountMapper (Mapper):
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            work_time_account.set_id(maxid[0]+1)
+            if maxid[0] in tuples is not None:  # Die Liste beinhaltet min. ein Projekt -> die Id ist somit n+1
+                work_time_account.set_id(maxid[0] + 1)
+            else:  # Die Liste ist leer, somit wird dem neuen Projekt die Id "1" zugewiesen
+                work_time_account.set_id(1)
 
         command = "INSERT INTO Worktimeaccount (id, last_edit, user_id) VALUES (%s,%s,%s)" #%s als Platzhalter und gibt einen formatierten string zurück
         data = (work_time_account.get_id(), work_time_account.get_last_edit(), work_time_account.get_owner())

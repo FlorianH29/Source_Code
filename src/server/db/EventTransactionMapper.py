@@ -106,7 +106,14 @@ class EventTransactionMapper (Mapper):
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            event_transaction.set_id(maxid[0] + 1)
+            if maxid[0] is not None:
+                """Wenn wir eine maximale ID festellen konnten, zählen wir diese
+                um 1 hoch und weisen diesen Wert als ID dem User-Objekt zu."""
+                event_transaction.set_id(maxid[0] + 1)
+            else:
+                """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
+                davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
+                event_transaction.set_id(1)
 
         command = "INSERT INTO Eventtransaction (id, last_edit, affiliated_work_time_account_id, event) VALUES (%s,%s,%s,%s)"
         data = (event_transaction.get_id(),
@@ -151,8 +158,8 @@ class EventTransactionMapper (Mapper):
         cursor.close()
 
 
-if (__name__ == "__main__"):
+"""if (__name__ == "__main__"):
     with EventTransactionMapper() as mapper:
         result = mapper.find_all()
         for t in result:
-            print(t)
+            print(t)"""
