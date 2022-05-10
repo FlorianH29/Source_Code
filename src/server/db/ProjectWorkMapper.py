@@ -25,17 +25,17 @@ class ProjectWorkMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, name, description, activityid FROM project_work WHERE id={}".format(key)
+        command = "SELECT id, last_edit, project_work_name, description, activityid FROM project_work WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, name, description, activityid) = tuples[0]
+            (id, last_edit, project_work_name, description) = tuples[0]
             project_work = ProjectWork()
             project_work.set_id(id)
-            project_work.set_name(name)
+            project_work.set_last_edit(last_edit)
+            project_work.set_project_work_name(project_work_name)
             project_work.set_description(description)
-            project_work.set_affiliated_activity(activityid)
 
             result = project_work
         except IndexError:
@@ -52,14 +52,14 @@ class ProjectWorkMapper (Mapper):
     def find_all(self):
         all_project_works = []  # Liste mit allen "project_works
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, last_edit, name, description FROM project_work")
+        cursor.execute("SELECT id, last_edit, project_work_name, description FROM project_work")
         tuples = cursor.fetchall()
 
-        for (id, last_edit, name, description) in tuples:
+        for (id, last_edit, project_work_name, description) in tuples:
             project_work = ProjectWork()
             project_work.set_id(id)
             project_work.set_last_edit(last_edit)
-            project_work.set_name(name)
+            project_work.set_project_work_name(project_work_name)
             project_work.set_description(description)
             all_project_works.append(project_work)
 
@@ -68,24 +68,24 @@ class ProjectWorkMapper (Mapper):
 
         return all_project_works
 
-    def insert(self, object):
+    def insert(self, in_ProjectWork):
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM project_work ")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            if maxid[0] in tuples is not None:  # Die Liste beinhaltet min. ein Projekt -> die Id ist somit n+1
-                ProjectWork.set_id(maxid[0] + 1)
-            else:  # Die Liste ist leer, somit wird dem neuen Projekt die Id "1" zugewiesen
-                ProjectWork.set_id(1)
+            if maxid[0] in tuples is not None:  # Die Liste beinhaltet min. ein ProjektWork -> die Id ist somit n+1
+                in_ProjectWork.set_id(maxid[0] + 1)
+            else:  # Die Liste ist leer, somit wird dem neuen ProjektWork die Id "1" zugewiesen
+                in_ProjectWork.set_id(1)
 
-        command = "INSERT INTO project_work (id, last_edit, name, description) VALUES (%s,%s,%s,%s)"
-        data = (ProjectWork.get_id(), ProjectWork.get_last_edit(), ProjectWork.get_name(), ProjectWork.get_description())
+        command = "INSERT INTO project_work (id, last_edit, project_work_name, description) VALUES (%s,%s,%s,%s)"
+        data = (in_ProjectWork.get_id(), in_ProjectWork.get_last_edit(), in_ProjectWork.get_project_work_name(), in_ProjectWork.get_description())
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
-        return ProjectWork
+        return in_ProjectWork
 
     def delete(self, in_project_work): # Projekt, welches gelöscht werden soll wird übergeben
         cursor = self._cnx.cursor()
@@ -99,8 +99,8 @@ class ProjectWorkMapper (Mapper):
     def update(self, in_project_work):  # Projekt, welches geupdatet werden soll wird übergeben
         cursor = self._cnx.cursor()
 
-        command = "UPDATE project_work " + "SET name=%s, description=%s WHERE project_work_id=%s"
-        data = (in_project_work.get_name(), in_project_work.get_description(), in_project_work.get_id())
+        command = "UPDATE project_work " + "SET project_work_name=%s, description=%s WHERE project_work_id=%s"
+        data = (in_project_work.get_project_work_name(), in_project_work.get_description(), in_project_work.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

@@ -25,15 +25,15 @@ class ProjectMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, name, client, project_term_id FROM project WHERE id={}".format(key)
+        command = "SELECT id, project_name, client, project_term_id FROM project WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, name, client, project_term) = tuples[0]
+            (id, project_name, client, project_term) = tuples[0]
             project = Project()
             project.set_id(id)
-            project.set_name(name)
+            project.set_project_name(project_name)
             project.set_client(client)
             project.set_project_term(project_term)
 
@@ -51,16 +51,16 @@ class ProjectMapper (Mapper):
     def find_all(self):
         all_projects = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, last_edit, name, client, project_term_id FROM project")
+        cursor.execute("SELECT id, last_edit, project_name, client, project_term_id FROM project")
         tuples = cursor.fetchall()
 
-        for (id, last_edit, name, client, project_term_id) in tuples:
+        for (id, last_edit, project_name, client, project_term_id) in tuples:
             project = Project()
             project.set_id(id)
             project.set_last_edit(last_edit)
-            project.set_name(name)
+            project.set_project_name(project_name)
             project.set_client(client)
-            project.set_project_term(get_time_interval_by_id(project_term_id))  # muss hier das time_interval via get übergeben werden?
+            project.set_project_term(project_term_id)  # muss hier das time_interval via get übergeben werden?
             all_projects.append(project)
 
         self._cnx.commit()
@@ -68,24 +68,24 @@ class ProjectMapper (Mapper):
 
         return all_projects
 
-    def insert(self, obj):
+    def insert(self, in_project):
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM project ")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
             if maxid[0] in tuples is not None:  # Die Liste beinhaltet min. ein Projekt -> die Id ist somit n+1
-                Project.set_id(maxid[0] + 1)
+                in_project.set_id(maxid[0] + 1)
             else:  # Die Liste ist leer, somit wird dem neuen Projekt die Id "1" zugewiesen
-                Project.set_id(1)
+                in_project.set_id(1)
 
         command = "INSERT INTO project (id, last_edit, name, client, project_term_id) VALUES (%s,%s,%s,%a,%s)"
-        data = (Project.get_id(), Project.get_last_edit(), Project.get_name(), Project.get_client(), Project.get_project_term())
+        data = (in_project.get_id(), in_project.get_last_edit(), in_project.get_project_name(), in_project.get_client(), in_project.get_project_term())
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
-        return Project
+        return in_project
 
     def delete(self, in_project):  # Projekt, welches gelöscht werden soll wird übergeben
         cursor = self._cnx.cursor()
@@ -99,8 +99,8 @@ class ProjectMapper (Mapper):
     def update(self, in_project):  # Projekt, welches geupdatet werden soll wird übergeben
         cursor = self._cnx.cursor()
 
-        command = "UPDATE project " + "SET name=%s, client=%s, project_term_id WHERE project_id=%s"
-        data = (in_project.get_name(), in_project.get_email(), in_project.get_project_term(), in_project.get_id())
+        command = "UPDATE project " + "SET project_name=%s, client=%s, project_term_id WHERE project_id=%s"
+        data = (in_project.get_project_name(), in_project.get_email(), in_project.get_project_term(), in_project.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
