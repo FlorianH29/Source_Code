@@ -7,32 +7,33 @@ class TimeInterval(bo.BusinessObject, ABC):
         super().__init__()
         """Start der Zeiterfassung"""
         self.__start_time = None
-        """Start der Zeiterfassung"""
+        """Ende der Zeiterfassung"""
         self.__end_time = None
+        """Arbeitszeit"""
         self.__time_interval = None
 
     def get_start_time(self):
-        """Auslesen vom start des Zeitstempels"""
+        """Auslesen vom start der Zeiterfassung"""
         return self.__start_time
 
     def set_start_time(self, start_time):
-        """Starten der Zeitmessung"""
+        """Starten der Zeiterfassung"""
         self.__start_time = start_time
 
     def get_end_time(self):
-        """Auslesen vom ende des Zeitstempels"""
+        """Auslesen vom ende der Zeiterfassung"""
         return self.__end_time
 
     def set_end_time(self, end_time):
-        """Beenden der Zeitmessung"""
+        """Beenden der der Zeiterfassung"""
         self.__end_time = end_time
 
     def get_time_interval(self):
-         """Auslesen vom ende des Zeitstempels"""
+         """Auslesen vov der Arbeitszeit"""
          return self.__time_interval
 
     def set_time_interval(self, time_interval):
-        """Beenden der Zeitmessung"""
+        """Beenden der Arbeitszeit"""
         self.__time_interval = time_interval
 
     def calculate_period(self):
