@@ -182,7 +182,7 @@ class HdMWebAppAdministration(object):
             mapper.delete(event_transaction)
 
     def create_event_transaction(self, id, last_edit, affiliated_work_time_account_id, event):
-        """Eine Buchung erstellen."""
+        """Eine EventTransaction erstellen."""
         t = EventTransaction()
         t.set_id(id)
         t.set_last_edit(last_edit)

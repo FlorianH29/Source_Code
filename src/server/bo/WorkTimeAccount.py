@@ -31,7 +31,8 @@ class WorkTimeAccount (bo.BusinessObject):
     und nicht an ihr Objekt gebunden ist also nicht vom Zustand des Objekts abhängig ist."""
     @staticmethod
     def from_dict(dictionary=dict()):
-        wta = WorkTimeAccount()
-        wta.set_id(dictionary["id"])
-        wta.set_owner(dictionary["owner"])
-        return wta
+        obj = WorkTimeAccount()
+        obj.set_id(dictionary["id"])
+        obj.set_last_edit(dictionary["last_edit"])
+        obj.set_owner(dictionary["owner"])
+        return obj
