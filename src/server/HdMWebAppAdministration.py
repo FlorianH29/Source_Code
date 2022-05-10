@@ -12,6 +12,7 @@ class HdMWebAppAdministration(object):
         pass
 
     """Methoden für Person:"""
+
     def get_person_by_id(self, number):
         """Den Benutzer mit der gegebenen ID auslesen."""
         with PersonMapper() as mapper:

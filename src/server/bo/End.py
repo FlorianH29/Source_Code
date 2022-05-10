@@ -3,8 +3,6 @@ import datetime
 
 
 class End (Event):
-    """Realisierung einer exemplarischen Event-Endklasse.
-    """
 
     def __init__(self):
         super().__init__()
