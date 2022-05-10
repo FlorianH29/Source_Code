@@ -79,7 +79,7 @@ class ProjectMapper (Mapper):
             else:  # Die Liste ist leer, somit wird dem neuen Projekt die Id "1" zugewiesen
                 in_project.set_id(1)
 
-        command = "INSERT INTO project (id, last_edit, name, client, project_term_id) VALUES (%s,%s,%s,%a,%s)"
+        command = "INSERT INTO project (id, last_edit, project_name, client, project_term_id) VALUES (%s,%s,%s,%a,%s)"
         data = (in_project.get_id(), in_project.get_last_edit(), in_project.get_project_name(), in_project.get_client(), in_project.get_project_term())
         cursor.execute(command, data)
 
