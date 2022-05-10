@@ -29,6 +29,7 @@ class Project (bo.BusinessObject):
 
 
     def __str__(self):
+        """Ausgabe von: id, name, client, project_term_id"""
         return "Project: \n  id: {} \n  name: {} \n  client: {} \n  project_term_id: {}".format(self.get_id(), self.get_name(), self.get_client(), self.get_project_term_id())
 
     @staticmethod
