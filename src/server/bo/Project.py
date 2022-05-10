@@ -27,14 +27,9 @@ class Project (bo.BusinessObject):
     def get_project_term_id(self):
         return self.__project_term_id
 
-    def set_last_edit(self, last_edit):
-        self.__last_edit = last_edit
-
-    def get_last_edit(self):
-        return self.__last_edit
 
     def __str__(self):
-        return "Project: \n  name: {}\n  client: {}\n  project_term: {}".format(self.get_name(), self.get_client(), self.get_project_term())
+        return "Project: \n  id: {} \n  name: {} \n  client: {} \n  project_term_id: {}".format(self.get_id(), self.get_name(), self.get_client(), self.get_project_term_id())
 
     @staticmethod
     def from_dict(dictionary=dict()):

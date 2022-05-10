@@ -21,7 +21,7 @@ class ProjectWork (bo.BusinessObject):
         return self.__description
 
     def __str__(self):
-        return "ProjectWork: \n  name: {}\n  client: {}\n  project_term: {}".format(self.get_name(), self.get_description(), self.get_affiliated_activity())
+        return "ProjectWork: \n  project_id: {}\n  last_edit: {} \n  name: {}\n  description: {}".format(self.get_id(), self.get_last_edit(), self.get_name(), self.get_description())
 
     @staticmethod
     def from_dict(dictionary=dict()):
@@ -31,4 +31,5 @@ class ProjectWork (bo.BusinessObject):
         projectwork.set_last_edit("last_edit")  # Set the last edit of the project work.
         projectwork.set_name(dictionary["name"])  # Sets the name from the dict as the name of the object.
         projectwork.set_description(dictionary["description"])  # Sets the description from the dict as the description of the object.
+        projectwork.set_
         return projectwork

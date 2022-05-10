@@ -68,7 +68,7 @@ class ProjectMapper (Mapper):
 
         return all_projects
 
-    def insert(self, object):
+    def insert(self, obj):
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM project ")
         tuples = cursor.fetchall()
