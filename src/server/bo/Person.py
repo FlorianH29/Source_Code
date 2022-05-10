@@ -70,6 +70,7 @@ class Person(bo.BusinessObject):
         obj.set_firstname(dictionary["firstname"])
         obj.set_lastname(dictionary["lastname"])
         obj.set_username(dictionary["username"])
+        obj.set_last_edit(dictionary["last_edit"])
         obj.set_mailaddress(dictionary["mailaddress"])
         obj.set_person_id(dictionary["person_id"])
         return obj
