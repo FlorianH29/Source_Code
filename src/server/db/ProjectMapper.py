@@ -60,7 +60,7 @@ class ProjectMapper (Mapper):
             project.set_last_edit(last_edit)
             project.set_name(name)
             project.set_client(client)
-            project.set_project_term(get_time_interval_by_id(project_term_id))  # muss hier das time_interval via get übergeben werden?
+            project.set_project_term_id(project_term_id)  # muss hier das time_interval via get übergeben werden?
             all_projects.append(project)
 
         self._cnx.commit()
@@ -75,17 +75,17 @@ class ProjectMapper (Mapper):
 
         for (maxid) in tuples:
             if maxid[0] in tuples is not None:  # Die Liste beinhaltet min. ein Projekt -> die Id ist somit n+1
-                Project.set_id(maxid[0] + 1)
+                object.set_id(maxid[0] + 1)
             else:  # Die Liste ist leer, somit wird dem neuen Projekt die Id "1" zugewiesen
-                Project.set_id(1)
+                object.set_id(1)
 
         command = "INSERT INTO project (id, last_edit, name, client, project_term_id) VALUES (%s,%s,%s,%a,%s)"
-        data = (Project.get_id(), Project.get_last_edit(), Project.get_name(), Project.get_client(), Project.get_project_term())
+        data = (object.get_id(), object.get_last_edit(), object.get_name(), object.get_client(), object.get_project_term())
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
-        return Project
+        return object
 
     def delete(self, in_project):  # Projekt, welches gelöscht werden soll wird übergeben
         cursor = self._cnx.cursor()

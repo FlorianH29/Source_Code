@@ -106,7 +106,10 @@ class TimeIntervalTransactionMapper (Mapper):
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            time_interval_transaction.set_id(maxid[0] + 1)
+            if maxid[0] in tuples is not None:  # Die Liste beinhaltet min. ein Projekt -> die Id ist somit n+1
+                time_interval_transaction.set_id(maxid[0] + 1)
+            else:  # Die Liste ist leer, somit wird dem neuen Projekt die Id "1" zugewiesen
+                time_interval_transaction.set_id(1)
 
         command = "INSERT INTO Timeintervaltransaction (id, last_edit, affiliated_work_time_account_id, time_interval) VALUES (%s,%s,%s,%s)"
         data = (time_interval_transaction.get_id(),

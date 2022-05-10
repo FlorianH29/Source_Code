@@ -62,7 +62,10 @@ class TimeIntervalMapper(Mapper):
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            time_interval.set_id(maxid[0] + 1)
+            if maxid[0] in tuples is not None:  # Die Liste beinhaltet min. ein Projekt -> die Id ist somit n+1
+                time_interval.set_id(maxid[0] + 1)
+            else:  # Die Liste ist leer, somit wird dem neuen Projekt die Id "1" zugewiesen
+                time_interval.set_id(1)
 
         command = "INSERT INTO TimeInterval (id, last_edit, start_time, end_time, time_interval) VALUES (%s,%s,%s,%s,%s)"
         data = (time_interval.get_id(),

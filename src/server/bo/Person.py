@@ -15,7 +15,7 @@ class Person(bo.BusinessObject):
         self.__lastname = ""  # Der Nachname des Benutzers.
         self.__username = ""  # Der Username des Benutzers.
         self.__mailaddress = ""  # Die E-Mail-Adresse des Benutzers.
-        self.__person_id = ""  # Die extern verwaltete Person ID.
+        self.__firebase_id = ""  # Die extern verwaltete Person ID.
 
     def get_firstname(self):
         """Auslesen des Vornamens."""
@@ -49,18 +49,18 @@ class Person(bo.BusinessObject):
         """Setzen der E-Mail-Adresse."""
         self.__mailaddress = value
 
-    def get_person_id(self):
+    def get_firebase_id(self):
         """Auslesen der externen User ID (z.B. Google ID)."""
-        return self.__person_id
+        return self.__firebase_id
 
-    def set_person_id(self, value):
+    def set_firebase_id(self, value):
         """Setzen der externen User ID (z.B. Google ID per Firebase)."""
-        self.__person_id = value
+        self.__firebase_id = value
 
     def __str__(self):
         """Erzeugen einer textuellen Darstellung der jeweiligen Instanz."""
-        return "Person: {}, {}, {}, {},{},{}".format(self.get_id(), self.__firstname, self.__lastname, self.__username,
-                                                     self.__mailaddress, self.__person_id)
+        return "Person: {}, {}, {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self.__firstname, self.__lastname, self.__username,
+                                                     self.__mailaddress, self.__firebase_id)
 
     @staticmethod
     def from_dict(dictionary=dict()):
@@ -72,5 +72,5 @@ class Person(bo.BusinessObject):
         obj.set_username(dictionary["username"])
         obj.set_last_edit(dictionary["last_edit"])
         obj.set_mailaddress(dictionary["mailaddress"])
-        obj.set_person_id(dictionary["person_id"])
+        obj.set_firebase_id(dictionary["firebase_id"])
         return obj

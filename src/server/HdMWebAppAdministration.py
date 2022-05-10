@@ -3,7 +3,6 @@ from .bo.End import End
 from .bo.Person import Person
 from .bo.Activity import Activity
 from .bo.TimeInterval import TimeInterval
-from .db import TimeIntervalMapper
 from .db.PersonMapper import PersonMapper
 from .db.StartMapper import StartMapper
 from .db.EndMapper import EndMapper
@@ -16,7 +15,7 @@ from .bo.WorkTimeAccount import WorkTimeAccount
 from .db.WorkTimeAccountMapper import WorkTimeAccountMapper
 from .db.ProjectMapper import ProjectMapper
 from .db.ProjectWorkMapper import ProjectWorkMapper
-from.db.TimeIntervalMapper import  TimeIntervalMapper
+from .db.TimeIntervalMapper import  TimeIntervalMapper
 
 
 
@@ -32,17 +31,17 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             return mapper.find_by_key(number)
 
-    def create_person(self, id, firstname, lastname, username, mailadress, last_edit, person_id):
+    def create_person(self, id, last_edit, firstname, lastname, username, mailaddress,  firebase_id):
         person = Person()
-        person.set_person_id(person_id)
         person.set_id(id)
+        person.set_last_edit(last_edit)
         person.set_firstname(firstname)
         person.set_lastname(lastname)
-        person.set_mailaddress(mailadress)
         person.set_username(username)
-        person.set_last_edit(last_edit)
+        person.set_mailaddress(mailaddress)
+        person.set_firebase_id(firebase_id)
 
-        with PersonMapper as mapper:
+        with PersonMapper() as mapper:
             mapper.insert(person)
 
     def delete_person(self, person):
@@ -256,7 +255,7 @@ class HdMWebAppAdministration(object):
             return mapper.insert(work_time_account)
 
     def save_work_time_account(self, work_time_account):
-        with WorkTimeAccountMapper as mapper:
+        with WorkTimeAccountMapper() as mapper:
             mapper.update(work_time_account)
 
     def delete_work_time_account(self, work_time_account):
@@ -323,7 +322,7 @@ class HdMWebAppAdministration(object):
         interval.set_end_time(end_time)
         interval.set_time_interval(time_interval)
 
-        with TimeIntervalMapper as mapper:
+        with TimeIntervalMapper() as mapper:
             return mapper.insert(time_interval)
 
 
@@ -340,5 +339,5 @@ class HdMWebAppAdministration(object):
 
     def get_all_time_interval(self):
         """Zeitinterval alle suchen"""
-        with TimeIntervalMapper () as mapper:
+        with TimeIntervalMapper() as mapper:
             return mapper.find_all()

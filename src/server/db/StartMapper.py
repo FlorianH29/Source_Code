@@ -79,7 +79,10 @@ class StartMapper (Mapper):
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            start.set_id(maxid[0]+1)
+            if maxid[0] in tuples is not None:  # Die Liste beinhaltet min. ein Projekt -> die Id ist somit n+1
+                start.set_id(maxid[0] + 1)
+            else:  # Die Liste ist leer, somit wird dem neuen Projekt die Id "1" zugewiesen
+                start.set_id(1)
 
         """
         Eine Möglichkeit, ein INSERT zu erstellen, ist diese:

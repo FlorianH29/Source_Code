@@ -25,7 +25,7 @@ class ProjectWorkMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, name, description, activityid FROM project_work WHERE id={}".format(key)
+        command = "SELECT id, name, description, activityid FROM Projectwork WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -52,7 +52,7 @@ class ProjectWorkMapper (Mapper):
     def find_all(self):
         all_project_works = []  # Liste mit allen "project_works
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, last_edit, name, description FROM project_work")
+        cursor.execute("SELECT id, last_edit, name, description FROM Projectwork")
         tuples = cursor.fetchall()
 
         for (id, last_edit, name, description) in tuples:
@@ -70,27 +70,27 @@ class ProjectWorkMapper (Mapper):
 
     def insert(self, object):
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(id) AS maxid FROM project_work ")
+        cursor.execute("SELECT MAX(id) AS maxid FROM Projectwork ")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
             if maxid[0] in tuples is not None:  # Die Liste beinhaltet min. ein Projekt -> die Id ist somit n+1
-                ProjectWork.set_id(maxid[0] + 1)
+                object.set_id(maxid[0] + 1)
             else:  # Die Liste ist leer, somit wird dem neuen Projekt die Id "1" zugewiesen
-                ProjectWork.set_id(1)
+                object.set_id(1)
 
         command = "INSERT INTO project_work (id, last_edit, name, description) VALUES (%s,%s,%s,%s)"
-        data = (ProjectWork.get_id(), ProjectWork.get_last_edit(), ProjectWork.get_name(), ProjectWork.get_description())
+        data = (object.get_id(), object.get_last_edit(), object.get_name(), object.get_description())
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
-        return ProjectWork
+        return object
 
     def delete(self, in_project_work): # Projekt, welches gelöscht werden soll wird übergeben
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM project_work WHERE id={}".format(in_project_work.get_id())
+        command = "DELETE FROM Projectwork WHERE id={}".format(in_project_work.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
@@ -99,7 +99,7 @@ class ProjectWorkMapper (Mapper):
     def update(self, in_project_work):  # Projekt, welches geupdatet werden soll wird übergeben
         cursor = self._cnx.cursor()
 
-        command = "UPDATE project_work " + "SET name=%s, description=%s WHERE project_work_id=%s"
+        command = "UPDATE Projectwork " + "SET name=%s, description=%s WHERE project_work_id=%s"
         data = (in_project_work.get_name(), in_project_work.get_description(), in_project_work.get_id())
         cursor.execute(command, data)
 
