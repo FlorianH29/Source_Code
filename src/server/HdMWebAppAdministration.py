@@ -19,7 +19,7 @@ class HdMWebAppAdministration(object):
 
     """Methoden für Person:"""
     def get_person_by_id(self, number):
-        """Den Benutzer mit der gegebenen ID auslesen."""
+        """Die Person mit der gegebenen ID auslesen."""
         with PersonMapper() as mapper:
             return mapper.find_by_key(number)
 
@@ -54,7 +54,7 @@ class HdMWebAppAdministration(object):
             return mapper.insert(start)
 
     def delete_start(self, start):
-        """Den gegebenen Benutzer aus unserem System löschen."""
+        """Die gegebene Person aus unserem System löschen."""
         with StartMapper() as mapper:
             mapper.delete(start)
 
