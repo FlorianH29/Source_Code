@@ -1,4 +1,4 @@
-from server.bo.Person import Person
+from server.bo import Person as p
 from server.db.Mapper import Mapper
 
 
@@ -22,7 +22,7 @@ class PersonMapper(Mapper):
         tuples = cursor.fetchall()
 
         for (id, firstName, lastName, username, mailaddress, person_id) in tuples:
-            employee = Person()
+            employee = p.Person()
             employee.set_id(id)
             employee.set_firstname(firstName)
             employee.set_lastname(lastName)
@@ -54,7 +54,7 @@ class PersonMapper(Mapper):
 
         try:
             (id, firstname, lastname, mailaddress, username, person_id) = tuples[0]
-            employee = Person()
+            employee = p.Person()
             employee.set_person_id(id)
             employee.set_firstname(firstname)
             employee.set_lastname(lastname)
