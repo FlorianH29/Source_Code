@@ -12,8 +12,7 @@ from .db.EventTransactionMapper import EventTransactionMapper
 from .bo.EventTransaction import EventTransaction
 from .bo.WorkTimeAccount import WorkTimeAccount
 from .db.WorkTimeAccountMapper import WorkTimeAccountMapper
-from.db.TimeIntervalMapper import  TimeIntervalMapper
-
+from .db.TimeIntervalMapper import TimeIntervalMapper
 
 
 class HdMWebAppAdministration(object):
@@ -22,6 +21,7 @@ class HdMWebAppAdministration(object):
         pass
 
     """Methoden für Person:"""
+
     def get_person_by_id(self, number):
         """Den Benutzer mit der gegebenen ID auslesen."""
         with PersonMapper() as mapper:
@@ -67,7 +67,7 @@ class HdMWebAppAdministration(object):
         with StartMapper() as mapper:
             return mapper.find_by_key(number)
 
-    def get_all_start_events (self):
+    def get_all_start_events(self):
         """Alle in der Datenbank gespeicherten Events auslesen."""
         with StartMapper() as mapper:
             return mapper.find_all()
@@ -87,12 +87,13 @@ class HdMWebAppAdministration(object):
             return mapper.insert(activity)
 
     """Methoden für EventTransaktionen"""
+
     def get_event_transaction_by_id(self, number):
         """Die EventTransaction mit der gegebenen EventTransaction-ID auslesen."""
         with EventTransactionMapper() as mapper:
             return mapper.find_by_key(number)
 
-    def get_all_event_transactions (self):
+    def get_all_event_transactions(self):
         """Alle in der Datenbank gespeicherten EventTransactions auslesen."""
         with EventTransactionMapper() as mapper:
             return mapper.find_all()
@@ -110,7 +111,6 @@ class HdMWebAppAdministration(object):
     def delete_event_transaction(self, event_transaction):
         """Die gegebene EventTransaction löschen."""
         with EventTransactionMapper() as mapper:
-
             mapper.delete(event_transaction)
 
     def create_event_transaction(self, id, last_edit, affiliated_work_time_account_id, event):
@@ -125,6 +125,7 @@ class HdMWebAppAdministration(object):
             return mapper.insert(t)
 
     """Methoden für TimeIntervalTransaktionen"""
+
     def get_time_interval_transaction_by_id(self, number):
         """Die TimeIntervalTransaction mit der gegebenen TimeIntervalTransaction-ID auslesen."""
         with TimeIntervalTransactionMapper() as mapper:
@@ -162,6 +163,7 @@ class HdMWebAppAdministration(object):
             return mapper.insert(t)
 
     """Methoden für WorkTimeAccount:"""
+
     def get_all_work_time_accounts(self):
         """Arbeitszeitkont anhand der id auslesen"""
         with WorkTimeAccountMapper() as mapper:
@@ -194,14 +196,13 @@ class HdMWebAppAdministration(object):
     def delete_work_time_account(self, work_time_account):
         """Arbeitszeitkonto löschen"""
         with WorkTimeAccountMapper() as mapper:
-            #wenn es transactions gibt, müssen die mit if abfrage gelöscht werden
+            # wenn es transactions gibt, müssen die mit if abfrage gelöscht werden
             mapper.delete(work_time_account)
-
 
     """Methoden von TimeInterval"""
 
-
     """Zeit Interval konto anlegen"""
+
     def create_time_interval(self, id, last_edit, start_time, end_time, time_interval):
         interval = TimeInterval()
         interval.set_id(id)
@@ -213,7 +214,6 @@ class HdMWebAppAdministration(object):
         with TimeIntervalMapper as mapper:
             return mapper.insert(time_interval)
 
-
     def delete_time_interval(self, time_interval):
         """Zeitinterval löschen"""
         with TimeIntervalMapper() as mapper:
@@ -224,8 +224,12 @@ class HdMWebAppAdministration(object):
         with TimeIntervalMapper() as mapper:
             return mapper.find_by_key(number)
 
-
     def get_all_time_interval(self):
         """Zeitinterval alle suchen"""
-        with TimeIntervalMapper () as mapper:
+        with TimeIntervalMapper() as mapper:
             return mapper.find_all()
+
+    def save_event_time_interval(self, time_interval):
+        """Zeitinerval wird neu gespeichert werden"""
+        with TimeIntervalMapper() as mapper:
+            mapper.update(time_interval)
