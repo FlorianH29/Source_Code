@@ -57,3 +57,4 @@ class HdMWebAppAdministration(object):
 
         with ActivityMapper() as mapper:
             return mapper.insert(activity)
+

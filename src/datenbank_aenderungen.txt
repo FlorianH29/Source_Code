@@ -6,3 +6,12 @@
 
 - Start Table erstellt mit id(INT), last_edit(DATE), time_stamp(DATE)
 - End Table erstellt mit gleichen Spalten
+
+
+Müssen noch geändert werden Florian:
+Tabelle:
+id
+last_edit
+start_time
+end_time
+time_interval
