@@ -341,3 +341,7 @@ class HdMWebAppAdministration(object):
         """Zeitinterval alle suchen"""
         with TimeIntervalMapper() as mapper:
             return mapper.find_all()
+
+    def save_time_interval(self):
+        with TimeIntervalMapper() as mapper:
+            return mapper.update()
