@@ -1,5 +1,6 @@
 from .bo.Start import Start
 from .bo.End import End
+from .bo.Person import Person
 from .bo.Activity import Activity
 from .db.PersonMapper import PersonMapper
 from .db.StartMapper import StartMapper
