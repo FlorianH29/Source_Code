@@ -7,7 +7,6 @@ class TimeIntervalMapper(Mapper):
         super().__init__()
 
     def find_all(self):
-
         result = []
         cursor = self._cnx.cursor()
         cursor.execute("SELECT * from TimeInterval")
