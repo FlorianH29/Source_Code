@@ -27,6 +27,9 @@ person = api.inherit('Person', bo, {
 
 # hier könnt ihr eure Tests reinschreiben, bitte bevor ihr auf den Main-pushed löschen!!!
 
-if __name__ == '__main__':
-    app.run(debug=True)
+hwa = HdMWebAppAdministration()
+
+
+'''if __name__ == '__main__':
+    app.run(debug=True)'''
 

@@ -17,8 +17,7 @@ from .bo.WorkTimeAccount import WorkTimeAccount
 from .db.WorkTimeAccountMapper import WorkTimeAccountMapper
 from .db.ProjectMapper import ProjectMapper
 from .db.ProjectWorkMapper import ProjectWorkMapper
-from .db.TimeIntervalMapper import  TimeIntervalMapper
-
+from .db.TimeIntervalMapper import TimeIntervalMapper
 
 
 class HdMWebAppAdministration(object):
@@ -252,12 +251,12 @@ class HdMWebAppAdministration(object):
         with WorkTimeAccountMapper() as mapper:
             return mapper.find_by_owner_id(owner.get_id())
 
-    def create_work_time_account(self, work_time_account_id, last_edit, user_id):
+    def create_work_time_account(self, work_time_account_id, last_edit, person_id):
         """Arbeitszeitkonto anlegen"""
         work_time_account = WorkTimeAccount()
         work_time_account.set_id(work_time_account_id)
         work_time_account.set_last_edit(last_edit)
-        work_time_account.set_owner(user_id)
+        work_time_account.set_owner(person_id)
 
         with WorkTimeAccountMapper() as mapper:
             return mapper.insert(work_time_account)
@@ -331,8 +330,6 @@ class HdMWebAppAdministration(object):
         with ProjectWorkMapper() as mapper:
             return mapper.update(project_work)
 
-
-
     """Methoden von TimeInterval"""
 
 
@@ -348,7 +345,6 @@ class HdMWebAppAdministration(object):
         with TimeIntervalMapper() as mapper:
             return mapper.insert(time_interval)
 
-
     def delete_time_interval(self, time_interval):
         """Zeitinterval löschen"""
         with TimeIntervalMapper() as mapper:
@@ -358,7 +354,6 @@ class HdMWebAppAdministration(object):
         """Zeitinterval suchen über eine Id"""
         with TimeIntervalMapper() as mapper:
             return mapper.find_by_key(number)
-
 
     def get_all_time_interval(self):
         """Zeitinterval alle suchen"""
