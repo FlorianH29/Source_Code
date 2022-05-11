@@ -22,14 +22,17 @@ person = api.inherit('Person', bo, {
     'user_id': fields.String(attribute='_user_id', description='Google User ID eines Benutzers')
 })
 
-# hwa.delete_event_transaction(test)
-# hwa.delete_person(test5)
 
 # hier könnt ihr eure Tests reinschreiben, bitte bevor ihr auf den Main-pushed löschen!!!
 
 hwa = HdMWebAppAdministration()
-hwa.create_time_interval(1, '20220609', '20220609', '20220610', 2)
+ti1 = hwa.get_time_interval_by_id(2)
+hwa.delete_time_interval(ti1)
+# wa1 = hwa.get_work_time_account_by_id(2)
+# print(wa1)
 
+# end1 = hwa.create_end_event(1, '20220305', '20220908')
+# print(end1)
 
 '''if __name__ == '__main__':
     app.run(debug=True)'''

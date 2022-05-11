@@ -13,13 +13,13 @@ class TimeIntervalMapper(Mapper):
         tuples = cursor.fetchall()
 
         for (timeinterval_id, last_edit, start_time, end_time, time_interval) in tuples:
-            time_interval = ti.TimeInterval()
-            time_interval.set_id(timeinterval_id)
-            time_interval.set_last_edit(last_edit)
-            time_interval.set_start_time(start_time)
-            time_interval.set_end_time(end_time)
-            time_interval.set_time_interval(time_interval)
-            result.append(time_interval)
+            interval = ti.TimeInterval()
+            interval.set_id(timeinterval_id)
+            interval.set_last_edit(last_edit)
+            interval.set_start_time(start_time)
+            interval.set_end_time(end_time)
+            interval.set_time_interval(time_interval)
+            result.append(interval)
 
         self._cnx.commit()
         cursor.close()
@@ -38,14 +38,14 @@ class TimeIntervalMapper(Mapper):
 
         try:
             (timeinterval_id, last_edit, start_time, end_time, time_interval) = tuples[0]
-            time_interval = ti.TimeInterval()
-            time_interval.set_id(timeinterval_id)
-            time_interval.set_last_edit(last_edit)
-            time_interval.set_start_time(start_time)
-            time_interval.set_end_time(end_time)
-            time_interval.set_time_interval(time_interval)
+            interval = ti.TimeInterval()
+            interval.set_id(timeinterval_id)
+            interval.set_last_edit(last_edit)
+            interval.set_start_time(start_time)
+            interval.set_end_time(end_time)
+            interval.set_time_interval(time_interval)
 
-            result = time_interval
+            result = interval
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""

@@ -59,8 +59,9 @@ class Person(bo.BusinessObject):
 
     def __str__(self):
         """Erzeugen einer textuellen Darstellung der jeweiligen Instanz."""
-        return "Person: {}, {}, {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self.__firstname, self.__lastname, self.__username,
-                                                     self.__mailaddress, self.__firebase_id)
+        return "Person: {}, {}, {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self.__firstname,
+                                                           self.__lastname, self.__username, self.__mailaddress,
+                                                           self.__firebase_id)
 
     @staticmethod
     def from_dict(dictionary=dict()):

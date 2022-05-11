@@ -2,7 +2,7 @@ from server.bo import BusinessObject as bo
 from abc import ABC
 
 
-class TimeInterval(bo.BusinessObject, ABC):
+class TimeInterval(bo.BusinessObject):
 
     def __init__(self):
         super().__init__()
@@ -42,11 +42,8 @@ class TimeInterval(bo.BusinessObject, ABC):
 
     def __str__(self):
         """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
-        return "TimeInterval: {}, {}, {}, {}, {}".format(self.get_id(),
-                                                         self.get_last_edit(),
-                                                         self.get_start_time(),
-                                                         self.get_end_time(),
-                                                         self.get_time_interval())
+        return "TimeInterval: {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self.__start_time,
+                                                         self.__end_time, self.__time_interval)
 
     @staticmethod
     def from_dict(dictionary=dict()):
