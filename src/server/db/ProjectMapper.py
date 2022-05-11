@@ -25,14 +25,15 @@ class ProjectMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT project_id, project_name, client, project_term_id FROM project WHERE project_id={}".format(key)
+        command = "SELECT project_id, last_edit, project_name, client, project_term_id FROM project WHERE project_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (project_id, project_name, client, project_term) = tuples[0]
+            (project_id, last_edit, project_name, client, project_term) = tuples[0]
             project = p.Project()
             project.set_id(project_id)
+            project.set_last_edit(last_edit)
             project.set_project_name(project_name)
             project.set_client(client)
             project.set_project_term_id(project_term)

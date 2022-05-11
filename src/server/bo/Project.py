@@ -27,10 +27,10 @@ class Project (bo.BusinessObject):
     def get_project_term_id(self):
         return self.__project_term_id
 
-
     def __str__(self):
         """Ausgabe von: id, name, client, project_term_id"""
-        return "Project: \n  id: {} \n  project_name: {} \n  client: {} \n  project_term_id: {}".format(self.get_id(), self.get_project_name(), self.get_client(), self.get_project_term_id())
+        return "Project: \n  id: {} \n  project_name: {} \n  client: {} \n  project_term_id: {}".format(
+            self.get_id(), self.get_project_name(), self.get_client(), self.get_project_term_id())
 
     @staticmethod
     def from_dict(dictionary=dict()):
