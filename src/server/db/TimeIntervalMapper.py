@@ -31,8 +31,8 @@ class TimeIntervalMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT timeinterval_id, last_edit, start_time, end_time, time_interval FROM timenterval " \
-                  "WHERE time_interval_id={}".format(key)
+        command = "SELECT timeinterval_id, last_edit, start_time, end_time, time_interval FROM timeinterval " \
+                  "WHERE timeinterval_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -78,7 +78,7 @@ class TimeIntervalMapper(Mapper):
                 time_interval.get_last_edit(),
                 time_interval.get_start_time(),
                 time_interval.get_end_time(),
-                time_interval.egt_time_interval())
+                time_interval.get_time_interval())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -109,11 +109,3 @@ class TimeIntervalMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-
-
-if (__name__ == "__main__"):
-    with TimeIntervalMapper() as mapper:
-        result = mapper.find_all()
-        for k in result:
-            print(k)
-

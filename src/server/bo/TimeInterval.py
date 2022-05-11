@@ -3,7 +3,8 @@ from abc import ABC
 
 
 class TimeInterval(bo.BusinessObject, ABC):
-    def __int__(self):
+
+    def __init__(self):
         super().__init__()
         """Start der Zeiterfassung"""
         self.__start_time = None
@@ -13,7 +14,7 @@ class TimeInterval(bo.BusinessObject, ABC):
         self.__time_interval = None
 
     def get_start_time(self):
-        """Auslesen vom start der Zeiterfassung"""
+        """Auslesen vom Start der Zeiterfassung"""
         return self.__start_time
 
     def set_start_time(self, start_time):
@@ -29,15 +30,15 @@ class TimeInterval(bo.BusinessObject, ABC):
         self.__end_time = end_time
 
     def get_time_interval(self):
-         """Auslesen vov der Arbeitszeit"""
-         return self.__time_interval
+        """Auslesen vov der Arbeitszeit"""
+        return self.__time_interval
 
     def set_time_interval(self, time_interval):
         """Beenden der Arbeitszeit"""
         self.__time_interval = time_interval
 
     def calculate_period(self):
-        self.__time_interval = self.__end_time - self.__start_time # Muss noch getestet werden ob die berechnung mit dem Datum do funktioniert.
+        self.__time_interval = self.__end_time - self.__start_time  # Muss noch getestet werden ob die berechnung mit dem Datum do funktioniert.
 
     def __str__(self):
         """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""

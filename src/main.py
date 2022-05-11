@@ -28,6 +28,7 @@ person = api.inherit('Person', bo, {
 # hier könnt ihr eure Tests reinschreiben, bitte bevor ihr auf den Main-pushed löschen!!!
 
 hwa = HdMWebAppAdministration()
+hwa.create_time_interval(1, '20220609', '20220609', '20220610', 2)
 
 
 '''if __name__ == '__main__':
