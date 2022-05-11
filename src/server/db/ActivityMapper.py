@@ -21,18 +21,19 @@ class ActivityMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, last_edit, name, capacity, affiliated_project FROM Activity WHERE id={}".format(key)
+        command = "SELECT activity_id, last_edit, name, capacity, affiliated_project_id FROM activity " \
+                  "WHERE activity_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, last_edit, name, capacity, affiliated_project) = tuples[0]
+            (activity_id, last_edit, name, capacity, affiliated_project_id) = tuples[0]
             activity = Activity()
-            activity.set_id(id)
+            activity.set_id(activity_id)
             activity.set_last_edit(last_edit)
             activity.set_name(name)
             activity.set_capacity(capacity)
-            activity.set_affiliated_project(affiliated_project)
+            activity.set_affiliated_project(affiliated_project_id)
 
             result = activity
         except IndexError:
@@ -52,16 +53,16 @@ class ActivityMapper (Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT * from Activity")
+        cursor.execute("SELECT * from activity")
         tuples = cursor.fetchall()
 
-        for (id, last_edit, name, capacity, affiliated_project) in tuples:
+        for (activity_id, last_edit, name, capacity, affiliated_project_id) in tuples:
             activity = Activity()
-            activity.set_id(id)
+            activity.set_id(activity_id)
             activity.set_last_edit(last_edit)
             activity.set_name(name)
             activity.set_capacity(capacity)
-            activity.set_affiliated_project(affiliated_project)
+            activity.set_affiliated_project(affiliated_project_id)
             result.append(activity)
 
         self._cnx.commit()
@@ -79,13 +80,21 @@ class ActivityMapper (Mapper):
         :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
         """
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(id) AS maxid FROM Activity")  # geht nur, wenn schon Wert in Datenbank drin
+        cursor.execute("SELECT MAX(activity_id) AS maxid FROM activity")  # geht nur, wenn schon Wert in Datenbank drin
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            activity.set_id(maxid[0] + 1)
+            if maxid[0] is not None:
+                """Wenn wir eine maximale ID festellen konnten, zählen wir diese
+                um 1 hoch und weisen diesen Wert als ID dem Activity-Objekt zu."""
+                activity.set_id(maxid[0] + 1)
+            else:
+                """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
+                davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
+                activity.set_id(1)
 
-        command = "INSERT INTO Activity (id, last_edit, name, capacity, affiliated_project) VALUES (%s,%s,%s,%s,%s)"
+        command = "INSERT INTO activity (activity_id, last_edit, name, capacity, affiliated_project_id)" \
+                  " VALUES (%s,%s,%s,%s,%s)"
         data = (activity.get_id(), activity.get_last_edit(), activity.get_name(), activity.get_capacity(),
                 activity.get_affiliated_project())
         cursor.execute(command, data)
@@ -102,8 +111,8 @@ class ActivityMapper (Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE Activity " + "SET id=%s, last_edit=%s, name=%s, capacity=%s, " \
-                                       "affiliated_project=%s WHERE id=%s"
+        command = "UPDATE activity " + "SET activity_id=%s, last_edit=%s, name=%s, capacity=%s, " \
+                                       "affiliated_project_id=%s WHERE activity_id=%s"
         data = (activity.get_id(), activity.get_last_edit(), activity.get_name(), activity.get_capacity(),
                 activity.get_affiliated_project())
         cursor.execute(command, data)
@@ -118,7 +127,7 @@ class ActivityMapper (Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM Activity WHERE id={}".format(activity.get_id())
+        command = "DELETE FROM activity WHERE activity_id={}".format(activity.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

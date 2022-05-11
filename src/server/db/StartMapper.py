@@ -21,14 +21,14 @@ class StartMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, last_edit, time_stamp FROM Start WHERE id={}".format(key)
+        command = "SELECT start_id, last_edit, time_stamp FROM start WHERE start_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, last_edit, time_stamp) = tuples[0]
+            (start_id, last_edit, time_stamp) = tuples[0]
             start = Start()
-            start.set_id(id)
+            start.set_id(start_id)
             start.set_last_edit(last_edit)
             start.set_time_stamp(time_stamp)
 
@@ -50,12 +50,12 @@ class StartMapper (Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT * from Start")
+        cursor.execute("SELECT * from start")
         tuples = cursor.fetchall()
 
-        for (id, last_edit, time_stamp) in tuples:
+        for (start_id, last_edit, time_stamp) in tuples:
             start = Start()
-            start.set_id(id)
+            start.set_id(start_id)
             start.set_last_edit(last_edit)
             start.set_time_stamp(time_stamp)
             result.append(start)
@@ -75,22 +75,20 @@ class StartMapper (Mapper):
         :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
         """
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(id) AS maxid FROM Start")
+        cursor.execute("SELECT MAX(start_id) AS maxid FROM start")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            start.set_id(maxid[0]+1)
+            if maxid[0] is not None:
+                """Wenn wir eine maximale ID festellen konnten, zählen wir diese
+                um 1 hoch und weisen diesen Wert als ID dem Start-Objekt zu."""
+                start.set_id(maxid[0] + 1)
+            else:
+                """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
+                davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
+                start.set_id(1)
 
-        """
-        Eine Möglichkeit, ein INSERT zu erstellen, ist diese:
-            cursor.execute("INSERT INTO persons (id, firstName, lastName) VALUES ('{}','{}','{}')"
-                           .format(person.get_id(),person.get_first_name(),person.get_last_name()))
-        Dabei wird auf String-Formatierung zurückgegriffen.
-        """
-        """
-        Eine andere Möglichkeit, ist diese:
-        """
-        command = "INSERT INTO Start (id, last_edit, time_stamp) VALUES (%s,%s,%s)"
+        command = "INSERT INTO start (start_id, last_edit, time_stamp) VALUES (%s,%s,%s)"
         data = (start.get_id(), start.get_last_edit(), start.get_time_stamp())
         cursor.execute(command, data)
 
@@ -106,7 +104,7 @@ class StartMapper (Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE Start " + "SET id=%s, last_edit=%s, time_stamp=%s WHERE id=%s"
+        command = "UPDATE start " + "SET start_id=%s, last_edit=%s, time_stamp=%s WHERE start_id=%s"
         data = (start.get_id(), start.get_last_edit(), start.get_time_stamp())
         cursor.execute(command, data)
 
@@ -120,7 +118,7 @@ class StartMapper (Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM Start WHERE id={}".format(start.get_id())
+        command = "DELETE FROM start WHERE start_id={}".format(start.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

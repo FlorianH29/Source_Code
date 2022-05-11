@@ -12,12 +12,12 @@ class WorkTimeAccountMapper (Mapper):
 
         result = []
         cursor = self._cnx.cursor() #cursor erlaubt uns SQL befehle hier auszuführen (siehe Verb. Mapper Klasse)
-        cursor.execute("SELECT id, last_edit, user_id FROM Worktimeaccount")
+        cursor.execute("SELECT work_time_account_id, last_edit, person_id FROM worktimeaccount")
         tuples = cursor.fetchall()
 
-        for (id, last_edit, owner) in tuples:
+        for (work_time_account_id, last_edit, owner) in tuples:
             work_time_account = wta.WorkTimeAccount()
-            work_time_account.set_id(id)
+            work_time_account.set_id(work_time_account_id)
             work_time_account.set_last_edit(last_edit)
             work_time_account.set_owner(owner)
             result.append(work_time_account)
@@ -32,13 +32,13 @@ class WorkTimeAccountMapper (Mapper):
     def find_by_owner_id(self, owner_id):
         result = []
         cursor = self._cnx.cursor()
-        command = "SELECT id, last_edit, user_id FROM Worktimeaccount WHERE user_id={} ORDER BY id".format(owner_id)
+        command = "SELECT work_time_account_id, last_edit, person_id FROM worktimeaccount WHERE person_id={} ORDER BY work_time_account_id".format(owner_id)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, last_edit,  owner) in tuples:
+        for (work_time_account_id, last_edit,  owner) in tuples:
             work_time_account = wta.WorkTimeAccount()
-            work_time_account.set_id(id)
+            work_time_account.set_id(work_time_account_id)
             work_time_account.set_last_edit(last_edit)
             work_time_account.set_owner(owner)
             result.append(work_time_account)
@@ -60,18 +60,19 @@ class WorkTimeAccountMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT  id, last_edit, user_id FROM Worktimeaccount WHERE id={}".format(key)
+        command = "SELECT  work_time_account_id, last_edit, person_id FROM worktimeaccount " \
+                  "WHERE work_time_account_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         if tuples is not None \
                 and len(tuples) > 0 \
                 and tuples[0] is not None:
-            (id, last_edit, user_id) = tuples[0]
+            (work_time_account_id, last_edit, person_id) = tuples[0]
             work_time_account = wta.WorkTimeAccount()
-            work_time_account.set_id(id)
+            work_time_account.set_id(work_time_account_id)
             work_time_account.set_last_edit(last_edit)
-            work_time_account.set_owner(user_id)
+            work_time_account.set_owner(person_id)
 
             result = work_time_account
         else:
@@ -87,13 +88,20 @@ class WorkTimeAccountMapper (Mapper):
     und wenn erforerlich korrigiert."""
     def insert(self, work_time_account):
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(id) AS maxid FROM Worktimeaccount")
+        cursor.execute("SELECT MAX(work_time_account_id) AS maxid FROM worktimeaccount")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            work_time_account.set_id(maxid[0]+1)
+            if maxid[0] is not None:
+                """Wenn wir eine maximale ID festellen konnten, zählen wir diese
+                um 1 hoch und weisen diesen Wert als ID dem WorkTimeAccount-Objekt zu."""
+                work_time_account.set_id(maxid[0] + 1)
+            else:
+                """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
+                davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
+                work_time_account.set_id(1)
 
-        command = "INSERT INTO Worktimeaccount (id, last_edit, user_id) VALUES (%s,%s,%s)" #%s als Platzhalter und gibt einen formatierten string zurück
+        command = "INSERT INTO worktimeaccount (work_time_account_id, last_edit, person_id) VALUES (%s,%s,%s)" #%s als Platzhalter und gibt einen formatierten string zurück
         data = (work_time_account.get_id(), work_time_account.get_last_edit(), work_time_account.get_owner())
         cursor.execute(command, data)
 
@@ -105,7 +113,7 @@ class WorkTimeAccountMapper (Mapper):
      überschrieben."""
     def update(self, work_time_account):
         cursor = self._cnx.cursor()
-        command = "UPDATE Worktimeaccount" + "SET user_id=%s, last_edit=%s, user_id=%s WHERE id=%s"
+        command = "UPDATE worktimeaccount" + "SET person_id=%s, last_edit=%s, work_time_account_id=%s WHERE work_time_account_id=%s"
         data = (work_time_account.get_owner(), work_time_account.get_last_edit(), work_time_account.get_id())
         cursor.execute(command, data)
 
@@ -115,7 +123,7 @@ class WorkTimeAccountMapper (Mapper):
     """Löschen von Arbeitszeitkonto Daten aus der Datenbank."""
     def delete(self, work_time_account):
         cursor = self._cnx.cursor()
-        command = "DELETE FROM Worktimeaccount WHERE id={}".format(work_time_account.get_id())
+        command = "DELETE FROM worktimeaccount WHERE work_time_account_id={}".format(work_time_account.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
