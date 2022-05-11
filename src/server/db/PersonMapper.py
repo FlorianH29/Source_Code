@@ -57,7 +57,7 @@ class PersonMapper(Mapper):
         try:
             (person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id) = tuples[0]
             employee = p.Person()
-            employee.set_firebase_id(person_id)
+            employee.set_id(person_id)
             employee.set_last_edit(last_edit)
             employee.set_firstname(firstname)
             employee.set_lastname(lastname)

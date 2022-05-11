@@ -7,7 +7,7 @@ import datetime
 app = Flask(__name__)
 
 api = Api(app, version='1.0', title='HdMWebAppAPI',
-    description='Eine rudimentäre Demo-API für das Buchen von Zeitslots für Projekte.')
+          description='Eine rudimentäre Demo-API für das Buchen von Zeitslots für Projekte.')
 
 # BusinessObject dient als Basisklasse, auf der die weiteren Strukturen Customer, Account und Transaction aufsetzen.
 bo = api.model('BusinessObject', {
@@ -22,15 +22,10 @@ person = api.inherit('Person', bo, {
     'user_id': fields.String(attribute='_user_id', description='Google User ID eines Benutzers')
 })
 
-hwa = HdMWebAppAdministration()
-test5 = hwa.get_work_time_account_of_owner(2)
-print(test5)
+# hwa.delete_event_transaction(test)
+# hwa.delete_person(test5)
 
-#hwa.delete_event_transaction(test)
-#hwa.delete_person(test5)
-
-
-#hier könnt ihr eure Tests reinschreiben, bitte bevor ihr auf den Main-pushed löschen!!!
+# hier könnt ihr eure Tests reinschreiben, bitte bevor ihr auf den Main-pushed löschen!!!
 
 if __name__ == '__main__':
     app.run(debug=True)
