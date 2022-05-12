@@ -28,6 +28,8 @@ person = api.inherit('Person', bo, {
 # hier könnt ihr eure Tests reinschreiben, bitte bevor ihr auf den Main-pushed löschen!!!
 
 hwa = HdMWebAppAdministration()
+
+#Test für Update-Befehl
 ee1 = hwa.get_person_by_id(5)
 ee1.set_lastname("Marko")
 
