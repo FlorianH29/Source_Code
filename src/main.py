@@ -26,8 +26,9 @@ person = api.inherit('Person', bo, {
 # hier könnt ihr eure Tests reinschreiben, bitte bevor ihr auf den Main-pushed löschen!!!
 
 hwa = HdMWebAppAdministration()
-ti1 = hwa.get_time_interval_by_id(2)
-hwa.delete_time_interval(ti1)
+# ee1 = hwa.get_end_event_by_id(4)
+# hwa.save_end_event(ee1)
+
 # wa1 = hwa.get_work_time_account_by_id(2)
 # print(wa1)
 
