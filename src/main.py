@@ -6,6 +6,8 @@ from server.HdMWebAppAdministration import HdMWebAppAdministration
 from server.bo.Person import Person
 import datetime
 
+
+
 app = Flask(__name__)
 
 CORS(app, resources=r'/hdmwebapp/*')
@@ -33,8 +35,19 @@ person = api.inherit('Person', bo, {
 # hier könnt ihr eure Tests reinschreiben, bitte bevor ihr auf den Main-pushed löschen!!!
 
 hwa = HdMWebAppAdministration()
-# ee1 = hwa.get_end_event_by_id(4)
-# hwa.save_end_event(ee1)
+
+#Test für Update-Befehl
+ee1 = hwa.get_person_by_id(5)
+ee1.set_lastname("Marko")
+
+hwa.save_person(ee1)
+
+
+#hwa.save_person(ee1)
+
+
+
+#hwa.save_end_event(ee1)
 
 # wa1 = hwa.get_work_time_account_by_id(2)
 # print(wa1)

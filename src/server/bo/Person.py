@@ -75,3 +75,5 @@ class Person(bo.BusinessObject):
         obj.set_mailaddress(dictionary["mailaddress"])
         obj.set_firebase_id(dictionary["firebase_id"])
         return obj
+
+

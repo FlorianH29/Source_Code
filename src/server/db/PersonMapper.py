@@ -122,12 +122,14 @@ class PersonMapper(Mapper):
 
         :param employee das Objekt, das in die DB geschrieben werden soll
         """
+
         cursor = self._cnx.cursor()
 
         command = "UPDATE person " + "SET firstName=%s, last_edit=%s, lastName=%s, username=%s, mailaddress=%s," \
                                      "firebase_id=%s WHERE person_id=%s"
-        data = (employee.get_first_name(), employee.get_last_edit(), employee.get_username, employee.get_mailadress,
-                employee.get_id(), employee.get_firebase_id)
+
+        data = (employee.get_firstname(), employee.get_last_edit(), employee.get_lastname(), employee.get_username(),
+                employee.get_mailaddress(), employee.get_firebase_id(), employee.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
