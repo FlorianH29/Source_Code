@@ -111,10 +111,10 @@ class ActivityMapper (Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE activity " + "SET activity_id=%s, last_edit=%s, name=%s, capacity=%s, " \
-                                       "affiliated_project_id=%s WHERE activity_id=%s"
-        data = (activity.get_id(), activity.get_last_edit(), activity.get_name(), activity.get_capacity(),
-                activity.get_affiliated_project())
+        command = "UPDATE activity SET last_edit=%s, name=%s, capacity=%s, " \
+                  "affiliated_project_id=%s WHERE activity_id=%s"
+        data = (activity.get_last_edit(), activity.get_name(), activity.get_capacity(),
+                activity.get_affiliated_project(),activity.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

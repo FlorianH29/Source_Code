@@ -136,12 +136,12 @@ class EventTransactionMapper (Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE eventtransaction " + "SET eventtransaction_id=%s, last_edit=%s, affiliated_work_time_account_id=%s," \
-                                               " event=%s WHERE eventtransaction_id=%s"
-        data = (event_transaction.get_id(),
-                event_transaction.get_last_edit(),
+        command = "UPDATE eventtransaction SET last_edit=%s, affiliated_work_time_account_id=%s," \
+                                               "event=%s WHERE eventtransaction_id=%s"
+        data = (event_transaction.get_last_edit(),
                 event_transaction.get_affiliated_work_time_account(),
-                event_transaction.get_event())
+                event_transaction.get_event(),
+                event_transaction.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

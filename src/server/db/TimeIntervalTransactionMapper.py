@@ -18,7 +18,7 @@ class TimeIntervalTransactionMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, time_interval " \
+        command = "SELECT timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, affiliated_time_interval " \
                   "FROM timeintervaltransaction WHERE timeintervaltransaction_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
@@ -26,12 +26,12 @@ class TimeIntervalTransactionMapper (Mapper):
         if tuples is not None \
                 and len(tuples) > 0 \
                 and tuples[0] is not None:
-            (timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, time_interval) = tuples[0]
+            (timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, affiliated_time_interval) = tuples[0]
             time_interval_transaction = tit.TimeIntervalTransaction()
             time_interval_transaction.set_id(timeintervaltransaction_id)
             time_interval_transaction.set_last_edit(last_edit)
             time_interval_transaction.set_affiliated_work_time_account(affiliated_work_time_account_id)
-            time_interval_transaction.set_time_interval(time_interval)
+            time_interval_transaction.set_affiliated_time_interval(affiliated_time_interval)
 
             result = time_interval_transaction
         else:
@@ -51,16 +51,18 @@ class TimeIntervalTransactionMapper (Mapper):
         result = []
         cursor = self._cnx.cursor()
 
-        cursor.execute("SELECT timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, time_interval "
+        cursor.execute(
+            "SELECT timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, affiliated_time_interval "
                        "from timeintervaltransaction")
         tuples = cursor.fetchall()
 
-        for (timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, time_interval) in tuples:
+        for (timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, affiliated_time_interval) in tuples:
             time_interval_transaction = tit.TimeIntervalTransaction()
             time_interval_transaction.set_id(timeintervaltransaction_id)
             time_interval_transaction.set_last_edit(last_edit)
             time_interval_transaction.set_affiliated_work_time_account(affiliated_work_time_account_id)
-            time_interval_transaction.set_time_interval(time_interval)
+            time_interval_transaction.set_affiliated_time_interval(affiliated_time_interval)
+
             result.append(time_interval_transaction)
 
         self._cnx.commit()
@@ -76,21 +78,22 @@ class TimeIntervalTransactionMapper (Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        command = "SELECT timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, time_interval FROM" \
-                  " timeintervaltransaction WHERE affiliated_work_time_account_id={} " \
+        command = "SELECT timeintervaltransaction_id, last_edit, affiliated_work_time_account_id," \
+                  " affiliated_time_interval FROM" " timeintervaltransaction WHERE affiliated_work_time_account_id={} " \
                   "ORDER BY timeintervaltransaction_id".format(worktimeaccount_id)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, time_interval) in tuples:
+        for (timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, affiliated_time_interval) in tuples:
             time_interval_transaction = tit.TimeIntervalTransaction()
             time_interval_transaction.set_id(timeintervaltransaction_id)
             time_interval_transaction.set_last_edit(last_edit)
             time_interval_transaction.set_affiliated_work_time_account(affiliated_work_time_account_id)
-            time_interval_transaction.set_time_interval(time_interval)
+            time_interval_transaction.set_affiliated_time_interval(affiliated_time_interval)
             result.append(time_interval_transaction)
 
         self._cnx.commit()
+
         cursor.close()
 
         return result
@@ -101,7 +104,7 @@ class TimeIntervalTransactionMapper (Mapper):
         Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
         berichtigt.
 
-        :param timeintervaltransaction das zu speichernde Objekt
+        :param time_interval_transaction das zu speichernde Objekt
         :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
         """
         cursor = self._cnx.cursor()
@@ -112,18 +115,18 @@ class TimeIntervalTransactionMapper (Mapper):
             if maxid[0] is not None:
                 """Wenn wir eine maximale ID festellen konnten, zählen wir diese
                 um 1 hoch und weisen diesen Wert als ID dem TimeIntervalTransaction-Objekt zu."""
-                object.set_id(maxid[0] + 1)
+                time_interval_transaction.set_id(maxid[0] + 1)
             else:
                 """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
-                object.set_id(1)
+                time_interval_transaction.set_id(1)
 
         command = "INSERT INTO timeintervaltransaction (timeintervaltransaction_id, last_edit, " \
-                  "affiliated_work_time_account_id, time_interval) VALUES (%s,%s,%s,%s)"
+                  "affiliated_work_time_account_id, affiliated_time_interval) VALUES (%s,%s,%s,%s)"
         data = (time_interval_transaction.get_id(),
                 time_interval_transaction.get_last_edit(),
                 time_interval_transaction.get_affiliated_work_time_account(),
-                time_interval_transaction.get_time_interval())
+                time_interval_transaction.get_affiliated_time_interval())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -138,13 +141,14 @@ class TimeIntervalTransactionMapper (Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE timeintervaltransaction " + "SET timeintervaltransaction_id=%s, last_edit=%s," \
-                                                      " affiliated_work_time_account_id=%s, time_interval=%s " \
-                                                      "WHERE timeintervaltransaction_id=%s"
+        command = "UPDATE timeintervaltransaction " \
+                  "SET timeintervaltransaction_id=%s, last_edit=%s, affiliated_work_time_account_id=%s, " \
+                  "affiliated_time_interval=%s " \
+                  "WHERE timeintervaltransaction_id=%s"
         data = (time_interval_transaction.get_id(),
                 time_interval_transaction.get_last_edit(),
                 time_interval_transaction.get_affiliated_work_time_account(),
-                time_interval_transaction.get_time_interval())
+                time_interval_transaction.get_affiliated_time_interval())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -163,10 +167,3 @@ class TimeIntervalTransactionMapper (Mapper):
 
         self._cnx.commit()
         cursor.close()
-
-id
-if (__name__ == "__main__"):
-    with TimeIntervalTransactionMapper() as mapper:
-        result = mapper.find_all()
-        for t in result:
-            print(t)

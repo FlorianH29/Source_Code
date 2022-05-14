@@ -105,8 +105,8 @@ class EndMapper (Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE end " + "SET end_id=%s, last_edit=%s, time_stamp=%s WHERE end_id=%s"
-        data = (end.get_id(), end.get_last_edit(), end.get_time_stamp())
+        command = "UPDATE end SET last_edit=%s, time_stamp=%s WHERE end_id=%s"
+        data = (end.get_last_edit(), end.get_time_stamp(), end.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
