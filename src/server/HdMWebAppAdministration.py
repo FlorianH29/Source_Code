@@ -280,7 +280,11 @@ class HdMWebAppAdministration(object):
     def delete_work_time_account(self, work_time_account):
         """Arbeitszeitkonto löschen"""
         with WorkTimeAccountMapper() as mapper:
-            # wenn es transactions gibt, müssen die mit if abfrage gelöscht werden
+
+            #if not (time_interval is None):
+                #for transaction in time_interval:
+                    #self.delete(transaction)
+
             mapper.delete(work_time_account)
 
     """Project Methoden"""
