@@ -347,13 +347,13 @@ class HdMWebAppAdministration(object):
     """Methoden von TimeInterval"""
 
     """ZeitIntervalkonto anlegen"""
-    def create_time_interval(self, timeinterval_id, last_edit, start_time, end_time, time_interval):
+    def create_time_interval(self, timeinterval_id, last_edit, start_time, end_time, time_period):
         interval = TimeInterval()
         interval.set_id(timeinterval_id)
         interval.set_last_edit(last_edit)
         interval.set_start_time(start_time)
         interval.set_end_time(end_time)
-        interval.set_time_interval(time_interval)
+        interval.set_time_period(time_period)
 
         with TimeIntervalMapper() as mapper:
             return mapper.insert(interval)

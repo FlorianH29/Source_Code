@@ -1,4 +1,4 @@
-from server.bo import Break as lil
+from server.bo import Break
 from server.db.Mapper import Mapper
 
     class BreakMapper(Mapper):
