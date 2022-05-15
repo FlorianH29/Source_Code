@@ -15,7 +15,7 @@ CORS(app, resources=r'/hdmwebapp/*')
 api = Api(app, version='1.0', title='HdMWebAppAPI',
           description='Eine rudimentäre Demo-API für das Buchen von Zeitslots für Projekte.')
 
-banking = api.namespace('hdmwebapp', description='Funktionen der HdMWebApp zur Zeitbuchung.')
+function = api.namespace('hdmwebapp', description='Funktionen der HdMWebApp zur Zeitbuchung.')
 
 # BusinessObject dient als Basisklasse, auf der die weiteren Strukturen Customer, Account und Transaction aufsetzen.
 bo = api.model('BusinessObject', {
@@ -29,6 +29,10 @@ person = api.inherit('Person', bo, {
     'mailaddress': fields.String(attribute='__mailaddress', description='E-Mail-Adresse eines Benutzers'),
     'username': fields.String(attribute='__username', description='Username eines Benutzers'),
     'firebase_id': fields.String(attribute='__firebase_id', description='Google User ID eines Benutzers')
+})
+
+work_time_account = api.inherit('WorkTimeAccount', bo, {
+    'owner': fields.Integer(attribute='__owner', description='Unique Id des Kontoinhabers')
 })
 
 
@@ -47,16 +51,11 @@ p1 = hwa.get_project_by_id(1)
 
 hwa.create_activity_for_project('Test Activity', 10, p1)"""
 
-#Test transaction für wta
-#hwa.create_work_time_account_for_person()
+#Test worktimeaccount für person und transaktion auf das Konto
+# -> anlegen Funktioniert, verbindung timeinterval und timeinterval transaction noch nicht
+#hwa.create_work_time_account_for_person(hwa.get_person_by_id(3))
 
 
-
-# wa1 = hwa.get_work_time_account_by_id(2)
-# print(wa1)
-
-# end1 = hwa.create_end_event(1, '20220305', '20220908')
-# print(end1)
 
 if __name__ == '__main__':
     app.run(debug=False)
