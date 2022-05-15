@@ -90,8 +90,9 @@ class TimeIntervalMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "UPDATE timeinterval " + "SET timeinterval_id=%s, last_edit=%s, start_time=%s, end_time=%s, " \
-                                           "time_interval=%s, WHERE time_interval_id=%s"
+        command = "UPDATE timeinterval " \
+                  "SET timeinterval_id=%s, last_edit=%s, start_time=%s, end_time=%s, " \
+                   "time_period=%s, WHERE time_interval_id=%s"
         data = (time_interval.get_id(), time_interval.get_last_edit(), time_interval.get_start_time(),
                 time_interval.get_end_time(), time_interval.get_time_period())
         cursor.execute(command, data)
