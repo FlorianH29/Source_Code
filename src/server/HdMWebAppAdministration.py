@@ -9,7 +9,7 @@ from .bo.Project import Project
 from .bo.ProjectWork import ProjectWork
 from .bo.Event import Event
 from .db.PersonMapper import PersonMapper
-# from .db.ArriveMapper import StartMapper
+#from .db.ArriveMapper import StartMapper
 # from .db.DepartureMapper import EndMapper
 from .db.ActivityMapper import ActivityMapper
 from .bo.TimeIntervalTransaction import TimeIntervalTransaction
@@ -350,10 +350,11 @@ class HdMWebAppAdministration(object):
 
     """ZeitIntervalkonto anlegen"""
 
-    def create_time_interval(self, timeinterval_id, last_edit, start_time, end_time, time_interval):
+    def create_time_interval(self, timeinterval_id, start_time, end_time, time_interval):
         interval = TimeInterval()
         interval.set_id(timeinterval_id)
-        interval.set_last_edit(last_edit)
+        '''Setzen des Last_edit durch die aktuelle Zeit'''
+        interval.set_last_edit(datetime.datetime.now())
         interval.set_start_time(start_time)
         interval.set_end_time(end_time)
         interval.set_time_period(time_interval)
@@ -376,9 +377,9 @@ class HdMWebAppAdministration(object):
         with TimeIntervalMapper() as mapper:
             return mapper.find_all()
 
-    def save_time_interval(self):
+    def save_time_interval(self, value):
         with TimeIntervalMapper() as mapper:
-            return mapper.update()
+            return mapper.update(value)
 
     """Methoden von Event"""
 
