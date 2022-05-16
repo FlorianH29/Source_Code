@@ -72,7 +72,7 @@ class TimeIntervalMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 time_interval.set_id(1)
 
-        command = "INSERT INTO timeinterval (timeinterval_id, last_edit, start_time, end_time, time_interval)" \
+        command = "INSERT INTO timeinterval (timeinterval_id, last_edit, start_time, end_time, time_period)" \
                   " VALUES (%s,%s,%s,%s,%s)"
         data = (time_interval.get_id(),
                 time_interval.get_last_edit(),
