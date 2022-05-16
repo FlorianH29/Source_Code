@@ -353,7 +353,7 @@ class HdMWebAppAdministration(object):
         interval.set_last_edit(last_edit)
         interval.set_start_time(start_time)
         interval.set_end_time(end_time)
-        interval.set_time_interval(time_interval)
+        interval.set_time_period(time_interval)
 
         with TimeIntervalMapper() as mapper:
             return mapper.insert(interval)
