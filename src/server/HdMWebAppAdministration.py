@@ -1,15 +1,15 @@
 import datetime
 
-from .bo.Start import Start
-from .bo.End import End
+from .bo.Arrive import Start
+from .bo.Departure import End
 from .bo.Person import Person
 from .bo.Activity import Activity
 from .bo.TimeInterval import TimeInterval
 from .bo.Project import Project
 from .bo.ProjectWork import ProjectWork
 from .db.PersonMapper import PersonMapper
-from .db.StartMapper import StartMapper
-from .db.EndMapper import EndMapper
+from .db.ArriveMapper import StartMapper
+from .db.DepartureMapper import EndMapper
 from .db.ActivityMapper import ActivityMapper
 from .bo.TimeIntervalTransaction import TimeIntervalTransaction
 from .db.TimeIntervalTransactionMapper import TimeIntervalTransactionMapper
@@ -347,13 +347,13 @@ class HdMWebAppAdministration(object):
     """Methoden von TimeInterval"""
 
     """ZeitIntervalkonto anlegen"""
-    def create_time_interval(self, timeinterval_id, last_edit, start_time, end_time, time_period):
+    def create_time_interval(self, timeinterval_id, last_edit, start_time, end_time, time_interval):
         interval = TimeInterval()
         interval.set_id(timeinterval_id)
         interval.set_last_edit(last_edit)
         interval.set_start_time(start_time)
         interval.set_end_time(end_time)
-        interval.set_time_period(time_period)
+        interval.set_time_period(time_interval)
 
         with TimeIntervalMapper() as mapper:
             return mapper.insert(interval)

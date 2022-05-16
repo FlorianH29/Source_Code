@@ -33,7 +33,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `SoPraTestDB`.`end`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `SoPraTestDB`.`end` ;
+DROP TABLE IF EXISTS `SoPraTestDB`.departure ;
 
 CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`end` (
   `end_id` INT NOT NULL,
@@ -106,7 +106,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `SoPraTestDB`.`start`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `SoPraTestDB`.`start` ;
+DROP TABLE IF EXISTS `SoPraTestDB`.arrive ;
 
 CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`start` (
   `start_id` INT NOT NULL,
