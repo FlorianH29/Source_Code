@@ -1,54 +1,79 @@
 from server.bo import BusinessObject as bo
 
 
-class Person (bo.BusinessObject):
-    """Realisierung einer exemplarischen Benutzerklasse.
+class Person(bo.BusinessObject):
+    """Realisierung der Personenklasse.
 
-    Aus Gründen der Vereinfachung besitzt der Kunden in diesem Demonstrator
-    lediglich einen einfachen Namen, eine E_Mail-Adresse sowie eine außerhalb
-    unseres Systems verwaltete Person ID (z.B. die Google ID).
+    Eine Person besitzt einen Vor- und Nachname sowie einen Benutzernamen. Des Weiteren
+    hat eine Person eine E-Mail-Adresse und eine ID, welche in diesem Fall von Firebase
+    verwaltet wird.
     """
+
     def __init__(self):
         super().__init__()
-        self.__name = ""  # Der Name des Benutzers.
-        self.__email = ""  # Die E-Mail-Adresse des Benutzers.
-        self.__person_id = ""  # Die extern verwaltete Person ID.
+        self.__firstname = ""  # Der Vorname des Benutzers.
+        self.__lastname = ""  # Der Nachname des Benutzers.
+        self.__username = ""  # Der Username des Benutzers.
+        self.__mailaddress = ""  # Die E-Mail-Adresse des Benutzers.
+        self.__firebase_id = ""  # Die extern verwaltete Person ID.
 
+    def get_firstname(self):
+        """Auslesen des Vornamens."""
+        return self.__firstname
 
-    def get_name(self):
+    def get_lastname(self):
+        """Auslesen des Nachnamens."""
+        return self.__lastname
+
+    def get_username(self):
         """Auslesen des Benutzernamens."""
-        return self.__name
+        return self.__username
 
-    def set_name(self, value):
+    def set_firstname(self, value):
+        """Setzen des Vornamens."""
+        self.__firstname = value
+
+    def set_lastname(self, value):
+        """Setzen des Nachnamens."""
+        self.__lastname = value
+
+    def set_username(self, value):
         """Setzen des Benutzernamens."""
-        self.__name = value
+        self.__username = value
 
-    def get_email(self):
+    def get_mailaddress(self):
         """Auslesen der E-Mail-Adresse."""
-        return self.__email
+        return self.__mailaddress
 
-    def set_email(self, value):
+    def set_mailaddress(self, value):
         """Setzen der E-Mail-Adresse."""
-        self.__email = value
+        self.__mailaddress = value
 
-    def get_person_id(self):
+    def get_firebase_id(self):
         """Auslesen der externen User ID (z.B. Google ID)."""
-        return self.__person_id
+        return self.__firebase_id
 
-    def set_person_id(self, value):
-        """Setzen der externen User ID (z.B. Google ID)."""
-        self.__person_id = value
+    def set_firebase_id(self, value):
+        """Setzen der externen User ID (z.B. Google ID per Firebase)."""
+        self.__firebase_id = value
 
     def __str__(self):
-        """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
-        return "Person: {}, {}, {}, {}".format(self.get_id(), self.__name, self.__email, self.__user_id)
+        """Erzeugen einer textuellen Darstellung der jeweiligen Instanz."""
+        return "Person: {}, {}, {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self.__firstname,
+                                                           self.__lastname, self.__username, self.__mailaddress,
+                                                           self.__firebase_id)
 
     @staticmethod
     def from_dict(dictionary=dict()):
-        """Umwandeln eines Python dict() in einen User()."""
+        """Umwandeln eines Python dict() in eine Person()."""
         obj = Person()
         obj.set_id(dictionary["id"])  # eigentlich Teil von BusinessObject !
-        obj.set_name(dictionary["name"])
-        obj.set_email(dictionary["email"])
-        obj.set_person_id(dictionary["person_id"])
+        obj.set_firstname(dictionary["firstname"])
+        obj.set_lastname(dictionary["lastname"])
+        obj.set_username(dictionary["username"])
+        obj.set_last_edit(dictionary["last_edit"])
+        obj.set_mailaddress(dictionary["mailaddress"])
+        obj.set_firebase_id(dictionary["firebase_id"])
         return obj
+
+

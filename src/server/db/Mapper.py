@@ -21,7 +21,8 @@ class Mapper (AbstractContextManager, ABC):
             Die App befindet sich somit im **Production Mode** und zwar im *Standard Environment*.
             Hierbei handelt es sich also um die Verbindung zwischen Google App Engine und Cloud SQL."""
 
-            self._cnx = connector.connect(user='demo', password='demo',
+            self._cnx = connector.connect(user='demo',
+                                          password='demo',
                                           unix_socket='/cloudsql/python-bankprojekt-thies:europe-west3:bank-db-thies',
                                           database='bankproject')
         else:
@@ -29,15 +30,40 @@ class Mapper (AbstractContextManager, ABC):
             also auf einem Local Development Server. Hierbei stellen wir eine einfache Verbindung zu einer lokal
             installierten mySQL-Datenbank her."""
 
-            self._cnx = connector.connect(user='root', password='passwort123',
-                                  host='127.0.0.1',
-                                  database='SoPraTestDB',
-                                auth_plugin='mysql_native_password')
+            self._cnx = connector.connect(
+                user='root',
+                password='passwort123',
+                host='127.0.0.1',
+                database='SoPraTestDB',
+                auth_plugin='mysql_native_password')
 
         return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Was soll geschehen, wenn wir (evtl. vorübergehend) aufhören, mit dem Mapper zu arbeiten?"""
+        self._cnx.close()
+
+    """Formuliere nachfolgend sämtliche Auflagen, die instanzierbare Mapper-Subklassen mind. erfüllen müssen."""
+
 
     @abstractmethod
     def find_by_key(self, key):
         """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
         pass
 
+    @abstractmethod
+    def find_all(self):
+        """Lies alle Tupel aus und gib sie als Objekte zurück."""
+        pass
+
+    @abstractmethod
+    def insert(self, object):
+        pass
+
+    @abstractmethod
+    def update(self, object):
+        pass
+
+    @abstractmethod
+    def delete(self, object):
+        pass
