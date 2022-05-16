@@ -1,15 +1,14 @@
 import datetime
-
-from .bo.Arrive import Start
-from .bo.Departure import End
+from .bo.Arrive import Arrive
+from .bo.Departure import Departure
 from .bo.Person import Person
 from .bo.Activity import Activity
 from .bo.TimeInterval import TimeInterval
 from .bo.Project import Project
 from .bo.ProjectWork import ProjectWork
 from .db.PersonMapper import PersonMapper
-from .db.ArriveMapper import StartMapper
-from .db.DepartureMapper import EndMapper
+from .db.ArriveMapper import ArriveMapper
+from .db.DepartureMapper import DepartureMapper
 from .db.ActivityMapper import ActivityMapper
 from .bo.TimeIntervalTransaction import TimeIntervalTransaction
 from .db.TimeIntervalTransactionMapper import TimeIntervalTransactionMapper
@@ -62,69 +61,69 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             mapper.update(person)
 
-    """Methoden für Start:"""
+    """Methoden für Kommen:"""
 
-    def create_start_event(self, start_id, last_edit, time_stamp):
-        """Start-Ereignis anlegen"""
-        start = Start()
-        start.set_id(start_id)
-        start.set_last_edit(last_edit)
-        start.set_time_stamp(time_stamp)
+    def create_arrive_event(self, arrive_id, last_edit, time_stamp):
+        """Arrive-Ereignis anlegen"""
+        arrive = Arrive()
+        arrive.set_id(arrive_id)
+        arrive.set_last_edit(last_edit)
+        arrive.set_time_stamp(time_stamp)
 
-        with StartMapper() as mapper:
-            return mapper.insert(start)
+        with ArriveMapper() as mapper:
+            return mapper.insert(arrive)
 
-    def delete_start_event(self, start):
+    def delete_arrive_event(self, arrive):
         """Die gegebene Person aus unserem System löschen."""
 
-        with StartMapper() as mapper:
-            mapper.delete(start)
+        with ArriveMapper() as mapper:
+            mapper.delete(arrive)
 
-    def save_start_event(self, start):
+    def save_arrive_event(self, arrive):
         """Eine Start-Ereignis-Instanz speichern."""
-        with StartMapper() as mapper:
-            mapper.update(start)
+        with ArriveMapper() as mapper:
+            mapper.update(arrive)
 
-    def get_start_event_by_id(self, number):
+    def get_arrive_event_by_id(self, number):
         """Das Start-Ereignis mit der gegebenen ID auslesen"""
-        with StartMapper() as mapper:
+        with ArriveMapper() as mapper:
             return mapper.find_by_key(number)
 
-    def get_all_start_events(self):
+    def get_all_arrive_events(self):
         """Alle in der Datenbank gespeicherten Start-Ereignisse auslesen."""
-        with StartMapper() as mapper:
+        with ArriveMapper() as mapper:
             return mapper.find_all()
 
-    """Methoden für End:"""
+    """Methoden für Gehen:"""
 
-    def create_end_event(self, end_id, last_edit, time_stamp):
+    def create_departure_event(self, departure_id, last_edit, time_stamp):
         """End-Ereignis anlegen"""
-        end = End()
-        end.set_id(end_id)
-        end.set_last_edit(last_edit)
-        end.set_time_stamp(time_stamp)
+        dearture = Departure()
+        dearture.set_id(departure_id)
+        dearture.set_last_edit(last_edit)
+        dearture.set_time_stamp(time_stamp)
 
-        with EndMapper() as mapper:
-            return mapper.insert(end)
+        with DepartureMapper() as mapper:
+            return mapper.insert(dearture)
 
-    def delete_end_event(self, end):
+    def delete_departure_event(self, departure):
         """Das gegebene End-Ereignis aus unserem System löschen."""
-        with EndMapper() as mapper:
-            mapper.delete(end)
+        with DepartureMapper() as mapper:
+            mapper.delete(departure)
 
-    def save_end_event(self, end):
+    def save_departure_event(self, dearture):
         """Eine End-Ereignis-Instanz speichern."""
-        with EndMapper() as mapper:
-            mapper.update(end)
+        with DepartureMapper() as mapper:
+            mapper.update(dearture)
 
-    def get_end_event_by_id(self, number):
+    def get_departure_event_by_id(self, number):
         """Das End-Ereignis mit der gegebenen ID auslesen"""
-        with EndMapper() as mapper:
+        with DepartureMapper() as mapper:
             return mapper.find_by_key(number)
 
-    def get_all_end_events(self):
+    def get_all_departure_events(self):
         """Alle in der Datenbank gespeicherten End-Ereignisse auslesen."""
-        with EndMapper() as mapper:
+        with DepartureMapper() as mapper:
             return mapper.find_all()
 
     """Methoden für Aktivität:"""
