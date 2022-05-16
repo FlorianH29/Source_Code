@@ -157,6 +157,19 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`worktimeaccount` (
   PRIMARY KEY (`worktimeaccount_id`))
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `SoPraTestDB`.`activity`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `SoPraTestDB`.`event` ;
+
+CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`event` (
+  `event_id` INT NOT NULL,
+  `last_edit` DATETIME NULL,
+  `event_type` INT NULL,
+  PRIMARY KEY (`event_id`))
+ENGINE = InnoDB;
+
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
