@@ -101,11 +101,14 @@ class ProjectWorkMapper (Mapper):
         self._cnx.commit()
         cursor.close()
 
-    def update(self, project_work):  # Projekt, welches geupdatet werden soll wird übergeben
+    def update(self, project_work):  # Projekt, welches als update dient wird hier der Methode übergeben
         cursor = self._cnx.cursor()
 
-        command = "UPDATE projectwork " + "SET last_edit=%s, projectwork_name=%s, description=%s WHERE projectwork_id=%s"
-        #Fehler behoben, Grüße Benedikt
+        command = "UPDATE projectwork SET last_edit=%s, projectwork_name=%s, description=%s WHERE projectwork_id=%s"
+        """  
+        Die Variablen werden dem übergebenen "project_work" entnommen und überschreiben die aktuellen Werte, 
+        welche im Object mit der entsprechenden id stehen.
+        """
         data = (project_work.get_last_edit(), project_work.get_project_work_name(),
                project_work.get_description(), project_work.get_id())
         cursor.execute(command, data)
