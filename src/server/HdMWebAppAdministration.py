@@ -1,15 +1,15 @@
 import datetime
 
-from .bo.Start import Start
-from .bo.End import End
+from .bo.Arrive import Start
+from .bo.Departure import End
 from .bo.Person import Person
 from .bo.Activity import Activity
 from .bo.TimeInterval import TimeInterval
 from .bo.Project import Project
 from .bo.ProjectWork import ProjectWork
 from .db.PersonMapper import PersonMapper
-from .db.StartMapper import StartMapper
-from .db.EndMapper import EndMapper
+from .db.ArriveMapper import StartMapper
+from .db.DepartureMapper import EndMapper
 from .db.ActivityMapper import ActivityMapper
 from .bo.TimeIntervalTransaction import TimeIntervalTransaction
 from .db.TimeIntervalTransactionMapper import TimeIntervalTransactionMapper
