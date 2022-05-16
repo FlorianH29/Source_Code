@@ -6,6 +6,7 @@ from .bo.Activity import Activity
 from .bo.TimeInterval import TimeInterval
 from .bo.Project import Project
 from .bo.ProjectWork import ProjectWork
+from .bo.Event import Event
 from .db.PersonMapper import PersonMapper
 from .db.ArriveMapper import ArriveMapper
 from .db.DepartureMapper import DepartureMapper
@@ -19,6 +20,7 @@ from .db.WorkTimeAccountMapper import WorkTimeAccountMapper
 from .db.ProjectMapper import ProjectMapper
 from .db.ProjectWorkMapper import ProjectWorkMapper
 from .db.TimeIntervalMapper import TimeIntervalMapper
+from .db.EventMapper import EventMapper
 
 
 class HdMWebAppAdministration(object):
@@ -346,13 +348,14 @@ class HdMWebAppAdministration(object):
     """Methoden von TimeInterval"""
 
     """ZeitIntervalkonto anlegen"""
+
     def create_time_interval(self, timeinterval_id, last_edit, start_time, end_time, time_interval):
         interval = TimeInterval()
         interval.set_id(timeinterval_id)
         interval.set_last_edit(last_edit)
         interval.set_start_time(start_time)
         interval.set_end_time(end_time)
-        interval.set_time_interval(time_interval)
+        interval.set_time_period(time_interval)
 
         with TimeIntervalMapper() as mapper:
             return mapper.insert(interval)
@@ -375,3 +378,35 @@ class HdMWebAppAdministration(object):
     def save_time_interval(self):
         with TimeIntervalMapper() as mapper:
             return mapper.update()
+
+    """Methoden von Event"""
+
+    def create_event(self, event_id, last_edit, event_type):
+        """Event-Ereignis anlegen"""
+        event = Event()
+        event.set_id(event_id)
+        event.set_last_edit(last_edit)
+        event.set_type(event_type)
+
+        with EventMapper() as mapper:
+            return mapper.insert(event)
+
+    def delete_event(self, event):
+        """Das gegebene Event-Ereignis aus unserem System löschen."""
+        with EventMapper() as mapper:
+            mapper.delete(event)
+
+    def save_event(self, event):
+        """Eine Event-Instanz speichern."""
+        with EventMapper() as mapper:
+            mapper.update(event)
+
+    def get_event_by_id(self, number):
+        """Die Events mit der gegebenen ID auslesen"""
+        with EventMapper() as mapper:
+            return mapper.find_by_key(number)
+
+    def get_all_events(self):
+        """Alle in der Datenbank gespeicherten Events auslesen."""
+        with EventMapper() as mapper:
+            return mapper.find_all()
