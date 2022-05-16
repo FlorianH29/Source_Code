@@ -49,5 +49,14 @@ export default class HdMWebAppAPI {
       })
     })
   }
-
+  getWorktimeaccountsForCustomer(perosnID) {
+    return this.#fetchAdvanced(this.#getWorktimeaccountsForPersonsURL(perosnID))
+      .then((responseJSON) => {
+        let worktimeaccountBOs = WorktimeaccountBO.fromJSON(responseJSON);
+        // console.info(accountBOs);
+        return new Promise(function (resolve) {
+          resolve(worktimeaccountBOs);
+        })
+      })
+  }
 }

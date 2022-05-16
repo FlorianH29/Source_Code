@@ -3,3 +3,5 @@
  */
 export {default as HdMWebAppAPI} from './HdMWebAppAPI';
 export {default as PersonBO} from './PersonBO';
+export {default as WorktimeaccountBO} from './WorktimeaccountBO';
+
