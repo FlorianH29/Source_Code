@@ -14,7 +14,7 @@ CORS(app, resources=r'/hdmwebapp/*')
 api = Api(app, version='1.0', title='HdMWebAppAPI',
           description='Eine rudimentäre Demo-API für das Buchen von Zeitslots für Projekte.')
 
-banking = api.namespace('hdmwebapp', description='Funktionen der HdMWebApp zur Zeitbuchung.')
+hdmwebapp = api.namespace('hdmwebapp', description='Funktionen der HdMWebApp zur Zeitbuchung.')
 
 # BusinessObject dient als Basisklasse, auf der die weiteren Strukturen Customer, Account und Transaction aufsetzen.
 bo = api.model('BusinessObject', {
@@ -36,20 +36,9 @@ person = api.inherit('Person', bo, {
 hwa = HdMWebAppAdministration()
 
 #Test für Update-Befehl
-ee1 = hwa.get_person_by_id(2)
-
-wa1 = hwa.get_work_time_account_by_id(4)
-ti1 = hwa.get_time_interval_by_id(1)
-
-p1 = hwa.get_project_by_id(1)
-d1 = hwa.get_departure_event_by_id(3)
-
-
-# wa1 = hwa.get_work_time_account_by_id(2)
-# print(wa1)
-
-# end1 = hwa.create_end_event(1, '20220305', '20220908')
-# print(end1)
+et = hwa.get_event_transaction_by_id(1)
+et.set_event(1)
+hwa.save_event_transaction(et)
 
 if __name__ == '__main__':
     app.run(debug=False)
