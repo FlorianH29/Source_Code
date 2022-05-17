@@ -393,12 +393,12 @@ class HdMWebAppAdministration(object):
 
     """Methoden von Event"""
 
-    def create_event(self, event_id, last_edit, event_type):
+    def create_event(self, event_type):
         """Event-Ereignis anlegen"""
         event = Event()
-        event.set_id(event_id)
-        event.set_last_edit(last_edit)
-        event.set_type(event_type)
+        event.set_id(1)
+        event.set_last_edit(datetime.datetime.now())
+        event.set_event_type(event_type)
 
         with EventMapper() as mapper:
             return mapper.insert(event)
@@ -410,6 +410,7 @@ class HdMWebAppAdministration(object):
 
     def save_event(self, event):
         """Eine Event-Instanz speichern."""
+        event.set_last_edit(datetime.datetime.now())
         with EventMapper() as mapper:
             mapper.update(event)
 
@@ -418,7 +419,7 @@ class HdMWebAppAdministration(object):
         with EventMapper() as mapper:
             return mapper.find_by_key(number)
 
-    def get_all_events(self):
+    def get_all_events(self, value):
         """Alle in der Datenbank gespeicherten Events auslesen."""
         with EventMapper() as mapper:
             return mapper.find_all()
