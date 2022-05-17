@@ -65,7 +65,7 @@ class Person(bo.BusinessObject):
 
     @staticmethod
     def from_dict(dictionary=dict()):
-        """Umwandeln eines Python dict() in einen User()."""
+        """Umwandeln eines Python dict() in eine Person()."""
         obj = Person()
         obj.set_id(dictionary["id"])  # eigentlich Teil von BusinessObject !
         obj.set_firstname(dictionary["firstname"])

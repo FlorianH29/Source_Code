@@ -7,7 +7,6 @@ from server.bo.Person import Person
 import datetime
 
 
-
 app = Flask(__name__)
 
 CORS(app, resources=r'/hdmwebapp/*')
@@ -37,24 +36,15 @@ person = api.inherit('Person', bo, {
 hwa = HdMWebAppAdministration()
 
 #Test für Update-Befehl
-#hwa.create_person(1,'20220505', 'Anders', 'Wurst', 'h.wurst', 'hw@gmx.lol', 1)
-#ee1 = hwa.get_person_by_id(2)
+ee1 = hwa.get_person_by_id(2)
 
-#wa1 = hwa.get_work_time_account_by_id(4)
-hwa.create_time_interval(1, '20221605', '20221605', '20221605', 3)
+wa1 = hwa.get_work_time_account_by_id(4)
+ti1 = hwa.get_time_interval_by_id(1)
 
+p1 = hwa.get_project_by_id(1)
+d1 = hwa.get_arrive_event_by_id(1)
+hwa.delete_arrive_event(d1)
 
-#p1 = hwa.get_project_by_id(1)
-
-#hwa.create_activity_for_project('Test Activity', 10, p1)
-# end1 = hwa.get_end_event_by_id(1)
-# end1.set_last_edit('20010101')
-# hwa.save_end_event(end1)
-#hwa.save_person(ee1)
-
-
-
-#hwa.save_end_event(ee1)
 
 # wa1 = hwa.get_work_time_account_by_id(2)
 # print(wa1)

@@ -1,5 +1,5 @@
-from server.bo import BusinessObject as bo
 import datetime
+from server.bo import BusinessObject as bo
 
 
 class TimeInterval(bo.BusinessObject):
@@ -12,8 +12,7 @@ class TimeInterval(bo.BusinessObject):
         self.__end_time = None
         """Arbeitszeit"""
         self.__time_period = None
-        """Last edit wird auf den akutellen Zeitstempel gestellt"""
-        self.__last_edit = datetime.datetime.now()
+
 
     def get_start_time(self):
         """Auslesen vom Start der Zeiterfassung"""
