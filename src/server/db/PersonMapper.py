@@ -3,7 +3,7 @@ from server.db.Mapper import Mapper
 
 
 class PersonMapper(Mapper):
-    """Mapper-Klasse, die User-Objekte auf eine relationale
+    """Mapper-Klasse, die Personen-Objekte auf eine relationale
     Datenbank abbildet.
     """
 
@@ -38,11 +38,11 @@ class PersonMapper(Mapper):
         return result
 
     def find_by_key(self, key):
-        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
+        """Suchen einer Person mit vorgegebener person_id. Da diese eindeutig ist,
         wird genau ein Objekt zurückgegeben.
 
         :param key Primärschlüsselattribut (->DB)
-        :return User-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+        :return Person-Objekt, das dem übergebenen Schlüssel entspricht, None bei
             nicht vorhandenem DB-Tupel.
         """
 
@@ -136,7 +136,7 @@ class PersonMapper(Mapper):
         cursor.close()
 
     def delete(self, employee):
-        """Löschen der Daten eines Customer-Objekts aus der Datenbank.
+        """Löschen der Daten eines Personen-Objekts aus der Datenbank.
 
         :param employee das aus der DB zu löschende "Objekt"
         """
