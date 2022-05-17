@@ -302,14 +302,14 @@ class HdMWebAppAdministration(object):
         with ProjectMapper() as mapper:
             return mapper.find_all()
 
-    def create_project(self, project_name, client, project_term_id):
+    def create_project(self, project_name, client, time_interval):
         """Erstellen eines neuen Projekts"""
         project = Project()
         project.set_id(1)
         project.set_last_edit(datetime.datetime.now())
         project.set_project_name(project_name)
         project.set_client(client)
-        project.set_time_interval_id(project_term_id)
+        project.set_time_interval_id(time_interval.get_id())
 
         with ProjectMapper() as mapper:
             return mapper.insert(project)
@@ -364,8 +364,8 @@ class HdMWebAppAdministration(object):
         interval.set_id(1)
         '''Setzen des Last_edit durch die aktuelle Zeit'''
         interval.set_last_edit(datetime.datetime.now())
-        interval.set_start_time(start_time)
-        interval.set_end_time(end_time)
+        interval.set_start_event_id(start_time)
+        interval.set_end_event_id(end_time)
         interval.set_time_period(time_period)
 
         with TimeIntervalMapper() as mapper:

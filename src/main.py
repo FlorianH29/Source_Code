@@ -56,6 +56,14 @@ hwa = HdMWebAppAdministration()
 # et.set_event(1)
 # hwa.save_event_transaction(et)
 
+
+
+my_time_inter = hwa.create_time_interval(20000101, 20000105, 5)
+
+my_project = hwa.create_project("my_project", "My_client", my_time_inter)
+
+
+
 '''dt1 = datetime.datetime(2022, 5, 17)
 dt2 = datetime.datetime.now()
 print(dt1)

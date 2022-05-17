@@ -7,27 +7,27 @@ class TimeInterval(bo.BusinessObject):
     def __init__(self):
         super().__init__()
         """Start der Zeiterfassung"""
-        self.__start_time = None
+        self.__start_event_id = None
         """Ende der Zeiterfassung"""
-        self.__end_time = None
+        self.__end_event_id = None
         """Zeitraum"""
         self.__time_period = None
 
-    def get_start_time(self):
+    def get_start_event_id(self):
         """Auslesen vom Start der Zeiterfassung"""
-        return self.__start_time
+        return self.__start_event_id
 
-    def set_start_time(self, start_time):
+    def set_start_event_id(self, start_time):
         """Starten der Zeiterfassung"""
-        self.__start_time = start_time
+        self.__start_event_id = start_time
 
-    def get_end_time(self):
+    def get_end_event_id(self):
         """Auslesen vom Ende der Zeiterfassung"""
-        return self.__end_time
+        return self.__end_event_id
 
-    def set_end_time(self, end_time):
+    def set_end_event_id(self, end_time):
         """Setzen des Endzeitpunktes"""
-        self.__end_time = end_time
+        self.__end_event_id = end_time
 
     def get_time_period(self):
         """Auslesen der Arbeitszeit"""
@@ -37,13 +37,15 @@ class TimeInterval(bo.BusinessObject):
         """Setzen der Arbeitszeit"""
         self.__time_period = time_period
 
-    def calculate_period(self):
-        self.__time_period = self.__end_time - self.__start_time  # Muss noch getestet werden ob die berechnung mit dem Datum do funktioniert.
+    def calculate_period(self, start_event, end_event_id):
+
+
+        self.__time_period = self.__end_event_id - self.__start_event_id  # Muss noch getestet werden ob die berechnung mit dem Datum do funktioniert.
 
     def __str__(self):
         """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
-        return "TimeInterval: {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self.__start_time,
-                                                         self.__end_time, self.__time_period)
+        return "TimeInterval: {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self.__start_event_id,
+                                                         self.__end_event_id, self.__time_period)
 
     @staticmethod
     def from_dict(dictionary=dict()):
@@ -51,7 +53,7 @@ class TimeInterval(bo.BusinessObject):
         obj = TimeInterval()
         obj.set_id(dictionary["id"])
         obj.set_last_edit(dictionary["last_edit"])
-        obj.set_start_time(dictionary["start_time"])
-        obj.set_end_time(dictionary["end_time"])
+        obj.set_start_event_id(dictionary["start_time"])
+        obj.set_end_event_id(dictionary["end_time"])
         obj.set_time_period(dictionary["time_period"])
         return obj
