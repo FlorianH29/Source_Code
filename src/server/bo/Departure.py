@@ -22,7 +22,7 @@ class Departure (ev.Event):
 
     @staticmethod
     def from_dict(dictionary=dict()):
-        """Umwandeln eines Python dict() in ein End-Event()."""
+        """Umwandeln eines Python dict() in ein Departure-Event()."""
         obj = Departure()
         obj.set_id(dictionary["id"])
         obj.set_last_edit(dictionary["last_edit"])
