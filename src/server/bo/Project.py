@@ -21,15 +21,15 @@ class Project (bo.BusinessObject):
     def get_client(self):
         return self.__client
 
-    def set_time_interval_id(self, project_term_id):
-        self.time_interval_id = project_term_id
+    def set_time_interval_id(self, timeinterval_id):
+        self.time_interval_id = timeinterval_id
 
     def get_time_interval_id(self):
         return self.time_interval_id
 
     def __str__(self):
         """Ausgabe von: id, name, client, project_term_id"""
-        return "Project: \n  id: {} \n  project_name: {} \n  client: {} \n  time_interval_id: {}".format(
+        return "Project: \n  id: {} \n  project_name: {} \n  client: {} \n  timeinterval_id: {}".format(
             self.get_id(), self.get_project_name(), self.get_client(), self.get_time_interval_id())
 
     @staticmethod
@@ -40,5 +40,5 @@ class Project (bo.BusinessObject):
         project.set_project_name(dictionary["project_name"])  # Sets the name from the dict as the name of the object.
         project.set_last_edit("last_edit")  # Set the last edit of the project work.
         project.set_client(dictionary["client"])  # Sets the client from the dict as the client of the object.
-        project.set_time_interval_id(dictionary["time_interval_id"])  # Sets the client from the dict as the client of the object.
+        project.set_time_interval_id(dictionary["timeinterval_id"])  # Sets the client from the dict as the client of the object.
         return project
