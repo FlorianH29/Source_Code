@@ -36,14 +36,16 @@ person = api.inherit('Person', bo, {
 hwa = HdMWebAppAdministration()
 
 #Test für Update-Befehl
-ee1 = hwa.get_person_by_id(2)
+"""ee1 = hwa.get_person_by_id(2)
 
 wa1 = hwa.get_work_time_account_by_id(4)
 ti1 = hwa.get_time_interval_by_id(1)
 
 p1 = hwa.get_project_by_id(1)
-d1 = hwa.get_arrive_event_by_id(1)
-hwa.delete_arrive_event(d1)
+d1 = hwa.get_arrive_event_by_id(1)"""
+#hwa.delete_arrive_event(d1)
+
+
 
 
 # wa1 = hwa.get_work_time_account_by_id(2)
