@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`project` (
   `last_edit` DATETIME NULL,
   `project_name` VARCHAR(45) NULL,
   `client` VARCHAR(45) NULL,
-  `project_term_id` INT NULL,
+  `project_time_interval_id` INT NULL,
   PRIMARY KEY (`project_id`))
 ENGINE = InnoDB;
 
