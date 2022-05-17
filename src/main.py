@@ -36,7 +36,9 @@ person = api.inherit('Person', bo, {
 hwa = HdMWebAppAdministration()
 
 #Test für Update-Befehl
-
+et = hwa.get_event_transaction_by_id(1)
+et.set_event(1)
+hwa.save_event_transaction(et)
 
 if __name__ == '__main__':
     app.run(debug=False)
