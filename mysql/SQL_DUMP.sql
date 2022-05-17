@@ -31,15 +31,15 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `SoPraTestDB`.`end`
+-- Table `SoPraTestDB`.`departure`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `SoPraTestDB`.departure ;
 
-CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`end` (
-  `end_id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`departure` (
+  `departure_id` INT NOT NULL,
   `last_edit` DATETIME NULL,
   `time_stamp` DATETIME NULL,
-  PRIMARY KEY (`end_id`))
+  PRIMARY KEY (`departure_id`))
 ENGINE = InnoDB;
 
 
@@ -104,15 +104,15 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `SoPraTestDB`.`start`
+-- Table `SoPraTestDB`.`arrive`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `SoPraTestDB`.arrive ;
 
-CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`start` (
-  `start_id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`arrive` (
+  `arrive_id` INT NOT NULL,
   `last_edit` DATETIME NULL,
   `time_stamp` DATETIME NULL,
-  PRIMARY KEY (`start_id`))
+  PRIMARY KEY (`arrive_id`))
 ENGINE = InnoDB;
 
 
