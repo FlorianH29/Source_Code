@@ -110,7 +110,7 @@ class ProjectWorkMapper (Mapper):
         welche im Object mit der entsprechenden id stehen.
         """
         data = (project_work.get_last_edit(), project_work.get_project_work_name(),
-               project_work.get_description(), project_work.get_id())
+                project_work.get_description(), project_work.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

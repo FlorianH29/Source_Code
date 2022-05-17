@@ -295,11 +295,11 @@ class HdMWebAppAdministration(object):
         with ProjectMapper() as mapper:
             return mapper.find_all()
 
-    def create_project(self, project_id, last_edit, project_name, client, project_term_id):
+    def create_project(self, project_name, client, project_term_id):
         """Erstellen eines neuen Projekts"""
         project = Project()
-        project.set_id(project_id)
-        project.set_last_edit(last_edit)
+        project.set_id(1)
+        project.set_last_edit(datetime.datetime.now())
         project.set_project_name(project_name)
         project.set_client(client)
         project.set_project_term_id(project_term_id)
@@ -312,6 +312,8 @@ class HdMWebAppAdministration(object):
             return mapper.delete(project)
 
     def save_project(self, project):
+        # Vor dem Speichern wird der last_edit zu aktuellen Zeitpunkt gesetzt
+        project.set_last_edit(datetime.datetime.now())
         with ProjectMapper() as mapper:
             return mapper.update(project)
 
@@ -326,11 +328,11 @@ class HdMWebAppAdministration(object):
         with ProjectWorkMapper() as mapper:
             return mapper.find_all()
 
-    def create_project_work(self, project_work_id, last_edit, project_work_name, description):
+    def create_project_work(self, project_work_name, description):
         """Erstellen eines neuen ProjektWorks"""
         project_work = ProjectWork()
-        project_work.set_id(project_work)
-        project_work.set_last_edit(last_edit)
+        project_work.set_id(1)
+        project_work.set_last_edit(datetime.datetime.now())
         project_work.set_project_work_name(project_work_name)
         project_work.set_description(description)
 
@@ -342,6 +344,8 @@ class HdMWebAppAdministration(object):
             return mapper.delete(project_work)
 
     def save_project_work(self, project_work):
+        # Vor dem Speichern wird der last_edit zu aktuellen Zeitpunkt gesetzt
+        project_work.set_last_edit(datetime.datetime.now())
         with ProjectWorkMapper() as mapper:
             return mapper.update(project_work)
 
