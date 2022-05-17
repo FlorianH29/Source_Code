@@ -30,7 +30,7 @@ class EventMapper(Mapper):
             event = Event()
             event.set_id(event_id)
             event.set_last_edit(last_edit)
-            event.set_type(event_type)
+            event.set_event_type(event_type)
 
             result = event
         except IndexError:
@@ -57,7 +57,7 @@ class EventMapper(Mapper):
             event = Event()
             event.set_id(event_id)
             event.set_last_edit(last_edit)
-            event.set_type(event_type)
+            event.set_event_type(event_type)
             result.append(event)
 
         self._cnx.commit()
@@ -89,7 +89,7 @@ class EventMapper(Mapper):
                 event.set_id(1)
 
         command = "INSERT INTO event (event_id, last_edit, event_type) VALUES (%s,%s,%s)"
-        data = (event.get_id(), event.get_last_edit(), event.get_type())
+        data = (event.get_id(), event.get_last_edit(), event.get_event_type())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -105,7 +105,7 @@ class EventMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE event SET last_edit=%s, event_type=%s WHERE event_id=%s"
-        data = (event.get_last_edit(), event.get_type(), event.get_id())
+        data = (event.get_last_edit(), event.get_event_type(), event.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

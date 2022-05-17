@@ -60,6 +60,7 @@ class HdMWebAppAdministration(object):
 
     def save_person(self, person):
         """Die gegebene Person speichern."""
+        person.set_last_edit(datetime.datetime.now())
         with PersonMapper() as mapper:
             mapper.update(person)
 
@@ -301,11 +302,11 @@ class HdMWebAppAdministration(object):
         with ProjectMapper() as mapper:
             return mapper.find_all()
 
-    def create_project(self, project_id, last_edit, project_name, client, project_term_id):
+    def create_project(self, project_name, client, project_term_id):
         """Erstellen eines neuen Projekts"""
         project = Project()
-        project.set_id(project_id)
-        project.set_last_edit(last_edit)
+        project.set_id(1)
+        project.set_last_edit(datetime.datetime.now())
         project.set_project_name(project_name)
         project.set_client(client)
         project.set_time_interval_id(project_term_id)
@@ -318,6 +319,8 @@ class HdMWebAppAdministration(object):
             return mapper.delete(project)
 
     def save_project(self, project):
+        # Vor dem Speichern wird der last_edit zu aktuellen Zeitpunkt gesetzt
+        project.set_last_edit(datetime.datetime.now())
         with ProjectMapper() as mapper:
             return mapper.update(project)
 
@@ -332,11 +335,11 @@ class HdMWebAppAdministration(object):
         with ProjectWorkMapper() as mapper:
             return mapper.find_all()
 
-    def create_project_work(self, project_work_id, last_edit, project_work_name, description):
+    def create_project_work(self, project_work_name, description):
         """Erstellen eines neuen ProjektWorks"""
         project_work = ProjectWork()
-        project_work.set_id(project_work)
-        project_work.set_last_edit(last_edit)
+        project_work.set_id(1)
+        project_work.set_last_edit(datetime.datetime.now())
         project_work.set_project_work_name(project_work_name)
         project_work.set_description(description)
 
@@ -348,20 +351,22 @@ class HdMWebAppAdministration(object):
             return mapper.delete(project_work)
 
     def save_project_work(self, project_work):
+        # Vor dem Speichern wird der last_edit zu aktuellen Zeitpunkt gesetzt
+        project_work.set_last_edit(datetime.datetime.now())
         with ProjectWorkMapper() as mapper:
             return mapper.update(project_work)
 
     """Methoden von TimeInterval"""
 
-    def create_time_interval(self, timeinterval_id, start_time, end_time, time_interval):
+    def create_time_interval(self, start_time, end_time, time_period):
         """ZeitIntervalkonto anlegen"""
         interval = TimeInterval()
-        interval.set_id(timeinterval_id)
+        interval.set_id(1)
         '''Setzen des Last_edit durch die aktuelle Zeit'''
         interval.set_last_edit(datetime.datetime.now())
         interval.set_start_time(start_time)
         interval.set_end_time(end_time)
-        interval.set_time_period(time_interval)
+        interval.set_time_period(time_period)
 
         with TimeIntervalMapper() as mapper:
             return mapper.insert(interval)
@@ -382,6 +387,7 @@ class HdMWebAppAdministration(object):
             return mapper.find_all()
 
     def save_time_interval(self, value):
+        value.set_last_edit(datetime.datetime.now())
         with TimeIntervalMapper() as mapper:
             return mapper.update(value)
 
