@@ -40,10 +40,10 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             return mapper.find_all()
 
-    def create_person(self, person_id, last_edit, firstname, lastname, username, mailaddress, firebase_id):
+    def create_person(self, firstname, lastname, username, mailaddress, firebase_id):
         person = Person()
-        person.set_id(person_id)
-        person.set_last_edit(last_edit)
+        person.set_id(1)
+        person.set_last_edit(datetime.datetime.now())
         person.set_firstname(firstname)
         person.set_lastname(lastname)
         person.set_username(username)
