@@ -14,7 +14,7 @@ CORS(app, resources=r'/hdmwebapp/*')
 api = Api(app, version='1.0', title='HdMWebAppAPI',
           description='Eine rudimentäre Demo-API für das Buchen von Zeitslots für Projekte.')
 
-banking = api.namespace('hdmwebapp', description='Funktionen der HdMWebApp zur Zeitbuchung.')
+hdmwebapp = api.namespace('hdmwebapp', description='Funktionen der HdMWebApp zur Zeitbuchung.')
 
 # BusinessObject dient als Basisklasse, auf der die weiteren Strukturen Customer, Account und Transaction aufsetzen.
 bo = api.model('BusinessObject', {
