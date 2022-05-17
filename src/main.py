@@ -30,7 +30,7 @@ person = api.inherit('Person', bo, {
     'firebase_id': fields.String(attribute='__firebase_id', description='Google User ID eines Benutzers')
 })
 
-
+pro = hwa.create_project(1, 20000101,)
 # hier könnt ihr eure Tests reinschreiben, bitte bevor ihr auf den Main-pushed löschen!!!
 
 hwa = HdMWebAppAdministration()

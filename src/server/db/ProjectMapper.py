@@ -37,7 +37,7 @@ class ProjectMapper (Mapper):
             project.set_last_edit(last_edit)
             project.set_project_name(project_name)
             project.set_client(client)
-            project.set_project_term_id(project_term)
+            project.set_project_time_interval_id(project_term)
 
             result = project
         except IndexError:
@@ -62,7 +62,7 @@ class ProjectMapper (Mapper):
             project.set_last_edit(last_edit)
             project.set_project_name(project_name)
             project.set_client(client)
-            project.set_project_term_id(project_term_id)  # muss hier das time_interval via get übergeben werden?
+            project.set_project_time_interval_id(project_term_id)  # muss hier das time_interval via get übergeben werden?
             all_projects.append(project)
 
         self._cnx.commit()
@@ -91,7 +91,7 @@ class ProjectMapper (Mapper):
                 object.get_last_edit(),
                 object.get_project_name(),
                 object.get_client(),
-                object.get_project_term_id())
+                object.get_project_time_interval_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -116,7 +116,7 @@ class ProjectMapper (Mapper):
         welche im Object mit der entsprechenden id stehen.
         """
         data = (project.get_last_edit(), project.get_project_name(), project.get_client(),\
-                project.get_project_term_id(), project.get_id())
+                project.get_project_time_interval_id(), project.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
