@@ -31,7 +31,7 @@ class TimeIntervalMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT timeinterval_id, last_edit, start_time, end_time, time_period FROM timeinterval " \
+        command = "SELECT timeinterval_id, last_edit, start_time, end_time, time_interval FROM timeinterval " \
                   "WHERE timeinterval_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
@@ -72,7 +72,7 @@ class TimeIntervalMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 time_interval.set_id(1)
 
-        command = "INSERT INTO timeinterval (timeinterval_id, last_edit, start_time, end_time, time_period)" \
+        command = "INSERT INTO timeinterval (timeinterval_id, last_edit, start_time, end_time, time_interval)" \
                   " VALUES (%s,%s,%s,%s,%s)"
         data = (time_interval.get_id(),
                 time_interval.get_last_edit(),
@@ -90,10 +90,10 @@ class TimeIntervalMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "UPDATE timeinterval " + "SET timeinterval_id=%s, last_edit=%s, start_time=%s, end_time=%s, " \
-                                           "time_interval=%s, WHERE time_interval_id=%s"
-        data = (time_interval.get_id(), time_interval.get_last_edit(), time_interval.get_start_time(),
-                time_interval.get_end_time(), time_interval.get_time_period())
+        command = "UPDATE timeinterval " + "SET last_edit=%s, start_time=%s, end_time=%s, " \
+                                           "time_interval=%s WHERE timeinterval_id=%s"
+        data = (time_interval.get_last_edit(), time_interval.get_start_time(),
+                time_interval.get_end_time(), time_interval.get_time_period(), time_interval.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

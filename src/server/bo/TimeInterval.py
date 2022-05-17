@@ -1,5 +1,5 @@
+import datetime
 from server.bo import BusinessObject as bo
-from abc import ABC
 
 
 class TimeInterval(bo.BusinessObject):
@@ -12,6 +12,7 @@ class TimeInterval(bo.BusinessObject):
         self.__end_time = None
         """Arbeitszeit"""
         self.__time_period = None
+
 
     def get_start_time(self):
         """Auslesen vom Start der Zeiterfassung"""
