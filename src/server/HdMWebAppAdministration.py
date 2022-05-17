@@ -309,7 +309,7 @@ class HdMWebAppAdministration(object):
         project.set_last_edit(datetime.datetime.now())
         project.set_project_name(project_name)
         project.set_client(client)
-        project.set_project_term_id(project_term_id)
+        project.set_project_time_interval_id(project_term_id)
 
         with ProjectMapper() as mapper:
             return mapper.insert(project)
