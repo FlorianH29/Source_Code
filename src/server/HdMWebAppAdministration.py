@@ -66,11 +66,11 @@ class HdMWebAppAdministration(object):
 
     """Methoden für Kommen:"""
 
-    def create_arrive_event(self, arrive_id, last_edit, time_stamp):
+    def create_arrive_event(self, time_stamp):
         """Arrive-Ereignis anlegen"""
         arrive = Arrive()
-        arrive.set_id(arrive_id)
-        arrive.set_last_edit(last_edit)
+        arrive.set_id(1)
+        arrive.set_last_edit(datetime.datetime.now())
         arrive.set_time_stamp(time_stamp)
 
         with ArriveMapper() as mapper:
@@ -84,6 +84,7 @@ class HdMWebAppAdministration(object):
 
     def save_arrive_event(self, arrive):
         """Eine Start-Ereignis-Instanz speichern."""
+        arrive.set_last_edit(datetime.datetime.now())
         with ArriveMapper() as mapper:
             mapper.update(arrive)
 
@@ -99,25 +100,26 @@ class HdMWebAppAdministration(object):
 
     """Methoden für Gehen:"""
 
-    def create_departure_event(self, departure_id, last_edit, time_stamp):
+    def create_departure_event(self, time_stamp):
         """End-Ereignis anlegen"""
-        dearture = Departure()
-        dearture.set_id(departure_id)
-        dearture.set_last_edit(last_edit)
-        dearture.set_time_stamp(time_stamp)
+        departure = Departure()
+        departure.set_id(1)
+        departure.set_last_edit(datetime.datetime.now())
+        departure.set_time_stamp(time_stamp)
 
         with DepartureMapper() as mapper:
-            return mapper.insert(dearture)
+            return mapper.insert(departure)
 
     def delete_departure_event(self, departure):
         """Das gegebene End-Ereignis aus unserem System löschen."""
         with DepartureMapper() as mapper:
             mapper.delete(departure)
 
-    def save_departure_event(self, dearture):
+    def save_departure_event(self, departure):
         """Eine End-Ereignis-Instanz speichern."""
+        departure.set_last_edit(datetime.datetime.now())
         with DepartureMapper() as mapper:
-            mapper.update(dearture)
+            mapper.update(departure)
 
     def get_departure_event_by_id(self, number):
         """Das End-Ereignis mit der gegebenen ID auslesen"""
@@ -153,6 +155,7 @@ class HdMWebAppAdministration(object):
 
     def save_activity(self, activity):
         """Eine Aktivitäts-Instanz speichern."""
+        activity.set_last_edit(datetime.datetime.now())
         with ActivityMapper() as mapper:
             mapper.update(activity)
 
@@ -351,9 +354,8 @@ class HdMWebAppAdministration(object):
 
     """Methoden von TimeInterval"""
 
-    """ZeitIntervalkonto anlegen"""
-
     def create_time_interval(self, timeinterval_id, start_time, end_time, time_interval):
+        """ZeitIntervalkonto anlegen"""
         interval = TimeInterval()
         interval.set_id(timeinterval_id)
         '''Setzen des Last_edit durch die aktuelle Zeit'''
