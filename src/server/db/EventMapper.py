@@ -21,16 +21,17 @@ class EventMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT event_id, last_edit, event_type FROM event WHERE event_id={}".format(key)
+        command = "SELECT event_id, last_edit, event_type, time_stamp FROM event WHERE event_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (event_id, last_edit, event_type) = tuples[0]
+            (event_id, last_edit, event_type, time_stamp) = tuples[0]
             event = Event()
             event.set_id(event_id)
             event.set_last_edit(last_edit)
             event.set_event_type(event_type)
+            event.set_time_stamp(time_stamp)
 
             result = event
         except IndexError:
@@ -53,11 +54,12 @@ class EventMapper(Mapper):
         cursor.execute("SELECT * from event")
         tuples = cursor.fetchall()
 
-        for (event_id, last_edit, event_type) in tuples:
+        for (event_id, last_edit, event_type, time_stamp) in tuples:
             event = Event()
             event.set_id(event_id)
             event.set_last_edit(last_edit)
             event.set_event_type(event_type)
+            event.set_time_stamp(time_stamp)
             result.append(event)
 
         self._cnx.commit()
@@ -88,8 +90,8 @@ class EventMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 event.set_id(1)
 
-        command = "INSERT INTO event (event_id, last_edit, event_type) VALUES (%s,%s,%s)"
-        data = (event.get_id(), event.get_last_edit(), event.get_event_type())
+        command = "INSERT INTO event (event_id, last_edit, event_type, time_stamp) VALUES (%s,%s,%s,%s)"
+        data = (event.get_id(), event.get_last_edit(), event.get_event_type(), event.get_time_stamp())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -104,8 +106,8 @@ class EventMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE event SET last_edit=%s, event_type=%s WHERE event_id=%s"
-        data = (event.get_last_edit(), event.get_event_type(), event.get_id())
+        command = "UPDATE event SET last_edit=%s, event_type=%s, time_stamp=%s WHERE event_id=%s"
+        data = (event.get_last_edit(), event.get_event_type(), event.get_time_stamp(), event.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

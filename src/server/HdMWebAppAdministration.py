@@ -359,14 +359,14 @@ class HdMWebAppAdministration(object):
 
     """Methoden von TimeInterval"""
 
-    def create_time_interval(self, start_time, end_time, time_period):
+    def create_time_interval(self, start_event, end_event, time_period):
         """ZeitIntervalkonto anlegen"""
         interval = TimeInterval()
         interval.set_id(1)
         '''Setzen des Last_edit durch die aktuelle Zeit'''
         interval.set_last_edit(datetime.datetime.now())
-        interval.set_start_event_id(start_time)
-        interval.set_end_event_id(end_time)
+        interval.set_start_event(start_event.get_time_stamp())
+        interval.set_end_event(end_event.get_time_stamp())
         interval.set_time_period(time_period)
 
         with TimeIntervalMapper() as mapper:
@@ -394,12 +394,13 @@ class HdMWebAppAdministration(object):
 
     """Methoden von Event"""
 
-    def create_event(self, event_type):
+    def create_event(self, event_type, time_stamp):
         """Event-Ereignis anlegen"""
         event = Event()
         event.set_id(1)
         event.set_last_edit(datetime.datetime.now())
         event.set_event_type(event_type)
+        event.set_time_stamp(time_stamp)
 
         with EventMapper() as mapper:
             return mapper.insert(event)

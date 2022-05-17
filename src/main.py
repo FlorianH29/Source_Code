@@ -51,31 +51,6 @@ timeinterval = api.inherit('TimeInterval', bo, {
 
 hwa = HdMWebAppAdministration()
 
-#Test für Update-Befehl
-# et = hwa.get_event_transaction_by_id(1)
-# et.set_event(1)
-# hwa.save_event_transaction(et)
-
-
-
-my_time_inter = hwa.create_time_interval("20000101", "20000105", 5)
-
-my_project = hwa.create_project("my_project", "My_client", my_time_inter)
-
-my_activity = hwa.create_activity_for_project("my_name", 5, my_project)
-
-my_project_work = hwa.create_project_work("my_project_work_name", "my_descriptiohn", my_activity)
-
-
-
-
-'''dt1 = datetime.datetime(2022, 5, 17)
-dt2 = datetime.datetime.now()
-print(dt1)
-print(dt2)
-
-dt3 = dt2 - dt1
-print(type(dt3))'''
 
 
 if __name__ == '__main__':

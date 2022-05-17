@@ -167,6 +167,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`event` (
   `event_id` INT NOT NULL,
   `last_edit` DATETIME NULL,
   `event_type` INT NULL,
+  `time_stamp` DATETIME NULL,
   PRIMARY KEY (`event_id`))
 ENGINE = InnoDB;
 

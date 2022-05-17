@@ -1,9 +1,8 @@
 from server.bo import BusinessObject as bo
 import datetime
-from abc import ABC, abstractmethod
 
 
-class Event(bo.BusinessObject, ABC):
+class Event(bo.BusinessObject):
 
     def __init__(self):
         super().__init__()
@@ -30,6 +29,10 @@ class Event(bo.BusinessObject, ABC):
         self.__event_type = value
         """Auslesen des Zeitpunktes."""
 
+    def __str__(self):
+        """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
+        return "Event: {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self.get_event_type(),
+                                              self.get_time_stamp())
 
     @staticmethod
     def from_dict(dictionary=dict()):
@@ -37,5 +40,6 @@ class Event(bo.BusinessObject, ABC):
         obj = Event()
         obj.set_id(dictionary["id"])  # eigentlich Teil von BusinessObject !
         obj.set_last_edit(dictionary["last_edit"])
-        obj.set_type(dictionary["event_type"])
+        obj.set_event_type(dictionary["event_type"])
+        obj.set_time_stamp(dictionary["time_stamp"])
         return obj
