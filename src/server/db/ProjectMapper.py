@@ -116,7 +116,7 @@ class ProjectMapper (Mapper):
         welche im Object mit der entsprechenden id stehen.
         """
         data = (project.get_last_edit(), project.get_project_name(), project.get_client(),\
-                project.get_project_term_id(), project.get_id())
+                project.get_time_interval_id(), project.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
