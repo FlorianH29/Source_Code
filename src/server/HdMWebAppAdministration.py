@@ -335,13 +335,14 @@ class HdMWebAppAdministration(object):
         with ProjectWorkMapper() as mapper:
             return mapper.find_all()
 
-    def create_project_work(self, project_work_name, description):
+    def create_project_work(self, project_work_name, description, activity):
         """Erstellen eines neuen ProjektWorks"""
         project_work = ProjectWork()
         project_work.set_id(1)
         project_work.set_last_edit(datetime.datetime.now())
         project_work.set_project_work_name(project_work_name)
         project_work.set_description(description)
+        project_work.set_affiliated_activity(activity.get_id())
 
         with ProjectWorkMapper() as mapper:
             return mapper.insert(project_work)

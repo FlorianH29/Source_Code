@@ -58,9 +58,14 @@ hwa = HdMWebAppAdministration()
 
 
 
-my_time_inter = hwa.create_time_interval(20000101, 20000105, 5)
+my_time_inter = hwa.create_time_interval("20000101", "20000105", 5)
 
 my_project = hwa.create_project("my_project", "My_client", my_time_inter)
+
+my_activity = hwa.create_activity_for_project("my_name", 5, my_project)
+
+my_project_work = hwa.create_project_work("my_project_work_name", "my_descriptiohn", my_activity)
+
 
 
 
