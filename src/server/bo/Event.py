@@ -8,7 +8,7 @@ class Event(bo.BusinessObject, ABC):
     def __init__(self):
         super().__init__()
         self.__time_stamp = None  # Der Zeitpunkt des Eintretens des Ereignisses
-        self.__type = ""  # Typ des Ereignisses, entweder Start oder Ende eines Zeitintervalls
+        self.__event_type = ""  # Typ des Ereignisses, entweder Start oder Ende eines Zeitintervalls
 
 
     def get_time_stamp(self):
@@ -21,13 +21,13 @@ class Event(bo.BusinessObject, ABC):
         self.__time_stamp = value
 
 
-    def get_type(self):
+    def get_event_type(self):
         """Auslesen des Zeitpunktes."""
-        return self.__type
+        return self.__event_type
 
 
-    def set_type(self, value):
-        self.__type = value
+    def set_event_type(self, value):
+        self.__event_type = value
         """Auslesen des Zeitpunktes."""
 
 

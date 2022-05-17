@@ -60,6 +60,7 @@ class HdMWebAppAdministration(object):
 
     def save_person(self, person):
         """Die gegebene Person speichern."""
+        person.set_last_edit(datetime.datetime.now())
         with PersonMapper() as mapper:
             mapper.update(person)
 
