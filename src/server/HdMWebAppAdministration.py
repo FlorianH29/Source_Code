@@ -184,6 +184,7 @@ class HdMWebAppAdministration(object):
 
     def save_event_transaction(self, event_transaction):
         """Die gegebene EventTransaction speichern."""
+        event_transaction.set_last_edit(datetime.datetime.now())
         with EventTransactionMapper() as mapper:
             mapper.update(event_transaction)
 
@@ -192,13 +193,13 @@ class HdMWebAppAdministration(object):
         with EventTransactionMapper() as mapper:
             mapper.delete(event_transaction)
 
-    def create_event_transaction(self, event_transcation_id, last_edit, affiliated_work_time_account_id, event):
+    def create_event_transaction(self, event, work_time_account):
         """Eine EventTransaction erstellen."""
         t = EventTransaction()
-        t.set_id(event_transcation_id)
-        t.set_last_edit(last_edit)
-        t.set_affiliated_work_time_account(affiliated_work_time_account_id)
-        t.set_event(event)
+        t.set_id(1)
+        t.set_last_edit(datetime.datetime.now())
+        t.set_affiliated_work_time_account(work_time_account.get_id())
+        t.set_event(event.get_id())
 
         with EventTransactionMapper() as mapper:
             return mapper.insert(t)
@@ -222,6 +223,7 @@ class HdMWebAppAdministration(object):
 
     def save_time_interval_transaction(self, time_interval_transaction):
         """Die gegebene TimeIntervalTransaction speichern."""
+        time_interval_transaction.set_last_edit(datetime.datetime.now())
         with TimeIntervalTransactionMapper() as mapper:
             mapper.update(time_interval_transaction)
 
@@ -275,6 +277,7 @@ class HdMWebAppAdministration(object):
                 return None
 
     def save_work_time_account(self, work_time_account):
+        work_time_account.set_last_edit(datetime.datetime.now())
         with WorkTimeAccountMapper() as mapper:
             mapper.update(work_time_account)
 
