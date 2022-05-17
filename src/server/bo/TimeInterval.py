@@ -10,9 +10,8 @@ class TimeInterval(bo.BusinessObject):
         self.__start_time = None
         """Ende der Zeiterfassung"""
         self.__end_time = None
-        """Arbeitszeit"""
+        """Zeitraum"""
         self.__time_period = None
-
 
     def get_start_time(self):
         """Auslesen vom Start der Zeiterfassung"""
@@ -23,19 +22,19 @@ class TimeInterval(bo.BusinessObject):
         self.__start_time = start_time
 
     def get_end_time(self):
-        """Auslesen vom ende der Zeiterfassung"""
+        """Auslesen vom Ende der Zeiterfassung"""
         return self.__end_time
 
     def set_end_time(self, end_time):
-        """Beenden der der Zeiterfassung"""
+        """Setzen des Endzeitpunktes"""
         self.__end_time = end_time
 
     def get_time_period(self):
-        """Auslesen vov der Arbeitszeit"""
+        """Auslesen der Arbeitszeit"""
         return self.__time_period
 
     def set_time_period(self, time_period):
-        """Beenden der Arbeitszeit"""
+        """Setzen der Arbeitszeit"""
         self.__time_period = time_period
 
     def calculate_period(self):

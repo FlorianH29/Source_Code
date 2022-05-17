@@ -30,15 +30,40 @@ person = api.inherit('Person', bo, {
     'firebase_id': fields.String(attribute='__firebase_id', description='Google User ID eines Benutzers')
 })
 
+project = api.inherit('Project', bo, {
+    'projectname': fields.String(attribute='__project_name', description='Name eines Projekts'),
+    'client': fields.String(attribute='__client', description='Auftraggeber eines Projekts'),
+    'project_term_id': fields.String(attribute='__project_term_id', description='Laufzeit eines Projekts')
+})
+
+worktimeaccount = api.inherit('WorkTimeAccount', bo, {
+    'owner': fields.String(attribute='__owner', description='Besitzer eines Arbeitszeitkonto')
+})
+
+timeinterval = api.inherit('TimeInterval', bo, {
+    'starttime': fields.String(attribute='__start_time', description='Startzeitpunkt eines Zeitintervalls'),
+    'endtime': fields.String(attribute='__end_time', description='Endzeitpunkt eines Zeitintervalls'),
+    'timeperiod': fields.String(attribute='__time_period', description='Zeitraum des Intervalls')
+})
+
 
 # hier könnt ihr eure Tests reinschreiben, bitte bevor ihr auf den Main-pushed löschen!!!
 
 hwa = HdMWebAppAdministration()
 
 #Test für Update-Befehl
-et = hwa.get_event_transaction_by_id(1)
-et.set_event(1)
-hwa.save_event_transaction(et)
+# et = hwa.get_event_transaction_by_id(1)
+# et.set_event(1)
+# hwa.save_event_transaction(et)
+
+'''dt1 = datetime.datetime(2022, 5, 17)
+dt2 = datetime.datetime.now()
+print(dt1)
+print(dt2)
+
+dt3 = dt2 - dt1
+print(type(dt3))'''
+
 
 if __name__ == '__main__':
     app.run(debug=False)

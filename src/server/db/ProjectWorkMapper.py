@@ -104,7 +104,7 @@ class ProjectWorkMapper (Mapper):
     def update(self, project_work):  # Projekt, welches geupdatet werden soll wird übergeben
         cursor = self._cnx.cursor()
 
-        command = "UPDATE projectwork " + "SET last_edit=%s, projectwork_name=%s, description=%s WHERE projectwork_id=%s"
+        command = "UPDATE projectwork SET last_edit=%s, projectwork_name=%s, description=%s WHERE projectwork_id=%s"
         #Fehler behoben, Grüße Benedikt
         data = (project_work.get_last_edit(), project_work.get_project_work_name(),
                project_work.get_description(), project_work.get_id())
