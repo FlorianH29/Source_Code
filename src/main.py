@@ -15,7 +15,7 @@ CORS(app, resources=r'/hdmwebapp/*')
 api = Api(app, version='1.0', title='HdMWebAppAPI',
           description='Eine rudimentäre Demo-API für das Buchen von Zeitslots für Projekte.')
 
-function = api.namespace('hdmwebapp', description='Funktionen der HdMWebApp zur Zeitbuchung.')
+hdmwebapp = api.namespace('hdmwebapp', description='Funktionen der HdMWebApp zur Zeitbuchung.')
 
 # BusinessObject dient als Basisklasse, auf der die weiteren Strukturen Customer, Account und Transaction aufsetzen.
 bo = api.model('BusinessObject', {
@@ -34,6 +34,51 @@ person = api.inherit('Person', bo, {
 work_time_account = api.inherit('WorkTimeAccount', bo, {
     'owner': fields.Integer(attribute='__owner', description='Unique Id des Kontoinhabers')
 })
+
+@hdmwebapp.route('/persons')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class PersonListOperations(Resource):
+    @hdmwebapp.marshal_list_with(person)
+    #@secured
+    def get(self):
+        """Auslesen aller Customer-Objekte.
+
+        Sollten keine Customer-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
+        hwa = HdMWebAppAdministration()
+        persons = hwa.get_all_persons()
+        return persons
+
+    @hdmwebapp.marshal_with(person, code=200)
+    @hdmwebapp.expect(person)  # Wir erwarten ein Customer-Objekt von Client-Seite.
+    #@secured
+    def post(self):
+        """Anlegen eines neuen Customer-Objekts.
+
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
+        """
+        hwa = HdMWebAppAdministration()
+
+        proposal = Person.from_dict(api.payload)
+
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+        if proposal is not None:
+            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
+            eines Customer-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben. 
+            """
+            p = hwa.create_person(proposal.get_first_name(), proposal.get_last_name())
+            return p, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+#@property
+    #def payload(self):
+        """Store the input payload in the current request context"""
+        #return request.get_json()
 
 
 # hier könnt ihr eure Tests reinschreiben, bitte bevor ihr auf den Main-pushed löschen!!!

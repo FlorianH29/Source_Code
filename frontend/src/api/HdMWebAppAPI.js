@@ -1,4 +1,5 @@
 import PersonBO from './PersonBO';
+import WorktimeaccountBO from "./WorktimeaccountBO";
 
 
 export default class HdMWebAppAPI {
@@ -75,7 +76,7 @@ export default class HdMWebAppAPI {
     return this.#fetchAdvanced(this.#getWorktimeaccountsForPersonsURL(personID))
       .then((responseJSON) => {
         let worktimeaccountBOs = WorktimeaccountBO.fromJSON(responseJSON);
-        // console.info(accountBOs);
+        // console.info(worktimeaccountBOs);
         return new Promise(function (resolve) {
           resolve(worktimeaccountBOs);
         })

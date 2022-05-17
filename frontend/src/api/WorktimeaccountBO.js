@@ -1,7 +1,7 @@
 import BusinessObject from './BusinessObject';
 
 /**
- * Represents an account object of a customer.
+ * Represents an account object of a person.
  */
 export default class WorktimeaccountBO extends BusinessObject {
 

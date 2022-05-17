@@ -22,15 +22,15 @@ class PersonListEntry extends Component {
 
     // Init the state
     this.state = {
-      customer: props.customer,
-      showCustomerForm: false,
-      showCustomerDeleteDialog: false,
+      person: props.person,
+      showPersonForm: false,
+      showPersonDeleteDialog: false,
     };
   }
 
   /** Handles onChange events of the underlying ExpansionPanel */
   expansionPanelStateChanged = () => {
-    this.props.onExpandedStateChange(this.props.customer);
+    this.props.onExpandedStateChange(this.props.person);
   }
 
   /** Handles onAccountDelete events from an AccountListEntry  */
@@ -121,7 +121,7 @@ class PersonListEntry extends Component {
             </Grid>
           </AccordionSummary>
           <AccordionDetails>
-            <AccountList show={expandedState} person={person} />
+            <WorktimeaccountList show={expandedState} person={person} />
           </AccordionDetails>
         </Accordion>
         <CustomerForm show={showCustomerForm} person={person} onClose={this.customerFormClosed} />

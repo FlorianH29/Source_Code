@@ -212,7 +212,7 @@ class TransactionList extends Component {
         <Typography component='div' className={classes.subNav}>
           <Link component={RouterLink} to={{
             pathname: '/persons',
-            expandCustomer: person
+            expandPerson: person
           }}>
             <Grid container spacing={1} justify='flex-start' alignItems='stretch'>
               <Grid item>
