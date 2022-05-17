@@ -25,7 +25,8 @@ class ProjectMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT project_id, last_edit, project_name, client, project_term_id FROM project WHERE project_id={}".format(key)
+        command = "SELECT project_id, last_edit, project_name, client, project_term_id FROM " \
+                  " project WHERE project_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -106,11 +107,16 @@ class ProjectMapper (Mapper):
         self._cnx.commit()
         cursor.close()
 
-    def update(self, project):  # Projekt, welches geupdatet werden soll wird übergeben
+    def update(self, project):  # Projekt, welches als update dient wird hier der Methode übergeben
         cursor = self._cnx.cursor()
 
-        command = "UPDATE project " + "SET project_id=%s, last_edit=%s, project_name=%s, client=%s, project_term_id=%s WHERE project_id=%s"
-        data = (project.get_id(), project.get_last_edit(), project.get_project_name(), project.get_client(), project.get_project_term_id())
+        command = "UPDATE project SET last_edit=%s, project_name=%s, client=%s, project_term_id=%s WHERE project_id=%s"
+        """  
+        Die Variablen werden dem übergebenen "project" entnommen und überschreiben die aktuellen Werte, 
+        welche im Object mit der entsprechenden id stehen.
+        """
+        data = (project.get_last_edit(), project.get_project_name(), project.get_client(),\
+                project.get_project_term_id(), project.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

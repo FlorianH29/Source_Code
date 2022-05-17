@@ -31,8 +31,8 @@ class TimeIntervalMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT timeinterval_id, last_edit, start_time, end_time, time_interval FROM timeinterval " \
-                  "WHERE timeinterval_id={}".format(key)
+        command = "SELECT timeinterval_id, last_edit, start_time, end_time, time_period FROM timeinterval " \
+                  "WHERE timeinterval_id={}".format(key) # time_intervall zu time_period geändert
         cursor.execute(command)
         tuples = cursor.fetchall()
 
