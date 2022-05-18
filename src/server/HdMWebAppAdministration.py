@@ -6,6 +6,7 @@ from .bo.Activity import Activity
 from .bo.TimeInterval import TimeInterval
 from .bo.Project import Project
 from .bo.ProjectWork import ProjectWork
+from .bo.ProjectMember import ProjectMember
 from .bo.Event import Event
 from .db.PersonMapper import PersonMapper
 from .db.ArriveMapper import ArriveMapper
@@ -19,6 +20,7 @@ from .bo.WorkTimeAccount import WorkTimeAccount
 from .db.WorkTimeAccountMapper import WorkTimeAccountMapper
 from .db.ProjectMapper import ProjectMapper
 from .db.ProjectWorkMapper import ProjectWorkMapper
+from .db.ProjectMemberMapper import ProjectMemberMapper
 from .db.TimeIntervalMapper import TimeIntervalMapper
 from .db.EventMapper import EventMapper
 
@@ -356,6 +358,34 @@ class HdMWebAppAdministration(object):
         project_work.set_last_edit(datetime.datetime.now())
         with ProjectWorkMapper() as mapper:
             return mapper.update(project_work)
+
+    """ProjectMember Methoden"""
+
+    def get_projectmember_by_id(self, number):
+        """Das Projekt wird anhand seiner eindeutigen ID ausgelesen."""
+        with ProjectMemberMapper() as mapper:
+            return mapper.find_by_key(number)
+
+    def create_project_member(self, project, person):
+        """Erstellen eines neuen Projekts"""
+        project_m = ProjectMember()
+        project_m.set_id(1)
+        project_m.set_last_edit(datetime.datetime.now())
+        project_m.set_project(project.get_id())
+        project_m.set_person(person.get_id())
+
+        with ProjectMemberMapper() as mapper:
+            return mapper.insert(project_m)
+
+    def delete_project_member(self, project_m):
+        with ProjectMemberMapper() as mapper:
+            return mapper.delete(project_m)
+
+    def save_project_member(self, project_m):
+        # Vor dem Speichern wird der last_edit zu aktuellen Zeitpunkt gesetzt
+        project_m.set_last_edit(datetime.datetime.now())
+        with ProjectMemberMapper() as mapper:
+            return mapper.update(project_m)
 
     """Methoden von TimeInterval"""
 
