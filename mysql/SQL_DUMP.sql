@@ -110,9 +110,10 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `SoPraTestDB`.`projectmembers` ;
 
 CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`projectmembers` (
+  `projectmember_id` INT NOT NULL,
   `project_id` INT NOT NULL,
   `person_id` INT NOT NULL,
-  PRIMARY KEY (`project_id`, `person_id`))
+  PRIMARY KEY (`projectmember_id`))
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
