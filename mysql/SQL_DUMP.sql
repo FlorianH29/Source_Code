@@ -85,6 +85,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`project` (
   `project_name` VARCHAR(45) NULL,
   `client` VARCHAR(45) NULL,
   `timeinterval_id` INT NULL,
+  `owner` INT NULL,
   PRIMARY KEY (`project_id`))
 ENGINE = InnoDB;
 
@@ -103,6 +104,16 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`projectwork` (
   PRIMARY KEY (`projectwork_id`))
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `SoPraTestDB`.`projectmembers`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `SoPraTestDB`.`projectmembers` ;
+
+CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`projectmembers` (
+  `project_id` INT NOT NULL,
+  `person_id` INT NOT NULL,
+  PRIMARY KEY (`project_id`, `person_id`))
+ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `SoPraTestDB`.`arrive`
