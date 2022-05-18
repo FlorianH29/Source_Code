@@ -302,7 +302,7 @@ class HdMWebAppAdministration(object):
         with ProjectMapper() as mapper:
             return mapper.find_all()
 
-    def create_project(self, project_name, client, time_interval):
+    def create_project(self, project_name, client, time_interval, person):
         """Erstellen eines neuen Projekts"""
         project = Project()
         project.set_id(1)
@@ -310,6 +310,7 @@ class HdMWebAppAdministration(object):
         project.set_project_name(project_name)
         project.set_client(client)
         project.set_time_interval_id(time_interval.get_id())
+        project.set_owner(person.get_id())
 
         with ProjectMapper() as mapper:
             return mapper.insert(project)

@@ -29,7 +29,7 @@ class Project (bo.BusinessObject):
         return self.__time_interval_id
 
     def set_owner(self, owner):
-        self.__client = owner
+        self.__owner = owner
 
     def get_owner(self):
         return self.__owner

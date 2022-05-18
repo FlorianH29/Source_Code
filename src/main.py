@@ -51,8 +51,15 @@ timeinterval = api.inherit('TimeInterval', bo, {
 
 hwa = HdMWebAppAdministration()
 
+'''se = hwa.get_event_by_id(1)
+ee = hwa.get_event_by_id(2)
+
+t1 = hwa.get_time_interval_by_id(1)
+p1 = hwa.get_person_by_id(1)
+pro1 = hwa.get_project_by_id(1)
+hwa.delete_project(pro1)'''
 
 
-if __name__ == '__main__':
-    app.run(debug=False)
+'''if __name__ == '__main__':
+    app.run(debug=False)'''
 
