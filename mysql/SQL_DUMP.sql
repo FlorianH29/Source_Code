@@ -113,6 +113,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`projectmembers` (
   `projectmember_id` INT NOT NULL,
   `project_id` INT NOT NULL,
   `person_id` INT NOT NULL,
+   `last_edit` DATETIME NULL,
   PRIMARY KEY (`projectmember_id`))
 ENGINE = InnoDB;
 

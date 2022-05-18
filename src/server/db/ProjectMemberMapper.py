@@ -1,5 +1,6 @@
-from server.bo.Person import Person
-from server.bo.Project import Project
+from abc import ABC
+
+from server.bo.ProjectMember import ProjectMember
 from server.db.Mapper import Mapper
 
 
@@ -22,18 +23,19 @@ class ProjectMemberMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT departure_id, last_edit, time_stamp FROM departure WHERE departure_id={}".format(key)
+        command = "SELECT project_id, person_id FROM projectmembers WHERE projectmember_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (departure_id, last_edit, time_stamp) = tuples[0]
-            departure = Departure()
-            departure.set_id(departure_id)
-            departure.set_last_edit(last_edit)
-            departure.set_time_stamp(time_stamp)
+            (projectmember_id, last_edit, project_id, person_id) = tuples[0]
+            projectmember = ProjectMember()
+            projectmember.set_id(projectmember_id)
+            projectmember.set_last_edit(last_edit)
+            projectmember.set_project(project_id)
+            projectmember.set_person(person_id)
 
-            result = departure
+            result = projectmember
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
@@ -44,10 +46,60 @@ class ProjectMemberMapper (Mapper):
 
         return result
 
-    def find_all(self):
-        """Auslesen aller End-Ereignisse.
+    def insert(self, projectmember):
+        """Einfügen eines Project-Member-Ereignis-Objekts in die Datenbank.
 
-        :return  Sammlung mit End-Ereignis-Objekten, die sämtliche End-Ereignisse repräsentieren.
+        Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf. berichtigt.
+
+        :param projectmember: das zu speichernde Objekt
+        :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
         """
-        result = []
         cursor = self._cnx.cursor()
+        cursor.execute("SELECT MAX(projectmember_id) AS maxid FROM projectmembers")
+        tuples = cursor.fetchall()
+
+        for (maxid) in tuples:
+            if maxid[0] is not None:
+                """Wenn wir eine maximale ID festellen konnten, zählen wir diese
+                um 1 hoch und weisen diesen Wert als ID dem End-Objekt zu."""
+                projectmember.set_id(maxid[0] + 1)
+            else:
+                """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
+                davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
+                projectmember.set_id(1)
+
+        command = "INSERT INTO projectmembers (projectmember_id, last_edit, project_id, person_id) VALUES (%s,%s,%s,%s)"
+        data = (projectmember.get_id(), projectmember.get_last_edit(), projectmember.get_project(), projectmember.get_person())
+        cursor.execute(command, data)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return projectmember
+
+    def update(self, projectmember):
+        """Wiederholtes Schreiben eines Objekts in die Datenbank.
+
+        :param projectmember das Objekt, das in die DB geschrieben werden soll
+        """
+        cursor = self._cnx.cursor()
+
+        command = "UPDATE projectmembers SET last_edit=%s, project_id=%s, person_id=%s WHERE projectmember_id=%s"
+        data = (projectmember.get_last_edit(), projectmember.get_project(), projectmember.get_person(), projectmember.get_id())
+        cursor.execute(command, data)
+
+        self._cnx.commit()
+        cursor.close()
+
+    def delete(self, projectmember):
+        """Löschen der Daten eines Project-Member-Objekts aus der Datenbank.
+
+        :param projectmember das aus der DB zu löschende "Objekt"
+        """
+        cursor = self._cnx.cursor()
+
+        command = "DELETE FROM projectmembers WHERE projectmember_id={}".format(projectmember.get_id())
+        cursor.execute(command)
+
+        self._cnx.commit()
+        cursor.close()
