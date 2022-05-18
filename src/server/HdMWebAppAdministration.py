@@ -40,10 +40,10 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             return mapper.find_all()
 
-    def create_person(self, person_id, last_edit, firstname, lastname, username, mailaddress, firebase_id):
+    def create_person(self, firstname, lastname, username, mailaddress, firebase_id):
         person = Person()
-        person.set_id(person_id)
-        person.set_last_edit(last_edit)
+        person.set_id(1)
+        person.set_last_edit(datetime.datetime.now())
         person.set_firstname(firstname)
         person.set_lastname(lastname)
         person.set_username(username)
@@ -60,16 +60,17 @@ class HdMWebAppAdministration(object):
 
     def save_person(self, person):
         """Die gegebene Person speichern."""
+        person.set_last_edit(datetime.datetime.now())
         with PersonMapper() as mapper:
             mapper.update(person)
 
     """Methoden für Kommen:"""
 
-    def create_arrive_event(self, arrive_id, last_edit, time_stamp):
+    def create_arrive_event(self, time_stamp):
         """Arrive-Ereignis anlegen"""
         arrive = Arrive()
-        arrive.set_id(arrive_id)
-        arrive.set_last_edit(last_edit)
+        arrive.set_id(1)
+        arrive.set_last_edit(datetime.datetime.now())
         arrive.set_time_stamp(time_stamp)
 
         with ArriveMapper() as mapper:
@@ -83,6 +84,7 @@ class HdMWebAppAdministration(object):
 
     def save_arrive_event(self, arrive):
         """Eine Start-Ereignis-Instanz speichern."""
+        arrive.set_last_edit(datetime.datetime.now())
         with ArriveMapper() as mapper:
             mapper.update(arrive)
 
@@ -98,25 +100,26 @@ class HdMWebAppAdministration(object):
 
     """Methoden für Gehen:"""
 
-    def create_departure_event(self, departure_id, last_edit, time_stamp):
+    def create_departure_event(self, time_stamp):
         """End-Ereignis anlegen"""
-        dearture = Departure()
-        dearture.set_id(departure_id)
-        dearture.set_last_edit(last_edit)
-        dearture.set_time_stamp(time_stamp)
+        departure = Departure()
+        departure.set_id(1)
+        departure.set_last_edit(datetime.datetime.now())
+        departure.set_time_stamp(time_stamp)
 
         with DepartureMapper() as mapper:
-            return mapper.insert(dearture)
+            return mapper.insert(departure)
 
     def delete_departure_event(self, departure):
         """Das gegebene End-Ereignis aus unserem System löschen."""
         with DepartureMapper() as mapper:
             mapper.delete(departure)
 
-    def save_departure_event(self, dearture):
+    def save_departure_event(self, departure):
         """Eine End-Ereignis-Instanz speichern."""
+        departure.set_last_edit(datetime.datetime.now())
         with DepartureMapper() as mapper:
-            mapper.update(dearture)
+            mapper.update(departure)
 
     def get_departure_event_by_id(self, number):
         """Das End-Ereignis mit der gegebenen ID auslesen"""
@@ -152,6 +155,7 @@ class HdMWebAppAdministration(object):
 
     def save_activity(self, activity):
         """Eine Aktivitäts-Instanz speichern."""
+        activity.set_last_edit(datetime.datetime.now())
         with ActivityMapper() as mapper:
             mapper.update(activity)
 
@@ -184,6 +188,7 @@ class HdMWebAppAdministration(object):
 
     def save_event_transaction(self, event_transaction):
         """Die gegebene EventTransaction speichern."""
+        event_transaction.set_last_edit(datetime.datetime.now())
         with EventTransactionMapper() as mapper:
             mapper.update(event_transaction)
 
@@ -192,13 +197,13 @@ class HdMWebAppAdministration(object):
         with EventTransactionMapper() as mapper:
             mapper.delete(event_transaction)
 
-    def create_event_transaction(self, event_transcation_id, last_edit, affiliated_work_time_account_id, event):
+    def create_event_transaction(self, event, work_time_account):
         """Eine EventTransaction erstellen."""
         t = EventTransaction()
-        t.set_id(event_transcation_id)
-        t.set_last_edit(last_edit)
-        t.set_affiliated_work_time_account(affiliated_work_time_account_id)
-        t.set_event(event)
+        t.set_id(1)
+        t.set_last_edit(datetime.datetime.now())
+        t.set_affiliated_work_time_account(work_time_account.get_id())
+        t.set_event(event.get_id())
 
         with EventTransactionMapper() as mapper:
             return mapper.insert(t)
@@ -222,6 +227,7 @@ class HdMWebAppAdministration(object):
 
     def save_time_interval_transaction(self, time_interval_transaction):
         """Die gegebene TimeIntervalTransaction speichern."""
+        time_interval_transaction.set_last_edit(datetime.datetime.now())
         with TimeIntervalTransactionMapper() as mapper:
             mapper.update(time_interval_transaction)
 
@@ -275,6 +281,7 @@ class HdMWebAppAdministration(object):
                 return None
 
     def save_work_time_account(self, work_time_account):
+        work_time_account.set_last_edit(datetime.datetime.now())
         with WorkTimeAccountMapper() as mapper:
             mapper.update(work_time_account)
 
@@ -295,14 +302,14 @@ class HdMWebAppAdministration(object):
         with ProjectMapper() as mapper:
             return mapper.find_all()
 
-    def create_project(self, project_id, last_edit, project_name, client, project_term_id):
+    def create_project(self, project_name, client, time_interval):
         """Erstellen eines neuen Projekts"""
         project = Project()
-        project.set_id(project_id)
-        project.set_last_edit(last_edit)
+        project.set_id(1)
+        project.set_last_edit(datetime.datetime.now())
         project.set_project_name(project_name)
         project.set_client(client)
-        project.set_project_term_id(project_term_id)
+        project.set_time_interval_id(time_interval.get_id())
 
         with ProjectMapper() as mapper:
             return mapper.insert(project)
@@ -312,6 +319,8 @@ class HdMWebAppAdministration(object):
             return mapper.delete(project)
 
     def save_project(self, project):
+        # Vor dem Speichern wird der last_edit zu aktuellen Zeitpunkt gesetzt
+        project.set_last_edit(datetime.datetime.now())
         with ProjectMapper() as mapper:
             return mapper.update(project)
 
@@ -326,13 +335,14 @@ class HdMWebAppAdministration(object):
         with ProjectWorkMapper() as mapper:
             return mapper.find_all()
 
-    def create_project_work(self, project_work_id, last_edit, project_work_name, description):
+    def create_project_work(self, project_work_name, description, activity):
         """Erstellen eines neuen ProjektWorks"""
         project_work = ProjectWork()
-        project_work.set_id(project_work)
-        project_work.set_last_edit(last_edit)
+        project_work.set_id(1)
+        project_work.set_last_edit(datetime.datetime.now())
         project_work.set_project_work_name(project_work_name)
         project_work.set_description(description)
+        project_work.set_affiliated_activity(activity.get_id())
 
         with ProjectWorkMapper() as mapper:
             return mapper.insert(project_work)
@@ -342,21 +352,22 @@ class HdMWebAppAdministration(object):
             return mapper.delete(project_work)
 
     def save_project_work(self, project_work):
+        # Vor dem Speichern wird der last_edit zu aktuellen Zeitpunkt gesetzt
+        project_work.set_last_edit(datetime.datetime.now())
         with ProjectWorkMapper() as mapper:
             return mapper.update(project_work)
 
     """Methoden von TimeInterval"""
 
-    """ZeitIntervalkonto anlegen"""
-
-    def create_time_interval(self, timeinterval_id, start_time, end_time, time_interval):
+    def create_time_interval(self, start_event, end_event, time_period):
+        """ZeitIntervalkonto anlegen"""
         interval = TimeInterval()
-        interval.set_id(timeinterval_id)
+        interval.set_id(1)
         '''Setzen des Last_edit durch die aktuelle Zeit'''
         interval.set_last_edit(datetime.datetime.now())
-        interval.set_start_time(start_time)
-        interval.set_end_time(end_time)
-        interval.set_time_period(time_interval)
+        interval.set_start_event(start_event.get_time_stamp())
+        interval.set_end_event(end_event.get_time_stamp())
+        interval.set_time_period(time_period)
 
         with TimeIntervalMapper() as mapper:
             return mapper.insert(interval)
@@ -377,17 +388,19 @@ class HdMWebAppAdministration(object):
             return mapper.find_all()
 
     def save_time_interval(self, value):
+        value.set_last_edit(datetime.datetime.now())
         with TimeIntervalMapper() as mapper:
             return mapper.update(value)
 
     """Methoden von Event"""
 
-    def create_event(self, event_id, last_edit, event_type):
+    def create_event(self, event_type, time_stamp):
         """Event-Ereignis anlegen"""
         event = Event()
-        event.set_id(event_id)
-        event.set_last_edit(last_edit)
-        event.set_type(event_type)
+        event.set_id(1)
+        event.set_last_edit(datetime.datetime.now())
+        event.set_event_type(event_type)
+        event.set_time_stamp(time_stamp)
 
         with EventMapper() as mapper:
             return mapper.insert(event)
@@ -399,6 +412,7 @@ class HdMWebAppAdministration(object):
 
     def save_event(self, event):
         """Eine Event-Instanz speichern."""
+        event.set_last_edit(datetime.datetime.now())
         with EventMapper() as mapper:
             mapper.update(event)
 
@@ -407,7 +421,7 @@ class HdMWebAppAdministration(object):
         with EventMapper() as mapper:
             return mapper.find_by_key(number)
 
-    def get_all_events(self):
+    def get_all_events(self, value):
         """Alle in der Datenbank gespeicherten Events auslesen."""
         with EventMapper() as mapper:
             return mapper.find_all()

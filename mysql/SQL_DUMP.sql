@@ -31,15 +31,15 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `SoPraTestDB`.`end`
+-- Table `SoPraTestDB`.`departure`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `SoPraTestDB`.departure ;
 
-CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`end` (
-  `end_id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`departure` (
+  `departure_id` INT NOT NULL,
   `last_edit` DATETIME NULL,
   `time_stamp` DATETIME NULL,
-  PRIMARY KEY (`end_id`))
+  PRIMARY KEY (`departure_id`))
 ENGINE = InnoDB;
 
 
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`project` (
   `last_edit` DATETIME NULL,
   `project_name` VARCHAR(45) NULL,
   `client` VARCHAR(45) NULL,
-  `project_term_id` INT NULL,
+  `timeinterval_id` INT NULL,
   PRIMARY KEY (`project_id`))
 ENGINE = InnoDB;
 
@@ -99,20 +99,21 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`projectwork` (
   `last_edit` DATETIME NULL,
   `projectwork_name` VARCHAR(45) NULL,
   `description` VARCHAR(45) NULL,
+  `affiliated_activity_id` INT NOT NULL,
   PRIMARY KEY (`projectwork_id`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `SoPraTestDB`.`start`
+-- Table `SoPraTestDB`.`arrive`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `SoPraTestDB`.arrive ;
 
-CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`start` (
-  `start_id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`arrive` (
+  `arrive_id` INT NOT NULL,
   `last_edit` DATETIME NULL,
   `time_stamp` DATETIME NULL,
-  PRIMARY KEY (`start_id`))
+  PRIMARY KEY (`arrive_id`))
 ENGINE = InnoDB;
 
 
@@ -126,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`timeinterval` (
   `last_edit` DATETIME NULL,
   `start_time` DATETIME NULL,
   `end_time` DATETIME NULL,
-  `time_interval` INT NULL,
+  `time_period` INT NULL,
   PRIMARY KEY (`timeinterval_id`))
 ENGINE = InnoDB;
 
@@ -166,6 +167,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`event` (
   `event_id` INT NOT NULL,
   `last_edit` DATETIME NULL,
   `event_type` INT NULL,
+  `time_stamp` DATETIME NULL,
   PRIMARY KEY (`event_id`))
 ENGINE = InnoDB;
 

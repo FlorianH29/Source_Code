@@ -14,7 +14,7 @@ CORS(app, resources=r'/hdmwebapp/*')
 api = Api(app, version='1.0', title='HdMWebAppAPI',
           description='Eine rudimentäre Demo-API für das Buchen von Zeitslots für Projekte.')
 
-banking = api.namespace('hdmwebapp', description='Funktionen der HdMWebApp zur Zeitbuchung.')
+hdmwebapp = api.namespace('hdmwebapp', description='Funktionen der HdMWebApp zur Zeitbuchung.')
 
 # BusinessObject dient als Basisklasse, auf der die weiteren Strukturen Customer, Account und Transaction aufsetzen.
 bo = api.model('BusinessObject', {
@@ -30,27 +30,28 @@ person = api.inherit('Person', bo, {
     'firebase_id': fields.String(attribute='__firebase_id', description='Google User ID eines Benutzers')
 })
 
+project = api.inherit('Project', bo, {
+    'projectname': fields.String(attribute='__project_name', description='Name eines Projekts'),
+    'client': fields.String(attribute='__client', description='Auftraggeber eines Projekts'),
+    'project_term_id': fields.String(attribute='__project_term_id', description='Laufzeit eines Projekts')
+})
+
+worktimeaccount = api.inherit('WorkTimeAccount', bo, {
+    'owner': fields.String(attribute='__owner', description='Besitzer eines Arbeitszeitkonto')
+})
+
+timeinterval = api.inherit('TimeInterval', bo, {
+    'starttime': fields.String(attribute='__start_time', description='Startzeitpunkt eines Zeitintervalls'),
+    'endtime': fields.String(attribute='__end_time', description='Endzeitpunkt eines Zeitintervalls'),
+    'timeperiod': fields.String(attribute='__time_period', description='Zeitraum des Intervalls')
+})
+
 
 # hier könnt ihr eure Tests reinschreiben, bitte bevor ihr auf den Main-pushed löschen!!!
 
 hwa = HdMWebAppAdministration()
 
-#Test für Update-Befehl
-ee1 = hwa.get_person_by_id(2)
 
-wa1 = hwa.get_work_time_account_by_id(4)
-ti1 = hwa.get_time_interval_by_id(1)
-
-p1 = hwa.get_project_by_id(1)
-d1 = hwa.get_arrive_event_by_id(1)
-hwa.delete_arrive_event(d1)
-
-
-# wa1 = hwa.get_work_time_account_by_id(2)
-# print(wa1)
-
-# end1 = hwa.create_end_event(1, '20220305', '20220908')
-# print(end1)
 
 if __name__ == '__main__':
     app.run(debug=False)
