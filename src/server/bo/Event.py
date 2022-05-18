@@ -9,21 +9,17 @@ class Event(bo.BusinessObject):
         self.__time_stamp = None  # Der Zeitpunkt des Eintretens des Ereignisses
         self.__event_type = ""  # Typ des Ereignisses, entweder Start oder Ende eines Zeitintervalls
 
-
     def get_time_stamp(self):
         """Auslesen des Zeitpunktes."""
         return self.__time_stamp
-
 
     def set_time_stamp(self, value: datetime) -> datetime:
         """Setzen des Zeitpunktes. Typehint, datetime Objekt soll übergeben werden"""
         self.__time_stamp = value
 
-
     def get_event_type(self):
         """Auslesen des Zeitpunktes."""
         return self.__event_type
-
 
     def set_event_type(self, value):
         self.__event_type = value
