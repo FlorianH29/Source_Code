@@ -101,21 +101,6 @@ class PersonListOperations(Resource):
 
 hwa = HdMWebAppAdministration()
 
-#Test für Update-Befehl
-"""hwa.create_person(1,'20220505', 'Hans', 'Wurst', 'h.wurst', 'hw@gmx.lol', 1)
-ee1 = hwa.get_person_by_id(2)
-
-wa1 = hwa.get_work_time_account_by_id(4)
-ti1 = hwa.get_time_interval_by_id(1)
-
-p1 = hwa.get_project_by_id(1)
-
-hwa.create_activity_for_project('Test Activity', 10, p1)"""
-
-#Test worktimeaccount für person und transaktion auf das Konto
-# -> anlegen Funktioniert, verbindung timeinterval und timeinterval transaction noch nicht
-#hwa.create_work_time_account_for_person(hwa.get_person_by_id(3))
-
 
 
 if __name__ == '__main__':
