@@ -1,9 +1,9 @@
-from server.bo.End import End
+from server.bo.Departure import Departure
 from server.db.Mapper import Mapper
 
 
-class EndMapper (Mapper):
-    """Mapper-Klasse, die End-Ereignis-Objekte auf eine relationale Datenbank abbildet.
+class DepartureMapper (Mapper):
+    """Mapper-Klasse, die Departure-Objekte auf eine relationale Datenbank abbildet.
     Dazu mehrere Methoden, mit deren Hilfe Objekte gesucht, erzeugt, modifiziert und gelöscht werden können.
     Ist bidirektional, Objekte können in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
     """
@@ -12,7 +12,7 @@ class EndMapper (Mapper):
         super().__init__()
 
     def find_by_key(self, key):
-        """Suchen eines End-Ereignisses mit vorgegebener Ereignis ID. Rückgabe von genau einem Objekt.
+        """Suchen eines Departure-Ereignisses mit vorgegebener Ereignis ID. Rückgabe von genau einem Objekt.
 
         :param key Primärschlüsselattribut (->DB)
         :return End-Ereignis-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
@@ -21,18 +21,18 @@ class EndMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT end_id, last_edit, time_stamp FROM end WHERE end_id={}".format(key)
+        command = "SELECT departure_id, last_edit, time_stamp FROM departure WHERE departure_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (end_id, last_edit, time_stamp) = tuples[0]
-            end = End()
-            end.set_id(end_id)
-            end.set_last_edit(last_edit)
-            end.set_time_stamp(time_stamp)
+            (departure_id, last_edit, time_stamp) = tuples[0]
+            departure = Departure()
+            departure.set_id(departure_id)
+            departure.set_last_edit(last_edit)
+            departure.set_time_stamp(time_stamp)
 
-            result = end
+            result = departure
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
@@ -50,79 +50,75 @@ class EndMapper (Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT * from end")
+        cursor.execute("SELECT * from departure")
         tuples = cursor.fetchall()
 
-        for (end_id, last_edit, time_stamp) in tuples:
-            end = End()
-            end.set_id(end_id)
-            end.set_last_edit(last_edit)
-            end.set_time_stamp(time_stamp)
-            result.append(end)
+        for (departure_id, last_edit, time_stamp) in tuples:
+            departure = Departure()
+            departure.set_id(departure_id)
+            departure.set_last_edit(last_edit)
+            departure.set_time_stamp(time_stamp)
+            result.append(departure)
 
         self._cnx.commit()
         cursor.close()
 
         return result
 
-    def insert(self, end):
+    def insert(self, departure):
         """Einfügen eines End-Ereignis-Objekts in die Datenbank.
 
         Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf. berichtigt.
 
-        :param end: das zu speichernde Objekt
+        :param departure: das zu speichernde Objekt
         :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
         """
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(end_id) AS maxid FROM end")
+        cursor.execute("SELECT MAX(departure_id) AS maxid FROM departure")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
             if maxid[0] is not None:
                 """Wenn wir eine maximale ID festellen konnten, zählen wir diese
                 um 1 hoch und weisen diesen Wert als ID dem End-Objekt zu."""
-                end.set_id(maxid[0] + 1)
+                departure.set_id(maxid[0] + 1)
             else:
                 """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
-                end.set_id(1)
+                departure.set_id(1)
 
-
-        command = "INSERT INTO end (end_id, last_edit, time_stamp) VALUES (%s,%s,%s)"
-        data = (end.get_id(), end.get_last_edit(), end.get_time_stamp())
+        command = "INSERT INTO departure (departure_id, last_edit, time_stamp) VALUES (%s,%s,%s)"
+        data = (departure.get_id(), departure.get_last_edit(), departure.get_time_stamp())
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
 
-        return end
+        return departure
 
-    def update(self, end):
+    def update(self, departure):
         """Wiederholtes Schreiben eines Objekts in die Datenbank.
 
-        :param end
-        :param end das Objekt, das in die DB geschrieben werden soll
+        :param departure das Objekt, das in die DB geschrieben werden soll
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE end SET last_edit=%s, time_stamp=%s WHERE end_id=%s"
-        data = (end.get_last_edit(), end.get_time_stamp(), end.get_id())
+        command = "UPDATE departure SET last_edit=%s, time_stamp=%s WHERE departure_id=%s"
+        data = (departure.get_last_edit(), departure.get_time_stamp(), departure.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
 
-    def delete(self, end):
+    def delete(self, departure):
         """Löschen der Daten eines Ereignis-Objekts aus der Datenbank.
 
-        :param end das aus der DB zu löschende "Objekt"
+        :param departure das aus der DB zu löschende "Objekt"
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM end WHERE end_id={}".format(end.get_id())
+        command = "DELETE FROM departure WHERE departure_id={}".format(departure.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
         cursor.close()
-
-

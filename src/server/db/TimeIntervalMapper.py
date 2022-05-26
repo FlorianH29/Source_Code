@@ -16,8 +16,8 @@ class TimeIntervalMapper(Mapper):
             interval = ti.TimeInterval()
             interval.set_id(timeinterval_id)
             interval.set_last_edit(last_edit)
-            interval.set_start_time(start_time)
-            interval.set_end_time(end_time)
+            interval.set_start_event(start_time)
+            interval.set_end_event(end_time)
             interval.set_time_period(time_period)
             result.append(interval)
 
@@ -32,7 +32,7 @@ class TimeIntervalMapper(Mapper):
 
         cursor = self._cnx.cursor()
         command = "SELECT timeinterval_id, last_edit, start_time, end_time, time_period FROM timeinterval " \
-                  "WHERE timeinterval_id={}".format(key)
+                  "WHERE timeinterval_id={}".format(key) # time_intervall zu time_period geändert
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -41,8 +41,8 @@ class TimeIntervalMapper(Mapper):
             interval = ti.TimeInterval()
             interval.set_id(timeinterval_id)
             interval.set_last_edit(last_edit)
-            interval.set_start_time(start_time)
-            interval.set_end_time(end_time)
+            interval.set_start_event(start_time)
+            interval.set_end_event(end_time)
             interval.set_time_period(time_period)
 
             result = interval
@@ -76,8 +76,8 @@ class TimeIntervalMapper(Mapper):
                   " VALUES (%s,%s,%s,%s,%s)"
         data = (time_interval.get_id(),
                 time_interval.get_last_edit(),
-                time_interval.get_start_time(),
-                time_interval.get_end_time(),
+                time_interval.get_start_event(),
+                time_interval.get_end_event(),
                 time_interval.get_time_period())
         cursor.execute(command, data)
 
@@ -90,10 +90,10 @@ class TimeIntervalMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "UPDATE timeinterval " + "SET timeinterval_id=%s, last_edit=%s, start_time=%s, end_time=%s, " \
-                                           "time_interval=%s, WHERE time_interval_id=%s"
-        data = (time_interval.get_id(), time_interval.get_last_edit(), time_interval.get_start_time(),
-                time_interval.get_end_time(), time_interval.get_time_period())
+        command = "UPDATE timeinterval " + "SET last_edit=%s, start_time=%s, end_time=%s, " \
+                                           "time_period=%s WHERE timeinterval_id=%s"
+        data = (time_interval.get_last_edit(), time_interval.get_start_event(),
+                time_interval.get_end_event(), time_interval.get_time_period(), time_interval.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

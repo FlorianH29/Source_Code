@@ -31,6 +31,22 @@ person = api.inherit('Person', bo, {
     'firebase_id': fields.String(attribute='__firebase_id', description='Google User ID eines Benutzers')
 })
 
+project = api.inherit('Project', bo, {
+    'projectname': fields.String(attribute='__project_name', description='Name eines Projekts'),
+    'client': fields.String(attribute='__client', description='Auftraggeber eines Projekts'),
+    'project_term_id': fields.String(attribute='__project_term_id', description='Laufzeit eines Projekts')
+})
+
+worktimeaccount = api.inherit('WorkTimeAccount', bo, {
+    'owner': fields.String(attribute='__owner', description='Besitzer eines Arbeitszeitkonto')
+})
+
+timeinterval = api.inherit('TimeInterval', bo, {
+    'starttime': fields.String(attribute='__start_time', description='Startzeitpunkt eines Zeitintervalls'),
+    'endtime': fields.String(attribute='__end_time', description='Endzeitpunkt eines Zeitintervalls'),
+    'timeperiod': fields.String(attribute='__time_period', description='Zeitraum des Intervalls')
+})
+
 work_time_account = api.inherit('WorkTimeAccount', bo, {
     'owner': fields.Integer(attribute='__owner', description='Unique Id des Kontoinhabers')
 })
@@ -50,7 +66,7 @@ class PersonListOperations(Resource):
 
     @hdmwebapp.marshal_with(person, code=200)
     @hdmwebapp.expect(person)  # Wir erwarten ein Customer-Objekt von Client-Seite.
-    #@secured
+
     def post(self):
         """Anlegen eines neuen Customer-Objekts.
 

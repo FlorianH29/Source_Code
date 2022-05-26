@@ -2,14 +2,14 @@ from server.bo import Event as ev
 import datetime
 
 
-class Start (ev.Event):
+class Departure (ev.Event):
 
     def __init__(self):
         super().__init__()
-        self.__time_stamp = datetime.datetime.now()  # Der Zeitpunkt des Eintretens des Ereignisses
+        self.__time_stamp = datetime.datetime.now()  # Der Zeitpunkt, an dem der Mitarbeiter geht
 
     def get_time_stamp(self):
-        """Auslesen des Zeitpunktes (inklusive Datum)."""
+        """Auslesen des Zeitpunktes."""
         return self.__time_stamp
 
     def set_time_stamp(self, value: datetime) -> datetime:
@@ -22,8 +22,8 @@ class Start (ev.Event):
 
     @staticmethod
     def from_dict(dictionary=dict()):
-        """Umwandeln eines Python dict() in ein Start-Event()."""
-        obj = Start()
+        """Umwandeln eines Python dict() in ein Departure-Event()."""
+        obj = Departure()
         obj.set_id(dictionary["id"])
         obj.set_last_edit(dictionary["last_edit"])
         obj.set_time_stamp(dictionary["time_stamp"])
