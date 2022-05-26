@@ -14,10 +14,10 @@ export default class PersonBO extends BusinessObject {
    */
   constructor(aFirstname, aLastname, aUserName, aMailAddress, aFireBaseId) {
     super();
-    this.first_name = aFirstname;
-    this.last_name = aLastname;
-    this.user_name = aUserName;
-    this.mail_address = aMailAddress;
+    this.firstname = aFirstname;
+    this.lastname = aLastname;
+    this.username = aUserName;
+    this.mailaddress = aMailAddress;
     this.firebase_id = aFireBaseId;
   }
 
@@ -27,14 +27,14 @@ export default class PersonBO extends BusinessObject {
    * @param {String} aFirstname - the new firstname of this CustomerBO.
    */
   setFirstName(aFirstname) {
-    this.first_name = aFirstname;
+    this.firstname = aFirstname;
   }
 
   /**
    * Gets the firstname.
    */
   getFirstName() {
-    return this.first_name;
+    return this.firstname;
   }
 
   /**
@@ -43,14 +43,14 @@ export default class PersonBO extends BusinessObject {
    * @param {*} aLastname - the new lastname of this CustomerBO.
    */
   setLastName(aLastname) {
-    this.last_name = aLastname;
+    this.lastname = aLastname;
   }
 
   /**
    * Gets the lastname.
    */
   getLastName() {
-    return this.last_name;
+    return this.lastname;
   }
 
   /**
@@ -59,14 +59,14 @@ export default class PersonBO extends BusinessObject {
    * @param {String} aFirstname - the new firstname of this CustomerBO.
    */
   setUserName(aUserName) {
-    this.user_name = aUserName;
+    this.username = aUserName;
   }
 
   /**
    * Gets the firstname.
    */
   getUserName() {
-    return this.user_name;
+    return this.username;
   }
 
   /**
@@ -75,14 +75,14 @@ export default class PersonBO extends BusinessObject {
    * @param aMailAddress
    */
   setMailAddress(aMailAddress) {
-    this.mail_address = aMailAddress;
+    this.mailaddress = aMailAddress;
   }
 
   /**
    * Gets the firstname.
    */
   getMailAddress() {
-    return this.mail_address;
+    return this.mailaddress;
   }
 
   /**
@@ -91,7 +91,7 @@ export default class PersonBO extends BusinessObject {
    * @param aFireBaseId
    */
   setFireBaseId(aFireBaseId) {
-    this.first_name = aFireBaseId;
+    this.firebase_id = aFireBaseId;
   }
 
   /**
@@ -102,7 +102,7 @@ export default class PersonBO extends BusinessObject {
   }
 
   /**
-   * Returns an Array of CustomerBOs from a given JSON structure.
+   * Returns an Array of PersonBOs from a given JSON structure.
    */
   static fromJSON(persons) {
     let result = [];
@@ -118,7 +118,7 @@ export default class PersonBO extends BusinessObject {
       Object.setPrototypeOf(p, PersonBO.prototype);
       result.push(p);
     }
-
+    //console.log(result)
     return result;
   }
 }
