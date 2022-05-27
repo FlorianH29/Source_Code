@@ -22,7 +22,8 @@ class ProjectMember(bo.BusinessObject):
 
     def __str__(self):
         """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
-        return "Event: {}, {}, {}".format(self.get_id(), self.get_last_edit(), self.__project, self.__person)
+        return "ProjectMember: {}, {}, {}, {}".format(self.get_id(), self.__project,
+                                                      self.__person, self.get_last_edit())
 
     @staticmethod
     def from_dict(dictionary=dict()):

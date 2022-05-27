@@ -66,7 +66,7 @@ export default class ActivityBO extends BusinessObject {
   }
 
   /**
-   * Gibt einen Array von ActivityBOs einer gegebenen JSON Struktur zurück.
+   * Gibt einen Array mit ActivityBOs einer gegebenen JSON Struktur zurück.
    */
   static fromJSON(activities) {
     let result = [];

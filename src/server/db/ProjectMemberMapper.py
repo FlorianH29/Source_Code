@@ -23,17 +23,18 @@ class ProjectMemberMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT project_id, person_id FROM projectmembers WHERE projectmember_id={}".format(key)
+        command = "SELECT projectmember_id, project_id, person_id, last_edit FROM projectmembers " \
+                  "WHERE projectmember_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (projectmember_id, last_edit, project_id, person_id) = tuples[0]
+            (projectmember_id, project_id, person_id, last_edit) = tuples[0]
             projectmember = ProjectMember()
             projectmember.set_id(projectmember_id)
-            projectmember.set_last_edit(last_edit)
             projectmember.set_project(project_id)
             projectmember.set_person(person_id)
+            projectmember.set_last_edit(last_edit)
 
             result = projectmember
         except IndexError:
