@@ -388,6 +388,10 @@ class HdMWebAppAdministration(object):
         with ProjectMemberMapper() as mapper:
             return mapper.update(project_m)
 
+    def get_project_by_employee(self, person_id):
+        with ProjectMemberMapper() as mapper:
+            return mapper.find_projects_by_person_id(person_id)
+
     """Methoden von TimeInterval"""
 
     def create_time_interval(self, start_event, end_event, time_period):
