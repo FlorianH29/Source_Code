@@ -1,4 +1,5 @@
 from server.bo import Break
+"""
 from server.db.Mapper import Mapper
 
     class BreakMapper(Mapper):
@@ -21,7 +22,7 @@ from server.db.Mapper import Mapper
 
 
     def delete(self, break):
-
+"""
 
 
 

@@ -23,11 +23,11 @@ bo = api.model('BusinessObject', {
 })
 
 person = api.inherit('Person', bo, {
-    'firstname': fields.String(attribute='__firstname', description='Vorname eines Benutzers'),
-    'lastname': fields.String(attribute='__lasttname', description='Nachname eines Benutzers'),
-    'mailaddress': fields.String(attribute='__mailaddress', description='E-Mail-Adresse eines Benutzers'),
-    'username': fields.String(attribute='__username', description='Username eines Benutzers'),
-    'firebase_id': fields.String(attribute='__firebase_id', description='Google User ID eines Benutzers')
+    'firstname': fields.String(attribute='_firstname', description='Vorname eines Benutzers'),
+    'lastname': fields.String(attribute='_lastname', description='Nachname eines Benutzers'),
+    'mailaddress': fields.String(attribute='_mailaddress', description='E-Mail-Adresse eines Benutzers'),
+    'username': fields.String(attribute='_username', description='Username eines Benutzers'),
+    'firebase_id': fields.String(attribute='_firebase_id', description='Google User ID eines Benutzers')
 })
 
 project = api.inherit('Project', bo, {
@@ -46,26 +46,23 @@ timeinterval = api.inherit('TimeInterval', bo, {
     'timeperiod': fields.String(attribute='__time_period', description='Zeitraum des Intervalls')
 })
 
+@hdmwebapp.route('/persons')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class PersonListOperations(Resource):
+    @hdmwebapp.marshal_list_with(person)
+    def get(self):
+        hwa = HdMWebAppAdministration()
+        persons = hwa.get_all_persons()
+
+        return persons
+
+
+
 
 # hier könnt ihr eure Tests reinschreiben, bitte bevor ihr auf den Main-pushed löschen!!!
 
-hwa = HdMWebAppAdministration()
+ha = HdMWebAppAdministration()
 
-#hwa.create_person("benso", "test", "userdingens","mail", 1)
-#hwa.create_event(1, datetime.datetime.now())
-#hwa.create_event(2, "20200202")
-
-#lel1 = hwa.get_event_by_id(3)
-#lel2 = hwa.get_event_by_id(2)
-#hwa.create_time_interval(lel1, lel2, 7)
-#lel3 = hwa.get_time_interval_by_id(1)
-
-#hwa.create_project("huso", "chrisse",lel3)
-
-lel4 = hwa.get_person_by_id(3)
-lel5 = hwa.get_project_by_id(1)
-
-hwa.create_project_member(lel4, lel5)
 
 if __name__ == '__main__':
     app.run(debug=False)
