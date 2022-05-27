@@ -38,7 +38,7 @@ export default class ActivityBO extends BusinessObject {
    *
    * @param {*} aCapacity - die neue Kapazität dieses ActivityBO.
    */
-  setcapacity(aCapacity) {
+  setCapacity(aCapacity) {
     this.capacity = aCapacity;
   }
 
@@ -56,6 +56,13 @@ export default class ActivityBO extends BusinessObject {
    */
   setAffiliatedProject(anAffiliatedProject) {
     this.affiliated_project = anAffiliatedProject;
+  }
+
+    /**
+   * Gibt das zugeordnete Projekt zurück.
+   */
+  getAffiliatedProject() {
+    return this.affiliated_project;
   }
 
   /**
