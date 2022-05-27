@@ -31,9 +31,10 @@ person = api.inherit('Person', bo, {
 })
 
 project = api.inherit('Project', bo, {
-    'projectname': fields.String(attribute='__project_name', description='Name eines Projekts'),
-    'client': fields.String(attribute='__client', description='Auftraggeber eines Projekts'),
-    'project_term_id': fields.String(attribute='__project_term_id', description='Laufzeit eines Projekts')
+    'project_name': fields.String(attribute='_project_name', description='Name eines Projekts'),
+    'client': fields.String(attribute='_client', description='Auftraggeber eines Projekts'),
+    'time_interval_id': fields.String(attribute='_time_interval_id', description='Laufzeit eines Projekts'),
+    'owner': fields.String(attribute='_owner', description='Der Leiter eines Projekts')
 })
 
 worktimeaccount = api.inherit('WorkTimeAccount', bo, {
@@ -55,6 +56,16 @@ class PersonListOperations(Resource):
         persons = hwa.get_all_persons()
 
         return persons
+
+@hdmwebapp.route('/projects')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectListOperations(Resource):
+    @hdmwebapp.marshal_list_with(project)
+    def get(self):
+        hwa = HdMWebAppAdministration()
+        projects = hwa.get_all_projects()
+
+        return projects
 
 
 

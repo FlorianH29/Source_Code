@@ -56,7 +56,7 @@ export default class PersonBO extends BusinessObject {
   /**
    * Setzt einen neuen Vornamen.
    *
-   * @param {String} aFirstname - the new firstname of this CustomerBO.
+   * @param {String} aUserName - the new username of this CustomerBO.
    */
   setUserName(aUserName) {
     this.username = aUserName;

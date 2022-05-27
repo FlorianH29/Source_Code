@@ -5,34 +5,34 @@ class Project (bo.BusinessObject):
 
     def __init__(self):
         super().__init__()
-        self.__project_name = ""    # The project_name of the project.
-        self.__client = ""  # The name of the client.
-        self.__time_interval_id = None  # The project term is an object of TimeInterval
-        self.__owner = None  # Der Projektleiter
+        self._project_name = ""    # The project_name of the project.
+        self._client = ""  # The name of the client.
+        self._time_interval_id = None  # The project term is an object of TimeInterval
+        self._owner = None  # Der Projektleiter
 
     def set_project_name(self, project_name):
-        self.__project_name = project_name
+        self._project_name = project_name
 
     def get_project_name(self):
-        return self.__project_name
+        return self._project_name
 
     def set_client(self, client):
-        self.__client = client
+        self._client = client
 
     def get_client(self):
-        return self.__client
+        return self._client
 
     def set_time_interval_id(self, timeinterval_id):
-        self.__time_interval_id = timeinterval_id
+        self._time_interval_id = timeinterval_id
 
     def get_time_interval_id(self):
-        return self.__time_interval_id
+        return self._time_interval_id
 
     def set_owner(self, owner):
-        self.__client = owner
+        self._owner = owner
 
     def get_owner(self):
-        return self.__owner
+        return self._owner
 
     def __str__(self):
         """Ausgabe von: id, name, client, project_term_id"""

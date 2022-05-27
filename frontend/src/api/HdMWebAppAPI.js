@@ -1,4 +1,5 @@
 import PersonBO from './PersonBO';
+import ProjectBO from './ProjectBO';
 
 
 export default class HdMWebAppAPI {
@@ -12,6 +13,9 @@ export default class HdMWebAppAPI {
 
   // Person bezogen
   #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
+
+  //Projekt bezogen
+  #getProjectsURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
 
   /**
    * Get the Singelton instance
@@ -50,4 +54,13 @@ export default class HdMWebAppAPI {
     })
   }
 
+  getProject() {
+    return this.#fetchAdvanced(this.#getProjectsURL()).then((responseJSON) => {
+      let projectBOs = ProjectBO.fromJSON(responseJSON);
+      console.log(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(projectBOs);
+      })
+    })
+  }
 }
