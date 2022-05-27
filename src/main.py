@@ -57,7 +57,7 @@ class PersonListOperations(Resource):
         return persons
 
 
-hwa = HdMWebAppAdministration()
+'''hwa = HdMWebAppAdministration()
 
 # hwa.create_person("hans", "peter", "userhans","mail@mail", 44)
 # hwa.create_event(1, datetime.datetime.now())
@@ -77,12 +77,12 @@ pr2 = hwa.get_project_by_id(2)
 hwa.create_project_member(pr2, pe3)
 
 
-'''
+
 p1 = hwa.get_person_by_id(1)
 pro1 = hwa.get_project_by_id(1)
-hwa.delete_project(pro1)'''
+hwa.delete_project(pro1)
 
-
-'''if __name__ == '__main__':
-    app.run(debug=False)'''
+'''
+if __name__ == '__main__':
+    app.run(debug=False)
 
