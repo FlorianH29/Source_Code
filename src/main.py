@@ -68,13 +68,32 @@ class ProjectListOperations(Resource):
         return projects
 
 
+'''hwa = HdMWebAppAdministration()
+
+# hwa.create_person("hans", "peter", "userhans","mail@mail", 44)
+# hwa.create_event(1, datetime.datetime.now())
+# hwa.create_event(2, "20200202")
+
+se = hwa.get_event_by_id(1)
+ee = hwa.get_event_by_id(2)
+
+# hwa.create_time_interval(se, ee, 7)
+ti1 = hwa.get_time_interval_by_id(1)
+pe3 = hwa.get_person_by_id(3)
+
+# hwa.create_project("project2", "client2", ti1, pe1)
+
+pr2 = hwa.get_project_by_id(2)
+
+hwa.create_project_member(pr2, pe3)
 
 
-# hier könnt ihr eure Tests reinschreiben, bitte bevor ihr auf den Main-pushed löschen!!!
 
-ha = HdMWebAppAdministration()
+p1 = hwa.get_person_by_id(1)
+pro1 = hwa.get_project_by_id(1)
+hwa.delete_project(pro1)
 
-
+'''
 if __name__ == '__main__':
     app.run(debug=False)
 
