@@ -42,10 +42,10 @@ export default class HdMWebAppAPI {
 
     getPersons() {
     return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
-      let personsBOs = PersonBO.fromJSON(responseJSON);
-      // console.info(personsBOs);
+      let personBOs = PersonBO.fromJSON(responseJSON);
+      //console.log(responseJSON);
       return new Promise(function (resolve) {
-        resolve(personsBOs);
+        resolve(personBOs);
       })
     })
   }
