@@ -25,18 +25,19 @@ class ProjectMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT project_id, last_edit, project_name, client, project_term_id FROM project WHERE project_id={}".format(key)
+        command = "SELECT project_id, last_edit, project_name, client, timeinterval_id, owner FROM project WHERE project_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (project_id, last_edit, project_name, client, project_term) = tuples[0]
+            (project_id, last_edit, project_name, client, timeinterval_id, owner) = tuples[0]
             project = p.Project()
             project.set_id(project_id)
             project.set_last_edit(last_edit)
             project.set_project_name(project_name)
             project.set_client(client)
-            project.set_project_term_id(project_term)
+            project.set_time_interval_id(timeinterval_id)
+            project.set_owner(owner)
 
             result = project
         except IndexError:
@@ -52,16 +53,17 @@ class ProjectMapper (Mapper):
     def find_all(self):
         all_projects = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT project_id, last_edit, project_name, client, project_term_id FROM project")
+        cursor.execute("SELECT project_id, last_edit, project_name, client, timeinterval_id, owner FROM project")
         tuples = cursor.fetchall()
 
-        for (project_id, last_edit, project_name, client, project_term_id) in tuples:
+        for (project_id, last_edit, project_name, client, timeinterval_id, owner) in tuples:
             project = p.Project()
             project.set_id(project_id)
             project.set_last_edit(last_edit)
             project.set_project_name(project_name)
             project.set_client(client)
-            project.set_project_term_id(project_term_id)  # muss hier das time_interval via get übergeben werden?
+            project.set_time_interval_id(timeinterval_id)
+            project.set_owner(owner)
             all_projects.append(project)
 
         self._cnx.commit()
@@ -84,13 +86,14 @@ class ProjectMapper (Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 object.set_id(1)
 
-        command = "INSERT INTO project (project_id, last_edit, project_name, client, project_term_id)" \
-                  " VALUES (%s,%s,%s,%s,%s)"
+        command = "INSERT INTO project (project_id, last_edit, project_name, client, timeinterval_id, owner)" \
+                  " VALUES (%s,%s,%s,%s,%s,%s)"
         data = (object.get_id(),
                 object.get_last_edit(),
                 object.get_project_name(),
                 object.get_client(),
-                object.get_project_term_id())
+                object.get_time_interval_id(),
+                object.get_owner())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -106,11 +109,17 @@ class ProjectMapper (Mapper):
         self._cnx.commit()
         cursor.close()
 
-    def update(self, project):  # Projekt, welches geupdatet werden soll wird übergeben
+    def update(self, project):  # Projekt, welches als update dient wird hier der Methode übergeben
         cursor = self._cnx.cursor()
 
-        command = "UPDATE project " + "SET project_id=%s, last_edit=%s, project_name=%s, client=%s, project_term_id=%s WHERE project_id=%s"
-        data = (project.get_id(), project.get_last_edit(), project.get_project_name(), project.get_client(), project.get_project_term_id())
+        command = "UPDATE project SET last_edit=%s, project_name=%s, client=%s, timeinterval_id=%s, " \
+                  "owner=%s WHERE project_id=%s"
+        """  
+        Die Variablen werden dem übergebenen "project" entnommen und überschreiben die aktuellen Werte, 
+        welche im Object mit der entsprechenden id stehen.
+        """
+        data = (project.get_last_edit(), project.get_project_name(), project.get_client(),
+                project.get_timeinterval_id(), project.get_owner(), project.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

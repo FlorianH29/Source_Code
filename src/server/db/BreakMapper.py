@@ -1,4 +1,5 @@
 from server.bo import Break
+"""
 from server.db.Mapper import Mapper
 
     class BreakMapper(Mapper):
@@ -12,7 +13,6 @@ from server.db.Mapper import Mapper
 
     def find_all(self):
 
-
     def find_by_break_id(self, break_id):
 
     def insert(self, break):
@@ -22,7 +22,7 @@ from server.db.Mapper import Mapper
 
 
     def delete(self, break):
-
+"""
 
 
 

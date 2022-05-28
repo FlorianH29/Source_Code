@@ -2,30 +2,30 @@ import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
 import { withStyles, Button, TextField, InputAdornment, IconButton, Grid, Typography } from '@mui/material';
 
-class PersonList extends Component {
+class ProjectList extends Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            persons: []
+            projects: []
         }
     }
 
     componentDidMount() {
-        this.getPersons();
+        this.getProjects();
     }
 
-    getPersons = () => {
-        HdMWebAppAPI.getAPI().getPersons()
-            .then(personBOs =>
+    getProjects = () => {
+        HdMWebAppAPI.getAPI().getProject()
+            .then(projectBOs =>
                 this.setState({
-                    persons: personBOs
+                    projects: projectBOs
                 })).catch(e =>
             this.setState({
-                persons: []
+                projects: []
             }));
-        //console.log(this.state.persons)
+        //console.log(this.state.projects)
     }
 
     render() {
@@ -34,7 +34,7 @@ class PersonList extends Component {
                 <Grid container spacing={1} justify='flex-start' alignItems='center'>
                     <Grid item>
                         <Typography>
-                            Filter person list by name:
+                            Filter projects by name/person:
                         </Typography>
                     </Grid>
                 </Grid>
@@ -48,4 +48,4 @@ class PersonList extends Component {
 
 }
 
-export default PersonList;
+export default ProjectList;

@@ -84,8 +84,10 @@ class ProjectWorkMapper (Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 object.set_id(1)
 
-        command = "INSERT INTO projectwork (projectwork_id, last_edit, projectwork_name, description) VALUES (%s,%s,%s,%s)"
-        data = (object.get_id(), object.get_last_edit(), object.get_project_work_name(), object.get_description())
+        command = "INSERT INTO projectwork (projectwork_id, last_edit, projectwork_name, description, " \
+                  "affiliated_activity_id) VALUES (%s,%s,%s,%s,%s)"
+        data = (object.get_id(), object.get_last_edit(), object.get_project_work_name(), object.get_description(),
+                object.get_affiliated_activity())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -101,13 +103,17 @@ class ProjectWorkMapper (Mapper):
         self._cnx.commit()
         cursor.close()
 
-    def update(self, project_work):  # Projekt, welches geupdatet werden soll wird übergeben
+    def update(self, project_work):  # Projekt, welches als update dient wird hier der Methode übergeben
         cursor = self._cnx.cursor()
 
-        command = "UPDATE projectwork " + "SET projectwork_id=%s, last_edit=%s, projectwork_name=%s, description=%s WHERE projectwork_id=%s"
-        #die umbenannte ID (project_work_id)stand hier schon so vor der Änderung. Mögliche Fehlerquelle
-        data = (project_work.get_id(), project_work.get_last_edit(), project_work.get_project_work_name(),
-               project_work.get_description())
+        command = "UPDATE projectwork SET last_edit=%s, projectwork_name=%s, description=%s, " \
+                  "affiliated_activity_id=%s WHERE projectwork_id=%s"
+        """  
+        Die Variablen werden dem übergebenen "project_work" entnommen und überschreiben die aktuellen Werte, 
+        welche im Object mit der entsprechenden id stehen.
+        """
+        data = (project_work.get_last_edit(), project_work.get_project_work_name(),
+                project_work.get_description(), project_work.get_id(), project_work.get_affiliated_activity())
         cursor.execute(command, data)
 
         self._cnx.commit()

@@ -142,13 +142,13 @@ class TimeIntervalTransactionMapper (Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE timeintervaltransaction " \
-                  "SET timeintervaltransaction_id=%s, last_edit=%s, affiliated_work_time_account_id=%s, " \
+                  "SET  last_edit=%s, affiliated_work_time_account_id=%s, " \
                   "affiliated_time_interval=%s " \
                   "WHERE timeintervaltransaction_id=%s"
-        data = (time_interval_transaction.get_id(),
-                time_interval_transaction.get_last_edit(),
+        data = (time_interval_transaction.get_last_edit(),
                 time_interval_transaction.get_affiliated_work_time_account(),
-                time_interval_transaction.get_affiliated_time_interval())
+                time_interval_transaction.get_affiliated_time_interval(),
+                time_interval_transaction.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
