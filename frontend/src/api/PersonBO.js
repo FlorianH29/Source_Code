@@ -4,7 +4,7 @@ import BusinessObject from './BusinessObject';
 export default class PersonBO extends BusinessObject {
 
   /**
-   * Konstruktor, erstelt ein Person Objekt mit
+   * Konstruktor, erstelt ein Personobjekt mit
    *
    * @param {String} aFirstname - der Vorname dieses PersonBO.
    * @param {String} aLastname - der Nachname dieses PersonBO.
@@ -14,95 +14,95 @@ export default class PersonBO extends BusinessObject {
    */
   constructor(aFirstname, aLastname, aUserName, aMailAddress, aFireBaseId) {
     super();
-    this.first_name = aFirstname;
-    this.last_name = aLastname;
-    this.user_name = aUserName;
-    this.mail_address = aMailAddress;
+    this.firstname = aFirstname;
+    this.lastname = aLastname;
+    this.username = aUserName;
+    this.mailaddress = aMailAddress;
     this.firebase_id = aFireBaseId;
   }
 
   /**
    * Setzt einen neuen Vornamen.
    *
-   * @param {String} aFirstname - the new firstname of this CustomerBO.
+   * @param {String} aFirstname - der neue Vorname dieses PersonBO.
    */
   setFirstName(aFirstname) {
-    this.first_name = aFirstname;
+    this.firstname = aFirstname;
   }
 
   /**
-   * Gets the firstname.
+   * Gibt den Vornamen zurück.
    */
   getFirstName() {
-    return this.first_name;
+    return this.firstname;
   }
 
   /**
-   * Sets a new lastname.
+   * Setzt einen neuen Nachnamen.
    *
-   * @param {*} aLastname - the new lastname of this CustomerBO.
+   * @param {*} aLastname - der neue Nachname dieses PersonBO.
    */
   setLastName(aLastname) {
-    this.last_name = aLastname;
+    this.lastname = aLastname;
   }
 
   /**
-   * Gets the lastname.
+   * Gibt den Nachnamen zurück.
    */
   getLastName() {
-    return this.last_name;
+    return this.lastname;
   }
 
   /**
-   * Setzt einen neuen Vornamen.
+   * Setzt einen neuen Username.
    *
-   * @param {String} aFirstname - the new firstname of this CustomerBO.
+   * @param {String} aUserName - der neue Username dieses PersonBO.
    */
   setUserName(aUserName) {
-    this.user_name = aUserName;
+    this.username = aUserName;
   }
 
   /**
-   * Gets the firstname.
+   * Gibt den Username zurück.
    */
   getUserName() {
-    return this.user_name;
+    return this.username;
   }
 
   /**
-   * Setzt einen neuen Vornamen.
+   * Setzt eine neue Mailadresse.
    *
-   * @param aMailAddress
+   * @param aMailAddress - die neue Mailadresse dieses PersonBO
    */
   setMailAddress(aMailAddress) {
-    this.mail_address = aMailAddress;
+    this.mailaddress = aMailAddress;
   }
 
   /**
-   * Gets the firstname.
+   * Gibt die Mailadresse zurück.
    */
   getMailAddress() {
-    return this.mail_address;
+    return this.mailaddress;
   }
 
   /**
-   * Setzt einen neuen Vornamen.
+   * Setzt eine neue Firebase ID.
    *
-   * @param aFireBaseId
+   * @param aFireBaseId - die neue Firebase ID dieses PersonBO
    */
   setFireBaseId(aFireBaseId) {
-    this.first_name = aFireBaseId;
+    this.firebase_id = aFireBaseId;
   }
 
   /**
-   * Gets the firstname.
+   * Gibt die Firebase ID zurück.
    */
   getFireBaseId() {
     return this.firebase_id;
   }
 
   /**
-   * Returns an Array of CustomerBOs from a given JSON structure.
+   * Gibt einen Array mit PersonBOs einer gegebenen JSON Struktur zurück.
    */
   static fromJSON(persons) {
     let result = [];
@@ -113,12 +113,11 @@ export default class PersonBO extends BusinessObject {
         result.push(p);
       })
     } else {
-      // Es handelt sich offenbar um ein singuläres Objekt
       let p = persons;
       Object.setPrototypeOf(p, PersonBO.prototype);
       result.push(p);
     }
-
+    //console.log(result)
     return result;
   }
 }

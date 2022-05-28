@@ -18,7 +18,7 @@ class Arrive (ev.Event):
 
     def __str__(self):
         """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
-        return "Event: {}, {}, {}".format(self.get_id(), self.get_last_edit(), self.__time_stamp)
+        return "Arrive: {}, {}, {}".format(self.get_id(), self.get_last_edit(), self.__time_stamp)
 
     @staticmethod
     def from_dict(dictionary=dict()):
