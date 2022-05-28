@@ -460,3 +460,35 @@ class HdMWebAppAdministration(object):
         """Alle in der Datenbank gespeicherten Events auslesen."""
         with EventMapper() as mapper:
             return mapper.find_all()
+
+
+
+#Business Logik für Frontend
+    def get_project_by_firebase_id(self, value):
+        projectmember = self.get_project_by_employee(value)
+        project_member_list = []
+        project_name_list = []
+        counter = 0
+        for i in projectmember:
+            #Um die richtige Firebase Id zu getten, muss hier die get_person Methode angepasst werden
+            firebase_id = i.get_person()
+            project_member_list.append(firebase_id)
+            while counter < len(project_member_list):
+                firebase_id = self.get_project_by_id(project_member_list[counter])
+                project = firebase_id.get_project_name()
+                counter = counter + 1
+                project_name_list.append(project)
+        return project_name_list
+
+#Simplere Version die allerdings bisher nur in der Main.py läuft:
+"""
+test1 = hwa.get_project_by_employee(1)
+liste = []
+for i in test1:
+    a = i.get_person()
+    liste.append(a)
+for i in liste:
+    a = hwa.get_project_by_id(i)
+    b = a.get_project_name()
+    print(b)
+"""

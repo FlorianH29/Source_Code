@@ -93,21 +93,8 @@ hwa = HdMWebAppAdministration()
 #pro1 = hwa.get_project_by_id(1)
 #hwa.delete_project(pro1)
 
-test1 = hwa.get_project_by_employee(1)
-print(test1)
 
-liste = []
-
-for i in test1:
-    a = i.get_person()
-    liste.append(a)
-
-print(liste)
-
-for i in liste:
-    a = hwa.get_project_by_id(i)
-    b = a.get_project_name()
-    print(b)
+#print(hwa.get_project_by_firebase_id(1))
 
 if __name__ == '__main__':
     app.run(debug=False)
