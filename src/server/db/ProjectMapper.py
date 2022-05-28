@@ -25,7 +25,8 @@ class ProjectMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT project_id, last_edit, project_name, client, timeinterval_id, owner FROM project WHERE project_id={}".format(key)
+        command = "SELECT project_id, last_edit, project_name, client, timeinterval_id, owner " \
+                  "FROM project WHERE project_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 

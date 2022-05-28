@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`timeinterval` (
   `last_edit` DATETIME NULL,
   `start_time` DATETIME NULL,
   `end_time` DATETIME NULL,
-  `time_period` INT NULL,
+  `time_period` TIME NULL,
   PRIMARY KEY (`timeinterval_id`))
 ENGINE = InnoDB;
 

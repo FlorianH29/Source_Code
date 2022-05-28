@@ -23,7 +23,7 @@ bo = api.model('BusinessObject', {
 })
 
 activity = api.inherit('Activity', bo, {
-    'name': fields.String(attribute='name', description='Name einer Aktivität'),
+    'name': fields.String(attribute='_name', description='Name einer Aktivität'),
     'capacity': fields.Integer(attribute='_capacity', description='Kapazität einer Aktivität'),
     'affiliated_project': fields.Integer(attribute='_affiliated_project', description='Zugeordnetes Projekt einer A.')
 })
@@ -99,20 +99,6 @@ class ProjectWorksByActivityOperations(Resource):
         else:
             return "Activity not found", 500
 
-
-"""
-hwa = HdMWebAppAdministration()
-
-project2 = hwa.get_project_by_id(1)
-activity1 = hwa.get_activity_by_id(1)
-pw1 = hwa.get_projectwork_by_id(1)
-pw2 = hwa.get_projectwork_by_id(2)
-pw3 = hwa.get_projectwork_by_id(3)
-
-test = hwa.get_projectworks_by_activity(activity1)
-
-for i in test:
-    print(i)"""
 
 if __name__ == '__main__':
     app.run(debug=False)

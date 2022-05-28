@@ -90,8 +90,8 @@ class TimeIntervalMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "UPDATE timeinterval " + "SET last_edit=%s, start_time=%s, end_time=%s, " \
-                                           "time_period=%s WHERE timeinterval_id=%s"
+        command = "UPDATE timeinterval SET last_edit=%s, start_time=%s, end_time=%s, time_period=%s " \
+                  "WHERE timeinterval_id=%s"
         data = (time_interval.get_last_edit(), time_interval.get_start_event(),
                 time_interval.get_end_event(), time_interval.get_time_period(), time_interval.get_id())
         cursor.execute(command, data)
@@ -100,7 +100,7 @@ class TimeIntervalMapper(Mapper):
         cursor.close()
 
     def delete(self, time_interval):
-        """Löschen der Daten eines Zeitinterval aus der Datenbank.
+        """Löschen der Daten eines Zeitintervalls aus der Datenbank.
         """
         cursor = self._cnx.cursor()
 

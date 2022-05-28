@@ -201,14 +201,17 @@ class HdMWebAppAdministration(object):
 
     def create_event_transaction(self, event, work_time_account):
         """Eine EventTransaction erstellen."""
-        t = EventTransaction()
-        t.set_id(1)
-        t.set_last_edit(datetime.datetime.now())
-        t.set_affiliated_work_time_account(work_time_account.get_id())
-        t.set_event(event.get_id())
-
         with EventTransactionMapper() as mapper:
-            return mapper.insert(t)
+            if event and work_time_account is not None:
+                et = EventTransaction()
+                et.set_id(1)
+                et.set_last_edit(datetime.datetime.now())
+                et.set_affiliated_work_time_account(work_time_account.get_id())
+                et.set_event(event.get_id())
+
+                return mapper.insert(et)
+            else:
+                return None
 
     """Methoden für TimeIntervalTransaktionen"""
 
@@ -306,23 +309,25 @@ class HdMWebAppAdministration(object):
 
     def create_project(self, project_name, client, time_interval, person):
         """Erstellen eines neuen Projekts"""
-        project = Project()
-        project.set_id(1)
-        project.set_last_edit(datetime.datetime.now())
-        project.set_project_name(project_name)
-        project.set_client(client)
-        project.set_time_interval_id(time_interval.get_id())
-        project.set_owner(person.get_id())
-
         with ProjectMapper() as mapper:
-            return mapper.insert(project)
+            if time_interval and person is not None:
+                project = Project()
+                project.set_id(1)
+                project.set_last_edit(datetime.datetime.now())
+                project.set_project_name(project_name)
+                project.set_client(client)
+                project.set_time_interval_id(time_interval.get_id())
+                project.set_owner(person.get_id())
+
+                return mapper.insert(project), self.create_project_member(project, person)
+            else:
+                return None
 
     def delete_project(self, project):
         with ProjectMapper() as mapper:
             return mapper.delete(project)
 
     def save_project(self, project):
-        # Vor dem Speichern wird der last_edit zu aktuellen Zeitpunkt gesetzt
         project.set_last_edit(datetime.datetime.now())
         with ProjectMapper() as mapper:
             return mapper.update(project)
@@ -351,15 +356,18 @@ class HdMWebAppAdministration(object):
 
     def create_project_work(self, project_work_name, description, activity):
         """Erstellen eines neuen ProjektWorks"""
-        project_work = ProjectWork()
-        project_work.set_id(1)
-        project_work.set_last_edit(datetime.datetime.now())
-        project_work.set_project_work_name(project_work_name)
-        project_work.set_description(description)
-        project_work.set_affiliated_activity(activity.get_id())
-
         with ProjectWorkMapper() as mapper:
-            return mapper.insert(project_work)
+            if activity is not None:
+                project_work = ProjectWork()
+                project_work.set_id(1)
+                project_work.set_last_edit(datetime.datetime.now())
+                project_work.set_project_work_name(project_work_name)
+                project_work.set_description(description)
+                project_work.set_affiliated_activity(activity.get_id())
+
+                return mapper.insert(project_work)
+            else:
+                return None
 
     def delete_project_work(self, project_work):
         with ProjectWorkMapper() as mapper:
@@ -380,14 +388,17 @@ class HdMWebAppAdministration(object):
 
     def create_project_member(self, project, person):
         """Erstellen eines neuen Projekts"""
-        project_m = ProjectMember()
-        project_m.set_id(1)
-        project_m.set_last_edit(datetime.datetime.now())
-        project_m.set_project(project.get_id())
-        project_m.set_person(person.get_id())
-
         with ProjectMemberMapper() as mapper:
-            return mapper.insert(project_m)
+            if project and person is not None:
+                project_m = ProjectMember()
+                project_m.set_id(1)
+                project_m.set_last_edit(datetime.datetime.now())
+                project_m.set_project(project.get_id())
+                project_m.set_person(person.get_id())
+
+                return mapper.insert(project_m)
+            else:
+                return None
 
     def delete_project_member(self, project_m):
         with ProjectMemberMapper() as mapper:
@@ -401,18 +412,20 @@ class HdMWebAppAdministration(object):
 
     """Methoden von TimeInterval"""
 
-    def create_time_interval(self, start_event, end_event, time_period):
+    def create_time_interval(self, start_event, end_event):
         """ZeitIntervalkonto anlegen"""
-        interval = TimeInterval()
-        interval.set_id(1)
-        '''Setzen des Last_edit durch die aktuelle Zeit'''
-        interval.set_last_edit(datetime.datetime.now())
-        interval.set_start_event(start_event.get_time_stamp())
-        interval.set_end_event(end_event.get_time_stamp())
-        interval.set_time_period(time_period)
-
         with TimeIntervalMapper() as mapper:
-            return mapper.insert(interval)
+            if start_event and end_event is not None:
+                interval = TimeInterval()
+                interval.set_id(1)
+                interval.set_last_edit(datetime.datetime.now())
+                interval.set_start_event(start_event.get_time_stamp())
+                interval.set_end_event(end_event.get_time_stamp())
+                interval.set_time_period(interval.calculate_period())
+
+                return mapper.insert(interval)
+            else:
+                return None
 
     def delete_time_interval(self, time_interval):
         """Zeitinterval löschen"""
@@ -436,13 +449,13 @@ class HdMWebAppAdministration(object):
 
     """Methoden von Event"""
 
-    def create_event(self, event_type, time_stamp):
+    def create_event(self, event_type):
         """Event-Ereignis anlegen"""
         event = Event()
         event.set_id(1)
         event.set_last_edit(datetime.datetime.now())
         event.set_event_type(event_type)
-        event.set_time_stamp(time_stamp)
+        event.set_time_stamp(datetime.datetime.now())
 
         with EventMapper() as mapper:
             return mapper.insert(event)
