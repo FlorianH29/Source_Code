@@ -32,7 +32,7 @@ class ProjectWork (bo.BusinessObject):
         return "ProjectWork:  project_id: {}  last_edit: {}  project_work_name: {}  " \
                "description: {} affiliated_activity: {}".format(self.get_id(), self.get_last_edit(),
                                                                 self.get_project_work_name(), self.get_description(),
-                                                                self.__affiliated_activity())
+                                                                self.get_affiliated_activity())
 
     @staticmethod
     def from_dict(dictionary=dict()):

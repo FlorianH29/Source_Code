@@ -334,6 +334,17 @@ class HdMWebAppAdministration(object):
         with ProjectWorkMapper() as mapper:
             return mapper.find_by_key(number)
 
+    def get_projectworks_by_activity(self, activity):
+        """ ProjektWorks werden anhand der eindeutigen ID der Aktivität ausgelesen, der sie zugeordnet sind."""
+        with ProjectWorkMapper() as mapper:
+            result = []
+
+            if not (activity is None):
+                project_works = mapper.find_by_activity(activity.get_id())
+                if not (project_works is None):
+                    result.extend(project_works)
+            return result
+
     def get_all_project_works(self):
         with ProjectWorkMapper() as mapper:
             return mapper.find_all()
