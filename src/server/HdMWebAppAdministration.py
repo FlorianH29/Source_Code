@@ -469,19 +469,22 @@ class HdMWebAppAdministration(object):
         project_member_list = []
         project_name_list = []
         counter = 0
-        for i in projectmember:
-            #Um die richtige Firebase Id zu getten, muss hier die get_person Methode angepasst werden
-            firebase_id = i.get_person()
-            project_member_list.append(firebase_id)
-            while counter < len(project_member_list):
-                firebase_id = self.get_project_by_id(project_member_list[counter])
-                project = firebase_id.get_project_name()
-                counter = counter + 1
-                project_name_list.append(project)
-        return project_name_list
+        try:
+            for i in projectmember:
+                #Um die richtige Firebase Id zu getten, muss hier die get_person Methode angepasst werden
+                firebase_id = i.get_person()
+                project_member_list.append(firebase_id)
+                while counter < len(project_member_list):
+                    firebase_id = self.get_project_by_id(project_member_list[counter])
+                    project = firebase_id.get_project_name()
+                    counter = counter + 1
+                    project_name_list.append(project)
+            return project_name_list
+        except AttributeError:
+            return print("Keine Projekte gefunden")
 
 #Simplere Version die allerdings bisher nur in der Main.py läuft:
-"""
+"""2
 test1 = hwa.get_project_by_employee(1)
 liste = []
 for i in test1:

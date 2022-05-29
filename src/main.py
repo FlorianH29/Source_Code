@@ -94,7 +94,7 @@ hwa = HdMWebAppAdministration()
 #hwa.delete_project(pro1)
 
 
-#print(hwa.get_project_by_firebase_id(1))
+print(hwa.get_project_by_firebase_id(1))
 
 if __name__ == '__main__':
     app.run(debug=False)
