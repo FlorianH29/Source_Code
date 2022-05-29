@@ -1,13 +1,13 @@
-from server.bo import BusinessObject as bo
+from server.bo import TimeInterval as ti
 
 
-class ProjectWork (bo.BusinessObject):
+class ProjectWork (ti.TimeInterval):
 
     def __init__(self):
         super().__init__()
-        self.__project_work_name = ""    # The name of the project. (is str)
-        self.__description = ""  # The description of the ProjectWork. (is str)
-        self.__affiliated_activity = None
+        self.__project_work_name = ""    # Der Name die ProjectWork. (init als leerer str)
+        self.__description = ""  # Die Beschreibung für die ProjectWork. (init als leerer str)
+        self.__affiliated_activity = None  # Die zugehörige Activity (init als None)
 
     def set_project_work_name(self, project_work_name):
         self.__project_work_name = project_work_name
@@ -28,19 +28,26 @@ class ProjectWork (bo.BusinessObject):
         return self.__affiliated_activity
 
     def __str__(self):
-        """Ausgabe von: id, last_edit, project_work_name, description"""
+        """Ausgabe von: id, last_edit, project_work_name, description, affiliated_activity, end_event_id,
+        start_event_id"""
         return "ProjectWork:  project_id: {}  last_edit: {}  project_work_name: {}  " \
-               "description: {} affiliated_activity: {}".format(self.get_id(), self.get_last_edit(),
-                                                                self.get_project_work_name(), self.get_description(),
-                                                                self.__affiliated_activity())
+               "description: {} affiliated_activity: {} end_event: {}  start_event: {}  " \
+               "time_period: {}".format(self.get_id(), self.get_last_edit(),
+                                        self.get_project_work_name(), self.get_description(),
+                                        self.__affiliated_activity(), self.__time_period,
+                                        self.__start_event, self.__end_event)
 
     @staticmethod
     def from_dict(dictionary=dict()):
         """Umwandeln eines Python dict() in ein ProjectWork()."""
         projectwork = ProjectWork()
-        projectwork.set_id(dictionary["id"])  # Usually part of the business object.
-        projectwork.set_last_edit("last_edit")  # Set the last edit of the project work.
-        projectwork.set_project_work_name(dictionary["project_work_name"])  # Sets the project_work_name from the dict as the name of the object.
-        projectwork.set_description(dictionary["description"])  # Sets the description from the dict as the description of the object.
-        projectwork.set_affiliated_activity(dictionary["affiliated_activity"])
+        projectwork.set_id(dictionary["id"])  # Eigentlicher Teil von business object.
+        projectwork.set_last_edit("last_edit")  # Setzten des last_edit von projectwork
+        projectwork.set_project_work_name(dictionary["project_work_name"])  # Setzt Namen aus dict() für ProjectWork
+        projectwork.set_description(dictionary["description"])  # Setzt description aus dict() für ProjectWork
+        projectwork.set_affiliated_activity(dictionary["affiliated_activity"])  # Setzt affiliated_activity aus
+        # dict() für ProjectWork
+        projectwork.set_start_event(dictionary["start_time"])  # Setzt start_time aus dict() für ProjectWork
+        projectwork.set_end_event(dictionary["end_time"])  # Setzt end_time aus dict() für ProjectWork
+        projectwork.set_time_period(dictionary["time_period"])  # Setzt time_periode aus dict() für ProjectWork
         return projectwork

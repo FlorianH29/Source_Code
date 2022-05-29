@@ -2,7 +2,7 @@ from flask import Flask
 from flask_restx import Api, Resource, fields
 from flask_cors import CORS
 
-from server.HdMWebAppAdministration import HdMWebAppAdministration
+#from server.HdMWebAppAdministration import HdMWebAppAdministration
 from server.bo.Person import Person
 import datetime
 

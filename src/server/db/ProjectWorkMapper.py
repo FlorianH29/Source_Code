@@ -25,18 +25,24 @@ class ProjectWorkMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT projectwork_id, last_edit, projectwork_name, description FROM projectwork " \
-                  "WHERE projectwork_id={}".format(key)
+        command = "SELECT projectwork_id, last_edit, projectwork_name, description, affiliated_activity, " \
+                  "start_time, end_time, time_period FROM projectwork WHERE projectwork_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (projectwork_id, last_edit, projectwork_name, description) = tuples[0]
+            (projectwork_id, last_edit, projectwork_name, description, affiliated_activity,
+             start_time, end_time, time_period) = tuples[0]
             project_work = pw.ProjectWork()
             project_work.set_id(projectwork_id)
             project_work.set_last_edit(last_edit)
             project_work.set_project_work_name(projectwork_name)
             project_work.set_description(description)
+
+            project_work.set_affiliated_activity(affiliated_activity)
+            project_work.set_start_event(start_time)
+            project_work.set_end_event(end_time)
+            project_work.set_time_period(time_period)
 
             result = project_work
         except IndexError:
@@ -53,15 +59,23 @@ class ProjectWorkMapper (Mapper):
     def find_all(self):
         all_project_works = []  # Liste mit allen "project_works
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT projectwork_id, last_edit, projectwork_name, description FROM projectwork")
+        cursor.execute("SELECT projectwork_id, last_edit, projectwork_name, description, affiliated_activity, "
+                       "start_time, end_time, time_period FROM projectwork")
         tuples = cursor.fetchall()
 
-        for (projectwork_id, last_edit, projectwork_name, description) in tuples:
+        for (projectwork_id, last_edit, projectwork_name, description, affiliated_activity, start_time, end_time,
+             time_period) in tuples:
             project_work = pw.ProjectWork()
             project_work.set_id(projectwork_id)
             project_work.set_last_edit(last_edit)
             project_work.set_project_work_name(projectwork_name)
             project_work.set_description(description)
+
+            project_work.set_affiliated_activity(affiliated_activity)
+            project_work.set_start_event(start_time)
+            project_work.set_end_event(end_time)
+            project_work.set_time_period(time_period)
+
             all_project_works.append(project_work)
 
         self._cnx.commit()
@@ -85,9 +99,10 @@ class ProjectWorkMapper (Mapper):
                 object.set_id(1)
 
         command = "INSERT INTO projectwork (projectwork_id, last_edit, projectwork_name, description, " \
-                  "affiliated_activity_id) VALUES (%s,%s,%s,%s,%s)"
+                  "affiliated_activity, start_time, end_time, time_period) VALUES (%s,%s,%s,%s,%s)"
         data = (object.get_id(), object.get_last_edit(), object.get_project_work_name(), object.get_description(),
-                object.get_affiliated_activity())
+                object.get_affiliated_activity(), object.get_start_event(), object.get_end_event(),
+                object.get_time_period())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -107,13 +122,14 @@ class ProjectWorkMapper (Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE projectwork SET last_edit=%s, projectwork_name=%s, description=%s, " \
-                  "affiliated_activity_id=%s WHERE projectwork_id=%s"
+                  "affiliated_activity=%s, start_time=%s, end_time=%s, time_period=%s WHERE projectwork_id=%s"
         """  
         Die Variablen werden dem übergebenen "project_work" entnommen und überschreiben die aktuellen Werte, 
         welche im Object mit der entsprechenden id stehen.
         """
         data = (project_work.get_last_edit(), project_work.get_project_work_name(),
-                project_work.get_description(), project_work.get_id(), project_work.get_affiliated_activity())
+                project_work.get_description(), project_work.get_id(), project_work.get_affiliated_activity(),
+                project_work.get_start_event(), project_work.get_end_event(), project_work.get_time_period())
         cursor.execute(command, data)
 
         self._cnx.commit()
