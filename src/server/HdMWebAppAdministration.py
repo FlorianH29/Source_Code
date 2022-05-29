@@ -241,7 +241,7 @@ class HdMWebAppAdministration(object):
         with TimeIntervalTransactionMapper() as mapper:
             mapper.delete(time_interval_transaction)
 
-    def create_time_interval_transaction(self, time_interval, work_time_account):
+    def create_time_interval_transaction(self,  work_time_account, time_interval=None, affiliated_break=None, projectwork=None):
         """Eine TimeIntervalTransaction erstellen."""
         with TimeIntervalTransactionMapper() as mapper:
             if time_interval and work_time_account is not None:
@@ -250,10 +250,24 @@ class HdMWebAppAdministration(object):
                 t.set_last_edit(datetime.datetime.now())
                 t.set_affiliated_work_time_account(work_time_account.get_id())
                 t.set_affiliated_time_interval(time_interval.get_id())
+                print("test")
+            elif affiliated_break and work_time_account is not None:
+                t = TimeIntervalTransaction()
+                t.set_id(1)
+                t.set_last_edit(datetime.datetime.now())
+                t.set_affiliated_work_time_account(work_time_account.get_id())
+                t.set_affiliated_break(affiliated_break.get_id())
+            elif projectwork and work_time_account is not None:
+                t = TimeIntervalTransaction()
+                t.set_id(1)
+                t.set_last_edit(datetime.datetime.now())
+                t.set_affiliated_work_time_account(work_time_account.get_id())
+                t.set_affiliated_projectwork(projectwork.get_id())
 
-                return mapper.insert(t)
+
             else:
                 return None
+            return mapper.insert(t)
 
     """Methoden für WorkTimeAccount:"""
 
@@ -296,6 +310,9 @@ class HdMWebAppAdministration(object):
             # wenn es transactions gibt, müssen die mit if abfrage gelöscht werden
             mapper.delete(work_time_account)
 
+    def get_inhalt(self, person):
+        pass
+
     """Project Methoden"""
 
     def get_project_by_id(self, number):
@@ -331,6 +348,7 @@ class HdMWebAppAdministration(object):
         project.set_last_edit(datetime.datetime.now())
         with ProjectMapper() as mapper:
             return mapper.update(project)
+
 
     """ProjectWork Methoden"""
 

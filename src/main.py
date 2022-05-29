@@ -100,6 +100,16 @@ class ProjectWorksByActivityOperations(Resource):
             return "Activity not found", 500
 
 
+ha = HdMWebAppAdministration()
+a= ha.get_work_time_account_by_id(1)
+ti = ha.get_time_interval_by_id(2)
+ha.create_time_interval_transaction(a, ti, None, None)
+
+test = ha.get_all_time_interval_transactions()
+print(a)
+print(ti)
+print(test)
+
 if __name__ == '__main__':
     app.run(debug=False)
 
