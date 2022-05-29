@@ -349,12 +349,12 @@ class HdMWebAppAdministration(object):
         with ProjectMapper() as mapper:
             return mapper.update(project)
 
-    def get_project_by_person_id(self, person):
+    def get_project_by_person_id(self, person_id):
         """ ProjektWorks werden anhand der eindeutigen ID der Aktivität ausgelesen, der sie zugeordnet sind."""
         with ProjectMapper() as mapper:
             result = []
-            if not (person is None):
-                return mapper.find_by_person_id(person.get_id())
+            if not (person_id is None):
+                return mapper.find_by_person_id(person_id)
 
 
     """ProjectWork Methoden"""
@@ -472,11 +472,11 @@ class HdMWebAppAdministration(object):
         with TimeIntervalMapper() as mapper:
             return mapper.update(value)
 
-    def get_time_interval_by_person_id(self, person):
+    def get_time_interval_by_person_id(self, person_id):
         """ ProjektWorks werden anhand der eindeutigen ID der Aktivität ausgelesen, der sie zugeordnet sind."""
         with TimeIntervalMapper() as mapper:
-            if not (person is None):
-                return mapper.find_by_person_id(person.get_id())
+            if not (person_id is None):
+                return mapper.find_by_person_id(person_id)
 
     """Methoden von Event"""
 

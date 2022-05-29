@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import Grid from "@mui/material/Grid";
-import {ButtonGroup} from "@mui/material";
+import {ButtonGroup, Divider} from "@mui/material";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import ListItem from "@mui/material/ListItem";
+import {HdMWebAppAPI} from "../../api";
 
 class WorktimeAccount extends Component {
 
@@ -13,15 +14,21 @@ class WorktimeAccount extends Component {
         super(props);
 
         this.state = {
-            projects: []
+            worktimeaccounts: []
         };
 
     };
 
     componentDidMount() {
-        const response = [1,2,3,4,5]
-        this.setState({projects: response});
-        console.log(this.state.projects)
+        HdMWebAppAPI.getAPI().getWorktimeAccount(1)
+            .then(worktimeaccountBOs =>
+                this.setState({
+                    worktimeaccounts: worktimeaccountBOs
+                })).catch(e =>
+            this.setState({
+                worktimeaccounts: []
+            }));
+        console.log(this.state.worktimeaccounts)
     }
 
     render() {
@@ -45,12 +52,25 @@ class WorktimeAccount extends Component {
                             </Typography>
                         </Grid>
                         <Grid item xs={12} align={"center"}>
-                            {this.state.projects.map((project) => (
-                                <ListItem key = {project}>
-                                    <p>
-                                        {project}
-                                    </p>
-                                </ListItem>))}
+                            {this.state.worktimeaccounts.map((project) => (
+                                <Box key={project}>
+                                    <ListItem>
+                                        <Grid container justifyContent={"left"}>
+                                            <Grid item xs={6} align={"center"}>
+                                                <p>
+                                                    {project.name}
+                                                </p>
+                                            </Grid>
+                                            <Grid item xs={6} align={"center"}>
+                                                <p>
+                                                    {project.time}
+                                                </p>
+                                            </Grid>
+                                        </Grid>
+                                    </ListItem>
+                                    <Divider/>
+                                </Box>
+                            ))}
                         </Grid>
                     </Grid>
                 </Card>
