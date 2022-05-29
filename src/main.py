@@ -101,13 +101,8 @@ class ProjectWorksByActivityOperations(Resource):
 
 
 ha = HdMWebAppAdministration()
-a= ha.get_work_time_account_by_id(1)
-ti = ha.get_time_interval_by_id(2)
-ha.create_time_interval_transaction(a, ti, None, None)
-
-test = ha.get_all_time_interval_transactions()
-print(a)
-print(ti)
+p= ha.get_person_by_id(1)
+test = ha.get_project_by_person_id(p)
 print(test)
 
 if __name__ == '__main__':

@@ -51,6 +51,44 @@ class ProjectMapper (Mapper):
 
         return result
 
+    def find_by_person_id(self, person_id):
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
+        wird genau ein Objekt zurückgegeben.
+
+        :param key Primärschlüsselattribut (->DB)
+        :return User-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+            nicht vorhandenem DB-Tupel.
+        """
+
+        all_projects = []
+
+        cursor = self._cnx.cursor()
+        command =   " SELECT DISTINCT P.project_id, P.last_edit, P.project_name, P.client, P.timeinterval_id, P.owner " \
+                    " FROM SoPraTestDB.worktimeaccount WTA " \
+                    " INNER JOIN SoPraTestDB.Timeintervaltransaction TIT ON TIT.affiliated_work_time_account_id = WTA.worktimeaccount_id " \
+                    " INNER JOIN SoPraTestDB.Projectwork PW ON PW.projectwork_id = TIT.affiliated_projectwork_id " \
+                    " INNER JOIN SoPraTestDB.activity A ON A.activity_id = PW.affiliated_activity_id " \
+                    " INNER JOIN SoPraTestDB.Project P ON P.project_id = A.affiliated_project_id " \
+                    " WHERE WTA.person_id = {} " .format(person_id)
+
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        for (project_id, last_edit, project_name, client, timeinterval_id, owner) in tuples:
+            project = p.Project()
+            project.set_id(project_id)
+            project.set_last_edit(last_edit)
+            project.set_project_name(project_name)
+            project.set_client(client)
+            project.set_time_interval_id(timeinterval_id)
+            project.set_owner(owner)
+            all_projects.append(project)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return all_projects
+
     def find_all(self):
         all_projects = []
         cursor = self._cnx.cursor()

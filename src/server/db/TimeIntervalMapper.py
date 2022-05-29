@@ -56,6 +56,42 @@ class TimeIntervalMapper(Mapper):
 
         return result
 
+    def find_by_person_id(self, person_id):
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
+        wird genau ein Objekt zurückgegeben.
+
+        :param key Primärschlüsselattribut (->DB)
+        :return User-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+            nicht vorhandenem DB-Tupel.
+        """
+
+        result = []
+
+        cursor = self._cnx.cursor()
+        command =   " SELECT DISTINCT TI.timeinterval_id, TI.last_edit, TI.start_time, TI.end_time, TI.time_period" \
+                    " FROM SoPraTestDB.worktimeaccount WTA " \
+                    " INNER JOIN SoPraTestDB.Timeintervaltransaction TIT ON TIT.affiliated_work_time_account_id = WTA.worktimeaccount_id " \
+                    " INNER JOIN SoPraTestDB.Timeinterval TI ON TIT.affiliated_time_interval_id = TI.timeinterval_id " \
+                    " WHERE WTA.person_id = {} " .format(person_id)
+
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        for (timeinterval_id, last_edit, start_time, end_time, time_period) in tuples:
+            interval = ti.TimeInterval()
+            interval.set_id(timeinterval_id)
+            interval.set_last_edit(last_edit)
+            interval.set_start_event(start_time)
+            interval.set_end_event(end_time)
+            interval.set_time_period(time_period)
+            result.append(interval)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+
     def insert(self, time_interval):
 
         cursor = self._cnx.cursor()
