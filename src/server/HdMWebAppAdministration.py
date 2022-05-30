@@ -537,16 +537,3 @@ class HdMWebAppAdministration(object):
             return project_name_list
         except AttributeError:
             return print("Keine Projekte gefunden")
-
-#Simplere Version die allerdings bisher nur in der Main.py läuft:
-"""2
-test1 = hwa.get_project_by_employee(1)
-liste = []
-for i in test1:
-    a = i.get_person()
-    liste.append(a)
-for i in liste:
-    a = hwa.get_project_by_id(i)
-    b = a.get_project_name()
-    print(b)
-"""
