@@ -3,7 +3,7 @@ from server.db.Mapper import Mapper
 
 
 class ProjectWorkMapper (Mapper):
-    """Mapper-Klasse, die User-Objekte auf eine relationale
+    """Mapper-Klasse, die ProjectWork-Objekte auf eine relationale
     Datenbank abbildet. Hierzu wird eine Reihe von Methoden zur Verfügung
     gestellt, mit deren Hilfe z.B. Objekte gesucht, erzeugt, modifiziert und
     gelöscht werden können. Das Mapping ist bidirektional. D.h., Objekte können
@@ -12,6 +12,34 @@ class ProjectWorkMapper (Mapper):
 
     def __init__(self):
         super().__init__()
+
+    def find_by_activity(self, activity):
+        """Suchen von ProjectWork Objekten mit vorgegebener Aktivität.
+
+        :param activity ID der Aktivität, mit der zugehörigege ProjectWorks eindeutig in der DB gefunden werden können
+        :return ProjectWork-Objekte, die der der Aktivität zugeordnet werden können
+        """
+
+        result = []
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM projectwork WHERE affiliated_activity_id={}".format(activity)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        for (projectwork_id, last_edit, projectwork_name, description, affiliated_activity_id) in tuples:
+            project_work = pw.ProjectWork()
+            project_work.set_id(projectwork_id)
+            project_work.set_last_edit(last_edit)
+            project_work.set_project_work_name(projectwork_name)
+            project_work.set_description(description)
+            project_work.set_affiliated_activity(affiliated_activity_id)
+            result.append(project_work)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
 
     def find_by_key(self, key):
         """Suchen eines ProjectWorks mit vorgegebener ID. Da diese eindeutig ist,
@@ -25,24 +53,19 @@ class ProjectWorkMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT projectwork_id, last_edit, projectwork_name, description, affiliated_activity, " \
-                  "start_time, end_time, time_period FROM projectwork WHERE projectwork_id={}".format(key)
+        command = "SELECT projectwork_id, last_edit, projectwork_name, description, affiliated_activity_id " \
+                  "FROM projectwork WHERE projectwork_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (projectwork_id, last_edit, projectwork_name, description, affiliated_activity,
-             start_time, end_time, time_period) = tuples[0]
+            (projectwork_id, last_edit, projectwork_name, description, affiliated_activity_id) = tuples[0]
             project_work = pw.ProjectWork()
             project_work.set_id(projectwork_id)
             project_work.set_last_edit(last_edit)
             project_work.set_project_work_name(projectwork_name)
             project_work.set_description(description)
-
-            project_work.set_affiliated_activity(affiliated_activity)
-            project_work.set_start_event(start_time)
-            project_work.set_end_event(end_time)
-            project_work.set_time_period(time_period)
+            project_work.set_affiliated_activity(affiliated_activity_id)
 
             result = project_work
         except IndexError:
@@ -55,27 +78,18 @@ class ProjectWorkMapper (Mapper):
 
         return result
 
-
     def find_all(self):
-        all_project_works = []  # Liste mit allen "project_works
+        all_project_works = []  # Liste mit allen project_works
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT projectwork_id, last_edit, projectwork_name, description, affiliated_activity, "
-                       "start_time, end_time, time_period FROM projectwork")
+        cursor.execute("SELECT projectwork_id, last_edit, projectwork_name, description FROM projectwork")
         tuples = cursor.fetchall()
 
-        for (projectwork_id, last_edit, projectwork_name, description, affiliated_activity, start_time, end_time,
-             time_period) in tuples:
+        for (projectwork_id, last_edit, projectwork_name, description) in tuples:
             project_work = pw.ProjectWork()
             project_work.set_id(projectwork_id)
             project_work.set_last_edit(last_edit)
             project_work.set_project_work_name(projectwork_name)
             project_work.set_description(description)
-
-            project_work.set_affiliated_activity(affiliated_activity)
-            project_work.set_start_event(start_time)
-            project_work.set_end_event(end_time)
-            project_work.set_time_period(time_period)
-
             all_project_works.append(project_work)
 
         self._cnx.commit()
@@ -83,7 +97,7 @@ class ProjectWorkMapper (Mapper):
 
         return all_project_works
 
-    def insert(self, object):
+    def insert(self, project_work):
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(projectwork_id) AS maxid FROM projectwork ")
         tuples = cursor.fetchall()
@@ -92,24 +106,23 @@ class ProjectWorkMapper (Mapper):
             if maxid[0] is not None:
                 """Wenn wir eine maximale ID festellen konnten, zählen wir diese
                 um 1 hoch und weisen diesen Wert als ID dem ProjectWork-Objekt zu."""
-                object.set_id(maxid[0] + 1)
+                project_work.set_id(maxid[0] + 1)
             else:
                 """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
-                object.set_id(1)
+                project_work.set_id(1)
 
         command = "INSERT INTO projectwork (projectwork_id, last_edit, projectwork_name, description, " \
-                  "affiliated_activity, start_time, end_time, time_period) VALUES (%s,%s,%s,%s,%s)"
-        data = (object.get_id(), object.get_last_edit(), object.get_project_work_name(), object.get_description(),
-                object.get_affiliated_activity(), object.get_start_event(), object.get_end_event(),
-                object.get_time_period())
+                  "affiliated_activity_id) VALUES (%s,%s,%s,%s,%s)"
+        data = (project_work.get_id(), project_work.get_last_edit(), project_work.get_project_work_name(), project_work.get_description(),
+                project_work.get_affiliated_activity())
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
-        return object
+        return project_work
 
-    def delete(self, project_work): # Projekt, welches gelöscht werden soll wird übergeben
+    def delete(self, project_work):  # Projekt, welches gelöscht werden soll wird übergeben
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM projectwork WHERE projectwork_id={}".format(project_work.get_id())
@@ -122,14 +135,13 @@ class ProjectWorkMapper (Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE projectwork SET last_edit=%s, projectwork_name=%s, description=%s, " \
-                  "affiliated_activity=%s, start_time=%s, end_time=%s, time_period=%s WHERE projectwork_id=%s"
+                  "affiliated_activity_id=%s WHERE projectwork_id=%s"
         """  
         Die Variablen werden dem übergebenen "project_work" entnommen und überschreiben die aktuellen Werte, 
         welche im Object mit der entsprechenden id stehen.
         """
         data = (project_work.get_last_edit(), project_work.get_project_work_name(),
-                project_work.get_description(), project_work.get_id(), project_work.get_affiliated_activity(),
-                project_work.get_start_event(), project_work.get_end_event(), project_work.get_time_period())
+                project_work.get_description(), project_work.get_id(), project_work.get_affiliated_activity())
         cursor.execute(command, data)
 
         self._cnx.commit()

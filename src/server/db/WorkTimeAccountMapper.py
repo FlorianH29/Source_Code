@@ -119,8 +119,8 @@ class WorkTimeAccountMapper(Mapper):
 
     def update(self, work_time_account):
         cursor = self._cnx.cursor()
-        command = "UPDATE worktimeaccount" + "SET  last_edit=%s, work_time_account_id=%s WHERE work_time_account_id=%s"
-        data = (work_time_account.get_last_edit(), work_time_account.get_id(), work_time_account.get_id())
+        command = "UPDATE worktimeaccount SET last_edit=%s, work_time_account_id=%s WHERE work_time_account_id=%s"
+        data = (work_time_account.get_last_edit(), work_time_account.get_id(), work_time_account.get_owner())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -135,3 +135,5 @@ class WorkTimeAccountMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
+
+

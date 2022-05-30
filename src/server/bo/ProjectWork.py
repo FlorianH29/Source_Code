@@ -5,27 +5,27 @@ class ProjectWork (ti.TimeInterval):
 
     def __init__(self):
         super().__init__()
-        self.__project_work_name = ""    # Der Name die ProjectWork. (init als leerer str)
-        self.__description = ""  # Die Beschreibung für die ProjectWork. (init als leerer str)
-        self.__affiliated_activity = None  # Die zugehörige Activity (init als None)
+        self._project_work_name = ""    # Der Name die ProjectWork. (init als leerer str)
+        self._description = ""  # Die Beschreibung für die ProjectWork. (init als leerer str)
+        self._affiliated_activity = None  # Die zugehörige Activity (init als None)
 
     def set_project_work_name(self, project_work_name):
-        self.__project_work_name = project_work_name
+        self._project_work_name = project_work_name
 
     def get_project_work_name(self):
-        return self.__project_work_name
+        return self._project_work_name
 
     def set_description(self, description):
-        self.__description = description
+        self._description = description
 
     def get_description(self):
-        return self.__description
+        return self._description
 
     def set_affiliated_activity(self, affiliated_activity):
-        self.__affiliated_activity = affiliated_activity
+        self._affiliated_activity = affiliated_activity
 
     def get_affiliated_activity(self):
-        return self.__affiliated_activity
+        return self._affiliated_activity
 
     def __str__(self):
         """Ausgabe von: id, last_edit, project_work_name, description, affiliated_activity, end_event_id,
@@ -34,8 +34,8 @@ class ProjectWork (ti.TimeInterval):
                "description: {} affiliated_activity: {} end_event: {}  start_event: {}  " \
                "time_period: {}".format(self.get_id(), self.get_last_edit(),
                                         self.get_project_work_name(), self.get_description(),
-                                        self.__affiliated_activity(), self.__time_period,
-                                        self.__start_event, self.__end_event)
+                                        self._affiliated_activity(), self._time_period,
+                                        self._start_event, self._end_event)
 
     @staticmethod
     def from_dict(dictionary=dict()):

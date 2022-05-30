@@ -47,6 +47,34 @@ class ProjectMemberMapper (Mapper):
 
         return result
 
+    def find_projects_by_person_id(self, key):
+        """Suchen eines Departure-Ereignisses mit vorgegebener Ereignis ID. Rückgabe von genau einem Objekt.
+
+               :param key Primärschlüsselattribut (->DB)
+               :return Projekt-Member-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
+               """
+
+        result = []
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM projectmembers " \
+                  "WHERE person_id={}".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        for (project_id, person_id, projectmember_id, last_edit) in tuples:
+            projectmember = ProjectMember()
+            projectmember.set_project(project_id)
+            projectmember.set_person(person_id)
+            projectmember.set_id(projectmember_id)
+            projectmember.set_last_edit(last_edit)
+
+            result.append(projectmember)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
     def insert(self, projectmember):
         """Einfügen eines Project-Member-Ereignis-Objekts in die Datenbank.
 
