@@ -102,7 +102,6 @@ class App extends React.Component {
 
                         :
                         <>
-
                             <SignIn onSignIn={this.handleSignIn} />
                         </>
                 }
