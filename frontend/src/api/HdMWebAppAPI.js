@@ -5,21 +5,24 @@ import WorktimeAccountBO from "./WorktimeAccountBO";
 
 export default class HdMWebAppAPI {
 
-    // Singelton instance
-    static #api = null;
+  // Singelton instance
+  static #api = null;
 
 
-    // Local Python backend
-    #hdmwebappServerBaseURL = '/hdmwebapp';
+  // Local Python backend
+  #hdmwebappServerBaseURL = '/hdmwebapp';
 
-    // Person bezogen
-    #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
+  // Person bezogen
+  #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
 
-    //Projekt bezogen
-    #getProjectsURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
+  //Projekt bezogen
+  #getProjectsURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
 
-    //Worktimeaccount bezogen
-    #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
+  // Projektarbeit bezogen
+  #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/'/activities/${id}/projectworks'`;
+
+  //Worktimeaccount bezogen
+  #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
 
     /**
      * Get the Singelton instance
@@ -31,21 +34,6 @@ export default class HdMWebAppAPI {
             this.#api = new HdMWebAppAPI();
         }
         return this.#api;
-    }
-
-    // Projektarbeit bezogen
-    #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/'/activities/${id}/projectworks'`;
-
-    /**
-    * Get the Singelton instance
-    *
-    * @public
-    */
-    static getAPI() {
-      if (this.#api == null) {
-        this.#api = new HdMWebAppAPI();
-      }
-      return this.#api;
     }
 
     /**
@@ -64,14 +52,14 @@ export default class HdMWebAppAPI {
         )
 
     getPersons() {
-        return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
-            let personBOs = PersonBO.fromJSON(responseJSON);
-            //console.log(responseJSON);
-            return new Promise(function (resolve) {
-                resolve(personBOs);
-            })
-        })
-    }
+    return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
+      let personBOs = PersonBO.fromJSON(responseJSON);
+      //console.log(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(personBOs);
+      })
+    })
+  }
 
     getWorktimeAccount(id) {
         return this.#fetchAdvanced(this.#getWorktimeAccountURL(id)).then((responseJSON) => {
