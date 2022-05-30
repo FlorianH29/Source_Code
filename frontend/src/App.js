@@ -7,7 +7,7 @@ import Header from './components/layout/Header';
 import ProjectList from "./components/pages/ProjectList";
 import WorktimeAccount from "./components/pages/WorktimeAccount";
 import NotFound from "./components/pages/NotFound";
-
+import ProjectList from "./components/ProjectList";
 
 class App extends React.Component {
 
