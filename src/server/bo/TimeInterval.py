@@ -7,46 +7,45 @@ class TimeInterval(bo.BusinessObject):
     def __init__(self):
         super().__init__()
         """Start der Zeiterfassung"""
-        self.__start_event = None
+        self._start_event = None
         """Ende der Zeiterfassung"""
-        self.__end_event = None
+        self._end_event = None
         """Zeitraum"""
-        self.__time_period = None
+        self._time_period = None
 
     def get_start_event(self):
         """Auslesen vom Start der Zeiterfassung"""
-        return self.__start_event
+        return self._start_event
 
     def set_start_event(self, start_time):
         """Starten der Zeiterfassung"""
-        self.__start_event = start_time
+        self._start_event = start_time
 
     def get_end_event(self):
         """Auslesen vom Ende der Zeiterfassung"""
-        return self.__end_event
+        return self._end_event
 
     def set_end_event(self, end_time):
         """Setzen des Endzeitpunktes"""
-        self.__end_event = end_time
+        self._end_event = end_time
 
     def get_time_period(self):
-        """Auslesen der Arbeitszeit"""
-        return self.__time_period
+        """Auslesen des Zeitraumes"""
+        return self._time_period
 
     def set_time_period(self, time_period):
-        """Setzen der Arbeitszeit"""
-        self.__time_period = time_period
+        """Setzen des Zitraumes"""
+        self._time_period = time_period
 
-    def calculate_period(self, start_event, end_event):
-        self.__time_period = end_event.get_time_stamp() - start_event.get_time_stamp()
-        return self.__time_period
-
-        #self.__time_period = self.__end_event - self.__start_event  # Muss noch getestet werden ob die berechnung mit dem Datum do funktioniert.
+    def calculate_period(self):
+        """Berechnen des Zeitraumes"""
+        self._time_period = self.get_end_event() - self.get_start_event()
+        return self._time_period
 
     def __str__(self):
         """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
-        return "TimeInterval: {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self.__start_event,
-                                                         self.__end_event, self.__time_period)
+        return "TimeInterval: {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self._start_event,
+                                                         self._end_event, self._time_period)
 
     @staticmethod
     def from_dict(dictionary=dict()):

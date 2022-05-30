@@ -1,10 +1,12 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
 import {HdMWebAppAPI} from "./api";
 import {PersonBO} from "./api";
-import PersonList from './components/PersonList';
+import PersonList from './components/pages/PersonList';
 import Header from './components/layout/Header';
-import ProjectList from "./components/ProjectList";
+import ProjectList from "./components/pages/ProjectList";
+import WorktimeAccount from "./components/pages/WorktimeAccount";
+import NotFound from "./components/pages/NotFound";
 import SignIn from './components/pages/SignIn';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
@@ -75,30 +77,35 @@ class App extends React.Component {
 		const { currentPerson} = this.state;
 
         return (
-            <Router basename={process.env.PUBLIC_URL}>
+           <Router>
                 <Header person={currentPerson} />
 
                 {
                     currentPerson ?
                         <>
-                            <Redirect from='/' to='/persons'/>
-                            <Route exact path='/persons'>
-                                <PersonList/>
-                            </Route>
 
-                            <Route  path='/projects'>
-                                <ProjectList/>
-                            </Route>
+                            <Switch>
+                                <Route exact path='/persons'>
+                                    <PersonList/>
+                                </Route>
+                                <Route exact path='/projects'>
+                                    <ProjectList/>
+                                </Route>
+                                <Route exact path='/worktimeaccount'>
+                                    <WorktimeAccount/>
+                                </Route>
+                                <Route path='*'>
+                                    <NotFound/>
+                                </Route>
+                            </Switch>
                         </>
 
                         :
                         <>
-                            <Redirect to='/index.html' />
+
                             <SignIn onSignIn={this.handleSignIn} />
                         </>
-
                 }
-
             </Router>
         );
     }
