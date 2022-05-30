@@ -349,6 +349,7 @@ class HdMWebAppAdministration(object):
                 project.set_owner(person.get_id())
 
                 return mapper.insert(project), self.create_project_member(project, person)
+                # Nachdem das Projekt erstellt wurde, wird direkt der Ersteller als Projektmitglied hinzugefügt
             else:
                 return None
 
@@ -453,20 +454,33 @@ class HdMWebAppAdministration(object):
 
     """Methoden von TimeInterval"""
 
-    def create_time_interval(self, start_event, end_event):
+    def create_time_interval(self, start_event, end_event=None):
         """ZeitIntervalkonto anlegen"""
         with TimeIntervalMapper() as mapper:
-            if start_event and end_event is not None:
+            if start_event is not None and start_event.get_event_type() == 1:
                 interval = TimeInterval()
                 interval.set_id(1)
                 interval.set_last_edit(datetime.datetime.now())
                 interval.set_start_event(start_event.get_time_stamp())
-                interval.set_end_event(end_event.get_time_stamp())
-                interval.set_time_period(interval.calculate_period())
+                if end_event is not None:
+                    interval.set_end_event(end_event.get_time_stamp())
+                    interval.set_time_period(interval.calculate_period())
 
                 return mapper.insert(interval)
             else:
                 return None
+
+    def add_end_event_to_time_interval(self, end_event, interval):
+        """Einem offenen Zeitintervall ein Endereignis hinzufügen"""
+        with TimeIntervalMapper() as mapper:
+            if end_event and interval is not None:
+                if interval.get_end_event() is None and end_event.get_event_type() == 2:
+                    interval.set_end_event(end_event.get_time_stamp())
+                    interval.set_time_period(interval.calculate_period())
+
+                    return mapper.insert(interval)
+                else:
+                    return None
 
     def delete_time_interval(self, time_interval):
         """Zeitinterval löschen"""

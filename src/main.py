@@ -114,7 +114,7 @@ class ProjectListOperations(Resource):
         return projects
 
 
-@hdmwebapp.route('/projectworks-by-activity/<int:id>')
+@hdmwebapp.route('/activities/<int:id>/projectworks')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Aktivität')
 class ProjectWorksByActivityOperations(Resource):
