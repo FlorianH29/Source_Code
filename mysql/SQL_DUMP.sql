@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`timeinterval` (
   `last_edit` DATETIME NULL,
   `start_time` DATETIME NULL,
   `end_time` DATETIME NULL,
-  `time_period` INT NULL,
+  `time_period` TIME NULL,
   PRIMARY KEY (`timeinterval_id`))
 ENGINE = InnoDB;
 
@@ -154,7 +154,9 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`timeintervaltransaction` (
   `timeintervaltransaction_id` INT NOT NULL,
   `last_edit` DATETIME NULL,
   `affiliated_work_time_account_id` INT NULL,
-  `time_interval` INT NULL,
+  `affiliated_time_interval_id` INT NULL,
+  `affiliated_break_id` INT,
+  `affiliated_projectwork_id` INT,
   PRIMARY KEY (`timeintervaltransaction_id`))
 ENGINE = InnoDB;
 

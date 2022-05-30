@@ -56,6 +56,42 @@ class TimeIntervalMapper(Mapper):
 
         return result
 
+    def find_by_person_id(self, person_id):
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
+        wird genau ein Objekt zurückgegeben.
+
+        :param key Primärschlüsselattribut (->DB)
+        :return User-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+            nicht vorhandenem DB-Tupel.
+        """
+
+        result = []
+
+        cursor = self._cnx.cursor()
+        command =   " SELECT DISTINCT TI.timeinterval_id, TI.last_edit, TI.start_time, TI.end_time, TI.time_period" \
+                    " FROM SoPraTestDB.worktimeaccount WTA " \
+                    " INNER JOIN SoPraTestDB.Timeintervaltransaction TIT ON TIT.affiliated_work_time_account_id = WTA.worktimeaccount_id " \
+                    " INNER JOIN SoPraTestDB.Timeinterval TI ON TIT.affiliated_time_interval_id = TI.timeinterval_id " \
+                    " WHERE WTA.person_id = {} " .format(person_id)
+
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        for (timeinterval_id, last_edit, start_time, end_time, time_period) in tuples:
+            interval = ti.TimeInterval()
+            interval.set_id(timeinterval_id)
+            interval.set_last_edit(last_edit)
+            interval.set_start_event(start_time)
+            interval.set_end_event(end_time)
+            interval.set_time_period(time_period)
+            result.append(interval)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+
     def insert(self, time_interval):
 
         cursor = self._cnx.cursor()
@@ -90,8 +126,8 @@ class TimeIntervalMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "UPDATE timeinterval " + "SET last_edit=%s, start_time=%s, end_time=%s, " \
-                                           "time_period=%s WHERE timeinterval_id=%s"
+        command = "UPDATE timeinterval SET last_edit=%s, start_time=%s, end_time=%s, time_period=%s " \
+                  "WHERE timeinterval_id=%s"
         data = (time_interval.get_last_edit(), time_interval.get_start_event(),
                 time_interval.get_end_event(), time_interval.get_time_period(), time_interval.get_id())
         cursor.execute(command, data)
@@ -100,7 +136,7 @@ class TimeIntervalMapper(Mapper):
         cursor.close()
 
     def delete(self, time_interval):
-        """Löschen der Daten eines Zeitinterval aus der Datenbank.
+        """Löschen der Daten eines Zeitintervalls aus der Datenbank.
         """
         cursor = self._cnx.cursor()
 
