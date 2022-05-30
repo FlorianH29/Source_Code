@@ -6,8 +6,9 @@ import PersonList from './components/PersonList';
 import Header from './components/layout/Header';
 import ProjectList from "./components/ProjectList";
 import SignIn from './components/pages/SignIn';
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 import firebaseConfig from './firebaseconfig';
 
 
