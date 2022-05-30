@@ -49,9 +49,6 @@ projectwork = api.inherit('ProjectWork', bo, {
     'affiliated_activity': fields.Integer(attribute='_affiliated_activity', description='Zugeordnete Aktivität einer P.')
 })
 
-worktimeaccount = api.inherit('WorkTimeAccount', bo, {
-    'owner': fields.Integer(attribute='__owner', description='Besitzer eines Arbeitszeitkonto')
-})
 
 timeinterval = api.inherit('TimeInterval', bo, {
     'starttime': fields.DateTime(attribute='__start_time', description='Startzeitpunkt eines Zeitintervalls'),
@@ -82,7 +79,7 @@ class ProjectListOperations(Resource):
         return projects
 
 
-@hdmwebapp.route('/projectworks-by-activity/<int:id>')
+@hdmwebapp.route('/activities/<int:id>/projectworks')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Aktivität')
 class ProjectWorksByActivityOperations(Resource):
