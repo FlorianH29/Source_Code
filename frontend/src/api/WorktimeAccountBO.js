@@ -21,7 +21,7 @@ export default class WorktimeAccountBO extends BusinessObject {
             result.push(w);
         }
 
-        //console.log(result)
+        console.log(result)
         return result;
     }
 }
