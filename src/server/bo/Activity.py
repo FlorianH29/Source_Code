@@ -5,38 +5,38 @@ class Activity (bo.BusinessObject):
 
     def __init__(self):
         super().__init__()
-        self.__name = ''  # Der Name der Aktivität
-        self.__capacity = 0  # Kapazität in Personentagen
-        self.__affiliated_project = None  # Der Aktivität zugeordnetes Projekt
+        self._name = ''  # Der Name der Aktivität
+        self._capacity = 0  # Kapazität in Personentagen
+        self._affiliated_project = None  # Der Aktivität zugeordnetes Projekt
 
     def get_name(self):
         """Auslesen des Namens."""
-        return self.__name
+        return self._name
 
     def set_name(self, name):
         """Setzen des Namens."""
-        self.__name = name
+        self._name = name
 
     def get_capacity(self):
         """Auslesen des Namens."""
-        return self.__capacity
+        return self._capacity
 
     def set_capacity(self, capacity):
         """Setzen des Namens."""
-        self.__capacity = capacity
+        self._capacity = capacity
 
     def get_affiliated_project(self):
         """Auslesen des Namens."""
-        return self.__affiliated_project
+        return self._affiliated_project
 
     def set_affiliated_project(self, affiliated_project):
         """Setzen des Namens."""
-        self.__affiliated_project = affiliated_project
+        self._affiliated_project = affiliated_project
 
     def __str__(self):
         """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
-        return "Activity: {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self.__name, self.__capacity,
-                                                     self.__affiliated_project)
+        return "Activity: {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self._name, self._capacity,
+                                                     self._affiliated_project)
 
     @staticmethod
     def from_dict(dictionary=dict()):

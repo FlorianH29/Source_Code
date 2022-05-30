@@ -16,10 +16,16 @@ api = Api(app, version='1.0', title='HdMWebAppAPI',
 
 hdmwebapp = api.namespace('hdmwebapp', description='Funktionen der HdMWebApp zur Zeitbuchung.')
 
-# BusinessObject dient als Basisklasse, auf der die weiteren Strukturen Customer, Account und Transaction aufsetzen.
+# BusinessObject dient als Basisklasse, auf der die weiteren Strukturen aufsetzen.
 bo = api.model('BusinessObject', {
     'id': fields.Integer(attribute='_id', description='Der Unique Identifier eines Business Object'),
     'last_edit': fields.DateTime(attribute='_last_edit', description='Der Zeitpunkt der letzten Änderung')
+})
+
+activity = api.inherit('Activity', bo, {
+    'name': fields.String(attribute='_name', description='Name einer Aktivität'),
+    'capacity': fields.Integer(attribute='_capacity', description='Kapazität einer Aktivität'),
+    'affiliated_project': fields.Integer(attribute='_affiliated_project', description='Zugeordnetes Projekt einer A.')
 })
 
 person = api.inherit('Person', bo, {
@@ -31,20 +37,28 @@ person = api.inherit('Person', bo, {
 })
 
 project = api.inherit('Project', bo, {
-    'projectname': fields.String(attribute='__project_name', description='Name eines Projekts'),
-    'client': fields.String(attribute='__client', description='Auftraggeber eines Projekts'),
-    'project_term_id': fields.String(attribute='__project_term_id', description='Laufzeit eines Projekts')
+    'project_name': fields.String(attribute='_project_name', description='Name eines Projekts'),
+    'client': fields.String(attribute='_client', description='Auftraggeber eines Projekts'),
+    'time_interval_id': fields.Integer(attribute='_time_interval_id', description='Laufzeit eines Projekts'),
+    'owner': fields.Integer(attribute='_owner', description='Der Leiter eines Projekts')
+})
+
+projectwork = api.inherit('ProjectWork', bo, {
+    'project_work_name': fields.String(attribute='_project_work_name', description='Name einer Projektarbeit'),
+    'description': fields.String(attribute='_description', description='Beschreibung einer Projektarbeit'),
+    'affiliated_activity': fields.Integer(attribute='_affiliated_activity', description='Zugeordnete Aktivität einer P.')
 })
 
 worktimeaccount = api.inherit('WorkTimeAccount', bo, {
-    'owner': fields.String(attribute='__owner', description='Besitzer eines Arbeitszeitkonto')
+    'owner': fields.Integer(attribute='__owner', description='Besitzer eines Arbeitszeitkonto')
 })
 
 timeinterval = api.inherit('TimeInterval', bo, {
-    'starttime': fields.String(attribute='__start_time', description='Startzeitpunkt eines Zeitintervalls'),
-    'endtime': fields.String(attribute='__end_time', description='Endzeitpunkt eines Zeitintervalls'),
+    'starttime': fields.DateTime(attribute='__start_time', description='Startzeitpunkt eines Zeitintervalls'),
+    'endtime': fields.DateTime(attribute='__end_time', description='Endzeitpunkt eines Zeitintervalls'),
     'timeperiod': fields.String(attribute='__time_period', description='Zeitraum des Intervalls')
 })
+
 
 @hdmwebapp.route('/persons')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -57,11 +71,33 @@ class PersonListOperations(Resource):
         return persons
 
 
+@hdmwebapp.route('/projects')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectListOperations(Resource):
+    @hdmwebapp.marshal_list_with(project)
+    def get(self):
+        hwa = HdMWebAppAdministration()
+        projects = hwa.get_all_projects()
+
+        return projects
 
 
-# hier könnt ihr eure Tests reinschreiben, bitte bevor ihr auf den Main-pushed löschen!!!
+@hdmwebapp.route('/projectworks-by-activity/<int:id>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID der Aktivität')
+class ProjectWorksByActivityOperations(Resource):
+    @hdmwebapp.marshal_list_with(projectwork)
+    def get(self, id):
+        hwa = HdMWebAppAdministration()
+        act = hwa.get_activity_by_id(id)
+        # Die durch die id gegebene Aktivität als Objekt speichern.
 
-ha = HdMWebAppAdministration()
+        if act is not None:
+            projectwork_list = hwa.get_projectworks_by_activity(act)
+            # Auslesen der Projektarbeiten, die der Aktivität untergliedert sind.
+            return projectwork_list
+        else:
+            return "Activity not found", 500
 
 
 if __name__ == '__main__':

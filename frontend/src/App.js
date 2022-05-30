@@ -6,6 +6,7 @@ import PersonList from './components/PersonList';
 import Header from './components/layout/Header';
 import {WorktimeaccountBO} from "./api";
 import {TransactionBO} from "./api";
+import ProjectList from "./components/ProjectList";
 
 class App extends React.Component {
 
@@ -29,10 +30,13 @@ class App extends React.Component {
                 {
                     true ?
                         <>
-                            <Redirect from='/' to='persons'/>
+                            <Redirect from='/' to='/persons'/>
                             <Header user={true}/>
                             <Route exact path='/persons'>
                                 <PersonList/>
+                            </Route>
+                            <Route  path='/projects'>
+                                <ProjectList/>
                             </Route>
                         </>
 

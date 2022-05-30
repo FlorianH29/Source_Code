@@ -1,5 +1,5 @@
 import PersonBO from './PersonBO';
-import WorktimeaccountBO from "./WorktimeaccountBO";
+import ProjectBO from './ProjectBO';
 
 
 export default class HdMWebAppAPI {
@@ -12,29 +12,10 @@ export default class HdMWebAppAPI {
   #hdmwebappServerBaseURL = '/hdmwebapp';
 
   // Person bezogen
-  // #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
-
-  // Person related
   #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
-  #addPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
-  //#getPersonsURL = (id) => `${this.#hdmwebappServerBaseURL}/persons/${id}`;
-  #updatePersonsURL = (id) => `${this.#hdmwebappServerBaseURL}/persons/${id}`;
-  #deletePersonsURL = (id) => `${this.#hdmwebappServerBaseURL}/persons/${id}`;
-  #searchPersonsURL = (personName) => `${this.#hdmwebappServerBaseURL}/persons-by-name/${personName}`;
 
-
-  // Account related
-  #getAllWorktimeaccountsURL = () => `${this.#hdmwebappServerBaseURL}/worktimeaccounts`;
-  #getWorktimeaccountsForPersonsURL = (id) => `${this.#hdmwebappServerBaseURL}/persons/${id}/worktimeaccounts`;
-  #addWorktimeaccountsForPersonsURL = (id) => `${this.#hdmwebappServerBaseURL}/persons/${id}/worktimeaccounts`;
-  //#getBalanceForWorktimeaccountURL = (id) => `${this.#hdmwebappServerBaseURL}/persons/${id}/balance`;
-  #deleteWorktimeaccountIdURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccounts/${id}`;
-
-  // Transaction related
-  #getCreditsForWorktimeaccountIdURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}/credits`;
-  #getDebitsForWorktimeaccountIdURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}/debits`;
-  #addTransactionURL = () => `${this.#hdmwebappServerBaseURL}/transactions`;
-
+  //Projekt bezogen
+  #getProjectsURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
 
   /**
    * Get the Singelton instance
@@ -72,14 +53,14 @@ export default class HdMWebAppAPI {
       })
     })
   }
-  getWorktimeaccountsForPerson(personID) {
-    return this.#fetchAdvanced(this.#getWorktimeaccountsForPersonsURL(personID))
-      .then((responseJSON) => {
-        let worktimeaccountBOs = WorktimeaccountBO.fromJSON(responseJSON);
-        // console.info(worktimeaccountBOs);
-        return new Promise(function (resolve) {
-          resolve(worktimeaccountBOs);
-        })
+
+  getProject() {
+    return this.#fetchAdvanced(this.#getProjectsURL()).then((responseJSON) => {
+      let projectBOs = ProjectBO.fromJSON(responseJSON);
+      console.log(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(projectBOs);
       })
+    })
   }
 }

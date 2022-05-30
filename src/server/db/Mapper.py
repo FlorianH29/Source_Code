@@ -51,7 +51,7 @@ class Mapper (AbstractContextManager, ABC):
         """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
         pass
 
-    @abstractmethod
+    # @abstractmethod
     def find_all(self):
         """Lies alle Tupel aus und gib sie als Objekte zurück."""
         pass
