@@ -3,8 +3,6 @@ import logo from './404_mensch.png'; //
 import {Box, Button, Grid} from '@mui/material';
 import { withRouter } from "react-router";
 
-
-
 class NotFound extends Component {
 
       handleButton = () => {
