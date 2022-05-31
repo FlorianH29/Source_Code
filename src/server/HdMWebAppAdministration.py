@@ -171,6 +171,13 @@ class HdMWebAppAdministration(object):
         with ActivityMapper() as mapper:
             return mapper.find_all()
 
+    def get_activity_by_project_id(self, project_id):
+        """ ProjektWorks werden anhand der eindeutigen ID der Aktivität ausgelesen, der sie zugeordnet sind."""
+        with ActivityMapper() as mapper:
+            result = []
+            if not (project_id is None):
+                return mapper.find_by_project_id(project_id)
+
     """Methoden für EventTransaktionen"""
 
     def get_event_transaction_by_id(self, number):
