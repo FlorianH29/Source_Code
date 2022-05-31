@@ -38,13 +38,13 @@ def secured(function):
                     id_token, firebase_request_adapter)
 
                 if claims is not None:
-                    adm = HdMWebAppAdministration()
+                    haw = HdMWebAppAdministration()
 
                     google_person_id = claims.get("person_id")
                     email = claims.get("email")
                     name = claims.get("name")
 
-                    person = adm.get_person_by_google_person_id(google_person_id)
+                    person = haw.get_person_by_google_person_id(google_person_id)
                     if person is not None:
                         """Fall: Der Benutzer ist unserem System bereits bekannt.
                         Wir gehen davon aus, dass die google_user_id sich nicht ändert.
@@ -53,13 +53,13 @@ def secured(function):
                         in unserem System geupdated."""
                         person.set_name(name)
                         person.set_email(email)
-                        adm.save_person(person)
+                        haw.save_person(person)
                     else:
                         """Fall: Der Benutzer war bislang noch nicht eingelogged. 
                         Wir legen daher ein neues User-Objekt an, um dieses ggf. später
                         nutzen zu können.
                         """
-                        person = adm.create_person(name, email, google_person_id)
+                        person = haw.create_person(name, email, google_person_id)
 
                     print(request.method, request.path, "angefragt durch:", name, email)
 

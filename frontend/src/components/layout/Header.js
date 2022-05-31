@@ -5,8 +5,6 @@ import MenuItem from "@mui/material/MenuItem";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
-import firebaseConfig from '../../firebaseconfig';
-
 
 class Header extends Component {
 

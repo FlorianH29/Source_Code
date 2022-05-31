@@ -81,7 +81,6 @@ class App extends React.Component {
                 {
                     currentPerson ?
                         <>
-
                             <Switch>
                                 <Route exact path='/persons'>
                                     <PersonList/>
