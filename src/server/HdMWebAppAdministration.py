@@ -435,6 +435,10 @@ class HdMWebAppAdministration(object):
         with ProjectMemberMapper() as mapper:
             return mapper.update(project_m)
 
+    def get_project_by_employee(self, person_id):
+        with ProjectMemberMapper() as mapper:
+            return mapper.find_projects_by_person_id(person_id)
+
     """Methoden von TimeInterval"""
 
     def create_time_interval(self, start_event, end_event):
@@ -511,3 +515,25 @@ class HdMWebAppAdministration(object):
         """Alle in der Datenbank gespeicherten Events auslesen."""
         with EventMapper() as mapper:
             return mapper.find_all()
+
+
+
+#Business Logik für Frontend
+    def get_project_by_firebase_id(self, value):
+        projectmember = self.get_project_by_employee(value)
+        project_member_list = []
+        project_name_list = []
+        counter = 0
+        try:
+            for i in projectmember:
+                #Um die richtige Firebase Id zu getten, muss hier die get_person Methode angepasst werden
+                firebase_id = i.get_person()
+                project_member_list.append(firebase_id)
+                while counter < len(project_member_list):
+                    firebase_id = self.get_project_by_id(project_member_list[counter])
+                    project = firebase_id.get_project_name()
+                    counter = counter + 1
+                    project_name_list.append(project)
+            return project_name_list
+        except AttributeError:
+            return print("Keine Projekte gefunden")
