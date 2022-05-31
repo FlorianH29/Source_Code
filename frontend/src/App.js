@@ -13,6 +13,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import firebaseConfig from './firebaseconfig';
+import ActivityList from "./components/pages/ActivityList";
 
 
 class App extends React.Component {
@@ -94,6 +95,9 @@ class App extends React.Component {
                                 </Route>
                                  <Route exact path='/welcome'>
                                     <Welcome/>
+                                </Route>
+                                <Route exact path='/activities'>
+                                    <ActivityList/>
                                 </Route>
                                 <Route path='*'>
                                     <NotFound/>
