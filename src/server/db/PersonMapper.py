@@ -1,6 +1,8 @@
 from server.bo import Person as p
 from server.db.Mapper import Mapper
 
+from src.server.bo.Person import Person
+
 
 class PersonMapper(Mapper):
     """Mapper-Klasse, die Personen-Objekte auf eine relationale
@@ -147,6 +149,44 @@ class PersonMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
+
+
+
+   def find_by_firebase_id(self, firebase_id):
+        """Suchen eines Benutzers mit vorgegebener Google ID. Da diese eindeutig ist,
+        wird genau ein Objekt zurückgegeben.
+
+        :param google_user_id die Google ID des gesuchten Users.
+        :return User-Objekt, das die übergebene Google ID besitzt,
+            None bei nicht vorhandenem DB-Tupel.
+        """
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id FROM person " \
+                  "WHERE firebase_id={}".format(firebase_id)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id) = tuples[0]
+            fb = p.Person()
+            fb.set_id(person_id)
+            fb.set_last_edit(last_edit)
+            fb.set_firstname(firstname)
+            fb.set_lastname(lastname)
+            fb.set_mailaddress(mailaddress)
+            fb.set_username(username)
+            fb.set_firebase_id(firebase_id)
+
+        except IndexError:
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
 
 
 """if (__name__ == "__main__"):

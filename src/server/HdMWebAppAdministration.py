@@ -66,6 +66,11 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             mapper.update(person)
 
+    def get_user_by_firebase_id(self, id):
+        """Den Benutzer mit der gegebenen Google ID auslesen."""
+        with PersonMapper() as mapper:
+            return mapper.find_by_firebase_id(id)
+
     """Methoden für Kommen:"""
 
     def create_arrive_event(self, time_stamp):

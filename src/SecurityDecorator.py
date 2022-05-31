@@ -40,11 +40,11 @@ def secured(function):
                 if claims is not None:
                     hwa = HdMWebAppAdministration()
 
-                    google_person_id = claims.get("person_id")
+                    firebase_id = claims.get("firebase_id")
                     email = claims.get("email")
                     name = claims.get("name")
 
-                    person = hwa.get_person_by_google_person_id(google_person_id)
+                    person = hwa.get_person_by_firebase_id(firebase_id)
                     if person is not None:
                         """Fall: Der Benutzer ist unserem System bereits bekannt.
                         Wir gehen davon aus, dass die google_user_id sich nicht ändert.
@@ -59,7 +59,7 @@ def secured(function):
                         Wir legen daher ein neues User-Objekt an, um dieses ggf. später
                         nutzen zu können.
                         """
-                        person = hwa.create_person(name, email, google_person_id)
+                        person = hwa.create_person(name, email, firebase_id)
 
                     print(request.method, request.path, "angefragt durch:", name, email)
 
