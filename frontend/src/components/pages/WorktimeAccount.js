@@ -56,15 +56,15 @@ class WorktimeAccount extends Component {
                                 <Box key={project}>
                                     <ListItem>
                                         <Grid container justifyContent={"left"}>
-                                            <Grid item xs={6} align={"center"}>
-                                                <p>
+                                            <Grid item xs={6} align={"left"}>
+                                                <Typography variant={"h5"} component={"div"}>
                                                     {project.name}
-                                                </p>
+                                                </Typography>
                                             </Grid>
-                                            <Grid item xs={6} align={"center"}>
-                                                <p>
+                                            <Grid item xs={6} align={"left"}>
+                                                 <Typography variant={"h5"} component={"div"}>
                                                     {project.time}
-                                                </p>
+                                                 </Typography>
                                             </Grid>
                                         </Grid>
                                     </ListItem>
