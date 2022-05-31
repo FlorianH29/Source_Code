@@ -6,6 +6,7 @@ import PersonList from './components/pages/PersonList';
 import Header from './components/layout/Header';
 import ProjectList from "./components/pages/ProjectList";
 import WorktimeAccount from "./components/pages/WorktimeAccount";
+import Welcome from "./components/pages/Welcome";
 import NotFound from "./components/pages/NotFound";
 import SignIn from './components/pages/SignIn';
 import firebase from 'firebase/compat/app';
@@ -90,6 +91,9 @@ class App extends React.Component {
                                 </Route>
                                 <Route exact path='/worktimeaccount'>
                                     <WorktimeAccount/>
+                                </Route>
+                                 <Route exact path='/welcome'>
+                                    <Welcome/>
                                 </Route>
                                 <Route path='*'>
                                     <NotFound/>
