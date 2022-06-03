@@ -41,8 +41,8 @@ def secured(function):
                     hwa = HdMWebAppAdministration()
 
                     firebase_id = claims.get("firebase_id")
-                    email = claims.get("email")
-                    name = claims.get("name")
+                    mailaddress = claims.get("mailaddress")
+                    username = claims.get("name")
 
                     person = hwa.get_person_by_firebase_id(firebase_id)
                     if person is not None:
@@ -51,17 +51,17 @@ def secured(function):
                         Wohl aber können sich der zugehörige Klarname (name) und die
                         E-Mail-Adresse ändern. Daher werden diese beiden Daten sicherheitshalber
                         in unserem System geupdated."""
-                        person.set_name(name)
-                        person.set_email(email)
+                        person.set_username(username)
+                        person.set_mailaddress(mailaddress)
                         hwa.save_person(person)
                     else:
                         """Fall: Der Benutzer war bislang noch nicht eingelogged. 
                         Wir legen daher ein neues User-Objekt an, um dieses ggf. später
                         nutzen zu können.
                         """
-                        person = hwa.create_person(name, email, firebase_id)
+                        person = hwa.create_person(username, mailaddress, firebase_id)
 
-                    print(request.method, request.path, "angefragt durch:", name, email)
+                    print(request.method, request.path, "angefragt durch:", username, mailaddress)
 
                     objects = function(*args, **kwargs)
                     return objects
