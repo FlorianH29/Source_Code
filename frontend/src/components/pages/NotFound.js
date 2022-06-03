@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import logo from './404_mensch.png'; //
+import logo from './404_unicorn.png'; //
 import {Box, Button, Grid} from '@mui/material';
 import { withRouter } from "react-router";
 

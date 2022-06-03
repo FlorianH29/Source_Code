@@ -46,6 +46,38 @@ class ActivityMapper (Mapper):
 
         return result
 
+    def find_by_project_id(self, person_id):
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
+        wird genau ein Objekt zurückgegeben.
+
+        :param key Primärschlüsselattribut (->DB)
+        :return User-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+            nicht vorhandenem DB-Tupel.
+        """
+        all_activities = []
+
+        cursor = self._cnx.cursor()
+        command =   " SELECT DISTINCT A.activity_id, A.last_edit, A.name, A.capacity, A.affiliated_project_id " \
+                    " FROM SoPraTestDB.activity A" \
+                    " WHERE A.affiliated_project_id = {} " .format(person_id)
+
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        for (activity_id, last_edit, name, capacity, affiliated_project_id) in tuples:
+            activity = Activity()
+            activity.set_id(activity_id)
+            activity.set_last_edit(last_edit)
+            activity.set_name(name)
+            activity.set_capacity(capacity)
+            activity.set_affiliated_project(affiliated_project_id)
+            all_activities.append(activity)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return all_activities
+
     def find_all(self):
         """Auslesen aller Aktivitäts-Ereignisse.
 

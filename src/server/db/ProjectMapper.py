@@ -59,7 +59,6 @@ class ProjectMapper (Mapper):
         :return User-Objekt, das dem übergebenen Schlüssel entspricht, None bei
             nicht vorhandenem DB-Tupel.
         """
-
         all_projects = []
 
         cursor = self._cnx.cursor()

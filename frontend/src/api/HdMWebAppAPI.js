@@ -1,6 +1,7 @@
 import PersonBO from './PersonBO';
 import ProjectBO from './ProjectBO';
 import WorktimeAccountBO from "./WorktimeAccountBO";
+import ActivityBO from "./ActivityBO";
 
 
 export default class HdMWebAppAPI {
@@ -23,6 +24,9 @@ export default class HdMWebAppAPI {
 
   //Worktimeaccount bezogen
   #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
+
+    //Activity bezogen
+    #getActivitiesURL = () => `${this.#hdmwebappServerBaseURL}/activities`;
 
     /**
      * Get the Singelton instance
@@ -67,6 +71,16 @@ export default class HdMWebAppAPI {
             console.log(responseJSON);
             return new Promise(function (resolve) {
                 resolve(worktimeaccountBOs);
+            })
+        })
+    }
+
+    getActivities() {
+        return this.#fetchAdvanced(this.#getActivitiesURL()).then((responseJSON) => {
+            let activitiesBO = ActivityBO.fromJSON(responseJSON);
+            console.log(responseJSON);
+            return new Promise(function (resolve) {
+                resolve(activitiesBO);
             })
         })
     }
