@@ -28,7 +28,6 @@ class TimeIntervalTransaction(ta.Transaction):
     def get_affiliated_projectwork(self):
         return self.__affiliated_projectwork
 
-
     def __str__(self):
         return "Transaction ({}, {}, {})".format(self.get_id(), self.get_last_edit(), self.__affiliated_time_interval)
 

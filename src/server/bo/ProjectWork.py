@@ -1,7 +1,7 @@
-from server.bo import BusinessObject as bo
+from server.bo import TimeInterval as ti
 
 
-class ProjectWork (bo.BusinessObject):
+class ProjectWork (ti.TimeInterval):
 
     def __init__(self):
         super().__init__()
@@ -38,9 +38,12 @@ class ProjectWork (bo.BusinessObject):
     def from_dict(dictionary=dict()):
         """Umwandeln eines Python dict() in ein ProjectWork()."""
         projectwork = ProjectWork()
-        projectwork.set_id(dictionary["id"])  # Usually part of the business object.
-        projectwork.set_last_edit("last_edit")  # Set the last edit of the project work.
-        projectwork.set_project_work_name(dictionary["project_work_name"])  # Sets the project_work_name from the dict as the name of the object.
-        projectwork.set_description(dictionary["description"])  # Sets the description from the dict as the description of the object.
-        projectwork.set_affiliated_activity(dictionary["affiliated_activity"])
+        projectwork.set_id(dictionary["id"])  # Eigentlicher Teil von business object.
+        projectwork.set_last_edit("last_edit")  # Setzten des last_edit von projectwork
+        projectwork.set_project_work_name(dictionary["project_work_name"])  # Setzt Namen aus dict() für ProjectWork
+        projectwork.set_description(dictionary["description"])  # Setzt description aus dict() für ProjectWork
+        projectwork.set_start_event(dictionary["start_time"])  # Setzt start_time aus dict() für ProjectWork
+        projectwork.set_end_event(dictionary["end_time"])  # Setzt end_time aus dict() für ProjectWork
+        projectwork.set_time_period(dictionary["time_period"])  # Setzt time_periode aus dict() für ProjectWork
+        projectwork.set_affiliated_activity(dictionary["affiliated_activity"])  # Setzt affiliated_activity aus dict() für ProjectWork
         return projectwork
