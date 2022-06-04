@@ -1,4 +1,5 @@
-import BusinessObject from './BusinessObject';
+import TimeIntervalBO from './BusinessObject';
+import BusinessObject from "./BusinessObject";
 
 //Stellt eine Projektarbeit im System dar
 export default class ProjectWorkBO extends BusinessObject {
@@ -8,7 +9,7 @@ export default class ProjectWorkBO extends BusinessObject {
    *
    * @param {String} aProjectWorkName - der Name dieses ProjectWorkBO.
    * @param {String} aDescription - die Beschreibung dieses ProjectWorkBO.
-   * @param {String} anAffiliatedActivity - die Aktivität, die diesem ProjectWorkBO zugeordnet ist.
+   * @param {Number} anAffiliatedActivity - die Aktivität, die diesem ProjectWorkBO zugeordnet ist.
    */
   constructor(aProjectWorkName, aDescription, anAffiliatedActivity) {
     super();

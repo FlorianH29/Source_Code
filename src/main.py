@@ -47,18 +47,19 @@ project = api.inherit('Project', bo, {
     'owner': fields.Integer(attribute='_owner', description='Der Leiter eines Projekts')
 })
 
-projectwork = api.inherit('ProjectWork', bo, {
+timeinterval = api.inherit('TimeInterval', bo, {
+    'starttime': fields.DateTime(attribute='_start_time', description='Startzeitpunkt eines Zeitintervalls'),
+    'endtime': fields.DateTime(attribute='_end_time', description='Endzeitpunkt eines Zeitintervalls'),
+    'timeperiod': fields.String(attribute='_time_period', description='Zeitraum des Intervalls')
+})
+
+projectwork = api.inherit('ProjectWork', timeinterval, {
     'project_work_name': fields.String(attribute='_project_work_name', description='Name einer Projektarbeit'),
     'description': fields.String(attribute='_description', description='Beschreibung einer Projektarbeit'),
     'affiliated_activity': fields.Integer(attribute='_affiliated_activity', description='Zugeordnete Aktivität einer P.')
 })
 
 
-timeinterval = api.inherit('TimeInterval', bo, {
-    'starttime': fields.DateTime(attribute='__start_time', description='Startzeitpunkt eines Zeitintervalls'),
-    'endtime': fields.DateTime(attribute='__end_time', description='Endzeitpunkt eines Zeitintervalls'),
-    'timeperiod': fields.String(attribute='__time_period', description='Zeitraum des Intervalls')
-})
 
 
 @hdmwebapp.route('/persons')
@@ -131,9 +132,6 @@ class ProjectWorksByActivityOperations(Resource):
         else:
             return "Activity not found", 500
 
-h = HdMWebAppAdministration()
-test = h.get_activity_by_project_id(1)
-print(test)
 
 if __name__ == '__main__':
     app.run(debug=False)
