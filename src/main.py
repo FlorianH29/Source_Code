@@ -35,7 +35,7 @@ person = api.inherit('Person', bo, {
     'firebase_id': fields.String(attribute='_firebase_id', description='Google User ID eines Benutzers')
 })
 
-work_time_account= api.inherit('Worktimeaccout', {
+work_time_account = api.inherit('Worktimeaccout', {
     'name': fields.String(description='Name des Inhalts'),
     'time': fields.String(description='Dauer des Inhalts')
 })
@@ -48,8 +48,8 @@ project = api.inherit('Project', bo, {
 })
 
 timeinterval = api.inherit('TimeInterval', bo, {
-    'starttime': fields.DateTime(attribute='_start_time', description='Startzeitpunkt eines Zeitintervalls'),
-    'endtime': fields.DateTime(attribute='_end_time', description='Endzeitpunkt eines Zeitintervalls'),
+    'starttime': fields.DateTime(attribute='_start_event', description='Startzeitpunkt eines Zeitintervalls'),
+    'endtime': fields.DateTime(attribute='_end_event', description='Endzeitpunkt eines Zeitintervalls'),
     'timeperiod': fields.String(attribute='_time_period', description='Zeitraum des Intervalls')
 })
 
@@ -58,8 +58,6 @@ projectwork = api.inherit('ProjectWork', timeinterval, {
     'description': fields.String(attribute='_description', description='Beschreibung einer Projektarbeit'),
     'affiliated_activity': fields.Integer(attribute='_affiliated_activity', description='Zugeordnete Aktivität einer P.')
 })
-
-
 
 
 @hdmwebapp.route('/persons')
@@ -74,7 +72,7 @@ class PersonListOperations(Resource):
 
 
 @hdmwebapp.route('/worktimeaccount/<int:id>')
-@hdmwebapp.param('id', 'Die ID des Person-Objekts')
+@hdmwebapp.param('id', 'Die ID des Arbeitszeitkonto-Objekts')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class WorkTimeAccountContentList(Resource):
     @hdmwebapp.marshal_list_with(work_time_account)
@@ -89,6 +87,7 @@ class WorkTimeAccountContentList(Resource):
 
         print(result)
         return result
+
 
 @hdmwebapp.route('/activities')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
