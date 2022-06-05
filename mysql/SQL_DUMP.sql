@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`person` (
   `lastname` VARCHAR(45) NULL,
   `username` VARCHAR(45) NULL,
   `mailaddress` VARCHAR(45) NULL,
-  `firebase_id` INT NULL,
+  `firebase_id` VARCHAR(45) NULL,
   PRIMARY KEY (`person_id`))
 ENGINE = InnoDB;
 
