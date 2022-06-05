@@ -3,7 +3,7 @@ import ProjectBO from './ProjectBO';
 import WorktimeAccountBO from "./WorktimeAccountBO";
 import ActivityBO from "./ActivityBO";
 import ProjectWorkBO from "./ProjectWorkBO";
-
+import TimeIntervalBO from "./TimeIntervalBO";
 
 export default class HdMWebAppAPI {
 
@@ -130,7 +130,7 @@ export default class HdMWebAppAPI {
     getProjectWorks(id) {
         return this.#fetchAdvanced(this.#getProjectWorksforActivityURL(id)).then((responseJSON) => {
             let projectworkBOs = ProjectWorkBO.fromJSON(responseJSON);
-            console.log(projectworkBOs);
+            // console.log(projectworkBOs);
             return new Promise(function (resolve) {
                 resolve(projectworkBOs);
             })

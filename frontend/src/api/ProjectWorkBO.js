@@ -1,4 +1,4 @@
-import TimeIntervalBO from './BusinessObject';
+import TimeIntervalBO from './TimeIntervalBO';
 
 //Stellt eine Projektarbeit im System dar
 export default class ProjectWorkBO extends TimeIntervalBO {
@@ -55,7 +55,7 @@ export default class ProjectWorkBO extends TimeIntervalBO {
   /**
    * Setzt eine neue zugeordnete Aktivität.
    *
-   * @param {String} anAffiliatedActivity - die neue zugeordnete Aktivität dieses ProjectWorkBO.
+   * @param {Number} anAffiliatedActivity - die neue zugeordnete Aktivität dieses ProjectWorkBO.
    */
   setAffiliatedProject(anAffiliatedActivity) {
     this.affiliated_activity = anAffiliatedActivity;

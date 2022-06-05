@@ -15,7 +15,7 @@ class ProjectWorkList extends Component {
     }
 
     getProjectWorksForActivity = () => {
-        HdMWebAppAPI.getAPI().getProjectWorks(1)
+        HdMWebAppAPI.getAPI().getProjectWorks(1)  // statt 1 sollte hier die Id der ausgewählten Aktivität rein
             .then(projectWorkBOs =>
                 this.setState({
                     projectWorks: projectWorkBOs
@@ -27,34 +27,66 @@ class ProjectWorkList extends Component {
 
     componentDidMount() {
         this.getProjectWorksForActivity();
-        console.log(this.state.projectWorks)
     }
 
     render() {
+        // const { classes, expandedState } = this.props;
+        const { projectWorks } = this.state;
+        console.log(this.state)
+
         return (
             <div>
-                <Grid container spacing={1} justify='flex-start' alignItems='center'>
+                <Grid container>
                     <Grid item xs={12} align={"center"}>
-                            {this.state.projectWorks.map((pw) => (
-                                <Box key={pw}>
-                                    <ListItem>
-                                        <Grid container justifyContent={"left"}>
-                                            <Grid item xs={6} align={"left"}>
-                                                <Typography variant={"h5"} component={"div"}>
-                                                    {pw.project_work_name}
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={6} align={"left"}>
-                                                 <Typography variant={"h5"} component={"div"}>
-                                                    {pw.description}
-                                                 </Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </ListItem>
-                                    <Divider/>
-                                </Box>
-                            ))}
+                        <Grid container>
+                            <Grid item xs={4} align={"flex-end"}>
+                                <Typography variant={"h5"} component={"div"}> Projektarbeit </Typography>
+                            </Grid>
+                            <Grid item xs={4} align={"flex-end"}>
+                                <Typography variant={"h5"} component={"div"}> Beschreibung </Typography>
+                            </Grid>
+                            <Grid item xs={4} align={"flex-end"}>
+                                <Typography variant={"h5"} component={"div"}> Dauer </Typography>
+                            </Grid>
                         </Grid>
+                        <Divider/>
+                        {projectWorks.map((pw) => (
+                            <Box key={pw}>
+                                <ListItem>
+                                    <Grid container>
+                                        <Grid item xs={4} align={"center"}>
+                                            <Typography variant={"h5"} component={"div"}>
+                                                {pw.getProjectWorkName()}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={4} align={"center"}>
+                                            <Typography variant={"h5"} component={"div"}>
+                                                {pw.getDescription()}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={4} align={"center"}>
+                                            <Typography variant={"h5"} component={"div"}>
+                                                {pw.getTimeIPeriod()}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                </ListItem>
+                                <Divider/>
+                            </Box>
+                            ))}
+                        <Grid container direction={'row'} spacing={18}>
+                            <Grid item xs={6} align={'center'}>
+                                <Button variant='contained' color='primary' onClick={this.handleSignInButtonClicked}>
+							        Start buchen
+      					        </Button>
+                            </Grid>
+                            <Grid item xs={6} align={'center'}>
+                                <Button variant='contained' color='primary' onClick={this.handleSignInButtonClicked}>
+							        Ende buchen
+      					        </Button>
+                            </Grid>
+					    </Grid>
+                    </Grid>
                 </Grid>
                 {
 
