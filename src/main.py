@@ -48,9 +48,9 @@ project = api.inherit('Project', bo, {
 })
 
 timeinterval = api.inherit('TimeInterval', bo, {
-    'starttime': fields.DateTime(attribute='_start_event', description='Startzeitpunkt eines Zeitintervalls'),
-    'endtime': fields.DateTime(attribute='_end_event', description='Endzeitpunkt eines Zeitintervalls'),
-    'timeperiod': fields.String(attribute='_time_period', description='Zeitraum des Intervalls')
+    'start_event': fields.DateTime(attribute='_start_event', description='Startzeitpunkt eines Zeitintervalls'),
+    'end_event': fields.DateTime(attribute='_end_event', description='Endzeitpunkt eines Zeitintervalls'),
+    'time_period': fields.String(attribute='_time_period', description='Zeitraum des Intervalls')
 })
 
 projectwork = api.inherit('ProjectWork', timeinterval, {
@@ -132,6 +132,12 @@ class ProjectWorksByActivityOperations(Resource):
             return "Activity not found", 500
 
 
+hwa = HdMWebAppAdministration()
+p1 = hwa.get_project_by_id(1)
+a1 = hwa.get_activity_by_id(1)
+e1 = hwa.get_event_by_id(1)
+e2 = hwa.get_event_by_id(4)
+
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
 
