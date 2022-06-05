@@ -2,7 +2,7 @@ from server.bo.Activity import Activity
 from server.db.Mapper import Mapper
 
 
-class ActivityMapper (Mapper):
+class ActivityMapper(Mapper):
     """Mapper-Klasse, die Activity-Ereignis-Objekte auf eine relationale Datenbank abbildet.
     Dazu mehrere Methoden, mit deren Hilfe Objekte gesucht, erzeugt, modifiziert und gelöscht werden können.
     Ist bidirektional, Objekte können in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
@@ -50,16 +50,16 @@ class ActivityMapper (Mapper):
         """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
         wird genau ein Objekt zurückgegeben.
 
-        :param key Primärschlüsselattribut (->DB)
+        :param person_id Primärschlüsselattribut (->DB)
         :return User-Objekt, das dem übergebenen Schlüssel entspricht, None bei
             nicht vorhandenem DB-Tupel.
         """
         all_activities = []
 
         cursor = self._cnx.cursor()
-        command =   " SELECT DISTINCT A.activity_id, A.last_edit, A.name, A.capacity, A.affiliated_project_id " \
-                    " FROM SoPraTestDB.activity A" \
-                    " WHERE A.affiliated_project_id = {} " .format(person_id)
+        command = " SELECT DISTINCT A.activity_id, A.last_edit, A.name, A.capacity, A.affiliated_project_id " \
+                  " FROM SoPraTestDB.activity A" \
+                  " WHERE A.affiliated_project_id = {} ".format(person_id)
 
         cursor.execute(command)
         tuples = cursor.fetchall()
@@ -146,7 +146,7 @@ class ActivityMapper (Mapper):
         command = "UPDATE activity SET last_edit=%s, name=%s, capacity=%s, " \
                   "affiliated_project_id=%s WHERE activity_id=%s"
         data = (activity.get_last_edit(), activity.get_name(), activity.get_capacity(),
-                activity.get_affiliated_project(),activity.get_id())
+                activity.get_affiliated_project(), activity.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

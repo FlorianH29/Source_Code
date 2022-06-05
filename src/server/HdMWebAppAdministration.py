@@ -43,6 +43,7 @@ class HdMWebAppAdministration(object):
             return mapper.find_all()
 
     def create_person(self, firstname, lastname, mailaddress, firebase_id):
+        """Person anlegen, nach Anlegen der Person Anlegen eines Arbeitszeitkontos für sie."""
         person = Person()
         person.set_id(1)
         person.set_last_edit(datetime.datetime.now())
@@ -53,11 +54,23 @@ class HdMWebAppAdministration(object):
         person.set_firebase_id(firebase_id)
 
         with PersonMapper() as mapper:
-            mapper.insert(person)
+            return mapper.insert(person), self.create_work_time_account_for_person(person)
 
     def delete_person(self, person):
-        """Gegebene Person aus System löschen"""
+        """Gegebene Person aus System löschen, gleichzeitig Person als Mitarbeiter in den Projekten streichen, in denen
+         sie beteiligt war und ihr Arbeitszeitkonto löschen."""
+        # noch Projektarbeiten und Buchungen von davon, die auf Arbeitszeitkonto sind löschen?
         with PersonMapper() as mapper:
+            if person is not None:
+                projects = self.get_projectmember_by_person(person)
+                worktimeaccounts = self.get_work_time_account_of_owner(person)
+
+                for project in projects:
+                    self.delete_project_member(project)
+
+                for worktimeaccount in worktimeaccounts:
+                    self.delete_work_time_account(worktimeaccount)
+
             mapper.delete(person)
 
     def save_person(self, person):
@@ -158,7 +171,15 @@ class HdMWebAppAdministration(object):
     def delete_activity(self, activity):
         """Die gegebene Aktivität aus unserem System löschen."""
         with ActivityMapper() as mapper:
-            mapper.delete(activity)
+            if activity is not None:
+                project_works = self.get_projectworks_of_activity(activity)
+
+                for project_work in project_works:
+                    self.delete_project_work(project_work)
+
+                mapper.delete(activity)
+            else:
+                return None
 
     def save_activity(self, activity):
         """Eine Aktivitäts-Instanz speichern."""
@@ -176,12 +197,16 @@ class HdMWebAppAdministration(object):
         with ActivityMapper() as mapper:
             return mapper.find_all()
 
-    def get_activity_by_project_id(self, project_id):
-        """ ProjektWorks werden anhand der eindeutigen ID der Aktivität ausgelesen, der sie zugeordnet sind."""
+    def get_activities_of_project(self, project):
+        """ Akitvitäten werden anhand der eindeutigen ID des Projekts ausgelesen, dem sie zugeordnet sind."""
         with ActivityMapper() as mapper:
             result = []
-            if not (project_id is None):
-                return mapper.find_by_project_id(project_id)
+
+            if not (project is None):
+                activities = mapper.find_by_project_id(project.get_id())
+                if not (activities is None):
+                    result.extend(activities)
+        return result
 
     """Methoden für EventTransaktionen"""
 
@@ -209,6 +234,7 @@ class HdMWebAppAdministration(object):
     def delete_event_transaction(self, event_transaction):
         """Die gegebene EventTransaction löschen."""
         with EventTransactionMapper() as mapper:
+            # nicht ganz löschen, sondern nur deaktivieren
             mapper.delete(event_transaction)
 
     def create_event_transaction(self, event, work_time_account):
@@ -251,6 +277,7 @@ class HdMWebAppAdministration(object):
     def delete_time_interval_transaction(self, time_interval_transaction):
         """Die gegebene TimeIntervalTransaction löschen."""
         with TimeIntervalTransactionMapper() as mapper:
+            # nicht ganz löschen, sondern nur deaktivieren
             mapper.delete(time_interval_transaction)
 
     def create_time_interval_transaction(self, work_time_account, time_interval=None, affiliated_break=None,
@@ -294,7 +321,7 @@ class HdMWebAppAdministration(object):
             return mapper.find_by_key(number)
 
     def get_work_time_account_of_owner(self, owner):
-        """Alle Konten des gegebenen Kunden auslesen."""
+        """Arbeitszeitkonto einer gegebenen Person auslesen."""
         with WorkTimeAccountMapper() as mapper:
             return mapper.find_by_owner_id(owner.get_id())
 
@@ -354,8 +381,17 @@ class HdMWebAppAdministration(object):
                 return None
 
     def delete_project(self, project):
+        """Löschen eines Projekts, wenn darin Aktivitäten liegen, werden sie auch gelöscht."""
         with ProjectMapper() as mapper:
-            return mapper.delete(project)
+            if project is not None:
+                activities = self.get_activities_of_project(project)
+
+                for activity in activities:
+                    self.delete_activity(activity)
+
+                mapper.delete(project)
+            else:
+                return None
 
     def save_project(self, project):
         project.set_last_edit(datetime.datetime.now())
@@ -376,7 +412,7 @@ class HdMWebAppAdministration(object):
         with ProjectWorkMapper() as mapper:
             return mapper.find_by_key(number)
 
-    def get_projectworks_by_activity(self, activity):
+    def get_projectworks_of_activity(self, activity):
         """ ProjektWorks werden anhand der eindeutigen ID der Aktivität ausgelesen, der sie zugeordnet sind."""
         with ProjectWorkMapper() as mapper:
             result = []
@@ -439,6 +475,16 @@ class HdMWebAppAdministration(object):
         """Das Projekt wird anhand seiner eindeutigen ID ausgelesen."""
         with ProjectMemberMapper() as mapper:
             return mapper.find_by_key(number)
+
+    def get_projectmember_by_person(self, person):
+        with ProjectMemberMapper() as mapper:
+            result = []
+
+            if not (person is None):
+                projectmember = mapper.find_projects_by_person_id(person.get_id())
+                if not (projectmember is None):
+                    result.extend(projectmember)
+                return result
 
     def create_project_member(self, project, person):
         """Erstellen eines neuen Projekts"""

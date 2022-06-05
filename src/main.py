@@ -125,7 +125,7 @@ class ProjectWorksByActivityOperations(Resource):
         # Die durch die id gegebene Aktivität als Objekt speichern.
 
         if act is not None:
-            projectwork_list = hwa.get_projectworks_by_activity(act)
+            projectwork_list = hwa.get_projectworks_of_activity(act)
             # Auslesen der Projektarbeiten, die der Aktivität untergliedert sind.
             return projectwork_list
         else:
