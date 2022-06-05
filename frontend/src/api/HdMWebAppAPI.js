@@ -1,25 +1,32 @@
 import PersonBO from './PersonBO';
 import ProjectBO from './ProjectBO';
 import WorktimeAccountBO from "./WorktimeAccountBO";
+import ActivityBO from "./ActivityBO";
 
 
 export default class HdMWebAppAPI {
 
-    // Singelton instance
-    static #api = null;
+  // Singelton instance
+  static #api = null;
 
 
-    // Local Python backend
-    #hdmwebappServerBaseURL = '/hdmwebapp';
+  // Local Python backend
+  #hdmwebappServerBaseURL = '/hdmwebapp';
 
-    // Person bezogen
-    #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
+  // Person bezogen
+  #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
 
-    //Projekt bezogen
-    #getProjectsURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
+  //Projekt bezogen
+  #getProjectsURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
 
-    //Worktimeaccount bezogen
-    #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
+  // Projektarbeit bezogen
+  #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/'/activities/${id}/projectworks'`;
+
+  //Worktimeaccount bezogen
+  #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
+
+    //Activity bezogen
+    #getActivitiesURL = () => `${this.#hdmwebappServerBaseURL}/activities`;
 
     /**
      * Get the Singelton instance
@@ -49,14 +56,14 @@ export default class HdMWebAppAPI {
         )
 
     getPersons() {
-        return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
-            let personBOs = PersonBO.fromJSON(responseJSON);
-            //console.log(responseJSON);
-            return new Promise(function (resolve) {
-                resolve(personBOs);
-            })
-        })
-    }
+    return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
+      let personBOs = PersonBO.fromJSON(responseJSON);
+      //console.log(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(personBOs);
+      })
+    })
+  }
 
     getWorktimeAccount(id) {
         return this.#fetchAdvanced(this.#getWorktimeAccountURL(id)).then((responseJSON) => {
@@ -64,6 +71,16 @@ export default class HdMWebAppAPI {
             console.log(responseJSON);
             return new Promise(function (resolve) {
                 resolve(worktimeaccountBOs);
+            })
+        })
+    }
+
+    getActivities() {
+        return this.#fetchAdvanced(this.#getActivitiesURL()).then((responseJSON) => {
+            let activitiesBO = ActivityBO.fromJSON(responseJSON);
+            console.log(responseJSON);
+            return new Promise(function (resolve) {
+                resolve(activitiesBO);
             })
         })
     }

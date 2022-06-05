@@ -8,8 +8,8 @@ export default class ProjectBO extends BusinessObject {
    *
    * @param {String} aProjectName - der Name des ProjectBo.
    * @param {String} aClient - der Kunde des ProjectBO.
-   * @param {String} aTimeIntervalID - die TimeIntervalID des ProjectBO.
-   * @param {String} aOwner - der Owner des ProjectBO.
+   * @param {Number} aTimeIntervalID - die TimeIntervalID des ProjectBO.
+   * @param {Number} aOwner - der Owner des ProjectBO.
    */
   constructor(aProjectName, aClient, aTimeIntervalID, aOwner) {
     super();

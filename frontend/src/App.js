@@ -12,7 +12,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import firebaseConfig from './firebaseconfig';
-
+import ActivityList from "./components/pages/ActivityList";
 
 
 class App extends React.Component {
@@ -27,63 +27,62 @@ class App extends React.Component {
         };
     }
 
-	handleAuthStateChange = person => {
-		if (person) {
-			this.setState({
-				authLoading: true
-			});
-			person.getIdToken().then(token => {
+    handleAuthStateChange = person => {
+        if (person) {
+            this.setState({
+                authLoading: true
+            });
+            person.getIdToken().then(token => {
 
-				document.cookie = `token=${token};path=/`;
+                document.cookie = `token=${token};path=/`;
 
-				this.setState({
-					currentPerson: person,
-					authError: null,
-					authLoading: false
-				});
-			}).catch(e => {
-				this.setState({
-					authError: e,
-					authLoading: false
-				});
-			});
-		} else {
-			document.cookie = 'token=;path=/';
+                this.setState({
+                    currentPerson: person,
+                    authError: null,
+                    authLoading: false
+                });
+            }).catch(e => {
+                this.setState({
+                    authError: e,
+                    authLoading: false
+                });
+            });
+        } else {
+            document.cookie = 'token=;path=/';
 
-			this.setState({
-				currentPerson: null,
-				authLoading: false
-			});
-		}
-	}
+            this.setState({
+                currentPerson: null,
+                authLoading: false
+            });
+        }
+    }
 
-	handleSignIn = () => {
-		this.setState({
-			authLoading: true
-		});
-		const provider = new firebase.auth.GoogleAuthProvider();
-		firebase.auth().signInWithRedirect(provider);
-	}
+    handleSignIn = () => {
+        this.setState({
+            authLoading: true
+        });
+        const provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithRedirect(provider);
+    }
 
-	componentDidMount() {
-		firebase.initializeApp(firebaseConfig);
-		firebase.auth().languageCode = 'de';
-		firebase.auth().onAuthStateChanged(this.handleAuthStateChange);
-	}
-
+    componentDidMount() {
+        firebase.initializeApp(firebaseConfig);
+        firebase.auth().languageCode = 'de';
+        firebase.auth().onAuthStateChanged(this.handleAuthStateChange);
+        document.title = "HdM Zeiterfassung"
+    }
 
 
     render() {
-		const { currentPerson} = this.state;
+        const {currentPerson} = this.state;
 
         return (
-           <Router>
-                <Header person={currentPerson} />
+            <Router>
+                <Header person={currentPerson}/>
 
                 {
                     currentPerson ?
                         <>
-
                             <Switch>
                                 <Route exact path='/persons'>
                                     <PersonList/>
@@ -94,6 +93,9 @@ class App extends React.Component {
                                 <Route exact path='/worktimeaccount'>
                                     <WorktimeAccount/>
                                 </Route>
+                                <Route exact path='/activities'>
+                                    <ActivityList/>
+                                </Route>
                                 <Route path='*'>
                                     <NotFound/>
                                 </Route>
@@ -102,7 +104,7 @@ class App extends React.Component {
 
                         :
                         <>
-                            <SignIn onSignIn={this.handleSignIn} />
+                            <SignIn onSignIn={this.handleSignIn}/>
                         </>
                 }
             </Router>

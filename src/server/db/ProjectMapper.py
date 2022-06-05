@@ -2,7 +2,7 @@ from server.bo import Project as p
 from server.db.Mapper import Mapper
 
 
-class ProjectMapper (Mapper):
+class ProjectMapper(Mapper):
     """Mapper-Klasse, die User-Objekte auf eine relationale
     Datenbank abbildet. Hierzu wird eine Reihe von Methoden zur Verfügung
     gestellt, mit deren Hilfe z.B. Objekte gesucht, erzeugt, modifiziert und
@@ -55,21 +55,20 @@ class ProjectMapper (Mapper):
         """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
         wird genau ein Objekt zurückgegeben.
 
-        :param key Primärschlüsselattribut (->DB)
+        :param person_id Primärschlüsselattribut (->DB)
         :return User-Objekt, das dem übergebenen Schlüssel entspricht, None bei
             nicht vorhandenem DB-Tupel.
         """
-
         all_projects = []
 
         cursor = self._cnx.cursor()
-        command =   " SELECT DISTINCT P.project_id, P.last_edit, P.project_name, P.client, P.timeinterval_id, P.owner " \
-                    " FROM SoPraTestDB.worktimeaccount WTA " \
-                    " INNER JOIN SoPraTestDB.Timeintervaltransaction TIT ON TIT.affiliated_work_time_account_id = WTA.worktimeaccount_id " \
-                    " INNER JOIN SoPraTestDB.Projectwork PW ON PW.projectwork_id = TIT.affiliated_projectwork_id " \
-                    " INNER JOIN SoPraTestDB.activity A ON A.activity_id = PW.affiliated_activity_id " \
-                    " INNER JOIN SoPraTestDB.Project P ON P.project_id = A.affiliated_project_id " \
-                    " WHERE WTA.person_id = {} " .format(person_id)
+        command = " SELECT DISTINCT P.project_id, P.last_edit, P.project_name, P.client, P.timeinterval_id, P.owner " \
+                  " FROM SoPraTestDB.worktimeaccount WTA " \
+                  " INNER JOIN SoPraTestDB.Timeintervaltransaction TIT ON TIT.affiliated_work_time_account_id = WTA.worktimeaccount_id " \
+                  " INNER JOIN SoPraTestDB.Projectwork PW ON PW.projectwork_id = TIT.affiliated_projectwork_id " \
+                  " INNER JOIN SoPraTestDB.activity A ON A.activity_id = PW.affiliated_activity_id " \
+                  " INNER JOIN SoPraTestDB.Project P ON P.project_id = A.affiliated_project_id " \
+                  " WHERE WTA.person_id = {} ".format(person_id)
 
         cursor.execute(command)
         tuples = cursor.fetchall()

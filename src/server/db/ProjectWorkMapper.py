@@ -27,12 +27,16 @@ class ProjectWorkMapper (Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (projectwork_id, last_edit, projectwork_name, description, affiliated_activity_id) in tuples:
+        for (projectwork_id, last_edit, projectwork_name, description, start_event, end_event, time_period,
+             affiliated_activity_id) in tuples:
             project_work = pw.ProjectWork()
             project_work.set_id(projectwork_id)
             project_work.set_last_edit(last_edit)
             project_work.set_project_work_name(projectwork_name)
             project_work.set_description(description)
+            project_work.set_start_event(start_event)
+            project_work.set_end_event(end_event)
+            project_work.set_time_period(time_period)
             project_work.set_affiliated_activity(affiliated_activity_id)
             result.append(project_work)
 
@@ -53,18 +57,21 @@ class ProjectWorkMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT projectwork_id, last_edit, projectwork_name, description, affiliated_activity_id " \
-                  "FROM projectwork WHERE projectwork_id={}".format(key)
+        command = "SELECT * FROM projectwork WHERE projectwork_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (projectwork_id, last_edit, projectwork_name, description, affiliated_activity_id) = tuples[0]
+            (projectwork_id, last_edit, projectwork_name, description, start_event, end_event, time_period,
+             affiliated_activity_id) = tuples[0]
             project_work = pw.ProjectWork()
             project_work.set_id(projectwork_id)
             project_work.set_last_edit(last_edit)
             project_work.set_project_work_name(projectwork_name)
             project_work.set_description(description)
+            project_work.set_start_event(start_event)
+            project_work.set_end_event(end_event)
+            project_work.set_time_period(time_period)
             project_work.set_affiliated_activity(affiliated_activity_id)
 
             result = project_work
@@ -81,15 +88,20 @@ class ProjectWorkMapper (Mapper):
     def find_all(self):
         all_project_works = []  # Liste mit allen project_works
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT projectwork_id, last_edit, projectwork_name, description FROM projectwork")
+        cursor.execute("SELECT * FROM projectwork")
         tuples = cursor.fetchall()
 
-        for (projectwork_id, last_edit, projectwork_name, description) in tuples:
+        for (projectwork_id, last_edit, projectwork_name, description, start_event, end_event, time_period,
+             affiliated_activity_id) in tuples:
             project_work = pw.ProjectWork()
             project_work.set_id(projectwork_id)
             project_work.set_last_edit(last_edit)
             project_work.set_project_work_name(projectwork_name)
             project_work.set_description(description)
+            project_work.set_start_event(start_event)
+            project_work.set_end_event(end_event)
+            project_work.set_time_period(time_period)
+            project_work.set_affiliated_activity(affiliated_activity_id)
             all_project_works.append(project_work)
 
         self._cnx.commit()
@@ -113,9 +125,10 @@ class ProjectWorkMapper (Mapper):
                 project_work.set_id(1)
 
         command = "INSERT INTO projectwork (projectwork_id, last_edit, projectwork_name, description, " \
-                  "affiliated_activity_id) VALUES (%s,%s,%s,%s,%s)"
-        data = (project_work.get_id(), project_work.get_last_edit(), project_work.get_project_work_name(), project_work.get_description(),
-                project_work.get_affiliated_activity())
+                  "start_event, end_event, time_period, affiliated_activity_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
+        data = (project_work.get_id(), project_work.get_last_edit(), project_work.get_project_work_name(),
+                project_work.get_description(), project_work.get_start_event(), project_work.get_end_event(),
+                project_work.get_time_period(), project_work.get_affiliated_activity())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -134,14 +147,15 @@ class ProjectWorkMapper (Mapper):
     def update(self, project_work):  # Projekt, welches als update dient wird hier der Methode übergeben
         cursor = self._cnx.cursor()
 
-        command = "UPDATE projectwork SET last_edit=%s, projectwork_name=%s, description=%s, " \
-                  "affiliated_activity_id=%s WHERE projectwork_id=%s"
+        command = "UPDATE projectwork SET last_edit=%s, projectwork_name=%s, description=%s, start_event=%s, " \
+                  "end_event=%s, time_period=%s,affiliated_activity_id=%s WHERE projectwork_id=%s"
         """  
         Die Variablen werden dem übergebenen "project_work" entnommen und überschreiben die aktuellen Werte, 
         welche im Object mit der entsprechenden id stehen.
         """
-        data = (project_work.get_last_edit(), project_work.get_project_work_name(),
-                project_work.get_description(), project_work.get_id(), project_work.get_affiliated_activity())
+        data = (project_work.get_last_edit(), project_work.get_project_work_name(), project_work.get_description(),
+                project_work.get_start_event(), project_work.get_end_event(), project_work.get_time_period(),
+                project_work.get_affiliated_activity(), project_work.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import {AppBar, Typography, Toolbar, IconButton, Menu, Box} from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import MenuItem from "@mui/material/MenuItem";
-
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 
 class Header extends Component {
 
@@ -12,8 +14,10 @@ class Header extends Component {
         // Init an empty state
         this.state = {
             anchorEl: null,
+            person: null
         };
     };
+
 
     handleOpenUserMenu = (event) => {
         this.setState({anchorEl: event.currentTarget});
@@ -25,11 +29,11 @@ class Header extends Component {
 
     handleLogout = () => {
         this.handleCloseUserMenu();
-
+        firebase.auth().signOut();
     }
 
     render() {
-        const { user } = this.props;
+        const {person} = this.props;
 
         return (
             <Box sx={{flexGrow: 1}}>
@@ -38,7 +42,7 @@ class Header extends Component {
                         <Typography variant='h3' component='div' sx={{flexGrow: 1}}>
                             HdM Web App
                         </Typography>
-                        {user ? (
+                        {person ? (
                             <>
                                 <IconButton
                                     size="large"
@@ -59,12 +63,14 @@ class Header extends Component {
                                         horizontal: 'right',
                                     }}
                                     open={Boolean(this.state.anchorEl)}
-                                    onClose={() => {this.handleCloseUserMenu()}}>
+                                    onClose={() => {
+                                        this.handleCloseUserMenu()
+                                    }}>
 
                                     <MenuItem onClick={this.handleLogout}>LogOut</MenuItem>
                                 </Menu>
                             </>
-                        ):null}
+                        ) : null}
                     </Toolbar>
                 </AppBar>
             </Box>

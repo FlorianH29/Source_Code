@@ -22,10 +22,9 @@ bo = api.model('BusinessObject', {
     'last_edit': fields.DateTime(attribute='_last_edit', description='Der Zeitpunkt der letzten Änderung')
 })
 
-activity = api.inherit('Activity', bo, {
-    'name': fields.String(attribute='_name', description='Name einer Aktivität'),
-    'capacity': fields.Integer(attribute='_capacity', description='Kapazität einer Aktivität'),
-    'affiliated_project': fields.Integer(attribute='_affiliated_project', description='Zugeordnetes Projekt einer A.')
+activity = api.inherit('Activity', {
+    'name': fields.String(description='Name einer Aktivität'),
+    'capacity': fields.Integer(description='Kapazität einer Aktivität'),
 })
 
 person = api.inherit('Person', bo, {
@@ -48,18 +47,19 @@ project = api.inherit('Project', bo, {
     'owner': fields.Integer(attribute='_owner', description='Der Leiter eines Projekts')
 })
 
-projectwork = api.inherit('ProjectWork', bo, {
+timeinterval = api.inherit('TimeInterval', bo, {
+    'starttime': fields.DateTime(attribute='_start_time', description='Startzeitpunkt eines Zeitintervalls'),
+    'endtime': fields.DateTime(attribute='_end_time', description='Endzeitpunkt eines Zeitintervalls'),
+    'timeperiod': fields.String(attribute='_time_period', description='Zeitraum des Intervalls')
+})
+
+projectwork = api.inherit('ProjectWork', timeinterval, {
     'project_work_name': fields.String(attribute='_project_work_name', description='Name einer Projektarbeit'),
     'description': fields.String(attribute='_description', description='Beschreibung einer Projektarbeit'),
     'affiliated_activity': fields.Integer(attribute='_affiliated_activity', description='Zugeordnete Aktivität einer P.')
 })
 
 
-timeinterval = api.inherit('TimeInterval', bo, {
-    'starttime': fields.DateTime(attribute='__start_time', description='Startzeitpunkt eines Zeitintervalls'),
-    'endtime': fields.DateTime(attribute='__end_time', description='Endzeitpunkt eines Zeitintervalls'),
-    'timeperiod': fields.String(attribute='__time_period', description='Zeitraum des Intervalls')
-})
 
 
 @hdmwebapp.route('/persons')
@@ -90,6 +90,19 @@ class WorkTimeAccountContentList(Resource):
         print(result)
         return result
 
+@hdmwebapp.route('/activities')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ActivitiesList(Resource):
+    @hdmwebapp.marshal_list_with(activity)
+    def get(self):
+        hwa = HdMWebAppAdministration()
+        result = []
+        activities = hwa.get_all_activities()
+        for a in activities:
+            result.append({"name" : a._name, "capacity": a._capacity})
+        print(result)
+        return result
+
 
 @hdmwebapp.route('/projects')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -102,7 +115,7 @@ class ProjectListOperations(Resource):
         return projects
 
 
-@hdmwebapp.route('/projectworks-by-activity/<int:id>')
+@hdmwebapp.route('/activities/<int:id>/projectworks')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Aktivität')
 class ProjectWorksByActivityOperations(Resource):
@@ -118,7 +131,6 @@ class ProjectWorksByActivityOperations(Resource):
             return projectwork_list
         else:
             return "Activity not found", 500
-
 
 
 if __name__ == '__main__':
