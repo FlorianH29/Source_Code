@@ -1,11 +1,11 @@
 import React from 'react';
 import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
-import ActivityList from "./components/pages/ActivityList";
-import PersonList from './components/pages/PersonList';
+import ActivityList from "./components/ActivityList";
+import PersonList from './components/PersonList';
 import Header from './components/layout/Header';
-import ProjectList from "./components/pages/ProjectList";
-import ProjectWorkList from "./components/pages/ProjectWorkList";
-import WorktimeAccount from "./components/pages/WorktimeAccount";
+import ProjectList from "./components/ProjectList";
+import ProjectWorkList from "./components/ProjectWorkList";
+import WorktimeAccount from "./components/WorktimeAccount";
 import NotFound from "./components/pages/NotFound";
 import SignIn from './components/pages/SignIn';
 import firebase from 'firebase/compat/app';

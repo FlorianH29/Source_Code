@@ -3,8 +3,11 @@ from flask_restx import Api, Resource, fields
 from flask_cors import CORS
 
 from server.HdMWebAppAdministration import HdMWebAppAdministration
+from server.bo.Activity import Activity
 from server.bo.Person import Person
-import datetime
+from server.bo.Project import Project
+from server.bo.ProjectWork import ProjectWork
+from server.bo.WorkTimeAccount import WorkTimeAccount
 
 
 app = Flask(__name__)
@@ -132,12 +135,33 @@ class ProjectWorksByActivityOperations(Resource):
             return "Activity not found", 500
 
 
-hwa = HdMWebAppAdministration()
-p1 = hwa.get_project_by_id(1)
-a1 = hwa.get_activity_by_id(1)
-e1 = hwa.get_event_by_id(1)
-e2 = hwa.get_event_by_id(4)
+@hdmwebapp.route('/projectworks/<int:id>/')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID der Projektarbeit')
+class ProjectWorkOperations(Resource):
+    @hdmwebapp.marshal_list_with(projectwork)
+    def put(self, id):
+        hwa = HdMWebAppAdministration()
+        pw = ProjectWork.from_dict(api.payload)
+
+        if pw is not None:
+            pw.set_id(id)
+            hwa.save_project_work(pw)
+            return '', 200
+        else:
+            return '', 500
+
+    def delete(self, id):
+        """Löschen eines bestimmten Projektarbeitsobjekts.
+
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = hwa.get_projectwork_by_id(id)
+        hwa.delete_project_work(pw)
+        return '', 200
+
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
 
