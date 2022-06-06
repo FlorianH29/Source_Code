@@ -3,7 +3,7 @@
  */
 export {default as HdMWebAppAPI} from './HdMWebAppAPI';
 export {default as PersonBO} from './PersonBO';
-export {default as Project} from './ProjectBO';
-export {default as ProjectWork} from './ProjectWorkBO';
+export {default as ProjectBO} from './ProjectBO';
+export {default as ProjectWorkBO} from './ProjectWorkBO';
 export {default as WorktimeAccountBO} from './WorktimeAccountBO';
-export {default as TimeInterval} from './TimeIntervalBO';
+export {default as TimeIntervalBO} from './TimeIntervalBO';

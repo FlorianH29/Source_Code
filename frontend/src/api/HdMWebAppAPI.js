@@ -22,6 +22,8 @@ export default class HdMWebAppAPI {
 
   // Projektarbeit bezogen
   #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
+  #updateProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
+  #deleteProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
 
   //Worktimeaccount bezogen
   #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
@@ -104,4 +106,47 @@ export default class HdMWebAppAPI {
             })
         })
     }
+
+  /**
+  * Updated ein ProjectWorkBO
+  *
+  * @param {ProjectWorkBO} projectWorkBO das geupdated werden soll
+  * @public
+  */
+  updateProjectWork(projectWorkBO) {
+    return this.#fetchAdvanced(this.#updateProjectWorkURL(projectWorkBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(projectWorkBO)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseProjectWorkBO = ProjectWorkBO.fromJSON(responseJSON)[0];
+      console.log(responseProjectWorkBO)
+      return new Promise(function (resolve) {
+        resolve(responseProjectWorkBO);
+      })
+    })
+  }
+
+  /**
+  * Löscht ein ProjectWorkBO
+  *
+  * @param {Number} projectWorkID des ProjectWorkBO, welches gelöscht werden soll
+  * @public
+  */
+  deleteProjectWork(projectWorkID) {
+    return this.#fetchAdvanced(this.#deleteProjectWorkURL(projectWorkID), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseProjectWorkBO = ProjectWorkBO.fromJSON(responseJSON)[0];
+      console.log(responseProjectWorkBO)
+      return new Promise(function (resolve) {
+        resolve(responseProjectWorkBO);
+      })
+    })
+  }
 }
