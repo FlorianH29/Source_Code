@@ -141,8 +141,8 @@ DROP TABLE IF EXISTS `SoPraTestDB`.`timeinterval` ;
 CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`timeinterval` (
   `timeinterval_id` INT NOT NULL,
   `last_edit` DATETIME NULL,
-  `start_time` DATETIME NULL,
-  `end_time` DATETIME NULL,
+  `start_event_id` INT NULL,
+  `end_event_id` INT NULL,
   `time_period` TIME NULL,
   PRIMARY KEY (`timeinterval_id`))
 ENGINE = InnoDB;

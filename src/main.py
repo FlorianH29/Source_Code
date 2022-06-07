@@ -162,6 +162,13 @@ class ProjectWorkOperations(Resource):
         return '', 200
 
 
+hwa = HdMWebAppAdministration()
+
+#hwa.create_event(1)
+#hwa.create_event(2)
+hwa.create_time_interval(hwa.get_event_by_id(1), hwa.get_event_by_id(7))
+
+
 if __name__ == '__main__':
     app.run(debug=False)
 
