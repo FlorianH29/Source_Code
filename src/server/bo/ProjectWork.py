@@ -47,7 +47,7 @@ class ProjectWork (ti.TimeInterval):
         projectwork.set_description(dictionary["description"])  # Setzt description aus dict() für ProjectWork
         projectwork.set_affiliated_activity(dictionary["affiliated_activity"])  # Setzt affiliated_activity aus
         # dict() für ProjectWork
-        projectwork.set_start_event(dictionary["start_time"])  # Setzt start_time aus dict() für ProjectWork
-        projectwork.set_end_event(dictionary["end_time"])  # Setzt end_time aus dict() für ProjectWork
+        projectwork.set_start_event(dictionary["start_event"])  # Setzt start_time aus dict() für ProjectWork
+        projectwork.set_end_event(dictionary["end_event"])  # Setzt end_time aus dict() für ProjectWork
         projectwork.set_time_period(dictionary["time_period"])  # Setzt time_periode aus dict() für ProjectWork
         return projectwork

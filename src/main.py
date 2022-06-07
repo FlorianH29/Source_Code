@@ -2,9 +2,12 @@ from flask import Flask
 from flask_restx import Api, Resource, fields
 from flask_cors import CORS
 
-#from server.HdMWebAppAdministration import HdMWebAppAdministration
+from server.HdMWebAppAdministration import HdMWebAppAdministration
+from server.bo.Activity import Activity
 from server.bo.Person import Person
-import datetime
+from server.bo.Project import Project
+from server.bo.ProjectWork import ProjectWork
+from server.bo.WorkTimeAccount import WorkTimeAccount
 
 
 app = Flask(__name__)
@@ -35,7 +38,7 @@ person = api.inherit('Person', bo, {
     'firebase_id': fields.String(attribute='_firebase_id', description='Google User ID eines Benutzers')
 })
 
-work_time_account= api.inherit('Worktimeaccout', {
+work_time_account = api.inherit('Worktimeaccout', {
     'name': fields.String(description='Name des Inhalts'),
     'time': fields.String(description='Dauer des Inhalts')
 })
@@ -48,9 +51,9 @@ project = api.inherit('Project', bo, {
 })
 
 timeinterval = api.inherit('TimeInterval', bo, {
-    'starttime': fields.DateTime(attribute='_start_time', description='Startzeitpunkt eines Zeitintervalls'),
-    'endtime': fields.DateTime(attribute='_end_time', description='Endzeitpunkt eines Zeitintervalls'),
-    'timeperiod': fields.String(attribute='_time_period', description='Zeitraum des Intervalls')
+    'start_event': fields.DateTime(attribute='_start_event', description='Startzeitpunkt eines Zeitintervalls'),
+    'end_event': fields.DateTime(attribute='_end_event', description='Endzeitpunkt eines Zeitintervalls'),
+    'time_period': fields.String(attribute='_time_period', description='Zeitraum des Intervalls')
 })
 
 projectwork = api.inherit('ProjectWork', timeinterval, {
@@ -58,8 +61,6 @@ projectwork = api.inherit('ProjectWork', timeinterval, {
     'description': fields.String(attribute='_description', description='Beschreibung einer Projektarbeit'),
     'affiliated_activity': fields.Integer(attribute='_affiliated_activity', description='Zugeordnete Aktivität einer P.')
 })
-
-
 
 
 @hdmwebapp.route('/persons')
@@ -74,7 +75,7 @@ class PersonListOperations(Resource):
 
 
 @hdmwebapp.route('/worktimeaccount/<int:id>')
-@hdmwebapp.param('id', 'Die ID des Person-Objekts')
+@hdmwebapp.param('id', 'Die ID des Arbeitszeitkonto-Objekts')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class WorkTimeAccountContentList(Resource):
     @hdmwebapp.marshal_list_with(work_time_account)
@@ -89,6 +90,7 @@ class WorkTimeAccountContentList(Resource):
 
         print(result)
         return result
+
 
 @hdmwebapp.route('/activities')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -126,21 +128,40 @@ class ProjectWorksByActivityOperations(Resource):
         # Die durch die id gegebene Aktivität als Objekt speichern.
 
         if act is not None:
-            projectwork_list = hwa.get_projectworks_by_activity(act)
+            projectwork_list = hwa.get_projectworks_of_activity(act)
             # Auslesen der Projektarbeiten, die der Aktivität untergliedert sind.
             return projectwork_list
         else:
             return "Activity not found", 500
 
 
+@hdmwebapp.route('/projectworks/<int:id>/')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID der Projektarbeit')
+class ProjectWorkOperations(Resource):
+    @hdmwebapp.marshal_list_with(projectwork)
+    def put(self, id):
+        hwa = HdMWebAppAdministration()
+        pw = ProjectWork.from_dict(api.payload)
+
+        if pw is not None:
+            pw.set_id(id)
+            hwa.save_project_work(pw)
+            return '', 200
+        else:
+            return '', 500
+
+    def delete(self, id):
+        """Löschen eines bestimmten Projektarbeitsobjekts.
+
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = hwa.get_projectwork_by_id(id)
+        hwa.delete_project_work(pw)
+        return '', 200
+
+
 if __name__ == '__main__':
     app.run(debug=False)
 
-my_start = hdmwebapp.Event('01-01-2022', 'Start')
-my_end = hdmwebapp.Event('01-01-2022', 'Ende')
-my_period = '0-0-2'
-
-
-my_pw = hdmwebapp.ProjectWork(1, '01-01-2022', "name", "description", None, my_start, my_end, my_period)
-
-print(my_pw)

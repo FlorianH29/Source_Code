@@ -2,7 +2,8 @@ import PersonBO from './PersonBO';
 import ProjectBO from './ProjectBO';
 import WorktimeAccountBO from "./WorktimeAccountBO";
 import ActivityBO from "./ActivityBO";
-
+import ProjectWorkBO from "./ProjectWorkBO";
+import TimeIntervalBO from "./TimeIntervalBO";
 
 export default class HdMWebAppAPI {
 
@@ -20,31 +21,33 @@ export default class HdMWebAppAPI {
   #getProjectsURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
 
   // Projektarbeit bezogen
-  #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/'/activities/${id}/projectworks'`;
+  #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
+  #updateProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
+  #deleteProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
 
   //Worktimeaccount bezogen
   #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
 
-    //Activity bezogen
-    #getActivitiesURL = () => `${this.#hdmwebappServerBaseURL}/activities`;
+  //Activity bezogen
+  #getActivitiesURL = () => `${this.#hdmwebappServerBaseURL}/activities`;
 
-    /**
-     * Get the Singelton instance
-     *
-     * @public
-     */
-    static getAPI() {
-        if (this.#api == null) {
-            this.#api = new HdMWebAppAPI();
-        }
-        return this.#api;
-    }
+  /**
+   * Get the Singelton instance
+   *
+   * @public
+   */
+  static getAPI() {
+      if (this.#api == null) {
+          this.#api = new HdMWebAppAPI();
+      }
+      return this.#api;
+  }
 
-    /**
-     *  Returns a Promise which resolves to a json object.
-     *  The Promise returned from fetch() won’t reject on HTTP error status even if the response is an HTTP 404 or 500.
-     *  fetchAdvanced throws an Error also an server status errors
-     */
+  /**
+   *  Returns a Promise which resolves to a json object.
+   *  The Promise returned from fetch() won’t reject on HTTP error status even if the response is an HTTP 404 or 500.
+   *  fetchAdvanced throws an Error also an server status errors
+   */
     #fetchAdvanced = (url, init) => fetch(url, init)
         .then(res => {
                 // The Promise returned from fetch() won’t reject on HTTP error status even if the response is an HTTP 404 or 500.
@@ -54,7 +57,6 @@ export default class HdMWebAppAPI {
                 return res.json();
             }
         )
-
     getPersons() {
     return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
       let personBOs = PersonBO.fromJSON(responseJSON);
@@ -87,11 +89,64 @@ export default class HdMWebAppAPI {
 
     getProject() {
         return this.#fetchAdvanced(this.#getProjectsURL()).then((responseJSON) => {
-            let projectBOs = ProjectBO.fromJSON(responseJSON);
-            console.log(responseJSON);
+          let projectBOs = ProjectBO.fromJSON(responseJSON);
+          console.log(responseJSON);
+          return new Promise(function (resolve) {
+              resolve(projectBOs);
+          })
+        })
+    }
+
+    getProjectWorks(id) {
+        return this.#fetchAdvanced(this.#getProjectWorksforActivityURL(id)).then((responseJSON) => {
+            let projectworkBOs = ProjectWorkBO.fromJSON(responseJSON);
+            // console.log(projectworkBOs);
             return new Promise(function (resolve) {
-                resolve(projectBOs);
+                resolve(projectworkBOs);
             })
         })
     }
+
+  /**
+  * Updated ein ProjectWorkBO
+  *
+  * @param {ProjectWorkBO} projectWorkBO das geupdated werden soll
+  * @public
+  */
+  updateProjectWork(projectWorkBO) {
+    return this.#fetchAdvanced(this.#updateProjectWorkURL(projectWorkBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(projectWorkBO)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseProjectWorkBO = ProjectWorkBO.fromJSON(responseJSON)[0];
+      console.log(responseProjectWorkBO)
+      return new Promise(function (resolve) {
+        resolve(responseProjectWorkBO);
+      })
+    })
+  }
+
+  /**
+  * Löscht ein ProjectWorkBO
+  *
+  * @param {Number} projectWorkID des ProjectWorkBO, welches gelöscht werden soll
+  * @public
+  */
+  deleteProjectWork(projectWorkID) {
+    return this.#fetchAdvanced(this.#deleteProjectWorkURL(projectWorkID), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseProjectWorkBO = ProjectWorkBO.fromJSON(responseJSON)[0];
+      console.log(responseProjectWorkBO)
+      return new Promise(function (resolve) {
+        resolve(responseProjectWorkBO);
+      })
+    })
+  }
 }

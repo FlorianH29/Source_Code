@@ -76,7 +76,13 @@ class Header extends Component {
             </Box>
         )
     }
-
 }
+
+/** Component specific styles */
+const styles = theme => ({
+  root: {
+    width: '100%',
+  }
+});
 
 export default Header;

@@ -1,18 +1,20 @@
-import TimeIntervalBO from './BusinessObject';
-import BusinessObject from "./BusinessObject";
+import TimeIntervalBO from './TimeIntervalBO';
 
 //Stellt eine Projektarbeit im System dar
-export default class ProjectWorkBO extends BusinessObject {
+export default class ProjectWorkBO extends TimeIntervalBO {
 
   /**
    * Konstruktor, erstelt ein Projektarbeitsobjekt mit
    *
+   * @param {Date} aStartEvent - das Startevent des Zeitintervalls.
+   * @param {Date} anEndEvent - das Endevent des Zeitintervalls
+   * @param {Number} aTimePeriod - der gespeicherte Zeitraum des Zeitintervalls.
    * @param {String} aProjectWorkName - der Name dieses ProjectWorkBO.
    * @param {String} aDescription - die Beschreibung dieses ProjectWorkBO.
    * @param {Number} anAffiliatedActivity - die Aktivität, die diesem ProjectWorkBO zugeordnet ist.
    */
-  constructor(aProjectWorkName, aDescription, anAffiliatedActivity) {
-    super();
+  constructor(aStartEvent, anEndEvent, aTimePeriod, aProjectWorkName, aDescription, anAffiliatedActivity) {
+    super(aStartEvent, anEndEvent, aTimePeriod);
     this.project_work_name = aProjectWorkName;
     this.description = aDescription;
     this.affiliated_activity = anAffiliatedActivity;
@@ -53,7 +55,7 @@ export default class ProjectWorkBO extends BusinessObject {
   /**
    * Setzt eine neue zugeordnete Aktivität.
    *
-   * @param {String} anAffiliatedActivity - die neue zugeordnete Aktivität dieses ProjectWorkBO.
+   * @param {Number} anAffiliatedActivity - die neue zugeordnete Aktivität dieses ProjectWorkBO.
    */
   setAffiliatedProject(anAffiliatedActivity) {
     this.affiliated_activity = anAffiliatedActivity;
