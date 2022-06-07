@@ -136,3 +136,11 @@ class ProjectWorksByActivityOperations(Resource):
 if __name__ == '__main__':
     app.run(debug=False)
 
+my_start = hdmwebapp.Event('01-01-2022', 'Start')
+my_end = hdmwebapp.Event('01-01-2022', 'Ende')
+my_period = '0-0-2'
+
+
+my_pw = hdmwebapp.ProjectWork(1, '01-01-2022', "name", "description", None, my_start, my_end, my_period)
+
+print(my_pw)
