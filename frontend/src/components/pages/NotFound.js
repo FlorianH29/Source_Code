@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import logo from './404_unicorn.png'; //
+import logo from '../../404_unicorn.png'; //
 import {Box, Button, Grid} from '@mui/material';
-import { withRouter } from "react-router";
+//import { withRouter } from "react-router";
 
 class NotFound extends Component {
 
@@ -27,4 +27,4 @@ class NotFound extends Component {
     }
 }
 
-export default withRouter(NotFound);
+export default NotFound;
