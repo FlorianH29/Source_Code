@@ -41,6 +41,19 @@ class ProjectWorkForm extends Component {
     this.props.onClose(null);
   }
 
+  addProjectWork = () => {
+    console.log('addProjectWork durchgeführt')
+  }
+
+  addEvent = () => {
+      console.log('addEvent durchgeführt')
+  }
+
+  addStartEventandProjectWork = () => {
+    this.addEvent();
+    this.addProjectWork();
+  }
+
   /** Behandelt Wertänderungen der Textfelder und validiert diese */
   textFieldValueChange = (event) => {
     const value = event.target.value;
