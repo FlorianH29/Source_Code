@@ -21,30 +21,30 @@ export default class TimeIntervalBO extends BusinessObject {
   /**
    * Setzt ein neues Startereignis.
    *
-   * @param {Number} aStartEventId - das neue Startereignis dieses TimeIntervalBO.
+   * @param {Number} aStartEventId - die neue Id des neuen Startereignisses dieses TimeIntervalBOs.
    */
   setStartEvent(aStartEventId) {
     this.start_event_id = aStartEventId;
   }
 
   /**
-   * Gibt das Startereignis zurück.
+   * Gibt die Id des Startereignisses zurück.
    */
   getStartEventId() {
     return this.start_event_id;
   }
 
   /**
-   * Setzt ein neues Endereignis.
+   * Setzt eine neue Id eines neuen Endereignisses.
    *
-   * @param {Number} anEndEventId - das neue Endereignis dieses TimeIntervalBO.
+   * @param {Number} anEndEventId - die neue Id des neuen Endereignisses dieses TimeIntervalBOs.
    */
   setEndEvent(anEndEventId) {
     this.end_event_id = anEndEventId;
   }
 
   /**
-   * Gibt das Endereignis zurück.
+   * Gibt die Id des Endereignisses zurück.
    *
    */
   getEndEventId() {
