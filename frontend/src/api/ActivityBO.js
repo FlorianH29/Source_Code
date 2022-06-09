@@ -36,7 +36,7 @@ export default class ActivityBO extends BusinessObject {
   /**
    * Setzt die Kapazität.
    *
-   * @param {*} aCapacity - die neue Kapazität dieses ActivityBO.
+   * @param {String} aCapacity - die neue Kapazität dieses ActivityBO.
    */
   setCapacity(aCapacity) {
     this.capacity = aCapacity;

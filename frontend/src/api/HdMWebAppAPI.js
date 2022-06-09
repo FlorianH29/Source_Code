@@ -4,6 +4,7 @@ import WorktimeAccountBO from "./WorktimeAccountBO";
 import ActivityBO from "./ActivityBO";
 import ProjectWorkBO from "./ProjectWorkBO";
 import TimeIntervalBO from "./TimeIntervalBO";
+import EventBO from "./EventBO";
 
 export default class HdMWebAppAPI {
 
