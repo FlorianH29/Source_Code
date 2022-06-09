@@ -8,6 +8,7 @@ from server.bo.Person import Person
 from server.bo.Project import Project
 from server.bo.ProjectWork import ProjectWork
 from server.bo.WorkTimeAccount import WorkTimeAccount
+from SecurityDecorator import secured
 
 
 app = Flask(__name__)
@@ -67,6 +68,7 @@ projectwork = api.inherit('ProjectWork', timeinterval, {
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class PersonListOperations(Resource):
     @hdmwebapp.marshal_list_with(person)
+    @secured
     def get(self):
         hwa = HdMWebAppAdministration()
         persons = hwa.get_all_persons()
@@ -165,3 +167,7 @@ class ProjectWorkOperations(Resource):
 if __name__ == '__main__':
     app.run(debug=False)
 
+
+
+p = HdMWebAppAdministration.create_person("Yarrack", "Klein", "Penis@gmail.com", 20)
+print(p)
