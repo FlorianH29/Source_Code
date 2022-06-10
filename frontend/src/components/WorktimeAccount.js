@@ -1,34 +1,34 @@
 import React, {Component} from 'react';
-import {HdMWebAppAPI} from "../../api";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import {ButtonGroup, Divider} from "@mui/material";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
 import ListItem from "@mui/material/ListItem";
+import {HdMWebAppAPI} from "../api";
 
-
-class ActivityList extends Component {
+class WorktimeAccount extends Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            activities: []
+            worktimeaccounts: []
         };
+
     };
 
     componentDidMount() {
-        HdMWebAppAPI.getAPI().getActivities()
-            .then(activitiesBOs =>
+        HdMWebAppAPI.getAPI().getWorktimeAccount(1)
+            .then(worktimeaccountBOs =>
                 this.setState({
-                    activities: activitiesBOs
+                    worktimeaccounts: worktimeaccountBOs
                 })).catch(e =>
             this.setState({
-                activities: []
+                worktimeaccounts: []
             }));
-        console.log(this.state.activities)
+        console.log(this.state.worktimeaccounts)
     }
 
     render() {
@@ -39,32 +39,32 @@ class ActivityList extends Component {
                         <Grid item xs={12} align={"center"}>
                             <ButtonGroup>
                                 <Button variant={"contained"}>
-                                    Projekt bearbeiten
+                                    Meine Projekte
+                                </Button>
+                                <Button variant={"contained"}>
+                                    Neues Projekt anlegen
                                 </Button>
                             </ButtonGroup>
                         </Grid>
-                        <Grid item xs={12} align={"left"}>
+                        <Grid item xs={12} align={"center"}>
                             <Typography variant={"h3"} component={"div"}>
-                                Aktivität
-                            </Typography>
-                            <Typography variant={"h3"} component={"div"} align={"center"}>
-                                Kapazität
+                                Worktimeaccount
                             </Typography>
                         </Grid>
                         <Grid item xs={12} align={"center"}>
-                            {this.state.activities.map((activity) => (
-                                <Box key={activity}>
+                            {this.state.worktimeaccounts.map((project) => (
+                                <Box key={project}>
                                     <ListItem>
                                         <Grid container justifyContent={"left"}>
                                             <Grid item xs={6} align={"left"}>
                                                 <Typography variant={"h5"} component={"div"}>
-                                                    {activity.name}
+                                                    {project.name}
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={6} align={"left"}>
-                                                <Typography variant={"h5"} component={"div"}>
-                                                    {activity.capacity}
-                                                </Typography>
+                                                 <Typography variant={"h5"} component={"div"}>
+                                                    {project.time}
+                                                 </Typography>
                                             </Grid>
                                         </Grid>
                                     </ListItem>
@@ -76,8 +76,8 @@ class ActivityList extends Component {
                 </Card>
             </Box>
         )
-    }
 
+    }
 }
 
-export default ActivityList;
+export default WorktimeAccount;

@@ -42,22 +42,35 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             return mapper.find_all()
 
-    def create_person(self, firstname, lastname, username, mailaddress, firebase_id):
+    def create_person(self, firstname, lastname, mailaddress, firebase_id):
+        """Person anlegen, nach Anlegen der Person Anlegen eines Arbeitszeitkontos für sie."""
         person = Person()
         person.set_id(1)
         person.set_last_edit(datetime.datetime.now())
         person.set_firstname(firstname)
         person.set_lastname(lastname)
-        person.set_username(username)
+        person.set_username(firstname + "_" + lastname)
         person.set_mailaddress(mailaddress)
         person.set_firebase_id(firebase_id)
 
         with PersonMapper() as mapper:
-            mapper.insert(person)
+            return mapper.insert(person), self.create_work_time_account_for_person(person)
 
     def delete_person(self, person):
-        """Gegebene Person aus System löschen"""
+        """Gegebene Person aus System löschen, gleichzeitig Person als Mitarbeiter in den Projekten streichen, in denen
+         sie beteiligt war und ihr Arbeitszeitkonto löschen."""
+        # noch Projektarbeiten und Buchungen von davon, die auf Arbeitszeitkonto sind löschen?
         with PersonMapper() as mapper:
+            if person is not None:
+                projects = self.get_projectmember_by_person(person)
+                worktimeaccounts = self.get_work_time_account_of_owner(person)
+
+                for project in projects:
+                    self.delete_project_member(project)
+
+                for worktimeaccount in worktimeaccounts:
+                    self.delete_work_time_account(worktimeaccount)
+
             mapper.delete(person)
 
     def save_person(self, person):
@@ -153,7 +166,15 @@ class HdMWebAppAdministration(object):
     def delete_activity(self, activity):
         """Die gegebene Aktivität aus unserem System löschen."""
         with ActivityMapper() as mapper:
-            mapper.delete(activity)
+            if activity is not None:
+                project_works = self.get_projectworks_of_activity(activity)
+
+                for project_work in project_works:
+                    self.delete_project_work(project_work)
+
+                mapper.delete(activity)
+            else:
+                return None
 
     def save_activity(self, activity):
         """Eine Aktivitäts-Instanz speichern."""
@@ -171,12 +192,16 @@ class HdMWebAppAdministration(object):
         with ActivityMapper() as mapper:
             return mapper.find_all()
 
-    def get_activity_by_project_id(self, project_id):
-        """ ProjektWorks werden anhand der eindeutigen ID der Aktivität ausgelesen, der sie zugeordnet sind."""
+    def get_activities_of_project(self, project):
+        """ Akitvitäten werden anhand der eindeutigen ID des Projekts ausgelesen, dem sie zugeordnet sind."""
         with ActivityMapper() as mapper:
             result = []
-            if not (project_id is None):
-                return mapper.find_by_project_id(project_id)
+
+            if not (project is None):
+                activities = mapper.find_by_project_id(project.get_id())
+                if not (activities is None):
+                    result.extend(activities)
+        return result
 
     """Methoden für EventTransaktionen"""
 
@@ -204,6 +229,7 @@ class HdMWebAppAdministration(object):
     def delete_event_transaction(self, event_transaction):
         """Die gegebene EventTransaction löschen."""
         with EventTransactionMapper() as mapper:
+            # nicht ganz löschen, sondern nur deaktivieren
             mapper.delete(event_transaction)
 
     def create_event_transaction(self, event, work_time_account):
@@ -246,9 +272,11 @@ class HdMWebAppAdministration(object):
     def delete_time_interval_transaction(self, time_interval_transaction):
         """Die gegebene TimeIntervalTransaction löschen."""
         with TimeIntervalTransactionMapper() as mapper:
+            # nicht ganz löschen, sondern nur deaktivieren
             mapper.delete(time_interval_transaction)
 
-    def create_time_interval_transaction(self,  work_time_account, time_interval=None, affiliated_break=None, projectwork=None):
+    def create_time_interval_transaction(self, work_time_account, time_interval=None, affiliated_break=None,
+                                         projectwork=None):
         """Eine TimeIntervalTransaction erstellen."""
         with TimeIntervalTransactionMapper() as mapper:
             if time_interval and work_time_account is not None:
@@ -271,7 +299,6 @@ class HdMWebAppAdministration(object):
                 t.set_affiliated_work_time_account(work_time_account.get_id())
                 t.set_affiliated_projectwork(projectwork.get_id())
 
-
             else:
                 return None
             return mapper.insert(t)
@@ -289,7 +316,7 @@ class HdMWebAppAdministration(object):
             return mapper.find_by_key(number)
 
     def get_work_time_account_of_owner(self, owner):
-        """Alle Konten des gegebenen Kunden auslesen."""
+        """Arbeitszeitkonto einer gegebenen Person auslesen."""
         with WorkTimeAccountMapper() as mapper:
             return mapper.find_by_owner_id(owner.get_id())
 
@@ -344,12 +371,22 @@ class HdMWebAppAdministration(object):
                 project.set_owner(person.get_id())
 
                 return mapper.insert(project), self.create_project_member(project, person)
+                # Nachdem das Projekt erstellt wurde, wird direkt der Ersteller als Projektmitglied hinzugefügt
             else:
                 return None
 
     def delete_project(self, project):
+        """Löschen eines Projekts, wenn darin Aktivitäten liegen, werden sie auch gelöscht."""
         with ProjectMapper() as mapper:
-            return mapper.delete(project)
+            if project is not None:
+                activities = self.get_activities_of_project(project)
+
+                for activity in activities:
+                    self.delete_activity(activity)
+
+                mapper.delete(project)
+            else:
+                return None
 
     def save_project(self, project):
         project.set_last_edit(datetime.datetime.now())
@@ -363,7 +400,6 @@ class HdMWebAppAdministration(object):
             if not (person_id is None):
                 return mapper.find_by_person_id(person_id)
 
-
     """ProjectWork Methoden"""
 
     def get_projectwork_by_id(self, number):
@@ -371,7 +407,7 @@ class HdMWebAppAdministration(object):
         with ProjectWorkMapper() as mapper:
             return mapper.find_by_key(number)
 
-    def get_projectworks_by_activity(self, activity):
+    def get_projectworks_of_activity(self, activity):
         """ ProjektWorks werden anhand der eindeutigen ID der Aktivität ausgelesen, der sie zugeordnet sind."""
         with ProjectWorkMapper() as mapper:
             result = []
@@ -386,20 +422,37 @@ class HdMWebAppAdministration(object):
         with ProjectWorkMapper() as mapper:
             return mapper.find_all()
 
-    def create_project_work(self, project_work_name, description, activity):
+    def create_project_work(self, project_work_name, description, activity, start_event, end_event=None):
         """Erstellen eines neuen ProjektWorks"""
         with ProjectWorkMapper() as mapper:
-            if activity is not None:
+            if activity and start_event is not None and start_event.get_event_type() == 1:
+                # überprüfen, ob a und se existieren und überprüfen ob se tatsächlich ein Start Event ist
                 project_work = ProjectWork()
                 project_work.set_id(1)
                 project_work.set_last_edit(datetime.datetime.now())
                 project_work.set_project_work_name(project_work_name)
                 project_work.set_description(description)
                 project_work.set_affiliated_activity(activity.get_id())
+                project_work.set_start_event(start_event.get_time_stamp())
+                if end_event is not None:
+                    project_work.set_end_event(end_event.get_time_stamp())
+                    project_work.set_time_period(project_work.calculate_period())
 
                 return mapper.insert(project_work)
             else:
                 return None
+
+    def add_end_event_to_project_work(self, end_event, project_work):
+        """Einer offenen Projektarbeit ein Endereignis hinzufügen"""
+        with TimeIntervalMapper() as mapper:
+            if end_event and project_work is not None:
+                if project_work.get_end_event() is None and end_event.get_event_type() == 2:  # 2 für end event
+                    project_work.set_end_event(end_event.get_time_stamp())
+                    project_work.set_time_period(project_work.calculate_period())
+
+                    return mapper.update(project_work)
+                else:
+                    return None
 
     def delete_project_work(self, project_work):
         with ProjectWorkMapper() as mapper:
@@ -417,6 +470,16 @@ class HdMWebAppAdministration(object):
         """Das Projekt wird anhand seiner eindeutigen ID ausgelesen."""
         with ProjectMemberMapper() as mapper:
             return mapper.find_by_key(number)
+
+    def get_projectmember_by_person(self, person):
+        with ProjectMemberMapper() as mapper:
+            result = []
+
+            if not (person is None):
+                projectmember = mapper.find_projects_by_person_id(person.get_id())
+                if not (projectmember is None):
+                    result.extend(projectmember)
+                return result
 
     def create_project_member(self, project, person):
         """Erstellen eines neuen Projekts"""
@@ -448,20 +511,26 @@ class HdMWebAppAdministration(object):
 
     """Methoden von TimeInterval"""
 
-    def create_time_interval(self, start_event, end_event):
+    def create_time_interval(self, start_event, end_event=None):  # defaultmäßig ee= None, da TI kein Ende haben muss
         """ZeitIntervalkonto anlegen"""
         with TimeIntervalMapper() as mapper:
-            if start_event and end_event is not None:
+            if start_event is not None and start_event.get_event_type() == 1:  # 1 für Start Event, evtl noch apassen
                 interval = TimeInterval()
                 interval.set_id(1)
                 interval.set_last_edit(datetime.datetime.now())
                 interval.set_start_event(start_event.get_time_stamp())
-                interval.set_end_event(end_event.get_time_stamp())
-                interval.set_time_period(interval.calculate_period())
+                if end_event is not None:  # wenn ee übergeben wird: Wert setzen und Intervall berechnen
+                    interval.set_end_event(end_event.get_time_stamp())
+                    interval.set_time_period(interval.calculate_period())
 
                 return mapper.insert(interval)
             else:
                 return None
+
+    def add_end_event_to_time_interval(self, end_event, interval):
+        """Einem offenen Zeitintervall ein Endereignis hinzufügen"""
+        self.add_end_event_to_project_work(end_event, interval)
+        # Methode von ProjectWork aufgerufen und statt ProjectWork ein Zeitintervallobjekt übergeben
 
     def delete_time_interval(self, time_interval):
         """Zeitinterval löschen"""
@@ -523,9 +592,7 @@ class HdMWebAppAdministration(object):
         with EventMapper() as mapper:
             return mapper.find_all()
 
-
-
-#Business Logik für Frontend
+    # Business Logik für Frontend
     def get_project_by_firebase_id(self, value):
         projectmember = self.get_project_by_employee(value)
         project_member_list = []
@@ -533,7 +600,7 @@ class HdMWebAppAdministration(object):
         counter = 0
         try:
             for i in projectmember:
-                #Um die richtige Firebase Id zu getten, muss hier die get_person Methode angepasst werden
+                # Um die richtige Firebase Id zu getten, muss hier die get_person Methode angepasst werden
                 firebase_id = i.get_person()
                 project_member_list.append(firebase_id)
                 while counter < len(project_member_list):

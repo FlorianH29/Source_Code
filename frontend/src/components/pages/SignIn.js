@@ -20,12 +20,12 @@ class SignIn extends Component {
 		return (
 			<div>
 				<Typography className={classes.root} align='center' variant='h6'>Wilkommen zur Arbeitszeiterfassung</Typography>
-				<Typography className={classes.root} align='center'>Bitte melden sie sich an</Typography>
-				<Grid container justify='center'>
+				<Typography className={classes.root} align='center'>Bitte melden Sie sich an</Typography>
+				<Grid container justifyContent='center'>
 					<Grid item>
 						<Button variant='contained' color='primary' onClick={this.handleSignInButtonClicked}>
 							Sign in with Google
-      			</Button>
+      					</Button>
 					</Grid>
 				</Grid>
 			</div>

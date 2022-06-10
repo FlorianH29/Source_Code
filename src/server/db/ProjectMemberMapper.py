@@ -62,11 +62,11 @@ class ProjectMemberMapper (Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (project_id, person_id, projectmember_id, last_edit) in tuples:
+        for (projectmember_id, project_id, person_id, last_edit) in tuples:
             projectmember = ProjectMember()
+            projectmember.set_id(projectmember_id)
             projectmember.set_project(project_id)
             projectmember.set_person(person_id)
-            projectmember.set_id(projectmember_id)
             projectmember.set_last_edit(last_edit)
 
             result.append(projectmember)
@@ -75,6 +75,7 @@ class ProjectMemberMapper (Mapper):
         cursor.close()
 
         return result
+
     def insert(self, projectmember):
         """Einfügen eines Project-Member-Ereignis-Objekts in die Datenbank.
 

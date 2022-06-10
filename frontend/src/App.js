@@ -1,19 +1,17 @@
 import React from 'react';
 import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
-import {HdMWebAppAPI} from "./api";
-import {PersonBO} from "./api";
-import PersonList from './components/pages/PersonList';
+import ActivityList from "./components/ActivityList";
+import PersonList from './components/PersonList';
 import Header from './components/layout/Header';
-import ProjectList from "./components/pages/ProjectList";
-import WorktimeAccount from "./components/pages/WorktimeAccount";
-import Welcome from "./components/pages/Welcome";
+import ProjectList from "./components/ProjectList";
+import ProjectWorkList from "./components/ProjectWorkList";
+import WorktimeAccount from "./components/WorktimeAccount";
 import NotFound from "./components/pages/NotFound";
 import SignIn from './components/pages/SignIn';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import firebaseConfig from './firebaseconfig';
-import ActivityList from "./components/pages/ActivityList";
 
 
 class App extends React.Component {
@@ -70,11 +68,12 @@ class App extends React.Component {
         firebase.initializeApp(firebaseConfig);
         firebase.auth().languageCode = 'de';
         firebase.auth().onAuthStateChanged(this.handleAuthStateChange);
+        document.title = "HdM Zeiterfassung"
     }
 
 
     render() {
-        const {currentPerson} = this.state;
+        const {currentPerson, authError} = this.state;
 
         return (
             <Router>
@@ -89,6 +88,9 @@ class App extends React.Component {
                                 </Route>
                                 <Route exact path='/projects'>
                                     <ProjectList/>
+                                </Route>
+                                <Route exact path='/projectworks'>
+                                    <ProjectWorkList/>
                                 </Route>
                                 <Route exact path='/worktimeaccount'>
                                     <WorktimeAccount/>

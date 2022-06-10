@@ -37,6 +37,18 @@ class TimeInterval(bo.BusinessObject):
         """Setzen des Zitraumes"""
         self._time_period = time_period
 
+    def get_interval_start(self):
+        if self._end_event is not None:
+            return self._end_event.timestamp()
+        else:
+            return None
+
+    def get_interval_end(self):
+        if self._end_event is not None:
+            return self._end_event.timestamp()
+        else:
+            return None
+
     def calculate_period(self):
         """Berechnen des Zeitraumes"""
         self._time_period = self.get_end_event() - self.get_start_event()
