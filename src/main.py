@@ -72,8 +72,34 @@ class PersonListOperations(Resource):
     def get(self):
         hwa = HdMWebAppAdministration()
         persons = hwa.get_all_persons()
-
         return persons
+
+    @hdmwebapp.marshal_with(person, code=200)
+    @hdmwebapp.expect(person)  # Wir erwarten ein Customer-Objekt von Client-Seite.
+    @secured
+    def post(self):
+
+        ha = HdMWebAppAdministration()
+
+        proposal = Person.from_dict(api.payload)
+
+        if proposal is not None:
+            c = ha.create_person(proposal.get_firstname(), proposal.get_lastname, proposal.get_mailaddress, proposal.get_firebase_id ())
+            return c, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+
+
+@hdmwebapp.route('/person')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class CustomerListOperations(Resource):
+    @hdmwebapp.marshal_list_with(person)
+    @secured
+    def get(self):
+        adm = HdMWebAppAdministration()
+        customers = adm.get_all_persons()
+        return customers
 
 
 @hdmwebapp.route('/worktimeaccount/<int:id>')
@@ -81,6 +107,7 @@ class PersonListOperations(Resource):
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class WorkTimeAccountContentList(Resource):
     @hdmwebapp.marshal_list_with(work_time_account)
+    @secured
     def get(self, id):
         hwa = HdMWebAppAdministration()
         result = []
@@ -94,10 +121,12 @@ class WorkTimeAccountContentList(Resource):
         return result
 
 
+
 @hdmwebapp.route('/activities')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ActivitiesList(Resource):
     @hdmwebapp.marshal_list_with(activity)
+    @secured
     def get(self):
         hwa = HdMWebAppAdministration()
         result = []
@@ -112,6 +141,7 @@ class ActivitiesList(Resource):
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @hdmwebapp.marshal_list_with(project)
+    @secured
     def get(self):
         hwa = HdMWebAppAdministration()
         projects = hwa.get_all_projects()
@@ -124,6 +154,7 @@ class ProjectListOperations(Resource):
 @hdmwebapp.param('id', 'Die ID der Aktivität')
 class ProjectWorksByActivityOperations(Resource):
     @hdmwebapp.marshal_list_with(projectwork)
+    @secured
     def get(self, id):
         hwa = HdMWebAppAdministration()
         act = hwa.get_activity_by_id(id)
@@ -142,6 +173,7 @@ class ProjectWorksByActivityOperations(Resource):
 @hdmwebapp.param('id', 'Die ID der Projektarbeit')
 class ProjectWorkOperations(Resource):
     @hdmwebapp.marshal_list_with(projectwork)
+    @secured
     def put(self, id):
         hwa = HdMWebAppAdministration()
         pw = ProjectWork.from_dict(api.payload)
@@ -167,7 +199,7 @@ class ProjectWorkOperations(Resource):
 if __name__ == '__main__':
     app.run(debug=False)
 
+lel = HdMWebAppAdministration
+p = lel.create_person(1, "20220403", "Floriaj", "Spindler","kacke",)
 
 
-p = HdMWebAppAdministration.create_person("Yarrack", "Klein", "Penis@gmail.com", 20)
-print(p)

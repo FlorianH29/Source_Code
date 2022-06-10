@@ -50,19 +50,15 @@ def secured(function):
 
                     person = hwa.get_person_by_firebase_id(firebase_id)
                     if person is not None:
-                        """Fall: Der Benutzer ist unserem System bereits bekannt.
-                        Wir gehen davon aus, dass die google_user_id sich nicht ändert.
-                        Wohl aber können sich der zugehörige Klarname (name) und die
-                        E-Mail-Adresse ändern. Daher werden diese beiden Daten sicherheitshalber
-                        in unserem System geupdated."""
+                        """ Wenn der Benutzer bereits im System hinterlegt ist, kann es sein
+                            dass der Username und die Mailadresse sich ändert. Aus diesem 
+                            Grund wird hier der Usanme und die Mailadresse geupdatet."""
                         person.set_username(username)
                         person.set_mailaddress(mailaddress)
                         hwa.save_person(person)
                     else:
-                        """Fall: Der Benutzer war bislang noch nicht eingelogged. 
-                        Wir legen daher ein neues User-Objekt an, um dieses ggf. später
-                        nutzen zu können.
-                        """
+                        """Wenn der benutzer noch nicht im System angelegt, wird dieser hier mit der create 
+                            methode generiert."""
                         person = hwa.create_person(firstname, lastname, mailaddress, firebase_id)
 
                     print(request.method, request.path, "angefragt durch:", username, mailaddress, firebase_id)
