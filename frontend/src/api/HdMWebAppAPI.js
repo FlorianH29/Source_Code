@@ -29,8 +29,8 @@ export default class HdMWebAppAPI {
   //Worktimeaccount bezogen
   #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
 
-  //Activity bezogen
-  #getActivitiesURL = () => `${this.#hdmwebappServerBaseURL}/activities`;
+    //Activity bezogen
+    #getActivitiesURL = () => `${this.#hdmwebappServerBaseURL}/activities`;
 
   /**
    * Get the Singelton instance

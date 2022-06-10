@@ -80,7 +80,7 @@ class HdMWebAppAdministration(object):
             mapper.update(person)
 
     def get_person_by_firebase_id(self, id):
-        """Den Benutzer mit der gegebenen Google ID auslesen."""
+        """Den Benutzer mit der gegebenen Firebase ID auslesen."""
         with PersonMapper() as mapper:
             return mapper.find_by_firebase_id(id)
 
