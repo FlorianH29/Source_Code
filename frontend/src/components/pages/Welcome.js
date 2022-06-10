@@ -14,7 +14,7 @@ class Welcome extends Component {
                 <Card>
                     <Grid container spacing={2} justifyContent={"center"}  alignItems={"center"}>
                         <Grid item xs={12} align={"center"}>
-                            <h2>Wilkommen, {this.props.username}</h2>
+                            <h2>Wilkommen, {this.props.username}</h2> /gibt es schon einen username?
                             <p>Bitte bestätige deinen Arbeitsbeginn:</p>
                             <Button variant={"contained"} color="success">
                                     Kommen
