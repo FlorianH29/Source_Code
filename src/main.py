@@ -199,7 +199,6 @@ class ProjectWorkOperations(Resource):
 if __name__ == '__main__':
     app.run(debug=False)
 
-lel = HdMWebAppAdministration
-p = lel.create_person(1, "20220403", "Floriaj", "Spindler","kacke",)
+
 
 
