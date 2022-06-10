@@ -86,7 +86,7 @@ class WorkTimeAccountContentList(Resource):
         for p in projects:
             time_intervals_project = hwa.get_time_interval_by_id(p.get_time_interval_id())
             test = time_intervals_project.get_time_period()
-            result.append({"name": p._project_name, "time": sum(time_intervals_project.get_time_period())})
+            result.append({"name": p._project_name, "time": time_intervals_project.get_time_period()})
         time_intervals = hwa.get_time_interval_by_person_id(id)
         result.append({"name": "Arbeitszeit", "time": sum([t.get_time_period() for t in time_intervals])})
 
