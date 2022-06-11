@@ -168,6 +168,23 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `SoPraTestDB`.`break`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `SoPraTestDB`.`break` ;
+
+CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`break` (
+  `break_id` INT NOT NULL,
+  `last_edit` DATETIME NULL,
+  `start_event_id` INT NULL,
+  `end_event_id` INT NULL,
+  `time_period` TIME NULL,
+  PRIMARY KEY (`break_id`),
+  FOREIGN KEY (`start_event_id`) REFERENCES event(`event_id`),
+  FOREIGN KEY (`end_event_id`) REFERENCES event(`event_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `SoPraTestDB`.`timeintervaltransaction`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `SoPraTestDB`.`timeintervaltransaction` ;

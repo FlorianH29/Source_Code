@@ -206,10 +206,6 @@ class ProjectWorkOperations(Resource):
 
 
 h = HdMWebAppAdministration()
-# h.create_person('fname', 'lname', 'aklf a', 'adga')
-# h.create_project('name', 'c', )
-# h.create_arrive_event()
-# h.create_departure_event()
 e1 = h.get_event_by_id(1)
 e2 = h.get_event_by_id(3)
 ti = h.get_time_interval_by_id(2)
@@ -218,6 +214,7 @@ pe2 = h.get_person_by_id(2)
 pro = h.get_project_by_id(1)
 ac = h.get_activity_by_id(1)
 
+h.create_break(pe)
 
 if __name__ == '__main__':
     app.run(debug=False)

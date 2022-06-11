@@ -54,7 +54,7 @@ class TimeInterval(bo.BusinessObject):
         return self._time_period
 
     def set_time_period(self, time_period):
-        """Setzen des Zitraumes"""
+        """Setzen des Zeitraumes"""
         self._time_period = time_period
 
     def __str__(self):

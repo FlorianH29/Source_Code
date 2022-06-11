@@ -1,5 +1,6 @@
 import datetime
 from .bo.Arrive import Arrive
+from .bo.Break import Break
 from .bo.Departure import Departure
 from .bo.Person import Person
 from .bo.Activity import Activity
@@ -10,6 +11,7 @@ from .bo.ProjectMember import ProjectMember
 from .bo.Event import Event
 from .db.PersonMapper import PersonMapper
 from .db.ArriveMapper import ArriveMapper
+from .db.BreakMapper import BreakMapper
 from .db.DepartureMapper import DepartureMapper
 from .db.ActivityMapper import ActivityMapper
 from .bo.TimeIntervalTransaction import TimeIntervalTransaction
@@ -602,6 +604,38 @@ class HdMWebAppAdministration(object):
         with TimeIntervalMapper() as mapper:
             if not (person_id is None):
                 return mapper.find_by_person_id(person_id)
+
+    """Methoden für Pause"""
+
+    def create_break(self, person):
+        """Erstellen einer neuen Pause"""
+        with BreakMapper() as mapper:
+            if person is not None:
+                br = Break()
+                br.set_id(1)
+                br.set_last_edit(datetime.datetime.now())
+                br.set_start_event(self.get_last_start_event_break(person).get_id())
+                br.set_end_event(self.get_last_end_event_break(person).get_id())
+                br.set_time_period(self.calculate_period(br))
+
+                return mapper.insert(br)
+            else:
+                return None
+
+    def delete_break(self, br):
+        """Pause löschen"""
+        with BreakMapper() as mapper:
+            mapper.delete(br)
+
+    def get_break_by_id(self, number):
+        """Pause suchen über eine Id"""
+        with BreakMapper() as mapper:
+            return mapper.find_by_key(number)
+
+    def save_break(self, value):
+        value.set_last_edit(datetime.datetime.now())
+        with BreakMapper() as mapper:
+            return mapper.update(value)
 
     """Methoden von Event"""
 
