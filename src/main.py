@@ -4,6 +4,7 @@ from flask_cors import CORS
 
 from server.HdMWebAppAdministration import HdMWebAppAdministration
 from server.bo.Activity import Activity
+from server.bo.Event import Event
 from server.bo.Person import Person
 from server.bo.Project import Project
 from server.bo.ProjectWork import ProjectWork
@@ -25,9 +26,14 @@ bo = api.model('BusinessObject', {
     'last_edit': fields.DateTime(attribute='_last_edit', description='Der Zeitpunkt der letzten Änderung')
 })
 
-activity = api.inherit('Activity', {
+activity = api.inherit('Activity', bo, {
     'name': fields.String(description='Name einer Aktivität'),
     'capacity': fields.Integer(description='Kapazität einer Aktivität'),
+})
+
+event = api.inherit('Event', bo, {
+    'event_type': fields.Integer(attribute='_event_type', description='Typ eines Events, Start oder Ende'),
+    'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt')
 })
 
 person = api.inherit('Person', bo, {
@@ -106,6 +112,37 @@ class ActivitiesList(Resource):
         return result
 
 
+@hdmwebapp.route('/events')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class EventOperations(Resource):
+    @hdmwebapp.marshal_list_with(event)
+    def get(self, id):
+        """
+        Auslesen eines bestimmten Eventobjektes, das nach der id in der URI bestimmt wird.
+        """
+        hwa = HdMWebAppAdministration()
+        ev = hwa.get_event_by_id(id)
+        return ev
+
+    @hdmwebapp.marshal_with(event, code=200)
+    def post(self):
+        """
+        Anlegen eines Events. Das neu angelegte Event wird als Ergebnis zurückgegeben.
+        """
+        hwa = HdMWebAppAdministration()
+        proposal = Event.from_dict(api.payload)
+        print(proposal)
+
+        if proposal is not None:
+            """ 
+            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Eventobjekt erstellt.  
+            """
+            e = hwa.create_event(proposal.get_event_type())
+            return e, 200
+        else:
+            return '', 500
+
+
 @hdmwebapp.route('/projects')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
@@ -141,6 +178,9 @@ class ProjectWorksByActivityOperations(Resource):
 class ProjectWorkOperations(Resource):
     @hdmwebapp.marshal_list_with(projectwork)
     def put(self, id):
+        """
+        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
         hwa = HdMWebAppAdministration()
         pw = ProjectWork.from_dict(api.payload)
 
@@ -152,9 +192,8 @@ class ProjectWorkOperations(Resource):
             return '', 500
 
     def delete(self, id):
-        """Löschen eines bestimmten Projektarbeitsobjekts.
-
-        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
         """
         hwa = HdMWebAppAdministration()
         pw = hwa.get_projectwork_by_id(id)
@@ -163,5 +202,5 @@ class ProjectWorkOperations(Resource):
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
 

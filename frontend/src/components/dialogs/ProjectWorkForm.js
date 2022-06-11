@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import { HdMWebAppAPI, ProjectWorkBO } from '../../api';
+import {EventBO, HdMWebAppAPI, ProjectWorkBO} from '../../api';
 
 /**
  * Shows a modal form dialog for a CustomerBO in prop customer. If the customer is set, the dialog is configured
@@ -23,10 +23,18 @@ class ProjectWorkForm extends Component {
       de = props.projectWork.getDescription();
     }
 
+    let et = 1, ts = 0;
+    if (props.event) {
+      et = props.event.getEventType();
+      ts = props.event.getTimeStamp();
+    }
+
     // Init the state
     this.state = {
       projectWorkName: pwn,
       description: de,
+      eventType: et,
+      timeStamp: ts,
       projectWorkNameValidationFailed: false,
       descriptionValidationFailed: false
     };
@@ -46,7 +54,16 @@ class ProjectWorkForm extends Component {
   }
 
   addEvent = () => {
-      console.log('addEvent durchgeführt')
+    let newEvent = new EventBO();
+    console.log(this.state);
+    HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
+      // Backend call sucessfull
+      // reinit the dialogs state for a new empty customer
+      this.setState(this.baseState);
+      this.props.onClose(event); // call the parent with the customer object from backend
+    }).catch(e =>
+        console.log(e)              // show error message
+        );
   }
 
   addStartEventandProjectWork = () => {
@@ -133,7 +150,7 @@ class ProjectWorkForm extends Component {
                   <Button color='primary' onClick={this.updateProjectWork}>
                     Sichern
                   </Button>
-                  : <Button color='primary'>
+                  : <Button color='primary' onClick={this.addEvent}>
                     Erstellen
                   </Button>
               }
