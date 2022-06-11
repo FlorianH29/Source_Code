@@ -22,14 +22,14 @@ export default class ActivityBO extends BusinessObject {
    *
    * @param {String} aName - der neue Name dieses ActivityBO.
    */
-  setName(aName) {
+  setActivityName(aName) {
     this.name = aName;
   }
 
   /**
    * Gibt den Namen zurück.
    */
-  getName() {
+  getActivityName() {
     return this.name;
   }
 
@@ -38,14 +38,14 @@ export default class ActivityBO extends BusinessObject {
    *
    * @param {String} aCapacity - die neue Kapazität dieses ActivityBO.
    */
-  setCapacity(aCapacity) {
+  setActivityCapacity(aCapacity) {
     this.capacity = aCapacity;
   }
 
   /**
    * Gibt die Kapazität zurück.
    */
-  getCapacity() {
+  getActivityCapacity() {
     return this.capacity;
   }
 

@@ -36,20 +36,24 @@ class ActivityList extends Component {
             <Box sx={{m: 2}}>
                 <Card>
                     <Grid container spacing={1} justifyContent={"center"}>
-                        <Grid item xs={12} align={"center"}>
-                            <ButtonGroup>
-                                <Button variant={"contained"}>
+                        <Grid container>
+                            <Typography variant={"h3"} component={"div"}>
+                                Projekt:
+                            </Typography>
+                                <Button variant={"contained"} color='primary'>
                                     Projekt bearbeiten
                                 </Button>
-                            </ButtonGroup>
                         </Grid>
-                        <Grid item xs={12} align={"left"}>
-                            <Typography variant={"h3"} component={"div"}>
-                                Aktivität
-                            </Typography>
-                            <Typography variant={"h3"} component={"div"} align={"center"}>
-                                Kapazität
-                            </Typography>
+                         <Grid container>
+                            <Grid item xs={3} align={"flex-end"}>
+                                <Typography variant={"h5"} component={"div"}> Aktivitäten </Typography>
+                            </Grid>
+                            <Grid item xs={3} align={"flex-end"}>
+                                <Typography variant={"h5"} component={"div"}> Kapazität </Typography>
+                            </Grid>
+                            <Grid item xs={3} align={"flex-end"}>
+                                <Typography variant={"h5"} component={"div"}> Dauer </Typography>
+                            </Grid>
                         </Grid>
                         <Grid item xs={12} align={"center"}>
                             {this.state.activities.map((activity) => (
@@ -69,6 +73,11 @@ class ActivityList extends Component {
                                         </Grid>
                                     </ListItem>
                                     <Divider/>
+                        <Grid container>
+                            <Button variant={"contained"} color='primary'>
+                                Aktivität anlegen
+                            </Button>
+                        </Grid>
                                 </Box>
                             ))}
                         </Grid>

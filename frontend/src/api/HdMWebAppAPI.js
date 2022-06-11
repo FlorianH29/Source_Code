@@ -31,6 +31,8 @@ export default class HdMWebAppAPI {
 
   //Activity bezogen
   #getActivitiesURL = () => `${this.#hdmwebappServerBaseURL}/activities`;
+  #updateActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
+  #deleteActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
 
   /**
    * Get the Singelton instance
@@ -147,6 +149,46 @@ export default class HdMWebAppAPI {
       console.log(responseProjectWorkBO)
       return new Promise(function (resolve) {
         resolve(responseProjectWorkBO);
+      })
+    })
+  }
+
+  /**
+  * Updated ein ActivityBO
+  *
+  * @param {ActivityBO} ActivityBO das geupdated werden soll
+  * @public
+  */
+
+/**  addActivityForProject(customerID) {
+    return this.#fetchAdvanced(this.#addAccountsForCustomerURL(customerID), {
+      method: 'POST'
+    })
+      .then((responseJSON) => {
+        // We always get an array of AccountBO.fromJSON, but only need one object
+        let accountBO = AccountBO.fromJSON(responseJSON)[0];
+        // console.info(accountBO);
+        return new Promise(function (resolve) {
+          // We expect only one new account
+          resolve(accountBO);
+        })
+      })*/
+
+
+  updateActivity(activityBO) {
+    return this.#fetchAdvanced(this.#updateActivityURL(activityBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(activityBO)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseActivityBO = ActivityBO.fromJSON(responseJSON)[0];
+      console.log(responseActivityBO)
+      return new Promise(function (resolve) {
+        resolve(responseActivityBO);
       })
     })
   }
