@@ -6,14 +6,14 @@ export default class TimeIntervalBO extends BusinessObject {
   /**
    * Konstruktor, erstellt ein Zeitintervall Objekt mit
    *
-   * @param {Date} aStartEvent - das Startevent des Zeitintervalls.
-   * @param {Date} anEndEvent - das Endevent des Zeitintervalls
+   * @param {Number} aStartEventId - die Id des Startevents des Zeitintervalls.
+   * @param {Number} anEndEventId - die Id des Endevents des Zeitintervalls
    * @param {Number} aTimePeriod - der gespeicherte Zeitraum des Zeitintervalls.
    */
-  constructor(aStartEvent, anEndEvent, aTimePeriod) {
+  constructor(aStartEventId, anEndEventId, aTimePeriod) {
     super();
-    this.start_event = aStartEvent;
-    this.end_event = anEndEvent;
+    this.start_event_id = aStartEventId;
+    this.end_event_id = anEndEventId;
     this.time_period = aTimePeriod;
 
   }
@@ -21,34 +21,34 @@ export default class TimeIntervalBO extends BusinessObject {
   /**
    * Setzt ein neues Startereignis.
    *
-   * @param {Date} aStartEvent - das neue Startereignis dieses TimeIntervalBO.
+   * @param {Number} aStartEventId - die neue Id des neuen Startereignisses dieses TimeIntervalBOs.
    */
-  setStartEvent(aStartEvent) {
-    this.start_event = aStartEvent;
+  setStartEvent(aStartEventId) {
+    this.start_event_id = aStartEventId;
   }
 
   /**
-   * Gibt das Startereignis zurück.
+   * Gibt die Id des Startereignisses zurück.
    */
-  getStartEvent() {
-    return this.start_event;
+  getStartEventId() {
+    return this.start_event_id;
   }
 
   /**
-   * Setzt ein neues Endereignis.
+   * Setzt eine neue Id eines neuen Endereignisses.
    *
-   * @param {Date} anEndEvent - das neue Endereignis dieses TimeIntervalBO.
+   * @param {Number} anEndEventId - die neue Id des neuen Endereignisses dieses TimeIntervalBOs.
    */
-  setEndEvent(anEndEvent) {
-    this.end_event = anEndEvent;
+  setEndEvent(anEndEventId) {
+    this.end_event_id = anEndEventId;
   }
 
   /**
-   * Gibt das Endereignis zurück.
+   * Gibt die Id des Endereignisses zurück.
    *
    */
-  getEndEvent() {
-    return this.end_event;
+  getEndEventId() {
+    return this.end_event_id;
   }
 
   /**
