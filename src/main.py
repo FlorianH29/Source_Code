@@ -32,8 +32,9 @@ activity = api.inherit('Activity', bo, {
 })
 
 event = api.inherit('Event', bo, {
-    'event_type': fields.Integer(attribute='_event_type', description='Typ eines Events, Start oder Ende'),
-    'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt')
+    'event_type': fields.Integer(attribute='_event_type', description='Typ eines Events, Start oder Ende, für B und PW'),
+    'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt'),
+    'affiliated_person': fields.Integer(attribute='_affiliated_person', description='ID der Person, die Event besitzt')
 })
 
 person = api.inherit('Person', bo, {
@@ -141,7 +142,7 @@ class EventOperations(Resource):
             """ 
             Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Eventobjekt erstellt.  
             """
-            e = hwa.create_event(proposal.get_event_type())
+            e = hwa.create_event(proposal.get_event_type(), proposal.get_affiliated_person())
             return e, 200
         else:
             return '', 500
@@ -214,7 +215,6 @@ pe2 = h.get_person_by_id(2)
 pro = h.get_project_by_id(1)
 ac = h.get_activity_by_id(1)
 
-h.create_break(pe)
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)

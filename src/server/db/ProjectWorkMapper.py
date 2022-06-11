@@ -135,7 +135,7 @@ class ProjectWorkMapper (Mapper):
         cursor.close()
         return project_work
 
-    def delete(self, project_work):  # Projekt, welches gelöscht werden soll wird übergeben
+    def delete(self, project_work):  # Projektarbeit, welches gelöscht werden soll wird übergeben
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM projectwork WHERE projectwork_id={}".format(project_work.get_id())
@@ -144,7 +144,7 @@ class ProjectWorkMapper (Mapper):
         self._cnx.commit()
         cursor.close()
 
-    def update(self, project_work):  # Projekt, welches als update dient wird hier der Methode übergeben
+    def update(self, project_work):  # Projektarbeit, welche als update dient wird hier der Methode übergeben
         cursor = self._cnx.cursor()
 
         command = "UPDATE projectwork SET last_edit=%s, projectwork_name=%s, description=%s, start_event_id=%s, " \

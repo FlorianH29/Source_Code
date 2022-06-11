@@ -23,10 +23,11 @@ class ProjectWorkForm extends Component {
       de = props.projectWork.getDescription();
     }
 
-    let et = 1, ts = 0;
+    let et = 1, ts = 0, ap = 1;
     if (props.event) {
       et = props.event.getEventType();
       ts = props.event.getTimeStamp();
+      ap = props.event.getAffiliatedPerson();
     }
 
     // Init the state
@@ -35,6 +36,7 @@ class ProjectWorkForm extends Component {
       description: de,
       eventType: et,
       timeStamp: ts,
+      affilatedPerson: ap,
       projectWorkNameValidationFailed: false,
       descriptionValidationFailed: false
     };
@@ -50,11 +52,11 @@ class ProjectWorkForm extends Component {
   }
 
   addProjectWork = () => {
-    console.log('addProjectWork durchgeführt')
+    console.log('Methode noch nicht fertig')
   }
 
   addEvent = () => {
-    let newEvent = new EventBO();
+    let newEvent = new EventBO(this.state.eventType, this.state.affilatedPerson);
     console.log(this.state);
     HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
       // Backend call sucessfull
@@ -116,13 +118,13 @@ class ProjectWorkForm extends Component {
       header = `Projektarbeit ID: ${projectWork.getID()}`;
     } else {
       // ProjectWork ist nicht definiert, Erstellungsdialog wird angezeigt
-      title = 'Neue Projektarbeit erstellen';
-      header = 'Geben Sie Name und Beschreibung an';
+      title = 'Ende buchen und neue Projektarbeit erstellen';
+      header = 'Geben Sie bitte Name und Beschreibung an';
     }
 
     return (
         show ?
-          <Dialog open={true} onClose={this.handleClose} maxWidth='xs'>
+          <Dialog open={true} onClose={this.handleClose} maxWidth='xl'>
             <DialogTitle id='form-dialog-title'>{title}
               <IconButton onClick={this.handleClose}>
                 <CloseIcon />

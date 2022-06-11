@@ -8,11 +8,13 @@ export default class EventBO extends BusinessObject {
    *
    * @param {Number} anEventType - der Typ dieses EventBO.
    * @param {Date} aTimeStamp - die Kapazität dieses EventBO.
+   * @param {Number} anAffiliatedPerson - die Person, der dieses EventBO zugeordnet ist.
    */
-  constructor(anEventType) {
+  constructor(anEventType, anAffiliatedPerson) {
     super();
     this.event_type = 1;
     this.time_stamp = 0;
+    this.affiliated_person = 0;
   }
 
   /**
@@ -45,6 +47,22 @@ export default class EventBO extends BusinessObject {
    */
   getTimeStamp() {
     return this.time_stamp;
+  }
+
+  /**
+   * Setzt eine neue zugeordnete Person.
+   *
+   * @param {Number} anAffiliatedPerson - die neue zugeordnete Person dieses EventBO.
+   */
+  setAffiliatedPerson(anAffiliatedPerson) {
+    this.affiliated_person = anAffiliatedPerson;
+  }
+
+  /**
+   * Gibt den Eventtyp zurück.
+   */
+  getAffiliatedPerson() {
+    return this.affiliated_person;
   }
 
   /**

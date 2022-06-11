@@ -455,18 +455,6 @@ class HdMWebAppAdministration(object):
             else:
                 return None
 
-    def add_end_event_to_project_work(self, end_event, project_work):
-        """Einer offenen Projektarbeit ein Endereignis hinzufügen"""
-        with TimeIntervalMapper() as mapper:
-            if end_event and project_work is not None:
-                if project_work.get_end_event() is None and end_event.get_event_type() == 2:  # 2 für end event
-                    project_work.set_end_event(end_event.get_time_stamp())
-                    project_work.set_time_period(project_work.calculate_period())
-
-                    return mapper.update(project_work)
-                else:
-                    return None
-
     def delete_project_work(self, project_work):
         with ProjectWorkMapper() as mapper:
             return mapper.delete(project_work)
@@ -574,11 +562,6 @@ class HdMWebAppAdministration(object):
             else:
                 return None
 
-    def add_end_event_to_time_interval(self, end_event, interval):
-        """Einem offenen Zeitintervall ein Endereignis hinzufügen"""
-        self.add_end_event_to_project_work(end_event, interval)
-        # Methode von ProjectWork aufgerufen und statt ProjectWork ein Zeitintervallobjekt übergeben
-
     def delete_time_interval(self, time_interval):
         """Zeitinterval löschen"""
         with TimeIntervalMapper() as mapper:
@@ -639,14 +622,14 @@ class HdMWebAppAdministration(object):
 
     """Methoden von Event"""
 
-    def create_event(self, event_type, person):
+    def create_event(self, event_type, person_id):
         """Event-Ereignis anlegen"""
         event = Event()
         event.set_id(1)
         event.set_last_edit(datetime.datetime.now())
         event.set_event_type(event_type)
         event.set_time_stamp(datetime.datetime.now())
-        event.set_affiliated_person(person.get_id())
+        event.set_affiliated_person(person_id)
 
         with EventMapper() as mapper:
             return mapper.insert(event)
