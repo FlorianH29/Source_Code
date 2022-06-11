@@ -81,12 +81,13 @@ class HdMWebAppAdministration(object):
 
     """Methoden für Kommen:"""
 
-    def create_arrive_event(self):
+    def create_arrive_event(self, person):
         """Arrive-Ereignis anlegen"""
         arrive = Arrive()
         arrive.set_id(1)
         arrive.set_last_edit(datetime.datetime.now())
         arrive.set_time_stamp(datetime.datetime.now())
+        arrive.set_affiliated_person(person.get_id())
 
         with ArriveMapper() as mapper:
             return mapper.insert(arrive)
@@ -115,12 +116,13 @@ class HdMWebAppAdministration(object):
 
     """Methoden für Gehen:"""
 
-    def create_departure_event(self):
+    def create_departure_event(self, person):
         """End-Ereignis anlegen"""
         departure = Departure()
         departure.set_id(1)
         departure.set_last_edit(datetime.datetime.now())
         departure.set_time_stamp(datetime.datetime.now())
+        departure.set_affiliated_person(person.get_id())
 
         with DepartureMapper() as mapper:
             return mapper.insert(departure)
@@ -546,7 +548,6 @@ class HdMWebAppAdministration(object):
                 interval.set_start_event(arrive.get_id())
                 interval.set_end_event(departure.get_id())
 
-
     def add_end_event_to_time_interval(self, end_event, interval):
         """Einem offenen Zeitintervall ein Endereignis hinzufügen"""
         self.add_end_event_to_project_work(end_event, interval)
@@ -580,13 +581,14 @@ class HdMWebAppAdministration(object):
 
     """Methoden von Event"""
 
-    def create_event(self, event_type):
+    def create_event(self, event_type, person):
         """Event-Ereignis anlegen"""
         event = Event()
         event.set_id(1)
         event.set_last_edit(datetime.datetime.now())
         event.set_event_type(event_type)
         event.set_time_stamp(datetime.datetime.now())
+        event.set_affiliated_person(person.get_id())
 
         with EventMapper() as mapper:
             return mapper.insert(event)

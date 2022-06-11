@@ -21,17 +21,18 @@ class EventMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT event_id, last_edit, event_type, time_stamp FROM event WHERE event_id={}".format(key)
+        command = "SELECT * FROM event WHERE event_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (event_id, last_edit, event_type, time_stamp) = tuples[0]
+            (event_id, last_edit, event_type, time_stamp, affiliated_person_id) = tuples[0]
             event = Event()
             event.set_id(event_id)
             event.set_last_edit(last_edit)
             event.set_event_type(event_type)
             event.set_time_stamp(time_stamp)
+            event.set_affiliated_person(affiliated_person_id)
 
             result = event
         except IndexError:
@@ -54,12 +55,13 @@ class EventMapper(Mapper):
         cursor.execute("SELECT * from event")
         tuples = cursor.fetchall()
 
-        for (event_id, last_edit, event_type, time_stamp) in tuples:
+        for (event_id, last_edit, event_type, time_stamp, affiliated_person_id) in tuples:
             event = Event()
             event.set_id(event_id)
             event.set_last_edit(last_edit)
             event.set_event_type(event_type)
             event.set_time_stamp(time_stamp)
+            event.set_affiliated_person(affiliated_person_id)
             result.append(event)
 
         self._cnx.commit()
@@ -90,8 +92,10 @@ class EventMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 event.set_id(1)
 
-        command = "INSERT INTO event (event_id, last_edit, event_type, time_stamp) VALUES (%s,%s,%s,%s)"
-        data = (event.get_id(), event.get_last_edit(), event.get_event_type(), event.get_time_stamp())
+        command = "INSERT INTO event (event_id, last_edit, event_type, time_stamp, affiliated_person_id) " \
+                  "VALUES (%s,%s,%s,%s,%s)"
+        data = (event.get_id(), event.get_last_edit(), event.get_event_type(), event.get_time_stamp(),
+                event.get_affiliated_person())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -102,19 +106,21 @@ class EventMapper(Mapper):
     def update(self, event):
         """Wiederholtes Schreiben eines Objekts in die Datenbank.
 
-        :param arrive das Objekt, das in die DB geschrieben werden soll
+        :param event das Objekt, das in die DB geschrieben werden soll
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE event SET last_edit=%s, event_type=%s, time_stamp=%s WHERE event_id=%s"
-        data = (event.get_last_edit(), event.get_event_type(), event.get_time_stamp(), event.get_id())
+        command = "UPDATE event SET last_edit=%s, event_type=%s, time_stamp=%s, affiliated_person_id=%s " \
+                  "WHERE event_id=%s"
+        data = (event.get_last_edit(), event.get_event_type(), event.get_time_stamp(), event.get_id(),
+                event.get_affiliated_person())
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
 
     def delete(self, event):
-        """Löschen der Daten eines Arrive-Objekts aus der Datenbank.
+        """Löschen der Daten eines Event-Objekts aus der Datenbank.
 
         :param event: das aus der DB zu löschende "Objekt"
         """

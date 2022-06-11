@@ -21,16 +21,17 @@ class DepartureMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT departure_id, last_edit, time_stamp FROM departure WHERE departure_id={}".format(key)
+        command = "SELECT * FROM departure WHERE departure_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (departure_id, last_edit, time_stamp) = tuples[0]
+            (departure_id, last_edit, time_stamp, affiliated_person_id) = tuples[0]
             departure = Departure()
             departure.set_id(departure_id)
             departure.set_last_edit(last_edit)
             departure.set_time_stamp(time_stamp)
+            departure.set_affiliated_person(affiliated_person_id)
 
             result = departure
         except IndexError:
@@ -53,11 +54,12 @@ class DepartureMapper (Mapper):
         cursor.execute("SELECT * from departure")
         tuples = cursor.fetchall()
 
-        for (departure_id, last_edit, time_stamp) in tuples:
+        for (departure_id, last_edit, time_stamp, affiliated_person_id) in tuples:
             departure = Departure()
             departure.set_id(departure_id)
             departure.set_last_edit(last_edit)
             departure.set_time_stamp(time_stamp)
+            departure.set_affiliated_person(affiliated_person_id)
             result.append(departure)
 
         self._cnx.commit()
@@ -87,8 +89,10 @@ class DepartureMapper (Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 departure.set_id(1)
 
-        command = "INSERT INTO departure (departure_id, last_edit, time_stamp) VALUES (%s,%s,%s)"
-        data = (departure.get_id(), departure.get_last_edit(), departure.get_time_stamp())
+        command = "INSERT INTO departure (departure_id, last_edit, time_stamp, affiliated_person_id) " \
+                  "VALUES (%s,%s,%s,%s)"
+        data = (departure.get_id(), departure.get_last_edit(), departure.get_time_stamp(),
+                departure.get_affiliated_person())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -103,8 +107,8 @@ class DepartureMapper (Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE departure SET last_edit=%s, time_stamp=%s WHERE departure_id=%s"
-        data = (departure.get_last_edit(), departure.get_time_stamp(), departure.get_id())
+        command = "UPDATE departure SET last_edit=%s, time_stamp=%s, affiliated_person_id=%s WHERE departure_id=%s"
+        data = (departure.get_last_edit(), departure.get_time_stamp(), departure.get_affiliated_person(), departure.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

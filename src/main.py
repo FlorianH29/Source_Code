@@ -57,8 +57,8 @@ project = api.inherit('Project', bo, {
 })
 
 timeinterval = api.inherit('TimeInterval', bo, {
-    'start_event': fields.DateTime(attribute='_start_event', description='Startzeitpunkt eines Zeitintervalls'),
-    'end_event': fields.DateTime(attribute='_end_event', description='Endzeitpunkt eines Zeitintervalls'),
+    'start_event_id': fields.DateTime(attribute='_start_event_id', description='Startzeitpunkt eines Zeitintervalls'),
+    'end_event_id': fields.DateTime(attribute='_end_event_id', description='Endzeitpunkt eines Zeitintervalls'),
     'time_period': fields.String(attribute='_time_period', description='Zeitraum des Intervalls')
 })
 
@@ -214,7 +214,6 @@ ti = h.get_time_interval_by_id(2)
 pe = h.get_person_by_id(1)
 pro = h.get_project_by_id(1)
 ac = h.get_activity_by_id(1)
-h.create_project_work('name', 'ds', ac, e1, e2)
 
 if __name__ == '__main__':
     app.run(debug=False)

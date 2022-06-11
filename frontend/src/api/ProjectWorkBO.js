@@ -6,15 +6,15 @@ export default class ProjectWorkBO extends TimeIntervalBO {
   /**
    * Konstruktor, erstelt ein Projektarbeitsobjekt mit
    *
-   * @param {Date} aStartEvent - das Startevent des Zeitintervalls.
-   * @param {Date} anEndEvent - das Endevent des Zeitintervalls
+   * @param {Number} aStartEventId - die Id des Startevents des Zeitintervalls.
+   * @param {Number} anEndEventId - die Id des Endevents des Zeitintervalls
    * @param {Number} aTimePeriod - der gespeicherte Zeitraum des Zeitintervalls.
    * @param {String} aProjectWorkName - der Name dieses ProjectWorkBO.
    * @param {String} aDescription - die Beschreibung dieses ProjectWorkBO.
    * @param {Number} anAffiliatedActivity - die Aktivität, die diesem ProjectWorkBO zugeordnet ist.
    */
-  constructor(aStartEvent, anEndEvent, aTimePeriod, aProjectWorkName, aDescription, anAffiliatedActivity) {
-    super(aStartEvent, anEndEvent, aTimePeriod);
+  constructor(aStartEventId, anEndEventId, aTimePeriod, aProjectWorkName, aDescription, anAffiliatedActivity) {
+    super(aStartEventId, anEndEventId, aTimePeriod);
     this.project_work_name = aProjectWorkName;
     this.description = aDescription;
     this.affiliated_activity = anAffiliatedActivity;

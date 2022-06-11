@@ -48,7 +48,7 @@ class TimeInterval(bo.BusinessObject):
         obj = TimeInterval()
         obj.set_id(dictionary["id"])
         obj.set_last_edit(dictionary["last_edit"])
-        obj.set_start_event(dictionary["start_event"])
-        obj.set_end_event(dictionary["end_event"])
+        obj.set_start_event(dictionary["start_event_id"])
+        obj.set_end_event(dictionary["end_event_id"])
         obj.set_time_period(dictionary["time_period"])
         return obj
