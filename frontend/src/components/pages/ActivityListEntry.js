@@ -1,0 +1,80 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles, Typography, Accordion, AccordionSummary, AccordionDetails, Grid, Divider, ListItemSecondaryAction } from '@material-ui/core';
+import { Button, ButtonGroup } from '@material-ui/core';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import ListItem from "@mui/material/ListItem";
+import ActivityDeleteDialog from "../dialogs/ActivityForm";
+import ActivityForm from "../dialogs/ActivityForm";
+
+
+class ActivityListEntry extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            activity : props.activity
+        };
+    }
+
+    editActivityButtonClicked = (event) => {
+    event.stopPropagation();
+    this.setState({
+      showActivityForm: true
+    });
+    }
+
+    deleteActivityButtonClicked = (event) => {
+    event.stopPropagation();
+    this.setState({
+      showActivityDeleteDialog: true
+    });
+  }
+
+
+    render() {
+    //const { classes } = this.props;
+    const { activity } = this.state;
+
+    // console.log(this.state);
+    return (
+      <div>
+        <ListItem>
+          <Grid container alignItems='center'>
+            <Grid item xs={3} align={"center"}>
+              <Typography variant={"h5"} component={"div"}>
+                {activiy.getActivityName()}
+              </Typography>
+            </Grid>
+            <Grid item xs={3} align={"center"}>
+              <Typography variant={"h5"} component={"div"}>
+                {activity.getActivityCapacity()}
+              </Typography>
+            </Grid>
+            <Grid item xs={3} align={"center"}>
+              <Typography variant={"h5"} component={"div"}>
+                {activity.getTimeIPeriod()}
+              </Typography>
+            </Grid>
+            <Grid item xs={3} align={"center"}>
+                <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editActivityButtonClicked}> </Button>
+                <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteActivityButtonClicked}> </Button>
+            </Grid>
+          </Grid>
+          </ListItem>
+          <Divider/>
+
+        </div>
+    );
+  }
+}
+
+ActivityListEntry.propTypes = {
+  /** Das ActivityBO welches gerendert werden soll */
+  activity: PropTypes.object.isRequired
+
+}
+
+export default ActivityListEntry;
