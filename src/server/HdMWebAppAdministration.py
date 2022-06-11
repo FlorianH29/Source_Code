@@ -109,6 +109,13 @@ class HdMWebAppAdministration(object):
         with ArriveMapper() as mapper:
             return mapper.find_by_key(number)
 
+    def get_last_arrive_by_person(self, person):
+        with ArriveMapper() as mapper:
+            if person is not None:
+                return mapper.find_last_arrive_by_person(person.get_id())
+            else:
+                return None
+
     def get_all_arrive_events(self):
         """Alle in der Datenbank gespeicherten Start-Ereignisse auslesen."""
         with ArriveMapper() as mapper:
@@ -142,6 +149,13 @@ class HdMWebAppAdministration(object):
         """Das End-Ereignis mit der gegebenen ID auslesen"""
         with DepartureMapper() as mapper:
             return mapper.find_by_key(number)
+
+    def get_last_departure_by_person(self, person):
+        with DepartureMapper() as mapper:
+            if person is not None:
+                return mapper.find_last_departure_by_person(person.get_id())
+            else:
+                return None
 
     def get_all_departure_events(self):
         """Alle in der Datenbank gespeicherten End-Ereignisse auslesen."""
@@ -523,6 +537,16 @@ class HdMWebAppAdministration(object):
             time_period = end_time - start_time
             return time_period
 
+    def calculate_period_for_arrive_and_departure(self, timeinterval):
+        """Berechnen des Zeitraumes"""
+        if timeinterval is not None:
+            start = timeinterval.get_arrive()
+            end = timeinterval.get_departure()
+            start_time = self.get_arrive_event_by_id(start).get_time_stamp()
+            end_time = self.get_departure_event_by_id(end).get_time_stamp()
+            time_period = end_time - start_time
+            return time_period
+
     def create_time_interval(self, start_event, end_event=None):  # defaultmäßig ee= None, da TI kein Ende haben muss
         """Zeitinterval anlegen"""
         with TimeIntervalMapper() as mapper:
@@ -539,14 +563,19 @@ class HdMWebAppAdministration(object):
             else:
                 return None
 
-    def create_time_interval_for_arrive_and_departure(self, arrive, departure):
+    def create_time_interval_for_arrive_and_departure(self, person):
         with TimeIntervalMapper() as mapper:
-            if arrive and departure is not None:
+            if person is not None:
                 interval = TimeInterval()
                 interval.set_id(1)
                 interval.set_last_edit(datetime.datetime.now())
-                interval.set_start_event(arrive.get_id())
-                interval.set_end_event(departure.get_id())
+                interval.set_arrive(self.get_last_arrive_by_person(person).get_id())
+                interval.set_departure(self.get_last_departure_by_person(person).get_id())
+                interval.set_time_period(self.calculate_period_for_arrive_and_departure(interval))
+
+                return mapper.insert(interval)
+            else:
+                return None
 
     def add_end_event_to_time_interval(self, end_event, interval):
         """Einem offenen Zeitintervall ein Endereignis hinzufügen"""

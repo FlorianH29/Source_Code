@@ -6,44 +6,25 @@ class TimeIntervalMapper(Mapper):
     def __init__(self):
         super().__init__()
 
-    def find_all(self):
-        result = []
-        cursor = self._cnx.cursor()
-        cursor.execute("SELECT * from timeinterval")
-        tuples = cursor.fetchall()
-
-        for (timeinterval_id, last_edit, start_event_id, end_event_id, time_period) in tuples:
-            interval = ti.TimeInterval()
-            interval.set_id(timeinterval_id)
-            interval.set_last_edit(last_edit)
-            interval.set_start_event(start_event_id)
-            interval.set_end_event(end_event_id)
-            interval.set_time_period(time_period)
-            result.append(interval)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
-
     def find_by_key(self, key):
 
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT timeinterval_id, last_edit, start_event_id, end_event_id, time_period FROM timeinterval " \
-                  "WHERE timeinterval_id={}".format(key) # time_intervall zu time_period geändert
+        command = "SELECT * FROM timeinterval WHERE timeinterval_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (timeinterval_id, last_edit, start_event_id, end_event_id, time_period) = tuples[0]
+            (timeinterval_id, last_edit, start_event_id, end_event_id, time_period, arrive_id, departure_id) = tuples[0]
             interval = ti.TimeInterval()
             interval.set_id(timeinterval_id)
             interval.set_last_edit(last_edit)
             interval.set_start_event(start_event_id)
             interval.set_end_event(end_event_id)
             interval.set_time_period(time_period)
+            interval.set_arrive(arrive_id)
+            interval.set_departure(departure_id)
 
             result = interval
         except IndexError:
@@ -68,29 +49,30 @@ class TimeIntervalMapper(Mapper):
         result = []
 
         cursor = self._cnx.cursor()
-        command =   " SELECT DISTINCT TI.timeinterval_id, TI.last_edit, TI.start_event_id, TI.end_event_id, " \
-                    " TI.time_period FROM SoPraTestDB.worktimeaccount WTA " \
-                    " INNER JOIN SoPraTestDB.Timeintervaltransaction TIT ON TIT.affiliated_work_time_account_id = WTA.worktimeaccount_id " \
-                    " INNER JOIN SoPraTestDB.Timeinterval TI ON TIT.affiliated_time_interval_id = TI.timeinterval_id " \
-                    " WHERE WTA.person_id = {} " .format(person_id)
+        command = " SELECT DISTINCT TI.timeinterval_id, TI.last_edit, TI.start_event_id, TI.end_event_id, " \
+                  " TI.time_period, TI.arrive_id, TI.departure_id FROM SoPraTestDB.worktimeaccount WTA " \
+                  " INNER JOIN SoPraTestDB.Timeintervaltransaction TIT ON TIT.affiliated_work_time_account_id = WTA.worktimeaccount_id " \
+                  " INNER JOIN SoPraTestDB.Timeinterval TI ON TIT.affiliated_time_interval_id = TI.timeinterval_id " \
+                  " WHERE WTA.person_id = {} ".format(person_id)
 
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (timeinterval_id, last_edit, start_event_id, end_event_id, time_period) in tuples:
+        for (timeinterval_id, last_edit, start_event_id, end_event_id, time_period, arrive_id, departure_id) in tuples:
             interval = ti.TimeInterval()
             interval.set_id(timeinterval_id)
             interval.set_last_edit(last_edit)
             interval.set_start_event(start_event_id)
             interval.set_end_event(end_event_id)
             interval.set_time_period(time_period)
+            interval.set_arrive(arrive_id)
+            interval.set_departure(departure_id)
             result.append(interval)
 
         self._cnx.commit()
         cursor.close()
 
         return result
-
 
     def insert(self, time_interval):
 
@@ -108,13 +90,15 @@ class TimeIntervalMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 time_interval.set_id(1)
 
-        command = "INSERT INTO timeinterval (timeinterval_id, last_edit, start_event_id, end_event_id, time_period)" \
-                  " VALUES (%s,%s,%s,%s,%s)"
+        command = "INSERT INTO timeinterval (timeinterval_id, last_edit, start_event_id, end_event_id, time_period, " \
+                  "arrive_id, departure_id ) VALUES (%s,%s,%s,%s,%s,%s,%s)"
         data = (time_interval.get_id(),
                 time_interval.get_last_edit(),
                 time_interval.get_start_event(),
                 time_interval.get_end_event(),
-                time_interval.get_time_period())
+                time_interval.get_time_period(),
+                time_interval.get_arrive(),
+                time_interval.get_departure())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -126,10 +110,11 @@ class TimeIntervalMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "UPDATE timeinterval SET last_edit=%s, start_event_id=%s, end_event_id=%s, time_period=%s " \
-                  "WHERE timeinterval_id=%s"
+        command = "UPDATE timeinterval SET last_edit=%s, start_event_id=%s, end_event_id=%s, time_period=%s, " \
+                  "arrive_id=%s, departure_id=%s WHERE timeinterval_id=%s"
         data = (time_interval.get_last_edit(), time_interval.get_start_event(),
-                time_interval.get_end_event(), time_interval.get_time_period(), time_interval.get_id())
+                time_interval.get_end_event(), time_interval.get_time_period(), time_interval.get_arrive(),
+                time_interval.get_departure(), time_interval.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

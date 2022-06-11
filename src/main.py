@@ -57,9 +57,11 @@ project = api.inherit('Project', bo, {
 })
 
 timeinterval = api.inherit('TimeInterval', bo, {
-    'start_event_id': fields.DateTime(attribute='_start_event_id', description='Startzeitpunkt eines Zeitintervalls'),
-    'end_event_id': fields.DateTime(attribute='_end_event_id', description='Endzeitpunkt eines Zeitintervalls'),
-    'time_period': fields.String(attribute='_time_period', description='Zeitraum des Intervalls')
+    'start_event_id': fields.Integer(attribute='_start_event_id', description='Id des Starts eines Zeitintervalls'),
+    'end_event_id': fields.Integer(attribute='_end_event_id', description='Id des Starts eines Zeitintervalls'),
+    'time_period': fields.String(attribute='_time_period', description='Zeitraum des Intervalls'),
+    'arrive_id': fields.Integer(attribute='_arrive_id', description='Id des Kommen Events'),
+    'departure_id': fields.Integer(attribute='_departure_id', description='Id des Gehen Events')
 })
 
 projectwork = api.inherit('ProjectWork', timeinterval, {
@@ -212,8 +214,13 @@ e1 = h.get_event_by_id(1)
 e2 = h.get_event_by_id(3)
 ti = h.get_time_interval_by_id(2)
 pe = h.get_person_by_id(1)
+pe2 = h.get_person_by_id(2)
 pro = h.get_project_by_id(1)
 ac = h.get_activity_by_id(1)
+
+test = h.create_time_interval_for_arrive_and_departure(pe2)
+print(test)
+print(h.get_last_departure_by_person(pe).get_id())
 
 if __name__ == '__main__':
     app.run(debug=False)

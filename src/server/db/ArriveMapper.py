@@ -44,6 +44,40 @@ class ArriveMapper (Mapper):
 
         return result
 
+    def find_last_arrive_by_person(self, key):
+        """Suchen eines Arrive-Ereignisses mit der ID der vorgegebenen Person. Rückgabe von genau einem Objekt.
+
+        :param key: Fremdschlüsselattribut (->DB)
+        :return Das letzte Arrive-Objekt, das dem Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
+        """
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM arrive WHERE arrive_id = " \
+                  "(SELECT MAX(arrive_id) FROM arrive WHERE affiliated_person_id={})".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (arrive_id, last_edit, time_stamp, affiliated_person_id) = tuples[0]
+            arrive = Arrive()
+            arrive.set_id(arrive_id)
+            arrive.set_last_edit(last_edit)
+            arrive.set_time_stamp(time_stamp)
+            arrive.set_affiliated_person(affiliated_person_id)
+
+            result = arrive
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
     def find_all(self):
         """Auslesen aller Arrive-Ereignisse.
 

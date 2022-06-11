@@ -40,7 +40,9 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`departure` (
   `departure_id` INT NOT NULL,
   `last_edit` DATETIME NULL,
   `time_stamp` DATETIME NULL,
-  PRIMARY KEY (`departure_id`))
+  `affiliated_person_id`INT NUlL,
+  PRIMARY KEY (`departure_id`),
+  FOREIGN KEY (`affiliated_person_id`) REFERENCES person(`person_id`))
 ENGINE = InnoDB;
 
 
@@ -138,7 +140,9 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`arrive` (
   `arrive_id` INT NOT NULL,
   `last_edit` DATETIME NULL,
   `time_stamp` DATETIME NULL,
-  PRIMARY KEY (`arrive_id`))
+  `affiliated_person_id` INT NULL,
+  PRIMARY KEY (`arrive_id`),
+  FOREIGN KEY (`affiliated_person_id`) REFERENCES person(`person_id`) )
 ENGINE = InnoDB;
 
 
@@ -153,9 +157,13 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`timeinterval` (
   `start_event_id` INT NULL,
   `end_event_id` INT NULL,
   `time_period` TIME NULL,
+  `arrive_id` INT NULL,
+  `departure_id` INT NULL,
   PRIMARY KEY (`timeinterval_id`),
   FOREIGN KEY (`start_event_id`) REFERENCES event(`event_id`),
-  FOREIGN KEY (`end_event_id`) REFERENCES event(`event_id`))
+  FOREIGN KEY (`end_event_id`) REFERENCES event(`event_id`),
+  FOREIGN KEY (`arrive_id`) REFERENCES arrive (`arrive_id`),
+  FOREIGN KEY (`departure_id`) REFERENCES departure (`departure_id`))
 ENGINE = InnoDB;
 
 
@@ -201,7 +209,9 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`event` (
   `last_edit` DATETIME NULL,
   `event_type` INT NULL,
   `time_stamp` DATETIME NULL,
-  PRIMARY KEY (`event_id`))
+  `affiliated_person_id`INT NULL,
+  PRIMARY KEY (`event_id`),
+  FOREIGN KEY (`affiliated_person_id`) REFERENCES person(`person_id`))
 ENGINE = InnoDB;
 
 
