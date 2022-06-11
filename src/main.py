@@ -90,7 +90,9 @@ class WorkTimeAccountContentList(Resource):
         result = []
         projects = hwa.get_project_by_person_id(id)
         for p in projects:
-            result.append({"name": p._project_name, "time": 10})
+            time_intervals_project = hwa.get_time_interval_by_id(p.get_time_interval_id())
+            test = time_intervals_project.get_time_period()
+            result.append({"name": p._project_name, "time": time_intervals_project.get_time_period()})
         time_intervals = hwa.get_time_interval_by_person_id(id)
         result.append({"name": "Arbeitszeit", "time": sum([t.get_time_period() for t in time_intervals])})
 
@@ -199,6 +201,7 @@ class ProjectWorkOperations(Resource):
         pw = hwa.get_projectwork_by_id(id)
         hwa.delete_project_work(pw)
         return '', 200
+
 
 
 if __name__ == '__main__':
