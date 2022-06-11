@@ -210,7 +210,11 @@ h = HdMWebAppAdministration()
 # h.create_departure_event()
 e1 = h.get_event_by_id(1)
 e2 = h.get_event_by_id(3)
-h.create_time_interval(e1, e2)
+ti = h.get_time_interval_by_id(2)
+pe = h.get_person_by_id(1)
+pro = h.get_project_by_id(1)
+ac = h.get_activity_by_id(1)
+h.create_project_work('name', 'ds', ac, e1, e2)
 
 if __name__ == '__main__':
     app.run(debug=False)

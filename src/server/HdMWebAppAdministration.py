@@ -433,10 +433,10 @@ class HdMWebAppAdministration(object):
                 project_work.set_project_work_name(project_work_name)
                 project_work.set_description(description)
                 project_work.set_affiliated_activity(activity.get_id())
-                project_work.set_start_event(start_event.get_time_stamp())
+                project_work.set_start_event(start_event.get_id())
                 if end_event is not None:
-                    project_work.set_end_event(end_event.get_time_stamp())
-                    project_work.set_time_period(project_work.calculate_period())
+                    project_work.set_end_event(end_event.get_id())
+                    project_work.set_time_period(self.calculate_period(project_work))
 
                 return mapper.insert(project_work)
             else:
