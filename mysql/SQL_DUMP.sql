@@ -152,8 +152,8 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`timeinterval` (
   `end_event_id` INT NULL,
   `time_period` TIME NULL,
   PRIMARY KEY (`timeinterval_id`),
-  FOREIGN KEY `start_event_id` REFERENCES event(`event_id`),
-  FOREIGN KEY `end_event_id` REFERENCES event(`event_id`))
+  FOREIGN KEY (`start_event_id`) REFERENCES event(`event_id`),
+  FOREIGN KEY (`end_event_id`) REFERENCES event(`event_id`))
 ENGINE = InnoDB;
 
 
