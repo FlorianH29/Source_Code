@@ -112,8 +112,8 @@ class TimeIntervalMapper(Mapper):
                   " VALUES (%s,%s,%s,%s,%s)"
         data = (time_interval.get_id(),
                 time_interval.get_last_edit(),
-                time_interval.get_start_event().get_id(),
-                time_interval.get_end_event().get_id(),
+                time_interval.get_start_event(),
+                time_interval.get_end_event(),
                 time_interval.get_time_period())
         cursor.execute(command, data)
 
@@ -128,8 +128,8 @@ class TimeIntervalMapper(Mapper):
 
         command = "UPDATE timeinterval SET last_edit=%s, start_event_id=%s, end_event_id=%s, time_period=%s " \
                   "WHERE timeinterval_id=%s"
-        data = (time_interval.get_last_edit(), time_interval.get_start_event().get_id(),
-                time_interval.get_end_event().get_id(), time_interval.get_time_period(), time_interval.get_id())
+        data = (time_interval.get_last_edit(), time_interval.get_start_event(),
+                time_interval.get_end_event(), time_interval.get_time_period(), time_interval.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

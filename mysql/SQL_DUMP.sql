@@ -104,12 +104,14 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`projectwork` (
   `last_edit` DATETIME NULL,
   `projectwork_name` VARCHAR(45) NULL,
   `description` VARCHAR(45) NULL,
-  `start_event` DATETIME NULL,
-  `end_event` DATETIME NULL,
+  `start_event_id` INT NULL,
+  `end_event_id` INT NULL,
   `time_period` TIME,
   `affiliated_activity_id` INT NOT NULL,
   PRIMARY KEY (`projectwork_id`),
-  FOREIGN KEY (`affiliated_activity_id`) REFERENCES activity(`activity_id`))
+  FOREIGN KEY (`affiliated_activity_id`) REFERENCES activity(`activity_id`),
+  FOREIGN KEY (`start_event_id`) REFERENCES event(`event_id`),
+  FOREIGN KEY (`end_event_id`) REFERENCES event(`event_id`))
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------

@@ -81,12 +81,12 @@ class HdMWebAppAdministration(object):
 
     """Methoden für Kommen:"""
 
-    def create_arrive_event(self, time_stamp):
+    def create_arrive_event(self):
         """Arrive-Ereignis anlegen"""
         arrive = Arrive()
         arrive.set_id(1)
         arrive.set_last_edit(datetime.datetime.now())
-        arrive.set_time_stamp(time_stamp)
+        arrive.set_time_stamp(datetime.datetime.now())
 
         with ArriveMapper() as mapper:
             return mapper.insert(arrive)
@@ -115,12 +115,12 @@ class HdMWebAppAdministration(object):
 
     """Methoden für Gehen:"""
 
-    def create_departure_event(self, time_stamp):
+    def create_departure_event(self):
         """End-Ereignis anlegen"""
         departure = Departure()
         departure.set_id(1)
         departure.set_last_edit(datetime.datetime.now())
-        departure.set_time_stamp(time_stamp)
+        departure.set_time_stamp(datetime.datetime.now())
 
         with DepartureMapper() as mapper:
             return mapper.insert(departure)
@@ -511,21 +511,41 @@ class HdMWebAppAdministration(object):
 
     """Methoden von TimeInterval"""
 
+    def calculate_period(self, timeinterval):
+        """Berechnen des Zeitraumes"""
+        if timeinterval is not None:
+            start = timeinterval.get_start_event()
+            end = timeinterval.get_end_event()
+            start_time = self.get_event_by_id(start).get_time_stamp()
+            end_time = self.get_event_by_id(end).get_time_stamp()
+            time_period = end_time - start_time
+            return time_period
+
     def create_time_interval(self, start_event, end_event=None):  # defaultmäßig ee= None, da TI kein Ende haben muss
-        """ZeitIntervalkonto anlegen"""
+        """Zeitinterval anlegen"""
         with TimeIntervalMapper() as mapper:
             if start_event is not None and start_event.get_event_type() == 1:  # 1 für Start Event, evtl noch apassen
                 interval = TimeInterval()
                 interval.set_id(1)
                 interval.set_last_edit(datetime.datetime.now())
-                interval.set_start_event(start_event)
+                interval.set_start_event(start_event.get_id())
                 if end_event is not None:  # wenn ee übergeben wird: Wert setzen und Intervall berechnen
-                    interval.set_end_event(end_event)
-                    interval.set_time_period(interval.calculate_period())
+                    interval.set_end_event(end_event.get_id())
+                    interval.set_time_period(self.calculate_period(interval))
 
                 return mapper.insert(interval)
             else:
                 return None
+
+    def create_time_interval_for_arrive_and_departure(self, arrive, departure):
+        with TimeIntervalMapper() as mapper:
+            if arrive and departure is not None:
+                interval = TimeInterval()
+                interval.set_id(1)
+                interval.set_last_edit(datetime.datetime.now())
+                interval.set_start_event(arrive.get_id())
+                interval.set_end_event(departure.get_id())
+
 
     def add_end_event_to_time_interval(self, end_event, interval):
         """Einem offenen Zeitintervall ein Endereignis hinzufügen"""

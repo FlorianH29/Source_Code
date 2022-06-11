@@ -203,7 +203,15 @@ class ProjectWorkOperations(Resource):
         return '', 200
 
 
+h = HdMWebAppAdministration()
+# h.create_person('fname', 'lname', 'aklf a', 'adga')
+# h.create_project('name', 'c', )
+# h.create_arrive_event()
+# h.create_departure_event()
+e1 = h.get_event_by_id(1)
+e2 = h.get_event_by_id(3)
+h.create_time_interval(e1, e2)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
 
