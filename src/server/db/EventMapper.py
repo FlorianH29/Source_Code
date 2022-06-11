@@ -36,8 +36,144 @@ class EventMapper(Mapper):
 
             result = event
         except IndexError:
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_last_start_event_project_work(self, key):
+        """Suchen des letzten Startevents einer Projektarbeit mit vorgegebener Personen ID.
+        Rückgabe von genau einem Objekt.
+
+        :param key: Fremdschlüsselattribut (->DB)
+        :return Event-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
+        """
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM event WHERE event_id = (SELECT MAX(event_id) FROM event " \
+                  "WHERE affiliated_person_id={} AND event_type=1)".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (event_id, last_edit, event_type, time_stamp, affiliated_person_id) = tuples[0]
+            event = Event()
+            event.set_id(event_id)
+            event.set_last_edit(last_edit)
+            event.set_event_type(event_type)
+            event.set_time_stamp(time_stamp)
+            event.set_affiliated_person(affiliated_person_id)
+
+            result = event
+        except IndexError:
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_last_end_event_project_work(self, key):
+        """Suchen des letzten Endevents einer Projektarbeit mit vorgegebener Personen ID.
+        Rückgabe von genau einem Objekt.
+
+        :param key: Primärschlüsselattribut (->DB)
+        :return Event-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
+        """
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM event WHERE event_id = (SELECT MAX(event_id) FROM event " \
+                  "WHERE affiliated_person_id={} AND event_type=2)".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (event_id, last_edit, event_type, time_stamp, affiliated_person_id) = tuples[0]
+            event = Event()
+            event.set_id(event_id)
+            event.set_last_edit(last_edit)
+            event.set_event_type(event_type)
+            event.set_time_stamp(time_stamp)
+            event.set_affiliated_person(affiliated_person_id)
+
+            result = event
+        except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_last_start_event_break(self, key):
+        """Suchen des letzten Startevents einer Pause mit vorgegebener Personen ID.
+         Rückgabe von genau einem Objekt.
+
+        :param key: Primärschlüsselattribut (->DB)
+        :return Event-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
+        """
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM event WHERE event_id = (SELECT MAX(event_id) FROM event " \
+                  "WHERE affiliated_person_id={} AND event_type=3)".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (event_id, last_edit, event_type, time_stamp, affiliated_person_id) = tuples[0]
+            event = Event()
+            event.set_id(event_id)
+            event.set_last_edit(last_edit)
+            event.set_event_type(event_type)
+            event.set_time_stamp(time_stamp)
+            event.set_affiliated_person(affiliated_person_id)
+
+            result = event
+        except IndexError:
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_last_end_event_break(self, key):
+        """Suchen des letzten Startevents einer Pause mit vorgegebener Personen ID.
+         Rückgabe von genau einem Objekt.
+
+        :param key: Primärschlüsselattribut (->DB)
+        :return Event-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
+        """
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM event WHERE event_id = (SELECT MAX(event_id) FROM event " \
+                  "WHERE affiliated_person_id={} AND event_type=4)".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (event_id, last_edit, event_type, time_stamp, affiliated_person_id) = tuples[0]
+            event = Event()
+            event.set_id(event_id)
+            event.set_last_edit(last_edit)
+            event.set_event_type(event_type)
+            event.set_time_stamp(time_stamp)
+            event.set_affiliated_person(affiliated_person_id)
+
+            result = event
+        except IndexError:
             result = None
 
         self._cnx.commit()

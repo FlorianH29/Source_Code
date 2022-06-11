@@ -218,10 +218,6 @@ pe2 = h.get_person_by_id(2)
 pro = h.get_project_by_id(1)
 ac = h.get_activity_by_id(1)
 
-test = h.create_time_interval_for_arrive_and_departure(pe2)
-print(test)
-print(h.get_last_departure_by_person(pe).get_id())
 
 if __name__ == '__main__':
     app.run(debug=False)
-

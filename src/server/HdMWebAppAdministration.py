@@ -360,9 +360,6 @@ class HdMWebAppAdministration(object):
             # wenn es transactions gibt, müssen die mit if abfrage gelöscht werden
             mapper.delete(work_time_account)
 
-    def get_inhalt(self, person):
-        pass
-
     """Project Methoden"""
 
     def get_project_by_id(self, number):
@@ -438,21 +435,19 @@ class HdMWebAppAdministration(object):
         with ProjectWorkMapper() as mapper:
             return mapper.find_all()
 
-    def create_project_work(self, project_work_name, description, activity, start_event, end_event=None):
+    def create_project_work(self, project_work_name, description, activity, person):
         """Erstellen eines neuen ProjektWorks"""
         with ProjectWorkMapper() as mapper:
-            if activity and start_event is not None and start_event.get_event_type() == 1:
-                # überprüfen, ob a und se existieren und überprüfen ob se tatsächlich ein Start Event ist
+            if activity and person is not None:
                 project_work = ProjectWork()
                 project_work.set_id(1)
                 project_work.set_last_edit(datetime.datetime.now())
                 project_work.set_project_work_name(project_work_name)
                 project_work.set_description(description)
                 project_work.set_affiliated_activity(activity.get_id())
-                project_work.set_start_event(start_event.get_id())
-                if end_event is not None:
-                    project_work.set_end_event(end_event.get_id())
-                    project_work.set_time_period(self.calculate_period(project_work))
+                project_work.set_start_event(self.get_last_start_event_project_work(person).get_id())
+                project_work.set_end_event(self.get_last_end_event_project_work(person).get_id())
+                project_work.set_time_period(self.calculate_period(project_work))
 
                 return mapper.insert(project_work)
             else:
@@ -621,6 +616,34 @@ class HdMWebAppAdministration(object):
 
         with EventMapper() as mapper:
             return mapper.insert(event)
+
+    def get_last_start_event_project_work(self, person):
+        with EventMapper() as mapper:
+            if person is not None:
+                return mapper.find_last_start_event_project_work(person.get_id())
+            else:
+                return None
+
+    def get_last_end_event_project_work(self, person):
+        with EventMapper() as mapper:
+            if person is not None:
+                return mapper.find_last_end_event_project_work(person.get_id())
+            else:
+                return None
+
+    def get_last_start_event_break(self, person):
+        with EventMapper() as mapper:
+            if person is not None:
+                return mapper.find_last_start_event_break(person.get_id())
+            else:
+                return None
+
+    def get_last_end_event_break(self, person):
+        with EventMapper() as mapper:
+            if person is not None:
+                return mapper.find_last_end_event_break(person.get_id())
+            else:
+                return None
 
     def delete_event(self, event):
         """Das gegebene Event-Ereignis aus unserem System löschen."""
