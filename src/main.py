@@ -90,16 +90,21 @@ class PersonListOperations(Resource):
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
-
-@hdmwebapp.route('/person')
+@hdmwebapp.route('/person-by-name/<string:lastname>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class CustomerListOperations(Resource):
-    @hdmwebapp.marshal_list_with(person)
+@hdmwebapp.param('lastname', 'Der Nachname des Kunden')
+class CustomersByNameOperations(Resource):
+    @hdmwebapp.marshal_with(person)
     @secured
-    def get(self):
+    def get(self, lastname):
+        """ Auslesen von Customer-Objekten, die durch den Nachnamen bestimmt werden.
+
+        Die auszulesenden Objekte werden durch ```lastname``` in dem URI bestimmt.
+        """
         adm = HdMWebAppAdministration()
-        customers = adm.get_all_persons()
-        return customers
+        lel = adm.get_person_by_name(lastname)
+        return lel
+
 
 
 @hdmwebapp.route('/worktimeaccount/<int:id>')

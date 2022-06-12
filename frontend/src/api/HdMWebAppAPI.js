@@ -4,6 +4,7 @@ import WorktimeAccountBO from "./WorktimeAccountBO";
 import ActivityBO from "./ActivityBO";
 import ProjectWorkBO from "./ProjectWorkBO";
 import TimeIntervalBO from "./TimeIntervalBO";
+import header from "../components/layout/Header";
 
 export default class HdMWebAppAPI {
 
@@ -16,11 +17,13 @@ export default class HdMWebAppAPI {
 
   // Person bezogen
   #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
+  #addPersonURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
+  #updatePersonURL = () => `${this.#hdmwebappServerBaseURL}/persons/`;
 
   //Projekt bezogen
   #getProjectsURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
 
-    //Worktimeaccount bezogen
+  //Worktimeaccount bezogen
     #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
 
   //Activity bezogen
@@ -38,20 +41,10 @@ export default class HdMWebAppAPI {
         return this.#api;
     }
 
+
     // Projektarbeit bezogen
     #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/'/activities/${id}/projectworks'`;
 
-    /**
-    * Get the Singelton instance
-    *
-    * @public
-    */
-    static getAPI() {
-      if (this.#api == null) {
-        this.#api = new HdMWebAppAPI();
-      }
-      return this.#api;
-    }
 
     /**
      *  Returns a Promise which resolves to a json object.
@@ -68,7 +61,44 @@ export default class HdMWebAppAPI {
             }
         )
 
-    getPersons() {
+  addPerson(PersonBO) {
+    return this.#fetchAdvanced(this.#addPersonURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(PersonBO)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON, but only need one object
+      let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
+      // console.info(accountBOs);
+      return new Promise(function (resolve) {
+        resolve(responsePersonBO);
+      })
+    })
+  }
+
+  updatePerson(PersonBO) {
+    return this.#fetchAdvanced(this.#updatePersonURL(PersonBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(PersonBO)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
+      // console.info(accountBOs);
+      return new Promise(function (resolve) {
+        resolve(responsePersonBO);
+      })
+    })
+  }
+
+
+    getPerson() {
         return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
             let personBOs = PersonBO.fromJSON(responseJSON);
             //console.log(responseJSON);
@@ -137,3 +167,4 @@ export default class HdMWebAppAPI {
         })
     }
 }
+
