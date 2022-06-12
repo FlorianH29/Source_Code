@@ -6,6 +6,8 @@ import ActivityForm from "./dialogs/ActivityForm";
 import PropTypes from "prop-types";
 import ActivityListEntry from "./ActivityListEntry";
 import Card from "@mui/material/Card";
+import ActivityDeleteDialog from "./dialogs/ActivityDeleteDialog";
+
 
 
 class ActivityList extends Component {
@@ -31,43 +33,43 @@ class ActivityList extends Component {
     }
 
     addActivity = () => {
-    HdMWebAppAPI.getAPI().addActivityForProject(this.props.project.getID()).then(activityBO => {
-      // console.log(accountBO)
+    HdMWebAppAPI.getAPI().addActivityForProject(this.props.project.getID()).then(activitiesBO => {
+
       this.setState({  // Set new state when AccountBOs have been fetched
-        activity: [...this.state.activity, activityBO],
+        activities: [...this.state.activities, activitiesBO],
         loadingInProgress: false, // loading indicator
         addingActivityError: null
       })
     }).catch(e =>
       this.setState({ // Reset state with error from catch
-        accounts: [],
+        activities: [],
         loadingInProgress: false,
-        addingAccountError: e
+        addingActivityError: e
       })
     );
 
     // set loading to true
     this.setState({
       loadingInProgress: true,
-      addingAccountError: null
+      addingActivityError: null
     });
     }
 
-    activityDeleted = activity => {
-    const newActivityList = this.state.activity.filter(activityFromState => activityFromState.getID() !== activity.getID());
+    activityDeleted = activities => {
+    const newActivityList = this.state.activities.filter(activitiesFromState => activitiesFromState.getID() !== activities.getID());
     this.setState({
-      activity: newActivityList,
+      activities: newActivityList,
       showActivityForm: false
     });
     }
 
   /** Behandelt das onClose Event von CustomerForm */
-  ActivityClosed = activity => {
+  ActivityClosed = activities => {
     // projectWork ist nicht null und deshalb erstelltI/überarbeitet
-    if (activity) {
-      const newActivityList = [...this.state.activity, activity];
+    if (activities) {
+      const newActivityList = [...this.state.activities, activities];
       this.setState({
-        activity: newActivityList,
+        activities: newActivityList,
         showActivityForm: false
       });
     } else {
@@ -79,7 +81,7 @@ class ActivityList extends Component {
 
     render() {
         const { classes } = this.props;
-        const { activity, showActivityForm } = this.state;
+        const { activities, showActivityForm } = this.state;
 
         return (
             <Box sx={{m: 2}}>
@@ -105,8 +107,8 @@ class ActivityList extends Component {
                             </Grid>
                         </Grid>
                         <Divider/>
-                        {activity.map(a =>
-                            <ActivityListEntry key={a.getID()} activity={a} onActivityDeleted={this.activityDeleted}/>)
+                        {activities.map(a =>
+                            <ActivityListEntry key={a.getID()} activities={a} onActivityDeleted={this.activityDeleted}/>)
                         }
                         <Grid item xs={12} align={"center"}>
                             {this.state.activities.map((activity) => (
@@ -114,12 +116,12 @@ class ActivityList extends Component {
                                         <Grid container justifyContent={"left"}>
                                             <Grid item xs={6} align={"left"}>
                                                 <Typography variant={"h5"} component={"div"}>
-                                                    {activity.name}
+                                                    {activities.name}
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={6} align={"left"}>
                                                 <Typography variant={"h5"} component={"div"}>
-                                                    {activity.capacity}
+                                                    {activities.capacity}
                                                 </Typography>
                                             </Grid>
                                         </Grid>
@@ -132,11 +134,21 @@ class ActivityList extends Component {
                             ))}
                         </Grid>
                     </Grid>
+                        <ActivityForm onClose={this.activityFormClosed} show={showActivityForm}></ActivityForm>
                 </Card>
             </Box>
         )
     }
 
+}
+
+ActivityList.propTypes = {
+  /** @ignore */
+  classes: PropTypes.object.isRequired,
+  /** The CustomerBO of this AccountList */
+  project: PropTypes.object.isRequired,
+  /** If true, accounts are (re)loaded */
+  show: PropTypes.bool.isRequired
 }
 
 export default ActivityList;

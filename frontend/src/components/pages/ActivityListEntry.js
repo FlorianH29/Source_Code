@@ -7,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ListItem from "@mui/material/ListItem";
 import ActivityDeleteDialog from "../dialogs/ActivityForm";
 import ActivityForm from "../dialogs/ActivityForm";
+import {HdMWebAppAPI} from "../../api";
 
 
 
@@ -20,6 +21,41 @@ class ActivityListEntry extends Component {
             showActivityForm: false,
             showActivityDeleteDialog: false,
         };
+    }
+
+    componentDidMount() {
+    // load initial balance
+    this.getTimePeriodForActivity();
+    }
+
+    /** Lifecycle method, which is called when the component was updated */
+    componentDidUpdate(prevProps) {
+        if ((this.props.show) && (this.props.show !== prevProps.show)) {
+            this.getTimePeriodForActivity();
+        }
+    }
+
+    // Die Dauer für eine Aktivität bekommen
+    getTimePeriodForActivity = () => {
+    HdMWebAppAPI.getAPI().getTimePeriodForActivity(this.props.activity.getID()).then(period =>
+      this.setState({
+        period: period,
+        loadingInProgress: false, // loading indicator
+        loadingError: null
+      })).catch(e =>
+        this.setState({ // Reset state with error from catch
+          period: null,
+          loadingInProgress: false,
+          loadingError: e
+        })
+      );
+
+    // set loading to true
+    this.setState({
+      balance: 'loading',
+      loadingInProgress: true,
+      loadingError: null
+    });
     }
 
     editActivityButtonClicked = (event) => {
@@ -81,7 +117,7 @@ class ActivityListEntry extends Component {
             </Grid>
             <Grid item xs={3} align={"center"}>
               <Typography variant={"h5"} component={"div"}>
-                {activity.getTimeIPeriod()}
+                {activity.getActivityTimePeriod()}
               </Typography>
             </Grid>
             <Grid item xs={3} align={"center"}>
@@ -100,9 +136,11 @@ class ActivityListEntry extends Component {
 
 ActivityListEntry.propTypes = {
   /** Das ActivityBO welches gerendert werden soll */
+  classes: PropTypes.object.isRequired,
   activity: PropTypes.object.isRequired,
   project: PropTypes.object.isRequired,
-  onActivityDeleted: PropTypes.func.isRequired
+  onActivityDeleted: PropTypes.func.isRequired,
+  show: PropTypes.bool.isRequired
 }
 
-export default withStyles(styles)(ActivityListEntry);
+export default ActivityListEntry;

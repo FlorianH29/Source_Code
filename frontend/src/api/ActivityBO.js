@@ -50,6 +50,22 @@ export default class ActivityBO extends BusinessObject {
   }
 
   /**
+   * Setzt die Dauer.
+   *
+   * @param {String} aCapacity - die neue Kapazität dieses ActivityBO.
+   */
+  setActivityTimePeriod(aTimePeriod) {
+    this.timePeriod = aTimePeriod;
+  }
+
+  /**
+   * Gibt die Dauer zurück.
+   */
+  getActivityTimePeriod() {
+    return this.timePeriod;
+  }
+
+  /**
    * Setzt einen neues zugeordnetes Projekt.
    *
    * @param {String} anAffiliatedProject - das neue zugeordnete Projekt dieses AktivityBO.

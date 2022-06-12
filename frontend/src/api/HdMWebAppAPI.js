@@ -34,6 +34,7 @@ export default class HdMWebAppAPI {
   #updateActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
   #deleteActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
   #addActivityForProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/project/${id}/activities`;
+  #getTimePeriodForActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}/period`;
 
   /**
    * Get the Singelton instance
@@ -174,6 +175,16 @@ export default class HdMWebAppAPI {
                   resolve(activityBO);
               })
           })
+  }
+
+  getTimePeriodForActivity(accountBO) {
+    return this.#fetchAdvanced(this.#getTimePeriodForActivityURL(activityBO))
+      .then(responseJSON => {
+        // console.log(responseJSON)
+        return new Promise(function (resolve) {
+          resolve(responseJSON);
+        })
+      })
   }
 
   updateActivity(activityBO) {
