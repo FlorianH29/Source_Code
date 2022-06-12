@@ -1,4 +1,5 @@
 import datetime
+import time
 from .bo.Arrive import Arrive
 from .bo.Break import Break
 from .bo.Departure import Departure
@@ -43,6 +44,11 @@ class HdMWebAppAdministration(object):
         """Alle in der Datenbank gespeicherten Personen auslesen."""
         with PersonMapper() as mapper:
             return mapper.find_all()
+
+    def get_all_persons_by_arrive(self):
+        """Alle in der Datenbank gespeicherten Personen, welche kein Departure zum letzten Arrive haben, auslesen."""
+        with PersonMapper() as mapper:
+            return mapper.find_by_arrive()
 
     def create_person(self, firstname, lastname, mailaddress, firebase_id):
         """Person anlegen, nach Anlegen der Person Anlegen eines Arbeitszeitkontos für sie."""
@@ -111,6 +117,11 @@ class HdMWebAppAdministration(object):
         with ArriveMapper() as mapper:
             return mapper.find_by_key(number)
 
+    def get_arrive_event_by_affiliated_person_id(self, number):
+        """Das Start-Ereignis mit der gegebenen zugehörigen Personen ID auslesen"""
+        with ArriveMapper() as mapper:
+            return mapper.find_by_affiliated_person_id(number)
+
     def get_last_arrive_by_person(self, person):
         with ArriveMapper() as mapper:
             if person is not None:
@@ -151,6 +162,11 @@ class HdMWebAppAdministration(object):
         """Das End-Ereignis mit der gegebenen ID auslesen"""
         with DepartureMapper() as mapper:
             return mapper.find_by_key(number)
+
+    def get_departure_event_by_affiliated_person_id(self, number):
+        """Das End-Ereignis mit der gegebenen zugehörigen Personen ID auslesen"""
+        with DepartureMapper() as mapper:
+            return mapper.find_by_affiliated_person_id(number)
 
     def get_last_departure_by_person(self, person):
         with DepartureMapper() as mapper:
@@ -718,3 +734,21 @@ class HdMWebAppAdministration(object):
             return project_name_list
         except AttributeError:
             return print("Keine Projekte gefunden")
+
+    def check_time_for_departure(self):
+        while True:
+            time.sleep(60)
+            persons = self.get_all_persons_by_arrive()
+            person_list = []
+            for person in persons:
+                person_list.append(person)
+                person_id = person.get_id()
+                arrive = self.get_arrive_event_by_affiliated_person_id(person_id).get_time_stamp()
+                datetime_now = datetime.datetime.now()
+                working_time = datetime_now - arrive
+                if working_time >= datetime.timedelta(hours=10):
+                    self.create_departure_event(person)
+                    print('test')
+
+
+

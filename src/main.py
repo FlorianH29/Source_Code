@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restx import Api, Resource, fields
 from flask_cors import CORS
-
+from threading import *
 from server.HdMWebAppAdministration import HdMWebAppAdministration
 from server.bo.Activity import Activity
 from server.bo.Event import Event
@@ -12,6 +12,7 @@ from server.bo.WorkTimeAccount import WorkTimeAccount
 
 
 app = Flask(__name__)
+
 
 CORS(app, resources=r'/hdmwebapp/*')
 
@@ -206,12 +207,19 @@ class ProjectWorkOperations(Resource):
         return '', 200
 
 
+def worker():
+    hwa = HdMWebAppAdministration()
+    hwa.check_time_for_departure()
+
+
+sub_thread = Thread(target=worker)
+#es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
+sub_thread.setDaemon(True)
+sub_thread.start()
+
+
 h = HdMWebAppAdministration()
-
-pe2 = h.get_person_by_id(2)
-
-
-h.create_event_with_time_stamp(1, '20220613', pe2)
+#h.check_time_for_departure()
 
 
 if __name__ == '__main__':
