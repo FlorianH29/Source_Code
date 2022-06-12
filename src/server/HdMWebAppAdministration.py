@@ -760,6 +760,7 @@ class HdMWebAppAdministration(object):
                         self.create_event(2, person)
                     if event_type == 3:
                         self.create_event(4, person)
+                        self.create_break(person)
                     self.create_departure_event(person)
 
 
