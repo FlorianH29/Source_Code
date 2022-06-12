@@ -38,21 +38,30 @@ class TimeInterval(bo.BusinessObject):
         self._time_period = time_period
 
     def get_interval_start(self):
-        if self._end_event is not None:
-            return self._end_event.timestamp()
+        if self._start_event is not None:
+            return self._end_event.get_time_stamp()
         else:
             return None
 
     def get_interval_end(self):
         if self._end_event is not None:
-            return self._end_event.timestamp()
+            return self._end_event.get_time_stamp()
         else:
             return None
 
     def calculate_period(self):
         """Berechnen des Zeitraumes"""
-        self._time_period = self.get_end_event() - self.get_start_event()
+        self._time_period = self.get_interval_end() - self.get_interval_start()
         return self._time_period
+
+    def set_interval_by_id(self, id):
+        pass
+
+    def set_start_event_by_id(self, id):
+        self.get_start_event()
+
+    def set_end_event_by_id(self, id):
+        pass
 
     def __str__(self):
         """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
@@ -65,7 +74,7 @@ class TimeInterval(bo.BusinessObject):
         obj = TimeInterval()
         obj.set_id(dictionary["id"])
         obj.set_last_edit(dictionary["last_edit"])
-        obj.set_start_event(dictionary["start_time"])
-        obj.set_end_event(dictionary["end_time"])
+        obj.set_start_event(dictionary["start_event"])
+        obj.set_end_event(dictionary["end_event"])
         obj.set_time_period(dictionary["time_period"])
         return obj

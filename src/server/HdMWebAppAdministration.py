@@ -523,9 +523,9 @@ class HdMWebAppAdministration(object):
                 interval = TimeInterval()
                 interval.set_id(1)
                 interval.set_last_edit(datetime.datetime.now())
-                interval.set_start_event(start_event.get_time_stamp())
+                interval.set_start_event(start_event)
                 if end_event is not None:  # wenn ee übergeben wird: Wert setzen und Intervall berechnen
-                    interval.set_end_event(end_event.get_time_stamp())
+                    interval.set_end_event(end_event)
                     interval.set_time_period(interval.calculate_period())
 
                 return mapper.insert(interval)
