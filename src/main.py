@@ -219,7 +219,8 @@ sub_thread.start()
 
 
 h = HdMWebAppAdministration()
-#h.check_time_for_departure()
+#pe= h.get_person_by_id(2)
+#print(h.get_last_event_by_affiliated_person(pe))
 
 
 if __name__ == '__main__':
