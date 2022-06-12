@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import {HdMWebAppAPI, ActivityBO} from '../../api';
+import {HdMWebAppAPI, ActivityBO } from "../../api";
 
 
 class ActivityForm extends Component {
@@ -32,9 +32,6 @@ class ActivityForm extends Component {
         this.props.onClose(null);
     }
 
-    addActivity = () => {
-
-    }
 
     textFieldValueChange = (event) => {
         const value = event.target.value;
@@ -72,7 +69,7 @@ class ActivityForm extends Component {
         let title = '';
         let header = '';
 
-        if (projectWork) {
+        if (activity) {
             // ProjectWork definiert, Bearbeitungsdialog wird angezeigt
             title = 'Aktivität bearbeiten';
             header = `Aktivität ID: ${activity.getID()}`;
@@ -128,7 +125,6 @@ class ActivityForm extends Component {
 ActivityForm.propTypes = {
 
   onClose: PropTypes.func.isRequired,
-
   show: PropTypes.bool.isRequired,
 }
 

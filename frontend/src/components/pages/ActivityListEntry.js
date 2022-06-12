@@ -9,13 +9,16 @@ import ActivityDeleteDialog from "../dialogs/ActivityForm";
 import ActivityForm from "../dialogs/ActivityForm";
 
 
+
 class ActivityListEntry extends Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            activity : props.activity
+            activity : props.activity,
+            showActivityForm: false,
+            showActivityDeleteDialog: false,
         };
     }
 
@@ -26,17 +29,40 @@ class ActivityListEntry extends Component {
     });
     }
 
+     activityFormClosed = (activity) => {
+    // activity ist nicht null und wurde dementsprechend geändert
+    if (activity) {
+      this.setState({
+        activity: activity,
+        showActivityForm: false
+      });
+    } else {
+      this.setState({
+        showActivityForm: false
+      });
+    }
+    }
+
+    deleteActivityDialogClosed = (activity) => {
+    if (activity) {
+      this.props.onActivityDeleted(activity);
+    }
+    this.setState({
+      showActivityDeleteDialog: false // Den Dialog nicht mehr anzeigen
+    });
+    }
+
     deleteActivityButtonClicked = (event) => {
     event.stopPropagation();
     this.setState({
       showActivityDeleteDialog: true
     });
-  }
+    }
 
 
     render() {
-    //const { classes } = this.props;
-    const { activity } = this.state;
+    const { classes } = this.props;
+    const { activity, showActivityForm, showActivityDeleteDialog } = this.state;
 
     // console.log(this.state);
     return (
@@ -65,7 +91,8 @@ class ActivityListEntry extends Component {
           </Grid>
           </ListItem>
           <Divider/>
-
+        <ActivityDeleteDialog show={showActivityDeleteDialog} activity={activity} onClose={this.deleteActivityDialogClosed} />
+        <ActivityForm show={showActivityForm} activity={activity} onClose={this.activityFormClosed} />
         </div>
     );
   }
@@ -73,8 +100,9 @@ class ActivityListEntry extends Component {
 
 ActivityListEntry.propTypes = {
   /** Das ActivityBO welches gerendert werden soll */
-  activity: PropTypes.object.isRequired
-
+  activity: PropTypes.object.isRequired,
+  project: PropTypes.object.isRequired,
+  onActivityDeleted: PropTypes.func.isRequired
 }
 
-export default ActivityListEntry;
+export default withStyles(styles)(ActivityListEntry);

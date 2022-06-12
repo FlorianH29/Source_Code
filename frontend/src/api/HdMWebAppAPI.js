@@ -33,6 +33,7 @@ export default class HdMWebAppAPI {
   #getActivitiesURL = () => `${this.#hdmwebappServerBaseURL}/activities`;
   #updateActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
   #deleteActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
+  #addActivityForProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/project/${id}/activities`;
 
   /**
    * Get the Singelton instance
@@ -160,20 +161,20 @@ export default class HdMWebAppAPI {
   * @public
   */
 
-/**  addActivityForProject(customerID) {
-    return this.#fetchAdvanced(this.#addAccountsForCustomerURL(customerID), {
-      method: 'POST'
-    })
-      .then((responseJSON) => {
-        // We always get an array of AccountBO.fromJSON, but only need one object
-        let accountBO = AccountBO.fromJSON(responseJSON)[0];
-        // console.info(accountBO);
-        return new Promise(function (resolve) {
-          // We expect only one new account
-          resolve(accountBO);
-        })
-      })*/
-
+  addActivityForProject(projectID) {
+      return this.#fetchAdvanced(this.#addActivityForProjectURL(projectID), {
+          method: 'POST'
+      })
+          .then((responseJSON) => {
+              // We always get an array of AccountBO.fromJSON, but only need one object
+              let activityBO = ActivityBO.fromJSON(responseJSON)[0];
+              // console.info(accountBO);
+              return new Promise(function (resolve) {
+                  // We expect only one new account
+                  resolve(activityBO);
+              })
+          })
+  }
 
   updateActivity(activityBO) {
     return this.#fetchAdvanced(this.#updateActivityURL(activityBO.getID()), {
@@ -192,4 +193,16 @@ export default class HdMWebAppAPI {
       })
     })
   }
+  deleteActivity(activityID) {
+    return this.#fetchAdvanced(this.#deleteActivityURL(activityID), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseActivityBO = ActivityBO.fromJSON(responseJSON)[0];
+      return new Promise(function (resolve) {
+        resolve(responseActivityBO);
+      })
+    })
+  }
+
 }

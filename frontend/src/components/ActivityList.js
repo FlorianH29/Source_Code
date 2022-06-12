@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from "../api";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import Grid from "@mui/material/Grid";
-import {ButtonGroup, Divider} from "@mui/material";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import {withStyles, Button, TextField, InputAdornment, IconButton, Grid, Typography, Divider, Box} from '@mui/material';
 import ListItem from "@mui/material/ListItem";
+import ActivityForm from "./dialogs/ActivityForm";
+import PropTypes from "prop-types";
+import ActivityListEntry from "./ActivityListEntry";
+import Card from "@mui/material/Card";
 
 
 class ActivityList extends Component {
@@ -15,7 +14,8 @@ class ActivityList extends Component {
         super(props);
 
         this.state = {
-            activities: []
+            activities: [],
+            showActivityForm: false
         };
     };
 
@@ -28,10 +28,59 @@ class ActivityList extends Component {
             this.setState({
                 activities: []
             }));
-        console.log(this.state.activities)
+    }
+
+    addActivity = () => {
+    HdMWebAppAPI.getAPI().addActivityForProject(this.props.project.getID()).then(activityBO => {
+      // console.log(accountBO)
+      this.setState({  // Set new state when AccountBOs have been fetched
+        activity: [...this.state.activity, activityBO],
+        loadingInProgress: false, // loading indicator
+        addingActivityError: null
+      })
+    }).catch(e =>
+      this.setState({ // Reset state with error from catch
+        accounts: [],
+        loadingInProgress: false,
+        addingAccountError: e
+      })
+    );
+
+    // set loading to true
+    this.setState({
+      loadingInProgress: true,
+      addingAccountError: null
+    });
+    }
+
+    activityDeleted = activity => {
+    const newActivityList = this.state.activity.filter(activityFromState => activityFromState.getID() !== activity.getID());
+    this.setState({
+      activity: newActivityList,
+      showActivityForm: false
+    });
+    }
+
+  /** Behandelt das onClose Event von CustomerForm */
+  ActivityClosed = activity => {
+    // projectWork ist nicht null und deshalb erstelltI/überarbeitet
+    if (activity) {
+      const newActivityList = [...this.state.activity, activity];
+      this.setState({
+        activity: newActivityList,
+        showActivityForm: false
+      });
+    } else {
+        this.setState({
+          showActivityForm: false
+        });
+      }
     }
 
     render() {
+        const { classes } = this.props;
+        const { activity, showActivityForm } = this.state;
+
         return (
             <Box sx={{m: 2}}>
                 <Card>
@@ -55,10 +104,13 @@ class ActivityList extends Component {
                                 <Typography variant={"h5"} component={"div"}> Dauer </Typography>
                             </Grid>
                         </Grid>
+                        <Divider/>
+                        {activity.map(a =>
+                            <ActivityListEntry key={a.getID()} activity={a} onActivityDeleted={this.activityDeleted}/>)
+                        }
                         <Grid item xs={12} align={"center"}>
                             {this.state.activities.map((activity) => (
                                 <Box key={activity}>
-                                    <ListItem>
                                         <Grid container justifyContent={"left"}>
                                             <Grid item xs={6} align={"left"}>
                                                 <Typography variant={"h5"} component={"div"}>
@@ -71,8 +123,6 @@ class ActivityList extends Component {
                                                 </Typography>
                                             </Grid>
                                         </Grid>
-                                    </ListItem>
-                                    <Divider/>
                         <Grid container>
                             <Button variant={"contained"} color='primary'>
                                 Aktivität anlegen
