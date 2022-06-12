@@ -10,6 +10,7 @@ from server.bo.ProjectWork import ProjectWork
 from server.bo.WorkTimeAccount import WorkTimeAccount
 from SecurityDecorator import secured
 
+
 app = Flask(__name__)
 
 CORS(app, resources=r'/hdmwebapp/*')
@@ -96,16 +97,21 @@ class PersonListOperations(Resource):
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
-
-@hdmwebapp.route('/person')
+@hdmwebapp.route('/person-by-name/<string:lastname>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class CustomerListOperations(Resource):
-    @hdmwebapp.marshal_list_with(person)
+@hdmwebapp.param('lastname', 'Der Nachname des Kunden')
+class CustomersByNameOperations(Resource):
+    @hdmwebapp.marshal_with(person)
     @secured
-    def get(self):
+    def get(self, lastname):
+        """ Auslesen von Customer-Objekten, die durch den Nachnamen bestimmt werden.
+
+        Die auszulesenden Objekte werden durch ```lastname``` in dem URI bestimmt.
+        """
         adm = HdMWebAppAdministration()
-        customers = adm.get_all_persons()
-        return customers
+        lel = adm.get_person_by_name(lastname)
+        return lel
+
 
 
 @hdmwebapp.route('/worktimeaccount/<int:id>')
@@ -128,6 +134,8 @@ class WorkTimeAccountContentList(Resource):
         print(result)
         return result
 
+
+
 @hdmwebapp.route('/activities')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ActivitiesList(Resource):
@@ -147,6 +155,7 @@ class ActivitiesList(Resource):
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @hdmwebapp.marshal_list_with(project)
+    @secured
     def get(self):
         hwa = HdMWebAppAdministration()
         projects = hwa.get_all_projects()
@@ -159,6 +168,7 @@ class ProjectListOperations(Resource):
 @hdmwebapp.param('id', 'Die ID der Aktivität')
 class ProjectWorksByActivityOperations(Resource):
     @hdmwebapp.marshal_list_with(projectwork)
+    @secured
     def get(self, id):
         hwa = HdMWebAppAdministration()
         act = hwa.get_activity_by_id(id)
@@ -177,6 +187,7 @@ class ProjectWorksByActivityOperations(Resource):
 @hdmwebapp.param('id', 'Die ID der Projektarbeit')
 class ProjectWorkOperations(Resource):
     @hdmwebapp.marshal_list_with(projectwork)
+    @secured
     def put(self, id):
         hwa = HdMWebAppAdministration()
         pw = ProjectWork.from_dict(api.payload)
