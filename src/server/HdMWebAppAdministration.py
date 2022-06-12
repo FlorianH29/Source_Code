@@ -1,3 +1,4 @@
+from datetime import timedelta
 import datetime
 from .bo.Arrive import Arrive
 from .bo.Break import Break
@@ -176,6 +177,7 @@ class HdMWebAppAdministration(object):
                 activity.set_name(name)
                 activity.set_capacity(capacity)
                 activity.set_affiliated_project(project.get_id())
+                activity.set_work_time(0)
 
                 return mapper.insert(activity)
             else:
@@ -220,6 +222,15 @@ class HdMWebAppAdministration(object):
                 if not (activities is None):
                     result.extend(activities)
         return result
+
+    def calculate_work_time_of_activity(self, activity):
+        project_works = self.get_all_project_works()
+        work_time = timedelta(hours=0)
+        for project_work in project_works:
+            if project_work.get_affiliated_activity() == activity.get_id():
+                work_time += project_work.get_time_period()
+        activity.set_work_time(work_time)
+        self.save_activity(activity)
 
     """Methoden für EventTransaktionen"""
 
@@ -451,7 +462,7 @@ class HdMWebAppAdministration(object):
                 project_work.set_end_event(self.get_last_end_event_project_work(person).get_id())
                 project_work.set_time_period(self.calculate_period(project_work))
 
-                return mapper.insert(project_work)
+                return mapper.insert(project_work), self.calculate_work_time_of_activity(activity)
             else:
                 return None
 
@@ -635,6 +646,7 @@ class HdMWebAppAdministration(object):
             return mapper.insert(event)
 
     def get_last_start_event_project_work(self, person):
+        """Gibt das letzte Startevent für eine Projektarbeit einer bestimmten Person zurück"""
         with EventMapper() as mapper:
             if person is not None:
                 return mapper.find_last_start_event_project_work(person.get_id())
@@ -642,6 +654,7 @@ class HdMWebAppAdministration(object):
                 return None
 
     def get_last_end_event_project_work(self, person):
+        """Gibt das letzte Endevent für eine Projektarbeit einer bestimmten Person zurück"""
         with EventMapper() as mapper:
             if person is not None:
                 return mapper.find_last_end_event_project_work(person.get_id())
@@ -649,6 +662,7 @@ class HdMWebAppAdministration(object):
                 return None
 
     def get_last_start_event_break(self, person):
+        """Gibt das letzte Startevent für eine Pause einer bestimmten Person zurück"""
         with EventMapper() as mapper:
             if person is not None:
                 return mapper.find_last_start_event_break(person.get_id())
@@ -656,6 +670,7 @@ class HdMWebAppAdministration(object):
                 return None
 
     def get_last_end_event_break(self, person):
+        """Gibt das letzte Endevent für eine Projektarbeit einer bestimmten Person zurück"""
         with EventMapper() as mapper:
             if person is not None:
                 return mapper.find_last_end_event_break(person.get_id())
