@@ -623,16 +623,32 @@ class HdMWebAppAdministration(object):
     """Methoden von Event"""
 
     def create_event(self, event_type, person_id):
-        """Event-Ereignis anlegen"""
-        event = Event()
-        event.set_id(1)
-        event.set_last_edit(datetime.datetime.now())
-        event.set_event_type(event_type)
-        event.set_time_stamp(datetime.datetime.now())
-        event.set_affiliated_person(person_id)
-
+        """Event anlegen"""
         with EventMapper() as mapper:
-            return mapper.insert(event)
+            if event_type and person_id is not None:
+                event = Event()
+                event.set_id(1)
+                event.set_last_edit(datetime.datetime.now())
+                event.set_event_type(event_type)
+                event.set_time_stamp(datetime.datetime.now())
+                event.set_affiliated_person(person_id)
+                return mapper.insert(event)
+            else:
+                return None
+
+    def create_event_with_time_stamp(self, event_type, time_stamp, person_id):
+        """Event mit Zeitpunkt erstellen"""
+        with EventMapper() as mapper:
+            if event_type and person_id and time_stamp is not None:
+                event = Event()
+                event.set_id(1)
+                event.set_last_edit(datetime.datetime.now())
+                event.set_event_type(event_type)
+                event.set_time_stamp(time_stamp)
+                event.set_affiliated_person(person_id.get_id())
+                return mapper.insert(event)
+            else:
+                return None
 
     def get_last_start_event_project_work(self, person):
         with EventMapper() as mapper:
