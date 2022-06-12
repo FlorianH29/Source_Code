@@ -4,8 +4,8 @@ import WorktimeAccountBO from "./WorktimeAccountBO";
 import ActivityBO from "./ActivityBO";
 import ProjectWorkBO from "./ProjectWorkBO";
 import TimeIntervalBO from "./TimeIntervalBO";
-import EventBO from "./EventBO";
 import header from "../components/layout/Header";
+import personForm from "../components/dialogs/PersonForm";
 export default class HdMWebAppAPI {
 
     // Singelton instance

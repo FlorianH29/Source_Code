@@ -25,10 +25,13 @@ class PersonForm extends Component {
   constructor(props) {
     super(props);
 
-    let fn = '', ln = '';
+    let fn = '', ln = '', un = '', ma = '', fb = '';
     if (props.person) {
       fn = props.person.getFirstName();
       ln = props.person.getLastName();
+      un = props.person.getUserName();
+      ma = props.person.getMailAddress();
+      fb = props.person.getFireBaseId();
     }
 
     // Init the state
@@ -39,6 +42,16 @@ class PersonForm extends Component {
       lastName: ln,
       lastNameValidationFailed: false,
       lastNameEdited: false,
+      username: un,
+      userNameValidationFailed: false,
+      userNameEdited: false,
+      mailadress: ma,
+      mailadressValidationFailed: false,
+      mailadressEdited: false,
+      firebase_id: fb,
+      firebase_idValidationFailed: false,
+      firebase_idEdited: false,
+
       addingInProgress: false,
       updatingInProgress: false,
       addingError: null,
@@ -50,10 +63,8 @@ class PersonForm extends Component {
 
   /** Adds the customer */
   addPerson = () => {
-    let newPerson = new PersonBO(this.state.firstName, this.state.lastName, this.state.lastName, );
-    BankAPI.getAPI().addPerson(newPerson).then(person => {
-      // Backend call sucessfull
-      // reinit the dialogs state for a new empty customer
+    let newPerson = new PersonBO(this.state.firstName, this.state.lastName, this.state.username, this.state.mailadress, this.state.firebase_id);
+    HdMWebAppAPI.getAPI().addPerson(newPerson).then(person => {
       this.setState(this.baseState);
       this.props.onClose(person); // call the parent with the customer object from backend
     }).catch(e =>
@@ -76,6 +87,9 @@ class PersonForm extends Component {
     // set the new attributes from our dialog
     updatedPerson.setFirstName(this.state.firstName);
     updatedPerson.setLastName(this.state.lastName);
+    updatedPerson.setUserName(this.state.username);
+    updatedPerson.setMailAddress(this.state.mailadress);
+    updatedPerson.setFireBaseId(this.state.firebase_id);
     HdMWebAppAPI.getAPI().updatePerson(updatedPerson).then(person => {
       this.setState({
         updatingInProgress: false,              // disable loading indicator
@@ -84,6 +98,9 @@ class PersonForm extends Component {
       // keep the new state as base state
       this.baseState.firstName = this.state.firstName;
       this.baseState.lastName = this.state.lastName;
+      this.baseState.username = this.state.username;
+      this.baseState.mailadress = this.state.mailadress;
+      this.baseState.firebase_id = this.state.firebase_id;
       this.props.onClose(updatedPerson);      // call the parent with the new customer
     }).catch(e =>
       this.setState({
@@ -125,8 +142,9 @@ class PersonForm extends Component {
   /** Renders the component */
   render() {
     const { classes, person, show } = this.props;
-    const { firstName, firstNameValidationFailed, firstNameEdited, lastName, lastNameValidationFailed, lastNameEdited, addingInProgress,
-      addingError, updatingInProgress, updatingError } = this.state;
+    const { firstName, firstNameValidationFailed, firstNameEdited, lastName, lastNameValidationFailed, lastNameEdited,
+      username, usernameValidationFailed, usernameEdited, mailadress, mailadressValidationFailed, mailadressEdited, firebase_id, firebaseidValidationFailed, firebaseidEdited,
+      addingInProgress, addingError, updatingInProgress, updatingError } = this.state;
 
     let title = '';
     let header = '';
@@ -159,6 +177,15 @@ class PersonForm extends Component {
               <TextField type='text' required fullWidth margin='normal' id='lastName' label='Last name:' value={lastName}
                 onChange={this.textFieldValueChange} error={lastNameValidationFailed}
                 helperText={lastNameValidationFailed ? 'The last name must contain at least one character' : ' '} />
+              <TextField type='text' required fullWidth margin='normal' id='username' label='User name:' value={username}
+                onChange={this.textFieldValueChange} error={usernameValidationFailed}
+                helperText={usernameValidationFailed ? 'Kein User Name' : ' '} />
+              <TextField type='text' required fullWidth margin='normal' id='mailadress' label='Mailadress:' value={mailadress}
+                onChange={this.textFieldValueChange} error={mailadressValidationFailed}
+                helperText={mailadressValidationFailed ? 'The last name must contain at least one character' : ' '} />
+              <TextField type='token' required fullWidth margin='normal' id='lastName' label='Last name:' value={firebase_id}
+                onChange={this.textFieldValueChange} error={firebaseidValidationFailed}
+                helperText={firebaseidValidationFailed ? 'The last name must contain at least one character' : ' '} />
             </form>
             <LoadingProgress show={addingInProgress || updatingInProgress} />
             {
