@@ -26,23 +26,9 @@ class ProjectWorkDeleteDialog extends Component {
   /** Die Projektarbeit löschen */
   deleteProjectWork = () => {
     HdMWebAppAPI.getAPI().deleteProjectWork(this.props.projectWork.getID()).then(projectWork => {
-      this.setState({
-        deletingInProgress: false,              // disable loading indicator
-        deletingError: null                     // no error message
-      });
       this.props.onClose(this.props.projectWork);  // call the parent with the deleted customer
     }).catch(e =>
-      this.setState({
-        deletingInProgress: false,              // disable loading indicator
-        deletingError: e                        // show error message
-      })
-    );
-
-    // set loading to true
-    this.setState({
-      deletingInProgress: true,                 // show loading indicator
-      deletingError: null                       // disable error message
-    });
+        console.log(e))
   }
 
   /** Behandelt das Click Event des Buttons Abbrechen */
@@ -59,7 +45,7 @@ class ProjectWorkDeleteDialog extends Component {
     return (
       show ?
         <Dialog open={show} onClose={this.handleClose}>
-          <DialogTitle id='delete-dialog-title'>Delete customer
+          <DialogTitle>Projektarbeit löschen
             <IconButton onClick={this.handleClose}>
               <CloseIcon />
             </IconButton>

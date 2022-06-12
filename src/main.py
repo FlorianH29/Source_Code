@@ -4,6 +4,7 @@ from flask_cors import CORS
 
 from server.HdMWebAppAdministration import HdMWebAppAdministration
 from server.bo.Activity import Activity
+from server.bo.Event import Event
 from server.bo.Person import Person
 from server.bo.Project import Project
 from server.bo.ProjectWork import ProjectWork
@@ -26,9 +27,15 @@ bo = api.model('BusinessObject', {
     'last_edit': fields.DateTime(attribute='_last_edit', description='Der Zeitpunkt der letzten Änderung')
 })
 
-activity = api.inherit('Activity', {
+activity = api.inherit('Activity', bo, {
     'name': fields.String(description='Name einer Aktivität'),
     'capacity': fields.Integer(description='Kapazität einer Aktivität'),
+})
+
+event = api.inherit('Event', bo, {
+    'event_type': fields.Integer(attribute='_event_type', description='Typ eines Events, Start oder Ende, für B und PW'),
+    'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt'),
+    'affiliated_person': fields.Integer(attribute='_affiliated_person', description='ID der Person, die Event besitzt')
 })
 
 person = api.inherit('Person', bo, {
@@ -52,9 +59,11 @@ project = api.inherit('Project', bo, {
 })
 
 timeinterval = api.inherit('TimeInterval', bo, {
-    'start_event': fields.DateTime(attribute='_start_event', description='Startzeitpunkt eines Zeitintervalls'),
-    'end_event': fields.DateTime(attribute='_end_event', description='Endzeitpunkt eines Zeitintervalls'),
-    'time_period': fields.String(attribute='_time_period', description='Zeitraum des Intervalls')
+    'start_event_id': fields.Integer(attribute='_start_event_id', description='Id des Starts eines Zeitintervalls'),
+    'end_event_id': fields.Integer(attribute='_end_event_id', description='Id des Starts eines Zeitintervalls'),
+    'time_period': fields.String(attribute='_time_period', description='Zeitraum des Intervalls'),
+    'arrive_id': fields.Integer(attribute='_arrive_id', description='Id des Kommen Events'),
+    'departure_id': fields.Integer(attribute='_departure_id', description='Id des Gehen Events')
 })
 
 projectwork = api.inherit('ProjectWork', timeinterval, {
@@ -151,6 +160,37 @@ class ActivitiesList(Resource):
         return result
 
 
+@hdmwebapp.route('/events')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class EventOperations(Resource):
+    @hdmwebapp.marshal_list_with(event)
+    def get(self, id):
+        """
+        Auslesen eines bestimmten Eventobjektes, das nach der id in der URI bestimmt wird.
+        """
+        hwa = HdMWebAppAdministration()
+        ev = hwa.get_event_by_id(id)
+        return ev
+
+    @hdmwebapp.marshal_with(event, code=200)
+    def post(self):
+        """
+        Anlegen eines Events. Das neu angelegte Event wird als Ergebnis zurückgegeben.
+        """
+        hwa = HdMWebAppAdministration()
+        proposal = Event.from_dict(api.payload)
+        print(proposal)
+
+        if proposal is not None:
+            """ 
+            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Eventobjekt erstellt.  
+            """
+            e = hwa.create_event(proposal.get_event_type(), proposal.get_affiliated_person())
+            return e, 200
+        else:
+            return '', 500
+
+
 @hdmwebapp.route('/projects')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
@@ -189,6 +229,9 @@ class ProjectWorkOperations(Resource):
     @hdmwebapp.marshal_list_with(projectwork)
     @secured
     def put(self, id):
+        """
+        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
         hwa = HdMWebAppAdministration()
         pw = ProjectWork.from_dict(api.payload)
 
@@ -200,9 +243,8 @@ class ProjectWorkOperations(Resource):
             return '', 500
 
     def delete(self, id):
-        """Löschen eines bestimmten Projektarbeitsobjekts.
-
-        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
         """
         hwa = HdMWebAppAdministration()
         pw = hwa.get_projectwork_by_id(id)
@@ -210,7 +252,15 @@ class ProjectWorkOperations(Resource):
         return '', 200
 
 
+h = HdMWebAppAdministration()
+e1 = h.get_event_by_id(1)
+e2 = h.get_event_by_id(3)
+ti = h.get_time_interval_by_id(2)
+pe = h.get_person_by_id(1)
+pe2 = h.get_person_by_id(2)
+pro = h.get_project_by_id(1)
+ac = h.get_activity_by_id(1)
+
 
 if __name__ == '__main__':
-    app.run(debug=False)
-
+    app.run(debug=True)
