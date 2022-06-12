@@ -12,8 +12,8 @@ export default class HdMWebAppAPI {
     static #api = null;
 
 
-    // Local Python backend
-    #hdmwebappServerBaseURL = '/hdmwebapp';
+  // Local Python backend
+  #hdmwebappServerBaseURL = '/hdmwebapp';
 
   // Person bezogen
   #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
@@ -34,8 +34,11 @@ export default class HdMWebAppAPI {
     //Activity bezogen
     #getActivitiesURL = () => `${this.#hdmwebappServerBaseURL}/activities`;
 
+  // Ereignis bezogen
+  #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
+
   /**
-   * Get the Singelton instance
+   * Gibt die Singelton Instanz zurück
    *
    * @public
    */
@@ -60,6 +63,22 @@ export default class HdMWebAppAPI {
                 return res.json();
             }
         )
+  addEvent(eventBO) {
+    return this.#fetchAdvanced(this.#addEventURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(eventBO)
+    }).then((responseJSON) => {
+      let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+      console.log(responseEventBO);
+      return new Promise(function (resolve) {
+        resolve(responseEventBO);
+      })
+    })
+  }
 
   addPerson(PersonBO) {
     return this.#fetchAdvanced(this.#addPersonURL(), {
@@ -97,7 +116,6 @@ export default class HdMWebAppAPI {
     })
   }
 
-
     getPerson() {
         return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
             let personBOs = PersonBO.fromJSON(responseJSON);
@@ -107,6 +125,40 @@ export default class HdMWebAppAPI {
             })
         })
     }
+
+  /**
+   * Erstellt ein Ereignis und gibt eine Promise zurück, die ein neues EventBO
+   * Objekt mit dem Eventtyp des Parameters eventBO als Ergebnis hat.
+   *
+   * @param {EventBO} eventBO welches erstellt werden soll.
+   * @public
+   */
+  addEvent(eventBO) {
+    return this.#fetchAdvanced(this.#addEventURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(eventBO)
+    }).then((responseJSON) => {
+      let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+      console.log(responseEventBO);
+      return new Promise(function (resolve) {
+        resolve(responseEventBO);
+      })
+    })
+  }
+
+    getPersons() {
+    return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
+      let personBOs = PersonBO.fromJSON(responseJSON);
+      //console.log(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(personBOs);
+      })
+    })
+  }
 
     getWorktimeAccount(id) {
         return this.#fetchAdvanced(this.#getWorktimeAccountURL(id)).then((responseJSON) => {
@@ -144,16 +196,6 @@ export default class HdMWebAppAPI {
             return new Promise(function (resolve) {
                 resolve(worktimeaccountBOs);
             })
-        })
-    }
-
-    getProject() {
-        return this.#fetchAdvanced(this.#getProjectsURL()).then((responseJSON) => {
-          let projectBOs = ProjectBO.fromJSON(responseJSON);
-          console.log(responseJSON);
-          return new Promise(function (resolve) {
-              resolve(projectBOs);
-          })
         })
     }
 

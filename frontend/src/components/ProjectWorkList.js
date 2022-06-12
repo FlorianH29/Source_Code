@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-import {HdMWebAppAPI} from '../api';
-import {withStyles, Button, TextField, InputAdornment, IconButton, Grid, Typography, Divider} from '@mui/material';
+import {EventBO, HdMWebAppAPI} from '../api';
+import {Button, Grid, Typography, Divider, Dialog, DialogActions, DialogContent} from '@mui/material';
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
 import ProjectWorkEntry from "./ProjectWorkListEntry";
 import ProjectWorkForm from "./dialogs/ProjectWorkForm";
 import PropTypes from "prop-types";
+import {DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
+import CloseIcon from "@material-ui/icons/Close";
 
 class ProjectWorkList extends Component {
 
@@ -14,7 +16,10 @@ class ProjectWorkList extends Component {
 
       this.state = {
         projectWorks: [],
-        showProjectWorkForm: false
+        showProjectWorkForm: false,
+        open: false,
+        disableEnd: true,
+        disableStart: false
       }
   }
 
@@ -34,15 +39,25 @@ class ProjectWorkList extends Component {
   }
 
   handleStartEventButtonClicked = (event) => {
-    // Dialog öffnen, um damit ein Startevent und eine Projektarbeit anlegen zu können
+    // Dialog öffnen, um damit ein Startevent anlegen zu können
+      event.stopPropagation();
+      this.setState({
+          open: true
+      })
+  }
+
+  handleEndEventButtonClicked = (event) => {
+    // Dialog öffnen, um damit ein Endevent zu dem Startevent und somit eine Projektarbeit anlegen zu können
       event.stopPropagation();
       this.setState({
           showProjectWorkForm: true
       })
   }
 
-  handleEndEventButtonClicked() {
-    // anlegen eines Endevents zu erstelltem Startevent
+  /** Behandelt das click event für den Button Abbrechen*/
+  handleClose = () => {
+    // den state neu setzen, sodass open false ist und der Dialog nicht mehr angezeigt wird
+    this.setState({open: false});
   }
 
   /**
@@ -72,10 +87,19 @@ class ProjectWorkList extends Component {
       }
   }
 
+  addNewEvent = () => {
+      // hier muss das Startereignis erstellt werden, aktuell nur umschalten der Knöpfe
+      this.setState({
+          disableEnd: false,
+          disableStart: true,
+          open: false
+      });
+  }
+
   render() {
     const { classes } = this.props;
-    const { projectWorks, showProjectWorkForm } = this.state;
-    console.log(this.state)
+    const { projectWorks, showProjectWorkForm, disableEnd, disableStart, open } = this.state;
+    // console.log(this.state)
 
     return (
         <div>
@@ -98,22 +122,49 @@ class ProjectWorkList extends Component {
                 }
                 <Grid container direction={'row'} spacing={18}>
                     <Grid item xs={6} align={'center'}>
-                        <Button variant='contained' color='primary' onClick={this.handleStartEventButtonClicked}>
+                        <Button variant='contained' disabled={disableStart} color='primary' onClick={this.handleStartEventButtonClicked}>
                             Start buchen
                         </Button>
                     </Grid>
                     <Grid item xs={6} align={'center'}>
-                        <Button variant='contained' color='primary' disabled={true} onClick={this.handleEndEventButtonClicked}>
+                        <Button variant='contained' disabled={disableEnd} color='primary' onClick={this.handleEndEventButtonClicked}>
                             Ende buchen
                         </Button>
                     </Grid>
                 </Grid>
             </Grid>
           </Grid>
+            <Dialog open={open} onClose={this.handleClose}>
+                <DialogTitle>Start buchen
+                    <IconButton onClick={this.handleClose}>
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Start buchen und mit Projektarbeit beginnen?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleClose} color='secondary'>
+                        Abbrechen
+                    </Button>
+                    <Button color='primary' onClick={this.addNewEvent}>
+                        Start buchen
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <ProjectWorkForm onClose={this.projectWorkFormClosed} show={showProjectWorkForm}></ProjectWorkForm>
         </div>
         );
     }
+}
+
+/** PropTypes */
+ProjectWorkForm.propTypes = {
+
+  onClose: PropTypes.func.isRequired,
+
 }
 
 export default ProjectWorkList;
