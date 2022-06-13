@@ -17,6 +17,7 @@ export default class ProjectBO extends BusinessObject {
     this.projectclient = aClient;
     this.timeintervallid = aTimeIntervalID;
     this.owner = aOwner;
+    this.work_time = 0;
 
   }
 

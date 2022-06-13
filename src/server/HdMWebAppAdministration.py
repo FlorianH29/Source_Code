@@ -224,6 +224,7 @@ class HdMWebAppAdministration(object):
         return result
 
     def calculate_work_time_of_activity(self, activity):
+        """Die für eine Aktivität gearbeitete Zeit berechnen"""
         project_works = self.get_all_project_works()
         work_time = timedelta(hours=0)
         for project_work in project_works:
@@ -426,6 +427,16 @@ class HdMWebAppAdministration(object):
             if not (person_id is None):
                 return mapper.find_by_person_id(person_id)
 
+    def calculate_work_time_of_project(self, project):
+        """Die für ein Projekt gearbeitete Zeit berechnen"""
+        activities = self.get_all_activities()
+        work_time = timedelta(hours=0)
+        for activity in activities:
+            if activity.get_affiliated_project() == project.get_id():
+                work_time += activity.get_work_time()
+        project.set_work_time(work_time)
+        self.save_project(project)
+
     """ProjectWork Methoden"""
 
     def get_projectwork_by_id(self, number):
@@ -462,7 +473,10 @@ class HdMWebAppAdministration(object):
                 project_work.set_end_event(self.get_last_end_event_project_work(person).get_id())
                 project_work.set_time_period(self.calculate_period(project_work))
 
-                return mapper.insert(project_work), self.calculate_work_time_of_activity(activity)
+                project = self.get_project_by_id(activity.get_affiliated_project())  # das Projekt der Aktität speichern
+
+                return mapper.insert(project_work), self.calculate_work_time_of_activity(activity), \
+                       self.calculate_work_time_of_project(project)
             else:
                 return None
 

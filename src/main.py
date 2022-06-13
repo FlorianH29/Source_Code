@@ -57,7 +57,8 @@ project = api.inherit('Project', bo, {
     'project_name': fields.String(attribute='_project_name', description='Name eines Projekts'),
     'client': fields.String(attribute='_client', description='Auftraggeber eines Projekts'),
     'time_interval_id': fields.Integer(attribute='_time_interval_id', description='Laufzeit eines Projekts'),
-    'owner': fields.Integer(attribute='_owner', description='Der Leiter eines Projekts')
+    'owner': fields.Integer(attribute='_owner', description='Der Leiter eines Projekts'),
+    'work_time': fields.String(attribute='_work_time', description='Zeit, die für ein Projekt gearbeitet wurde')
 })
 
 timeinterval = api.inherit('TimeInterval', bo, {
@@ -218,5 +219,6 @@ pe2 = h.get_person_by_id(2)
 pro = h.get_project_by_id(1)
 ac = h.get_activity_by_id(1)
 
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

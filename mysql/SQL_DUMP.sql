@@ -90,6 +90,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`project` (
   `client` VARCHAR(45) NULL,
   `timeinterval_id` INT NULL,
   `owner` INT NULL,
+  `work_time`TIME NULL,
   PRIMARY KEY (`project_id`),
   FOREIGN KEY (`timeinterval_id`) REFERENCES timeinterval(`timeinterval_id`),
   FOREIGN KEY (`owner`) REFERENCES person(`person_id`))
