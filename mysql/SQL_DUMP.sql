@@ -55,9 +55,14 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`eventtransaction` (
   `eventtransaction_id` INT NOT NULL,
   `last_edit` DATETIME NULL,
   `affiliated_work_time_account_id` INT NULL,
-  `event` INT NULL,
+  `affiliated_event_id` INT NULL,
+  `affiliated_arrive_id` INT NULL,
+  `affiliated_departure_id` INT NULL,
   PRIMARY KEY (`eventtransaction_id`),
-  FOREIGN KEY (`affiliated_work_time_account_id`) REFERENCES worktimeaccount(`worktimeaccount_id`))
+  FOREIGN KEY (`affiliated_work_time_account_id`) REFERENCES worktimeaccount(`worktimeaccount_id`),
+  FOREIGN KEY (`affiliated_event_id`) REFERENCES event(`event_id`),
+  FOREIGN KEY (`affiliated_arrive_id`) REFERENCES arrive(`arrive_id`),
+  FOREIGN KEY (`affiliated_departure_id`) REFERENCES departure(`departure_id`))
 ENGINE = InnoDB;
 
 

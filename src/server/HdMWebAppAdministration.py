@@ -98,7 +98,7 @@ class HdMWebAppAdministration(object):
         arrive.set_affiliated_person(person.get_id())
 
         with ArriveMapper() as mapper:
-            return mapper.insert(arrive)
+            return mapper.insert(arrive), self.create_event_transaction(None, arrive, None)
 
     def delete_arrive_event(self, arrive):
         """Die gegebene Person aus unserem System löschen."""
@@ -145,7 +145,7 @@ class HdMWebAppAdministration(object):
         departure.set_affiliated_person(person.get_id())
 
         with DepartureMapper() as mapper:
-            return mapper.insert(departure)
+            return mapper.insert(departure), self.create_event_transaction(None, None, departure)
 
     def delete_departure_event(self, departure):
         """Das gegebene End-Ereignis aus unserem System löschen."""
@@ -266,16 +266,32 @@ class HdMWebAppAdministration(object):
             # nicht ganz löschen, sondern nur deaktivieren
             mapper.delete(event_transaction)
 
-    def create_event_transaction(self, event, work_time_account):
+    def create_event_transaction(self, event=None, arrive=None, departure=None):
         """Eine EventTransaction erstellen."""
         with EventTransactionMapper() as mapper:
-            if event and work_time_account is not None:
+            if event is not None:
                 et = EventTransaction()
                 et.set_id(1)
                 et.set_last_edit(datetime.datetime.now())
-                et.set_affiliated_work_time_account(work_time_account.get_id())
+                person = self.get_person_by_id(event.get_affiliated_person())
+                et.set_affiliated_work_time_account(self.get_work_time_account_of_owner(person).get_id())
                 et.set_event(event.get_id())
-
+                return mapper.insert(et)
+            elif arrive is not None:
+                et = EventTransaction()
+                et.set_id(1)
+                et.set_last_edit(datetime.datetime.now())
+                person = self.get_person_by_id(arrive.get_affiliated_person())
+                et.set_affiliated_work_time_account(self.get_work_time_account_of_owner(person).get_id())
+                et.set_arrive(arrive.get_id())
+                return mapper.insert(et)
+            elif departure is not None:
+                et = EventTransaction()
+                et.set_id(1)
+                et.set_last_edit(datetime.datetime.now())
+                person = self.get_person_by_id(departure.get_affiliated_person())
+                et.set_affiliated_work_time_account(self.get_work_time_account_of_owner(person).get_id())
+                et.set_departure(departure.get_id())
                 return mapper.insert(et)
             else:
                 return None
@@ -648,7 +664,7 @@ class HdMWebAppAdministration(object):
                 event.set_event_type(event_type)
                 event.set_time_stamp(datetime.datetime.now())
                 event.set_affiliated_person(person.get_id())
-                return mapper.insert(event)
+                return mapper.insert(event), self.create_event_transaction(event, None, None)
             else:
                 return None
 

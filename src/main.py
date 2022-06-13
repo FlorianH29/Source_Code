@@ -221,6 +221,12 @@ sub_thread.start()
 h = HdMWebAppAdministration()
 #pe= h.get_person_by_id(2)
 #print(h.get_last_event_by_affiliated_person(pe))
+ev = h.get_event_by_id(24)
+pe = h.get_person_by_id(2)
+et = h.get_event_transaction_by_id(1)
+h.create_event(2, pe)
+
+
 
 
 if __name__ == '__main__':
