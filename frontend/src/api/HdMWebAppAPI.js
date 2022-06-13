@@ -6,6 +6,7 @@ import ProjectWorkBO from "./ProjectWorkBO";
 import TimeIntervalBO from "./TimeIntervalBO";
 import header from "../components/layout/Header";
 import personForm from "../components/dialogs/PersonForm";
+import EventBO from "./EventBO";
 export default class HdMWebAppAPI {
 
     // Singelton instance

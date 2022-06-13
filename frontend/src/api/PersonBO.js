@@ -72,7 +72,7 @@ export default class PersonBO extends BusinessObject {
   /**
    * Setzt eine neue Mailadresse.
    *
-   * @param aMailAddress - die neue Mailadresse dieses PersonBO
+   * @param aMailAddress - die neue Mailadresse dieser PersonBO
    */
   setMailAddress(aMailAddress) {
     this.mailaddress = aMailAddress;

@@ -106,13 +106,16 @@ class App extends React.Component {
 
                         :
                         <>
+                            <Redirect to='/index.html' />
                             <SignIn onSignIn={this.handleSignIn}/>
+
                         </>
                 }
             </Router>
         );
     }
 }
+
 console.log(Person);
 
 export default App;

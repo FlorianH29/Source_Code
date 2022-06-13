@@ -100,7 +100,8 @@ class PersonListOperations(Resource):
         proposal = Person.from_dict(api.payload)
 
         if proposal is not None:
-            c = ha.create_person(proposal.get_firstname(), proposal.get_lastname, proposal.get_mailaddress, proposal.get_firebase_id ())
+            c = ha.create_person(proposal.get_firstname(), proposal.get_lastname, proposal.get_mailaddress,
+                                 proposal.get_firebase_id())
             return c, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
