@@ -26,8 +26,10 @@ bo = api.model('BusinessObject', {
 })
 
 activity = api.inherit('Activity', {
-    'name': fields.String(description='Name einer Aktivität'),
-    'capacity': fields.Integer(description='Kapazität einer Aktivität'),
+    'name': fields.String(attribute='_name', description='Name einer Aktivität'),
+    'capacity': fields.Integer(attribute='_capacity', description='Kapazität einer Aktivität'),
+    'work_time': fields.Integer(attribute='_work_time', description='Dauer einer Aktivität'),
+    'affiliated_project': fields.Integer(attribute='affiliated_project', description='Zugehöriges Projekt')
 })
 
 person = api.inherit('Person', bo, {

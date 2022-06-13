@@ -55,8 +55,8 @@ class ActivityList extends Component {
     });
     }
 
-    activityDeleted = activities => {
-    const newActivityList = this.state.activities.filter(activitiesFromState => activitiesFromState.getID() !== activities.getID());
+    activityDeleted = activity => {
+    const newActivityList = this.state.activities.filter(activityFromState => activityFromState.getID() !== activities.getID());
     this.setState({
       activities: newActivityList,
       showActivityForm: false
@@ -64,10 +64,10 @@ class ActivityList extends Component {
     }
 
   /** Behandelt das onClose Event von CustomerForm */
-  ActivityClosed = activities => {
+  ActivityClosed = activity => {
     // projectWork ist nicht null und deshalb erstelltI/überarbeitet
-    if (activities) {
-      const newActivityList = [...this.state.activities, activities];
+    if (activity) {
+      const newActivityList = [...this.state.activities, activity];
       this.setState({
         activities: newActivityList,
         showActivityForm: false
@@ -108,7 +108,7 @@ class ActivityList extends Component {
                         </Grid>
                         <Divider/>
                         {activities.map(a =>
-                            <ActivityListEntry key={a.getID()} activities={a} onActivityDeleted={this.activityDeleted}/>)
+                            <ActivityListEntry key={a.getID()} activity={a} onActivityDeleted={this.activityDeleted}/>)
                         }
                         <Grid item xs={12} align={"center"}>
                             {this.state.activities.map((activity) => (
@@ -116,12 +116,22 @@ class ActivityList extends Component {
                                         <Grid container justifyContent={"left"}>
                                             <Grid item xs={6} align={"left"}>
                                                 <Typography variant={"h5"} component={"div"}>
-                                                    {activities.name}
+                                                    {activity.name}
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={6} align={"left"}>
                                                 <Typography variant={"h5"} component={"div"}>
-                                                    {activities.capacity}
+                                                    {activity.capacity}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={6} align={"left"}>
+                                                <Typography variant={"h5"} component={"div"}>
+                                                    {activity.work_time}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={6} align={"left"}>
+                                                <Typography variant={"h5"} component={"div"}>
+                                                    {activity.affiliated_project}
                                                 </Typography>
                                             </Grid>
                                         </Grid>

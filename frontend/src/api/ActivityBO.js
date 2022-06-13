@@ -14,6 +14,7 @@ export default class ActivityBO extends BusinessObject {
     super();
     this.name = aName;
     this.capacity = aCapacity;
+    this.work_time
     this.affiliated_project = anAffiliatedProject;
   }
 
@@ -54,15 +55,15 @@ export default class ActivityBO extends BusinessObject {
    *
    * @param {String} aCapacity - die neue Kapazität dieses ActivityBO.
    */
-  setActivityTimePeriod(aTimePeriod) {
-    this.timePeriod = aTimePeriod;
+  setActivityWorkTime(aWorkTime) {
+    this.work_time = aWorkTime;
   }
 
   /**
    * Gibt die Dauer zurück.
    */
-  getActivityTimePeriod() {
-    return this.timePeriod;
+  getActivityWorkTime() {
+    return this.work_time;
   }
 
   /**

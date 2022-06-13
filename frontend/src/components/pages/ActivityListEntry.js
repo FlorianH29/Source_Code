@@ -25,19 +25,19 @@ class ActivityListEntry extends Component {
 
     componentDidMount() {
     // load initial balance
-    this.getTimePeriodForActivity();
+    this.getActivityWorkTime();
     }
 
     /** Lifecycle method, which is called when the component was updated */
     componentDidUpdate(prevProps) {
         if ((this.props.show) && (this.props.show !== prevProps.show)) {
-            this.getTimePeriodForActivity();
+            this.getActivityWorkTime();
         }
     }
 
     // Die Dauer für eine Aktivität bekommen
-    getTimePeriodForActivity = () => {
-    HdMWebAppAPI.getAPI().getTimePeriodForActivity(this.props.activity.getID()).then(period =>
+    getActivityWorkTime = () => {
+    HdMWebAppAPI.getAPI().getActivityWorkTime(this.props.activity.getID()).then(period =>
       this.setState({
         period: period,
         loadingInProgress: false, // loading indicator
@@ -117,9 +117,12 @@ class ActivityListEntry extends Component {
             </Grid>
             <Grid item xs={3} align={"center"}>
               <Typography variant={"h5"} component={"div"}>
-                {activity.getActivityTimePeriod()}
+                {activity.getActivityWorkTime()}
               </Typography>
             </Grid>
+
+              affiliated project
+
             <Grid item xs={3} align={"center"}>
                 <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editActivityButtonClicked}> </Button>
                 <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteActivityButtonClicked}> </Button>
