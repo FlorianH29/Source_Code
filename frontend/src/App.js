@@ -106,7 +106,6 @@ class App extends React.Component {
 
                         :
                         <>
-                            <Redirect to='/index.html' />
                             <SignIn onSignIn={this.handleSignIn}/>
 
                         </>
