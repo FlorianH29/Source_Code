@@ -325,33 +325,34 @@ class HdMWebAppAdministration(object):
             # nicht ganz löschen, sondern nur deaktivieren
             mapper.delete(time_interval_transaction)
 
-    def create_time_interval_transaction(self, work_time_account, time_interval=None, affiliated_break=None,
+    def create_time_interval_transaction(self, person, time_interval=None, affiliated_break=None,
                                          projectwork=None):
         """Eine TimeIntervalTransaction erstellen."""
         with TimeIntervalTransactionMapper() as mapper:
-            if time_interval and work_time_account is not None:
+            if time_interval and person is not None:
                 t = TimeIntervalTransaction()
                 t.set_id(1)
                 t.set_last_edit(datetime.datetime.now())
-                t.set_affiliated_work_time_account(work_time_account.get_id())
+                t.set_affiliated_work_time_account(self.get_work_time_account_of_owner(person).get_id())
                 t.set_affiliated_time_interval(time_interval.get_id())
-                print("test")
-            elif affiliated_break and work_time_account is not None:
+                return mapper.insert(t)
+            elif affiliated_break and person is not None:
                 t = TimeIntervalTransaction()
                 t.set_id(1)
                 t.set_last_edit(datetime.datetime.now())
-                t.set_affiliated_work_time_account(work_time_account.get_id())
+                t.set_affiliated_work_time_account(self.get_work_time_account_of_owner(person).get_id())
                 t.set_affiliated_break(affiliated_break.get_id())
-            elif projectwork and work_time_account is not None:
+                return mapper.insert(t)
+            elif projectwork and person is not None:
                 t = TimeIntervalTransaction()
                 t.set_id(1)
                 t.set_last_edit(datetime.datetime.now())
-                t.set_affiliated_work_time_account(work_time_account.get_id())
+                t.set_affiliated_work_time_account(self.get_work_time_account_of_owner(person).get_id())
                 t.set_affiliated_projectwork(projectwork.get_id())
-
+                return mapper.insert(t)
             else:
                 return None
-            return mapper.insert(t)
+
 
     """Methoden für WorkTimeAccount:"""
 
@@ -483,7 +484,8 @@ class HdMWebAppAdministration(object):
                 project_work.set_end_event(self.get_last_end_event_project_work(person).get_id())
                 project_work.set_time_period(self.calculate_period(project_work))
 
-                return mapper.insert(project_work)
+                return mapper.insert(project_work), \
+                       self.create_time_interval_transaction(person, None, None, project_work)
             else:
                 return None
 
@@ -633,7 +635,7 @@ class HdMWebAppAdministration(object):
                 br.set_end_event(self.get_last_end_event_break(person).get_id())
                 br.set_time_period(self.calculate_period(br))
 
-                return mapper.insert(br)
+                return mapper.insert(br), self.create_time_interval_transaction(person, None, br, None)
             else:
                 return None
 

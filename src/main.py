@@ -224,7 +224,8 @@ h = HdMWebAppAdministration()
 ev = h.get_event_by_id(24)
 pe = h.get_person_by_id(2)
 et = h.get_event_transaction_by_id(1)
-h.create_event(2, pe)
+ac = h.get_activity_by_id(1)
+h.create_project_work('Test', 'Test', ac, pe)
 
 
 
