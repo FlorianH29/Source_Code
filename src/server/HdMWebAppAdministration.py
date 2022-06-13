@@ -747,11 +747,9 @@ class HdMWebAppAdministration(object):
         while True:
             time.sleep(60)
             persons = self.get_all_persons_by_arrive()
-            person_list = []
             for person in persons:
-                person_list.append(person)
                 person_id = person.get_id()
-                arrive = self.get_arrive_event_by_affiliated_person_id(person_id).get_time_stamp()
+                arrive = self.get_last_arrive_by_person(person).get_time_stamp()
                 datetime_now = datetime.datetime.now()
                 working_time = datetime_now - arrive
                 if working_time >= datetime.timedelta(hours=10):
@@ -762,7 +760,3 @@ class HdMWebAppAdministration(object):
                         self.create_event(4, person)
                         self.create_break(person)
                     self.create_departure_event(person)
-
-
-
-
