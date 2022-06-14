@@ -8,13 +8,14 @@ export default class ActivityBO extends BusinessObject {
    *
    * @param {String} aName - der Name dieses ActivityBO.
    * @param {String} aCapacity - die Kapazität dieses ActivityBO.
+   * @param {String} aWorkTime - die Dauer dieses ActivityBO.
    * @param {String} anAffiliatedProject - das Projekt, das diesem ActivityBO zugeordnet ist.
    */
-  constructor(aName, aCapacity, anAffiliatedProject) {
+  constructor(aName, aCapacity, aWorkTime, anAffiliatedProject) {
     super();
     this.name = aName;
     this.capacity = aCapacity;
-    this.work_time
+    this.work_time = aWorkTime;
     this.affiliated_project = anAffiliatedProject;
   }
 
@@ -98,7 +99,7 @@ export default class ActivityBO extends BusinessObject {
       Object.setPrototypeOf(a, ActivityBO.prototype);
       result.push(a);
     }
-    //console.log(result)
+    console.log(result)
     return result;
   }
 }

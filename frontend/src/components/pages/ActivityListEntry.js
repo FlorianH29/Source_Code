@@ -68,8 +68,9 @@ class ActivityListEntry extends Component {
      activityFormClosed = (activity) => {
     // activity ist nicht null und wurde dementsprechend geändert
     if (activity) {
+      const newActivityList = [...this.state.activities, activity];
       this.setState({
-        activity: activity,
+        activities: newActivityList,
         showActivityForm: false
       });
     } else {
@@ -107,7 +108,7 @@ class ActivityListEntry extends Component {
           <Grid container alignItems='center'>
             <Grid item xs={3} align={"center"}>
               <Typography variant={"h5"} component={"div"}>
-                {activiy.getActivityName()}
+                {activity.getActivityName()}
               </Typography>
             </Grid>
             <Grid item xs={3} align={"center"}>
@@ -120,9 +121,11 @@ class ActivityListEntry extends Component {
                 {activity.getActivityWorkTime()}
               </Typography>
             </Grid>
-
-              affiliated project
-
+            <Grid item xs={3} align={"center"}>
+              <Typography variant={"h5"} component={"div"}>
+                {activity.getAffiliatedProject()}
+              </Typography>
+            </Grid>
             <Grid item xs={3} align={"center"}>
                 <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editActivityButtonClicked}> </Button>
                 <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteActivityButtonClicked}> </Button>

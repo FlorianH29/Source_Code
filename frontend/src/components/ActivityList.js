@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
-import {HdMWebAppAPI} from "../api";
+import {ActivityBO, HdMWebAppAPI} from "../api";
 import {withStyles, Button, TextField, InputAdornment, IconButton, Grid, Typography, Divider, Box} from '@mui/material';
-import ListItem from "@mui/material/ListItem";
+import AddIcon from '@material-ui/icons/Add';
 import ActivityForm from "./dialogs/ActivityForm";
 import PropTypes from "prop-types";
-import ActivityListEntry from "./ActivityListEntry";
+import ActivityListEntry from "./pages/ActivityListEntry";
 import Card from "@mui/material/Card";
-import ActivityDeleteDialog from "./dialogs/ActivityDeleteDialog";
 
 
 
@@ -32,51 +31,51 @@ class ActivityList extends Component {
             }));
     }
 
-    addActivity = () => {
-    HdMWebAppAPI.getAPI().addActivityForProject(this.props.project.getID()).then(activitiesBO => {
-
-      this.setState({  // Set new state when AccountBOs have been fetched
-        activities: [...this.state.activities, activitiesBO],
-        loadingInProgress: false, // loading indicator
-        addingActivityError: null
-      })
-    }).catch(e =>
-      this.setState({ // Reset state with error from catch
-        activities: [],
-        loadingInProgress: false,
-        addingActivityError: e
-      })
-    );
-
-    // set loading to true
-    this.setState({
-      loadingInProgress: true,
-      addingActivityError: null
-    });
+    updateActivity = () => {
+        // das originale Activity klonen, für den Fall, dass Backend Call fehlschlägt
+        let updatedActivity = Object.assign(new ActivityBO, this.props.activity);
+        // setzen der neuen Attribute aus dem Dialog
+        updatedActivity.setActivityName(this.state.activityName);
+        updatedActivity.setActivityCapacity(this.state.capacity);
+        HdMWebAppAPI.getAPI().updateActivity(updatedActivity).then(activity => {
+            // den neuen state als baseState speichern
+            this.baseState.activityName = this.state.activityName;
+            this.baseState.capacity = this.state.capacity;
+            this.props.onClose(updatedActivity);
+        })
     }
 
+     handleAddActivityButtonClicked = (event) => {
+    // Dialog öffnen, um damit eine Aktivität anlegen zu können
+      event.stopPropagation();
+      this.setState({
+          showActivityForm: true
+      })
+    }
+
+
     activityDeleted = activity => {
-    const newActivityList = this.state.activities.filter(activityFromState => activityFromState.getID() !== activities.getID());
+    const newActivityList = this.state.activities.filter(activityFromState => activityFromState.getID() !== activity.getID());
     this.setState({
       activities: newActivityList,
       showActivityForm: false
     });
     }
 
-  /** Behandelt das onClose Event von CustomerForm */
-  ActivityClosed = activity => {
-    // projectWork ist nicht null und deshalb erstelltI/überarbeitet
-    if (activity) {
-      const newActivityList = [...this.state.activities, activity];
-      this.setState({
-        activities: newActivityList,
-        showActivityForm: false
-      });
-    } else {
-        this.setState({
-          showActivityForm: false
-        });
-      }
+    /** Behandelt das onClose Event von CustomerForm */
+    ActivityClosed = activity => {
+        // projectWork ist nicht null und deshalb erstelltI/überarbeitet
+        if (activity) {
+            const newActivityList = [...this.state.activities, activity];
+            this.setState({
+                activities: newActivityList,
+                showActivityForm: false
+            });
+        } else {
+            this.setState({
+                showActivityForm: false
+            });
+        }
     }
 
     render() {
@@ -107,41 +106,13 @@ class ActivityList extends Component {
                             </Grid>
                         </Grid>
                         <Divider/>
-                        {activities.map(a =>
-                            <ActivityListEntry key={a.getID()} activity={a} onActivityDeleted={this.activityDeleted}/>)
+                        {activities.map(ac =>
+                            <ActivityListEntry key={ac.getID()} activity={ac} onActivityDeleted={this.activityDeleted}/>)
                         }
                         <Grid item xs={12} align={"center"}>
-                            {this.state.activities.map((activity) => (
-                                <Box key={activity}>
-                                        <Grid container justifyContent={"left"}>
-                                            <Grid item xs={6} align={"left"}>
-                                                <Typography variant={"h5"} component={"div"}>
-                                                    {activity.name}
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={6} align={"left"}>
-                                                <Typography variant={"h5"} component={"div"}>
-                                                    {activity.capacity}
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={6} align={"left"}>
-                                                <Typography variant={"h5"} component={"div"}>
-                                                    {activity.work_time}
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={6} align={"left"}>
-                                                <Typography variant={"h5"} component={"div"}>
-                                                    {activity.affiliated_project}
-                                                </Typography>
-                                            </Grid>
-                                        </Grid>
-                        <Grid container>
-                            <Button variant={"contained"} color='primary'>
+                            <Button variant='contained' color='primary' startIcon={<AddIcon />} onClick={this.handleAddActivityButtonClicked}>
                                 Aktivität anlegen
                             </Button>
-                        </Grid>
-                                </Box>
-                            ))}
                         </Grid>
                     </Grid>
                         <ActivityForm onClose={this.activityFormClosed} show={showActivityForm}></ActivityForm>
@@ -151,6 +122,7 @@ class ActivityList extends Component {
     }
 
 }
+
 
 ActivityList.propTypes = {
   /** @ignore */

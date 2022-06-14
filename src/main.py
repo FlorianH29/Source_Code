@@ -25,11 +25,11 @@ bo = api.model('BusinessObject', {
     'last_edit': fields.DateTime(attribute='_last_edit', description='Der Zeitpunkt der letzten Änderung')
 })
 
-activity = api.inherit('Activity', {
+activity = api.inherit('Activity', bo, {
     'name': fields.String(attribute='_name', description='Name einer Aktivität'),
     'capacity': fields.Integer(attribute='_capacity', description='Kapazität einer Aktivität'),
-    'work_time': fields.Integer(attribute='_work_time', description='Dauer einer Aktivität'),
-    'affiliated_project': fields.Integer(attribute='affiliated_project', description='Zugehöriges Projekt')
+    'work_time': fields.DateTime(attribute='_work_time', description='Dauer einer Aktivität'),
+    'affiliated_project': fields.Integer(attribute='_affiliated_project', description='Zugehöriges Projekt'),
 })
 
 person = api.inherit('Person', bo, {

@@ -48,19 +48,29 @@ class ActivityForm extends Component {
         });
     }
 
-    updateActivity = () => {
-        // das originale ProjectWork klonen, für den Fall, dass Backend Call fehlschlägt
-        let updatedActivity = Object.assign(new ActivityBO, this.props.activity);
-        // setzen der neuen Attribute aus dem Dialog
-        updatedActivity.setActivityName(this.state.activityName);
-        updatedActivity.setActivityCapacity(this.state.capacity);
-        HdMWebAppAPI.getAPI().updateActivity(updatedActivity).then(activity => {
-            // den neuen state als baseState speichern
-            this.baseState.activityName = this.state.activityName;
-            this.baseState.capacity = this.state.capacity;
-            this.props.onClose(updatedActivity);
-        })
+    addActivity = () => {
+    HdMWebAppAPI.getAPI().addActivityForProject(this.props.project.getID()).then(activitiesBO => {
+
+      this.setState({  // Set new state when AccountBOs have been fetched
+        activities: [...this.state.activities, activitiesBO],
+        loadingInProgress: false, // loading indicator
+        addingActivityError: null,
+      })
+    }).catch(e =>
+      this.setState({ // Reset state with error from catch
+        activities: [],
+        loadingInProgress: false,
+        addingActivityError: e
+      })
+    );
+
+    // set loading to true
+    this.setState({
+      loadingInProgress: true,
+      addingActivityError: null
+    });
     }
+
 
     render() {
         const {activity, show} = this.props;
@@ -76,7 +86,7 @@ class ActivityForm extends Component {
         } else {
             // ProjectWork ist nicht definiert, Erstellungsdialog wird angezeigt
             title = 'Neue Aktivität erstellen';
-            header = 'Geben Sie die Kapazotät in Stunden an';
+            header = 'Geben Sie die Kapazität in Stunden an';
         }
 
         return (
@@ -92,10 +102,10 @@ class ActivityForm extends Component {
                 {header}
               </DialogContentText>
                 <form noValidate autoComplete='off'>
-                <TextField autoFocus type='text' required fullWidth margin='normal' id='projectWorkName' label='Name:' value={activityName}
+                <TextField autoFocus type='text' required fullWidth margin='normal' id='activityName' label='Name:' value={activityName}
                   onChange={this.textFieldValueChange} error={activityNameValidationFailed}
                   helperText={activityNameValidationFailed ? 'Bitte geben Sie einen Namen an' : ' '} />
-                <TextField type='text' required fullWidth margin='normal' id='description' label='Beschreibung:' value={capacity}
+                <TextField type='text' required fullWidth margin='normal' id='capacity' label='Kapazität:' value={capacity}
                   onChange={this.textFieldValueChange} error={capacityValidationFailed}
                   helperText={capacityValidationFailed ? 'Bitte geben Sie eine Kapazität in Stunden an' : ' '} />
               </form>
@@ -106,7 +116,7 @@ class ActivityForm extends Component {
               </Button>
               {// Falls eine Aktivität gegeben ist, sichern Knopf anzeigen, sonst einen Erstellen Knopf
                 activity ?
-                  <Button color='primary' onClick={this.updateActivity}>
+                  <Button color='primary' onClick={this.addActivity}>
                     Sichern
                   </Button>
                   : <Button color='primary'>
