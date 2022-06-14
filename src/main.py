@@ -1,4 +1,4 @@
-import datetime
+from datetime import timedelta
 
 from flask import Flask
 from flask_restx import Api, Resource, fields
@@ -173,7 +173,7 @@ class ProjectWorksByActivityOperations(Resource):
         # Die durch die id gegebene Aktivität als Objekt speichern.
 
         if act is not None:
-            projectwork_list = hwa.get_projectworks_of_activity(act)
+            projectwork_list = hwa.get_project_works_of_activity(act)
             # Auslesen der Projektarbeiten, die der Aktivität untergliedert sind.
             return projectwork_list
         else:
@@ -204,28 +204,21 @@ class ProjectWorkOperations(Resource):
         Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
         """
         hwa = HdMWebAppAdministration()
-        pw = hwa.get_projectwork_by_id(id)
+        pw = hwa.get_project_work_by_id(id)
         hwa.delete_project_work(pw)
         return '', 200
 
 
-def worker():
+def check():
     hwa = HdMWebAppAdministration()
     hwa.check_time_for_departure()
 
 
-sub_thread = Thread(target=worker)
+sub_thread = Thread(target=check)
 #es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
 
-h = HdMWebAppAdministration()
-pe = h.get_person_by_id(2)
-e = h.get_departure_event_by_id(6)
-ti = h.get_time_interval_by_id(4)
-
-print(h.calculate_period_for_arrive_and_departure(ti))
-print(h.calculate_work_time(pe))
 
 if __name__ == '__main__':
     app.run(debug=False)
