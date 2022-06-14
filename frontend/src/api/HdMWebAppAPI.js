@@ -32,8 +32,11 @@ export default class HdMWebAppAPI {
   //Activity bezogen
   #getActivitiesURL = () => `${this.#hdmwebappServerBaseURL}/activities`;
 
+  // Ereignis bezogen
+  #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
+
   /**
-   * Get the Singelton instance
+   * Gibt die Singelton Instanz zurück
    *
    * @public
    */
@@ -58,6 +61,31 @@ export default class HdMWebAppAPI {
                 return res.json();
             }
         )
+
+  /**
+   * Erstellt ein Ereignis und gibt eine Promise zurück, die ein neues EventBO
+   * Objekt mit dem Eventtyp des Parameters eventBO als Ergebnis hat.
+   *
+   * @param {EventBO} eventBO welches erstellt werden soll.
+   * @public
+   */
+  addEvent(eventBO) {
+    return this.#fetchAdvanced(this.#addEventURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(eventBO)
+    }).then((responseJSON) => {
+      let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+      console.log(responseEventBO);
+      return new Promise(function (resolve) {
+        resolve(responseEventBO);
+      })
+    })
+  }
+
     getPersons() {
     return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
       let personBOs = PersonBO.fromJSON(responseJSON);

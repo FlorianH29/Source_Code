@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import ListItem from "@mui/material/ListItem";
 import {HdMWebAppAPI} from "../api";
+import ProjectWorkForm from "./dialogs/ProjectWorkForm";
 
 class WorktimeAccount extends Component {
 
@@ -29,6 +30,10 @@ class WorktimeAccount extends Component {
                 worktimeaccounts: []
             }));
         console.log(this.state.worktimeaccounts)
+    }
+
+    handleButton = () => {
+        this.props.history.push('/worktimeaccount')
     }
 
     render() {
@@ -62,9 +67,9 @@ class WorktimeAccount extends Component {
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={6} align={"left"}>
-                                                 <Typography variant={"h5"} component={"div"}>
+                                                <Typography variant={"h5"} component={"div"}>
                                                     {project.time}
-                                                 </Typography>
+                                                </Typography>
                                             </Grid>
                                         </Grid>
                                     </ListItem>
