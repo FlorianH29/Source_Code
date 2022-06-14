@@ -72,14 +72,14 @@ export default class ActivityBO extends BusinessObject {
    *
    * @param {Number} aWorkTime - die neue gearbeitete Zeit dieses AktivityBO.
    */
-  setWorkTime(aWorkTime) {
+  setActivityWorkTime(aWorkTime) {
     this.work_time = aWorkTime;
   }
 
     /**
    * Gibt die gearbeitete Zeit zurück.
    */
-  getWorkTime() {
+  getActivityWorkTime() {
     return this.work_time;
   }
 

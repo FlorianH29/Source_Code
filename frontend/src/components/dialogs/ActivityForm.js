@@ -48,7 +48,7 @@ class ActivityForm extends Component {
         });
     }
 
-    addActivity = () => {
+/**    addActivity = () => {
     HdMWebAppAPI.getAPI().addActivityForProject(this.props.project.getID()).then(activitiesBO => {
 
       this.setState({  // Set new state when AccountBOs have been fetched
@@ -70,7 +70,74 @@ class ActivityForm extends Component {
       addingActivityError: null
     });
     }
+*/
 
+
+    addActivity = () => {
+    let newActivity = new ActivityBO(this.state.name, this.state.capacity);
+    HdMWebAppAPI.getAPI().addActivity(newActivity).then(activity => {
+      // Backend call sucessfull
+      // reinit the dialogs state for a new empty customer
+      this.setState(this.baseState);
+      this.props.onClose(activity); // call the parent with the customer object from backend
+    }).catch(e =>
+      this.setState({
+        updatingInProgress: false,    // disable loading indicator
+        updatingError: e              // show error message
+      })
+    );
+
+    // set loading to true
+    this.setState({
+      updatingInProgress: true,       // show loading indicator
+      updatingError: null             // disable error message
+    });
+  }
+
+/**    updateActivity = () => {
+        // das originale Activity klonen, für den Fall, dass Backend Call fehlschlägt
+        let updatedActivity = Object.assign(new ActivityBO, this.props.activity);
+        // setzen der neuen Attribute aus dem Dialog
+        updatedActivity.setActivityName(this.state.activityName);
+        updatedActivity.setActivityCapacity(this.state.capacity);
+        HdMWebAppAPI.getAPI().updateActivity(updatedActivity).then(activity => {
+            // den neuen state als baseState speichern
+            this.baseState.activityName = this.state.activityName;
+            this.baseState.capacity = this.state.capacity;
+            this.props.onClose(updatedActivity);
+        })
+    }
+*/
+
+
+    updateActivity = () => {
+    // clone the original cutomer, in case the backend call fails
+    let updatedActivity = Object.assign(new ActivityBO(), this.props.activity);
+    // set the new attributes from our dialog
+    updatedActivity.setName(this.state.name);
+    updatedActivity.setCapacity(this.state.capacity);
+    HdMWebAppAPI.getAPI().updateActivity(updatedActivity).then(activity => {
+      this.setState({
+        updatingInProgress: false,              // disable loading indicator
+        updatingError: null                     // no error message
+      });
+      // keep the new state as base state
+      this.baseState.name = this.state.name;
+      this.baseState.capacity = this.state.capacity;
+      this.props.onClose(updatedActivity);      // call the parent with the new customer
+    }).catch(e =>
+      this.setState({
+        updatingInProgress: false,              // disable loading indicator
+        updatingError: e                        // show error message
+      })
+    );
+
+    // set loading to true
+    this.setState({
+      updatingInProgress: true,                 // show loading indicator
+      updatingError: null                       // disable error message
+    });
+  }
 
     render() {
         const {activity, show} = this.props;
@@ -91,7 +158,7 @@ class ActivityForm extends Component {
 
         return (
         show ?
-          <Dialog open={true} onClose={this.handleClose} maxWidth='xs'>
+          <Dialog open={true} onClose={this.handleClose} maxWidth='xl'>
             <DialogTitle id='form-dialog-title'>{title}
               <IconButton onClick={this.handleClose}>
                 <CloseIcon />
@@ -116,10 +183,10 @@ class ActivityForm extends Component {
               </Button>
               {// Falls eine Aktivität gegeben ist, sichern Knopf anzeigen, sonst einen Erstellen Knopf
                 activity ?
-                  <Button color='primary' onClick={this.addActivity}>
+                  <Button color='primary' onClick={this.updateActivity}>
                     Sichern
                   </Button>
-                  : <Button color='primary'>
+                  : <Button color='primary' onClick={this.addActivity}>
                     Erstellen
                   </Button>
               }

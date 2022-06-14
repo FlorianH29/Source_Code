@@ -116,7 +116,7 @@ class ActivitiesList(Resource):
         result = []
         activities = hwa.get_all_activities()
         for a in activities:
-            result.append({"name": a.get_name(), "capacity": a.get_capacity()})
+            result.append({"name": a.get_name(), "capacity": a.get_capacity(), "work_time": a.get_work_time()})
         print(result)
         return result
 

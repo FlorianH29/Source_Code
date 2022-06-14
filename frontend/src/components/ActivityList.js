@@ -20,29 +20,19 @@ class ActivityList extends Component {
         };
     };
 
-    componentDidMount() {
+    getActivitiesForProject() {
         HdMWebAppAPI.getAPI().getActivities()
-            .then(activitiesBOs =>
+            .then(activityBOs =>
                 this.setState({
-                    activities: activitiesBOs
+                    activities: activityBOs
                 })).catch(e =>
             this.setState({
                 activities: []
             }));
     }
 
-    updateActivity = () => {
-        // das originale Activity klonen, für den Fall, dass Backend Call fehlschlägt
-        let updatedActivity = Object.assign(new ActivityBO, this.props.activity);
-        // setzen der neuen Attribute aus dem Dialog
-        updatedActivity.setActivityName(this.state.activityName);
-        updatedActivity.setActivityCapacity(this.state.capacity);
-        HdMWebAppAPI.getAPI().updateActivity(updatedActivity).then(activity => {
-            // den neuen state als baseState speichern
-            this.baseState.activityName = this.state.activityName;
-            this.baseState.capacity = this.state.capacity;
-            this.props.onClose(updatedActivity);
-        })
+    componentDidMount(){
+        this.getActivitiesForProject();
     }
 
      handleAddActivityButtonClicked = (event) => {
@@ -85,14 +75,19 @@ class ActivityList extends Component {
         return (
             <Box sx={{m: 2}}>
                 <Card>
-                    <Grid container spacing={1} justifyContent={"center"}>
-                        <Grid container>
-                            <Typography variant={"h3"} component={"div"}>
+                    <Grid container spacing={1} item xs={12} algin={"center"}>
+                        <Grid container >
+                            <Typography variant={"h4"} justifyContent={"center"} component={"div"}>
                                 Projekt:
                             </Typography>
-                                <Button variant={"contained"} color='primary'>
+                                <Button variant={"contained"} color='primary' algin={"right"}>
                                     Projekt bearbeiten
                                 </Button>
+                        </Grid>
+                        <Grid item xs={12} align={"right"}>
+                            <Button variant='contained' color='primary' startIcon={<AddIcon />} onClick={this.handleAddActivityButtonClicked}>
+                                Aktivität anlegen
+                            </Button>
                         </Grid>
                          <Grid container>
                             <Grid item xs={3} align={"flex-end"}>
@@ -109,11 +104,7 @@ class ActivityList extends Component {
                         {activities.map(ac =>
                             <ActivityListEntry key={ac.getID()} activity={ac} onActivityDeleted={this.activityDeleted}/>)
                         }
-                        <Grid item xs={12} align={"center"}>
-                            <Button variant='contained' color='primary' startIcon={<AddIcon />} onClick={this.handleAddActivityButtonClicked}>
-                                Aktivität anlegen
-                            </Button>
-                        </Grid>
+
                     </Grid>
                         <ActivityForm onClose={this.activityFormClosed} show={showActivityForm}></ActivityForm>
                 </Card>
@@ -130,7 +121,11 @@ ActivityList.propTypes = {
   /** The CustomerBO of this AccountList */
   project: PropTypes.object.isRequired,
   /** If true, accounts are (re)loaded */
-  show: PropTypes.bool.isRequired
+  show: PropTypes.bool.isRequired,
+}
+
+ActivityForm.propTypes = {
+    onClose: PropTypes.func.isRequired,
 }
 
 export default ActivityList;

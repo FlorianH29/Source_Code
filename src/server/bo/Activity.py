@@ -7,7 +7,6 @@ class Activity (bo.BusinessObject):
         super().__init__()
         self._name = ''  # Der Name der Aktivität
         self._capacity = 0  # Kapazität in Personentagen
-        self._work_time = 0 # Dauer einer Aktivität
         self._affiliated_project = None  # Der Aktivität zugeordnetes Projekt
         self._work_time = 0  # Die für die Aktivität gearbeitete Zeit
 
@@ -64,7 +63,6 @@ class Activity (bo.BusinessObject):
         obj.set_last_edit(dictionary["last_edit"])
         obj.set_name(dictionary["name"])
         obj.set_capacity(dictionary["capacity"])
-        obj.set_work_time(dictionary['work_time'])
         obj.set_affiliated_project(dictionary["affiliated_project"])
         obj.set_work_time(dictionary["work_time"])
 

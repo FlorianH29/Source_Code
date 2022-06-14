@@ -23,41 +23,6 @@ class ActivityListEntry extends Component {
         };
     }
 
-    componentDidMount() {
-    // load initial balance
-    this.getActivityWorkTime();
-    }
-
-    /** Lifecycle method, which is called when the component was updated */
-    componentDidUpdate(prevProps) {
-        if ((this.props.show) && (this.props.show !== prevProps.show)) {
-            this.getActivityWorkTime();
-        }
-    }
-
-    // Die Dauer für eine Aktivität bekommen
-    getActivityWorkTime = () => {
-    HdMWebAppAPI.getAPI().getActivityWorkTime(this.props.activity.getID()).then(period =>
-      this.setState({
-        period: period,
-        loadingInProgress: false, // loading indicator
-        loadingError: null
-      })).catch(e =>
-        this.setState({ // Reset state with error from catch
-          period: null,
-          loadingInProgress: false,
-          loadingError: e
-        })
-      );
-
-    // set loading to true
-    this.setState({
-      balance: 'loading',
-      loadingInProgress: true,
-      loadingError: null
-    });
-    }
-
     editActivityButtonClicked = (event) => {
     event.stopPropagation();
     this.setState({
