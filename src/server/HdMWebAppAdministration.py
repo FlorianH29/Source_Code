@@ -499,6 +499,20 @@ class HdMWebAppAdministration(object):
         with ProjectWorkMapper() as mapper:
             return mapper.update(project_work)
 
+    def calculate_sum_of_project_work_by_person(self, person):
+        time_periods = []
+        projects = self.get_project_by_person_id(person.get_id())
+        for p in projects:
+            ac = self.get_activities_of_project(p)
+            for a in ac:
+                act = self.get_activity_by_id(a.get_id())
+                project_works = self.get_projectworks_of_activity(act)
+                for pw in project_works:
+                    time_period = pw.get_time_period()
+                    time_periods.append(time_period)
+        sum_periods = sum(time_periods, datetime.timedelta())
+        return sum_periods
+
     """ProjectMember Methoden"""
 
     def get_projectmember_by_id(self, number):
@@ -621,6 +635,15 @@ class HdMWebAppAdministration(object):
         with TimeIntervalMapper() as mapper:
             if not (person_id is None):
                 return mapper.find_by_person_id(person_id)
+
+    def calculate_sum_of_time_intervals_by_person(self, person):
+        time_periods = []
+        time_intervals = self.get_time_interval_by_person_id(person.get_id())
+        for ti in time_intervals:
+            period = ti.get_time_period()
+            time_periods.append(period)
+        sum_periods = sum(time_periods, datetime.timedelta())
+        return sum_periods
 
     """Methoden für Pause"""
 

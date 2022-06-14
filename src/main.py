@@ -8,6 +8,7 @@ from server.bo.Event import Event
 from server.bo.Person import Person
 from server.bo.Project import Project
 from server.bo.ProjectWork import ProjectWork
+import datetime
 from server.bo.WorkTimeAccount import WorkTimeAccount
 
 
@@ -92,14 +93,11 @@ class WorkTimeAccountContentList(Resource):
     def get(self, id):
         hwa = HdMWebAppAdministration()
         result = []
+        person = hwa.get_person_by_id(id)
         projects = hwa.get_project_by_person_id(id)
         for p in projects:
-            time_intervals_project = hwa.get_time_interval_by_id(p.get_time_interval_id())
-            test = time_intervals_project.get_time_period()
-            result.append({"name": p._project_name, "time": time_intervals_project.get_time_period()})
-        time_intervals = hwa.get_time_interval_by_person_id(id)
-        result.append({"name": "Arbeitszeit", "time": sum([t.get_time_period() for t in time_intervals])})
-
+            result.append({"name": p.get_project_name(), "time": hwa.calculate_sum_of_project_work_by_person(person)})
+        result.append({"name": "Arbeitszeit", "time": hwa.calculate_sum_of_time_intervals_by_person(person)})
         print(result)
         return result
 
@@ -225,8 +223,18 @@ ev = h.get_event_by_id(24)
 pe = h.get_person_by_id(2)
 et = h.get_event_transaction_by_id(1)
 ac = h.get_activity_by_id(1)
-h.create_project_work('Test', 'Test', ac, pe)
+ar = h.get_arrive_event_by_id(7)
+tw1 = h.get_time_interval_by_id(1)
+tw2 = h.get_time_interval_by_id(2)
+pw = h.get_project_by_id(2)
+acc = h.get_activity_by_id(2)
+test = h.get_project_by_person_id(pe.get_id())
+#print(test)
 
+#h.create_project_work('testen', 'test', acc, pe)
+#tets = h.calculate_sum_of_project_work_by_person(pe)
+#print(tets)
+#h.create_project_work('Testeb', 'fromtendtesten', ac, pe)
 
 
 
