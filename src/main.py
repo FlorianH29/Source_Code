@@ -219,7 +219,13 @@ sub_thread = Thread(target=worker)
 sub_thread.setDaemon(True)
 sub_thread.start()
 
+h = HdMWebAppAdministration()
+pe = h.get_person_by_id(2)
+e = h.get_departure_event_by_id(6)
+ti = h.get_time_interval_by_id(4)
 
+print(h.calculate_period_for_arrive_and_departure(ti))
+print(h.calculate_work_time(pe))
 
 if __name__ == '__main__':
     app.run(debug=False)
