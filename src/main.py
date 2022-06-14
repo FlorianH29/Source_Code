@@ -95,9 +95,9 @@ class WorkTimeAccountContentList(Resource):
         result = []
         person = hwa.get_person_by_id(id)
         projects = hwa.get_project_by_person_id(id)
+        result.append({"name": "Arbeitszeit", "time": hwa.calculate_sum_of_time_intervals_by_person(person)})
         for p in projects:
             result.append({"name": p.get_project_name(), "time": hwa.calculate_sum_of_project_work_by_person(person)})
-        result.append({"name": "Arbeitszeit", "time": hwa.calculate_sum_of_time_intervals_by_person(person)})
         print(result)
         return result
 
@@ -214,27 +214,6 @@ sub_thread = Thread(target=worker)
 #es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
-
-
-h = HdMWebAppAdministration()
-#pe= h.get_person_by_id(2)
-#print(h.get_last_event_by_affiliated_person(pe))
-ev = h.get_event_by_id(24)
-pe = h.get_person_by_id(2)
-et = h.get_event_transaction_by_id(1)
-ac = h.get_activity_by_id(1)
-ar = h.get_arrive_event_by_id(7)
-tw1 = h.get_time_interval_by_id(1)
-tw2 = h.get_time_interval_by_id(2)
-pw = h.get_project_by_id(2)
-acc = h.get_activity_by_id(2)
-test = h.get_project_by_person_id(pe.get_id())
-#print(test)
-
-#h.create_project_work('testen', 'test', acc, pe)
-#tets = h.calculate_sum_of_project_work_by_person(pe)
-#print(tets)
-#h.create_project_work('Testeb', 'fromtendtesten', ac, pe)
 
 
 
