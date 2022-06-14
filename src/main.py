@@ -1,3 +1,5 @@
+import datetime
+
 from flask import Flask
 from flask_restx import Api, Resource, fields
 from flask_cors import CORS
@@ -29,8 +31,9 @@ bo = api.model('BusinessObject', {
 })
 
 activity = api.inherit('Activity', bo, {
-    'name': fields.String(description='Name einer Aktivität'),
-    'capacity': fields.Integer(description='Kapazität einer Aktivität'),
+    'name': fields.String(attribute='_name', description='Name einer Aktivität'),
+    'capacity': fields.Integer(attribute='_capacity', description='Kapazität einer Aktivität'),
+    'work_time': fields.String(attribute='_work_time', description='Zeit, die für eine Aktivität gearbeitet wurde')
 })
 
 event = api.inherit('Event', bo, {
@@ -56,7 +59,8 @@ project = api.inherit('Project', bo, {
     'project_name': fields.String(attribute='_project_name', description='Name eines Projekts'),
     'client': fields.String(attribute='_client', description='Auftraggeber eines Projekts'),
     'time_interval_id': fields.Integer(attribute='_time_interval_id', description='Laufzeit eines Projekts'),
-    'owner': fields.Integer(attribute='_owner', description='Der Leiter eines Projekts')
+    'owner': fields.Integer(attribute='_owner', description='Der Leiter eines Projekts'),
+    'work_time': fields.String(attribute='_work_time', description='Zeit, die für ein Projekt gearbeitet wurde')
 })
 
 timeinterval = api.inherit('TimeInterval', bo, {

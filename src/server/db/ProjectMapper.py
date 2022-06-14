@@ -151,13 +151,13 @@ class ProjectMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE project SET last_edit=%s, project_name=%s, client=%s, timeinterval_id=%s, " \
-                  "owner=%s WHERE project_id=%s"
+                  "owner=%s, work_time=%s WHERE project_id=%s"
         """  
         Die Variablen werden dem übergebenen "project" entnommen und überschreiben die aktuellen Werte, 
         welche im Object mit der entsprechenden id stehen.
         """
         data = (project.get_last_edit(), project.get_project_name(), project.get_client(),
-                project.get_timeinterval_id(), project.get_owner(), project.get_id())
+                project.get_time_interval_id(), project.get_owner(), project.get_work_time(), project.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

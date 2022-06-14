@@ -1,3 +1,4 @@
+from datetime import timedelta
 import datetime
 import time
 from .bo.Arrive import Arrive
@@ -192,6 +193,7 @@ class HdMWebAppAdministration(object):
                 activity.set_name(name)
                 activity.set_capacity(capacity)
                 activity.set_affiliated_project(project.get_id())
+                activity.set_work_time(0)
 
                 return mapper.insert(activity)
             else:
@@ -236,6 +238,16 @@ class HdMWebAppAdministration(object):
                 if not (activities is None):
                     result.extend(activities)
         return result
+
+    def calculate_work_time_of_activity(self, activity):
+        """Die für eine Aktivität gearbeitete Zeit berechnen"""
+        project_works = self.get_all_project_works()
+        work_time = timedelta(hours=0)
+        for project_work in project_works:
+            if project_work.get_affiliated_activity() == activity.get_id():
+                work_time += project_work.get_time_period()
+        activity.set_work_time(work_time)
+        self.save_activity(activity)
 
     """Methoden für EventTransaktionen"""
 
@@ -448,6 +460,16 @@ class HdMWebAppAdministration(object):
             if not (person_id is None):
                 return mapper.find_by_person_id(person_id)
 
+    def calculate_work_time_of_project(self, project):
+        """Die für ein Projekt gearbeitete Zeit berechnen"""
+        activities = self.get_all_activities()
+        work_time = timedelta(hours=0)
+        for activity in activities:
+            if activity.get_affiliated_project() == project.get_id():
+                work_time += activity.get_work_time()
+        project.set_work_time(work_time)
+        self.save_project(project)
+
     """ProjectWork Methoden"""
 
     def get_projectwork_by_id(self, number):
@@ -484,7 +506,10 @@ class HdMWebAppAdministration(object):
                 project_work.set_end_event(self.get_last_end_event_project_work(person).get_id())
                 project_work.set_time_period(self.calculate_period(project_work))
 
-                return mapper.insert(project_work), \
+                project = self.get_project_by_id(activity.get_affiliated_project())  # das Projekt der Aktität speichern
+
+                return mapper.insert(project_work), self.calculate_work_time_of_activity(activity), \
+                       self.calculate_work_time_of_project(project), \
                        self.create_time_interval_transaction(person, None, None, project_work)
             else:
                 return None
@@ -708,6 +733,7 @@ class HdMWebAppAdministration(object):
                 return None
 
     def get_last_start_event_project_work(self, person):
+        """Gibt das letzte Startevent für eine Projektarbeit einer bestimmten Person zurück"""
         with EventMapper() as mapper:
             if person is not None:
                 return mapper.find_last_start_event_project_work(person.get_id())
@@ -715,6 +741,7 @@ class HdMWebAppAdministration(object):
                 return None
 
     def get_last_end_event_project_work(self, person):
+        """Gibt das letzte Endevent für eine Projektarbeit einer bestimmten Person zurück"""
         with EventMapper() as mapper:
             if person is not None:
                 return mapper.find_last_end_event_project_work(person.get_id())
@@ -722,6 +749,7 @@ class HdMWebAppAdministration(object):
                 return None
 
     def get_last_start_event_break(self, person):
+        """Gibt das letzte Startevent für eine Pause einer bestimmten Person zurück"""
         with EventMapper() as mapper:
             if person is not None:
                 return mapper.find_last_start_event_break(person.get_id())
@@ -729,6 +757,7 @@ class HdMWebAppAdministration(object):
                 return None
 
     def get_last_end_event_break(self, person):
+        """Gibt das letzte Endevent für eine Projektarbeit einer bestimmten Person zurück"""
         with EventMapper() as mapper:
             if person is not None:
                 return mapper.find_last_end_event_break(person.get_id())

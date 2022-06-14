@@ -9,6 +9,7 @@ class Project (bo.BusinessObject):
         self._client = ""  # The name of the client.
         self._time_interval_id = None  # The project term is an object of TimeInterval
         self._owner = None  # Der Projektleiter
+        self._work_time = 0  # Die für das Projekt gearbeitete Zeit
 
     def set_project_name(self, project_name):
         self._project_name = project_name
@@ -34,10 +35,17 @@ class Project (bo.BusinessObject):
     def get_owner(self):
         return self._owner
 
+    def set_work_time(self, work_time):
+        self._work_time = work_time
+
+    def get_work_time(self):
+        return self._work_time
+
     def __str__(self):
         """Ausgabe von: id, name, client, project_term_id"""
-        return "Project: {}, {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self.get_project_name(),
-                                                        self.get_client(), self.get_time_interval_id(), self.get_owner())
+        return "Project: {}, {}, {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self.get_project_name(),
+                                                            self.get_client(), self.get_time_interval_id(),
+                                                            self.get_owner(), self.get_work_time())
 
     @staticmethod
     def from_dict(dictionary=dict()):
@@ -49,4 +57,5 @@ class Project (bo.BusinessObject):
         project.set_client(dictionary["client"])  # Sets the client from the dict as the client of the object.
         project.set_time_interval_id(dictionary["timeinterval_id"])  # Sets the client from the dict as the client of the object.
         project.set_owner(dictionary["owner"])  # Setzt owner aus dem dict als owner des Projekts
+        project.set_work_time(dictionary["work_time"])
         return project
