@@ -35,7 +35,7 @@ class ProjectWork (ti.TimeInterval):
                "time_period: {}".format(self.get_id(), self.get_last_edit(),
                                         self.get_project_work_name(), self.get_description(),
                                         self._affiliated_activity(), self._time_period,
-                                        self._start_event, self._end_event)
+                                        self.get_start_event(), self.get_end_event())
 
     @staticmethod
     def from_dict(dictionary=dict()):
@@ -47,7 +47,7 @@ class ProjectWork (ti.TimeInterval):
         projectwork.set_description(dictionary["description"])  # Setzt description aus dict() für ProjectWork
         projectwork.set_affiliated_activity(dictionary["affiliated_activity"])  # Setzt affiliated_activity aus
         # dict() für ProjectWork
-        projectwork.set_start_event(dictionary["start_event"])  # Setzt start_time aus dict() für ProjectWork
-        projectwork.set_end_event(dictionary["end_event"])  # Setzt end_time aus dict() für ProjectWork
+        projectwork.set_start_event(dictionary["start_event_id"])  # Setzt start_time aus dict() für ProjectWork
+        projectwork.set_end_event(dictionary["end_event_id"])  # Setzt end_time aus dict() für ProjectWork
         projectwork.set_time_period(dictionary["time_period"])  # Setzt time_periode aus dict() für ProjectWork
         return projectwork

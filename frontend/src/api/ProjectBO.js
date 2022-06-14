@@ -17,6 +17,7 @@ export default class ProjectBO extends BusinessObject {
     this.projectclient = aClient;
     this.timeintervallid = aTimeIntervalID;
     this.owner = aOwner;
+    this.work_time = 0;
 
   }
 
@@ -32,7 +33,7 @@ export default class ProjectBO extends BusinessObject {
   /**
    * Gets the projectname.
    */
-  getFirstName() {
+  getProjectName() {
     return this.projectname;
   }
 
@@ -56,7 +57,7 @@ export default class ProjectBO extends BusinessObject {
   /**
    * Setzt einen neuen Vornamen.
    *
-   * @param {String} aTimeIntervalID - die neue TimeIntervalId dieses ProjectBOs.
+   * @param {Number} aTimeIntervalID - die neue TimeIntervalId dieses ProjectBOs.
    */
   setTimeIntervallID(aTimeIntervalID) {
     this.timeintervallid = aTimeIntervalID;

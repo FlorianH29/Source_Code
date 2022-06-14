@@ -8,11 +8,13 @@ export default class EventBO extends BusinessObject {
    *
    * @param {Number} anEventType - der Typ dieses EventBO.
    * @param {Date} aTimeStamp - die Kapazität dieses EventBO.
+   * @param {Number} anAffiliatedPerson - die Person, der dieses EventBO zugeordnet ist.
    */
-  constructor(anEventType, aTimeStamp) {
+  constructor(anEventType, anAffiliatedPerson) {
     super();
-    this.eventType = anEventType;
-    this.timeStamp = aTimeStamp;
+    this.event_type = 1;
+    this.time_stamp = 0;
+    this.affiliated_person = 0;
   }
 
   /**
@@ -21,14 +23,14 @@ export default class EventBO extends BusinessObject {
    * @param {Number} anEventType - der neue Typ dieses EventBO.
    */
   setEventType(anEventType) {
-    this.eventType = anEventType;
+    this.event_type = anEventType;
   }
 
   /**
    * Gibt den Eventtyp zurück.
    */
   getEventType() {
-    return this.eventType;
+    return this.event_type;
   }
 
   /**
@@ -37,14 +39,30 @@ export default class EventBO extends BusinessObject {
    * @param {*} aTimeStamp - der neue Zeitpunkt dieses EventBO.
    */
   setTimeStamp(aTimeStamp) {
-    this.timeStamp = aTimeStamp;
+    this.time_stamp = aTimeStamp;
   }
 
   /**
    * Gibt den Zeitpunkt zurück.
    */
   getTimeStamp() {
-    return this.timeStamp;
+    return this.time_stamp;
+  }
+
+  /**
+   * Setzt eine neue zugeordnete Person.
+   *
+   * @param {Number} anAffiliatedPerson - die neue zugeordnete Person dieses EventBO.
+   */
+  setAffiliatedPerson(anAffiliatedPerson) {
+    this.affiliated_person = anAffiliatedPerson;
+  }
+
+  /**
+   * Gibt den Eventtyp zurück.
+   */
+  getAffiliatedPerson() {
+    return this.affiliated_person;
   }
 
   /**
@@ -54,14 +72,14 @@ export default class EventBO extends BusinessObject {
     let result = [];
 
     if (Array.isArray(events)) {
-      events.forEach((a) => {
-        Object.setPrototypeOf(a, EventBO.prototype);
-        result.push(a);
+      events.forEach((e) => {
+        Object.setPrototypeOf(e, EventBO.prototype);
+        result.push(e);
       })
     } else {
-      let a = events;
-      Object.setPrototypeOf(a, EventBO.prototype);
-      result.push(a);
+      let e = events;
+      Object.setPrototypeOf(e, EventBO.prototype);
+      result.push(e);
     }
     //console.log(result)
     return result;

@@ -125,7 +125,7 @@ class ProjectWorkMapper (Mapper):
                 project_work.set_id(1)
 
         command = "INSERT INTO projectwork (projectwork_id, last_edit, projectwork_name, description, " \
-                  "start_event, end_event, time_period, affiliated_activity_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
+                  "start_event_id, end_event_id, time_period, affiliated_activity_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
         data = (project_work.get_id(), project_work.get_last_edit(), project_work.get_project_work_name(),
                 project_work.get_description(), project_work.get_start_event(), project_work.get_end_event(),
                 project_work.get_time_period(), project_work.get_affiliated_activity())
@@ -135,7 +135,7 @@ class ProjectWorkMapper (Mapper):
         cursor.close()
         return project_work
 
-    def delete(self, project_work):  # Projekt, welches gelöscht werden soll wird übergeben
+    def delete(self, project_work):  # Projektarbeit, welches gelöscht werden soll wird übergeben
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM projectwork WHERE projectwork_id={}".format(project_work.get_id())
@@ -144,11 +144,11 @@ class ProjectWorkMapper (Mapper):
         self._cnx.commit()
         cursor.close()
 
-    def update(self, project_work):  # Projekt, welches als update dient wird hier der Methode übergeben
+    def update(self, project_work):  # Projektarbeit, welche als update dient wird hier der Methode übergeben
         cursor = self._cnx.cursor()
 
-        command = "UPDATE projectwork SET last_edit=%s, projectwork_name=%s, description=%s, start_event=%s, " \
-                  "end_event=%s, time_period=%s,affiliated_activity_id=%s WHERE projectwork_id=%s"
+        command = "UPDATE projectwork SET last_edit=%s, projectwork_name=%s, description=%s, start_event_id=%s, " \
+                  "end_event_id=%s, time_period=%s,affiliated_activity_id=%s WHERE projectwork_id=%s"
         """  
         Die Variablen werden dem übergebenen "project_work" entnommen und überschreiben die aktuellen Werte, 
         welche im Object mit der entsprechenden id stehen.
