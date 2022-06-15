@@ -3,7 +3,7 @@ from server.db.Mapper import Mapper
 
 
 class ActivityMapper(Mapper):
-    """Mapper-Klasse, die Activity-Ereignis-Objekte auf eine relationale Datenbank abbildet.
+    """Mapper-Klasse, die Activitäts-Objekte auf eine relationale Datenbank abbildet.
     Dazu mehrere Methoden, mit deren Hilfe Objekte gesucht, erzeugt, modifiziert und gelöscht werden können.
     Ist bidirektional, Objekte können in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
     """
@@ -12,7 +12,7 @@ class ActivityMapper(Mapper):
         super().__init__()
 
     def find_by_key(self, key):
-        """Suchen einer Aktivität mit vorgegebener Ereignis ID. Rückgabe von genau einem Objekt.
+        """Suchen einer Aktivität mit vorgegebener Aktivitäts ID. Rückgabe von genau einem Objekt.
 
         :param key Primärschlüsselattribut (->DB)
         :return Aktivität-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
@@ -21,19 +21,20 @@ class ActivityMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT activity_id, last_edit, name, capacity, affiliated_project_id FROM activity " \
+        command = "SELECT activity_id, last_edit, name, capacity, affiliated_project_id, work_time FROM activity " \
                   "WHERE activity_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (activity_id, last_edit, name, capacity, affiliated_project_id) = tuples[0]
+            (activity_id, last_edit, name, capacity, affiliated_project_id, work_time) = tuples[0]
             activity = Activity()
             activity.set_id(activity_id)
             activity.set_last_edit(last_edit)
             activity.set_name(name)
             activity.set_capacity(capacity)
             activity.set_affiliated_project(affiliated_project_id)
+            activity.set_work_time(work_time)
 
             result = activity
         except IndexError:
@@ -46,31 +47,31 @@ class ActivityMapper(Mapper):
 
         return result
 
-    def find_by_project_id(self, person_id):
-        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
-        wird genau ein Objekt zurückgegeben.
+    def find_by_project_id(self, project_id):
+        """Suchen einer Aktivität mit vorgegebener Projekt ID.
+        Da diese eindeutig ist, wird genau ein Objekt zurückgegeben.
 
-        :param person_id Primärschlüsselattribut (->DB)
-        :return User-Objekt, das dem übergebenen Schlüssel entspricht, None bei
-            nicht vorhandenem DB-Tupel.
+        :param project_id Fremdschlüsselattribut (->DB)
+        :return Aktivität-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
         """
         all_activities = []
 
         cursor = self._cnx.cursor()
-        command = " SELECT DISTINCT A.activity_id, A.last_edit, A.name, A.capacity, A.affiliated_project_id " \
+        command = " SELECT DISTINCT A.activity_id, A.last_edit, A.name, A.capacity, A.affiliated_project_id, A.work_time " \
                   " FROM SoPraTestDB.activity A" \
-                  " WHERE A.affiliated_project_id = {} ".format(person_id)
+                  " WHERE A.affiliated_project_id = {} ".format(project_id)
 
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (activity_id, last_edit, name, capacity, affiliated_project_id) in tuples:
+        for (activity_id, last_edit, name, capacity, affiliated_project_id, work_time) in tuples:
             activity = Activity()
             activity.set_id(activity_id)
             activity.set_last_edit(last_edit)
             activity.set_name(name)
             activity.set_capacity(capacity)
             activity.set_affiliated_project(affiliated_project_id)
+            activity.set_work_time(work_time)
             all_activities.append(activity)
 
         self._cnx.commit()
@@ -88,13 +89,14 @@ class ActivityMapper(Mapper):
         cursor.execute("SELECT * from activity")
         tuples = cursor.fetchall()
 
-        for (activity_id, last_edit, name, capacity, affiliated_project_id) in tuples:
+        for (activity_id, last_edit, name, capacity, affiliated_project_id, work_time) in tuples:
             activity = Activity()
             activity.set_id(activity_id)
             activity.set_last_edit(last_edit)
             activity.set_name(name)
             activity.set_capacity(capacity)
             activity.set_affiliated_project(affiliated_project_id)
+            activity.set_work_time(work_time)
             result.append(activity)
 
         self._cnx.commit()
@@ -125,10 +127,10 @@ class ActivityMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 activity.set_id(1)
 
-        command = "INSERT INTO activity (activity_id, last_edit, name, capacity, affiliated_project_id)" \
-                  " VALUES (%s,%s,%s,%s,%s)"
+        command = "INSERT INTO activity (activity_id, last_edit, name, capacity, affiliated_project_id, work_time)" \
+                  " VALUES (%s,%s,%s,%s,%s,%s)"
         data = (activity.get_id(), activity.get_last_edit(), activity.get_name(), activity.get_capacity(),
-                activity.get_affiliated_project())
+                activity.get_affiliated_project(), activity.get_work_time())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -143,10 +145,10 @@ class ActivityMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE activity SET last_edit=%s, name=%s, capacity=%s, " \
-                  "affiliated_project_id=%s WHERE activity_id=%s"
+        command = "UPDATE activity SET last_edit=%s, name=%s, capacity=%s, affiliated_project_id=%s, work_time=%s " \
+                  "WHERE activity_id=%s"
         data = (activity.get_last_edit(), activity.get_name(), activity.get_capacity(),
-                activity.get_affiliated_project(), activity.get_id())
+                activity.get_affiliated_project(), activity.get_work_time(), activity.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

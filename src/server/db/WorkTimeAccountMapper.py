@@ -31,19 +31,25 @@ class WorkTimeAccountMapper(Mapper):
     """Hier wird das Konto eines Inhabers ausgelesen anhand des Fremdschlüssels.  """
 
     def find_by_owner_id(self, owner_id):
-        result = []
+        result = None
         cursor = self._cnx.cursor()
         command = "SELECT worktimeaccount_id, last_edit, person_id FROM worktimeaccount WHERE person_id={} " \
                   "ORDER BY worktimeaccount_id".format(owner_id)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (work_time_account_id, last_edit, owner) in tuples:
+        if tuples is not None \
+                and len(tuples) > 0 \
+                and tuples[0] is not None:
+            (work_time_account_id, last_edit, person_id) = tuples[0]
             work_time_account = wta.WorkTimeAccount()
             work_time_account.set_id(work_time_account_id)
             work_time_account.set_last_edit(last_edit)
-            work_time_account.set_owner(owner)
-            result.append(work_time_account)
+            work_time_account.set_owner(person_id)
+
+            result = work_time_account
+        else:
+            result = None
 
         self._cnx.commit()
         cursor.close()

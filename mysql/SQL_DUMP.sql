@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`activity` (
   `name` VARCHAR(45) NULL,
   `capacity` INT NULL,
   `affiliated_project_id` INT NULL,
+  `work_time` TIME NULL,
   PRIMARY KEY (`activity_id`),
   FOREIGN KEY (`affiliated_project_id`) REFERENCES Project(`project_id`))
 ENGINE = InnoDB;
@@ -55,9 +56,14 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`eventtransaction` (
   `eventtransaction_id` INT NOT NULL,
   `last_edit` DATETIME NULL,
   `affiliated_work_time_account_id` INT NULL,
-  `event` INT NULL,
+  `affiliated_event_id` INT NULL,
+  `affiliated_arrive_id` INT NULL,
+  `affiliated_departure_id` INT NULL,
   PRIMARY KEY (`eventtransaction_id`),
-  FOREIGN KEY (`affiliated_work_time_account_id`) REFERENCES worktimeaccount(`worktimeaccount_id`))
+  FOREIGN KEY (`affiliated_work_time_account_id`) REFERENCES worktimeaccount(`worktimeaccount_id`),
+  FOREIGN KEY (`affiliated_event_id`) REFERENCES event(`event_id`),
+  FOREIGN KEY (`affiliated_arrive_id`) REFERENCES arrive(`arrive_id`),
+  FOREIGN KEY (`affiliated_departure_id`) REFERENCES departure(`departure_id`))
 ENGINE = InnoDB;
 
 
@@ -90,6 +96,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`project` (
   `client` VARCHAR(45) NULL,
   `timeinterval_id` INT NULL,
   `owner` INT NULL,
+  `work_time`TIME NULL,
   PRIMARY KEY (`project_id`),
   FOREIGN KEY (`timeinterval_id`) REFERENCES timeinterval(`timeinterval_id`),
   FOREIGN KEY (`owner`) REFERENCES person(`person_id`))
@@ -217,7 +224,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`worktimeaccount` (
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `SoPraTestDB`.`activity`
+-- Table `SoPraTestDB`.`event`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `SoPraTestDB`.`event` ;
 
