@@ -253,15 +253,7 @@ class ProjectWorkOperations(Resource):
         return '', 200
 
 
-h = HdMWebAppAdministration()
-e1 = h.get_event_by_id(1)
-e2 = h.get_event_by_id(3)
-ti = h.get_time_interval_by_id(2)
-pe = h.get_person_by_id(1)
-pe2 = h.get_person_by_id(2)
-pro = h.get_project_by_id(1)
-ac = h.get_activity_by_id(1)
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

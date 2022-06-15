@@ -138,7 +138,7 @@ class PersonMapper(Mapper):
         self._cnx.commit()
         cursor.close()
 
-    def find_person_by_firebase_id(self, firebase_id):
+    def find_person_by_firebase_id(self, key):
             """Suchen eines Benutzers mit vorgegebener Google ID. Da diese eindeutig ist,
             wird genau ein Objekt zurückgegeben.
 
@@ -150,7 +150,7 @@ class PersonMapper(Mapper):
 
             cursor = self._cnx.cursor()
             command = "SELECT person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id FROM person " \
-                      "WHERE firebase_id={}".format(firebase_id)
+                      "WHERE firebase_id='{}'".format(key)
             cursor.execute(command)
             tuples = cursor.fetchall()
 
