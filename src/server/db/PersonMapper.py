@@ -37,6 +37,37 @@ class PersonMapper(Mapper):
 
         return result
 
+    def find_by_arrive(self):
+        """Auslesen aller Mitarbeiter, welche am entsprechenden Tag eingecheckt haben.
+
+        :return Eine Sammlung mit Personen-Objekten, die sämtliche Kunden
+                repräsentieren.
+        """
+        result = []
+        cursor = self._cnx.cursor()
+        cursor.execute("SELECT  P.* FROM person P "
+                       "inner join arrive A on A.affiliated_person_id = P.person_id "
+                       "inner join departure D on D.affiliated_person_id = P.person_id "
+                       "GROUP BY P.person_id "
+                       "HAVING MAX(A.time_stamp) > MAX(D.time_stamp);")
+        tuples = cursor.fetchall()
+
+        for (person_id, last_edit, firstName, lastName, username, mailaddress, firebase_id) in tuples:
+            employee = p.Person()
+            employee.set_id(person_id)
+            employee.set_last_edit(last_edit)
+            employee.set_firstname(firstName)
+            employee.set_lastname(lastName)
+            employee.set_username(username)
+            employee.set_mailaddress(mailaddress)
+            employee.set_firebase_id(firebase_id)
+            result.append(employee)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
     def find_by_key(self, key):
         """Suchen einer Person mit vorgegebener person_id. Da diese eindeutig ist,
         wird genau ein Objekt zurückgegeben.

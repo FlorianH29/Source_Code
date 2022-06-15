@@ -1,17 +1,21 @@
+import datetime
+
 from flask import Flask
 from flask_restx import Api, Resource, fields
 from flask_cors import CORS
-
+from threading import *
 from server.HdMWebAppAdministration import HdMWebAppAdministration
 from server.bo.Activity import Activity
 from server.bo.Event import Event
 from server.bo.Person import Person
 from server.bo.Project import Project
 from server.bo.ProjectWork import ProjectWork
+import datetime
 from server.bo.WorkTimeAccount import WorkTimeAccount
 
 
 app = Flask(__name__)
+
 
 CORS(app, resources=r'/hdmwebapp/*')
 
@@ -27,8 +31,9 @@ bo = api.model('BusinessObject', {
 })
 
 activity = api.inherit('Activity', bo, {
-    'name': fields.String(description='Name einer Aktivität'),
-    'capacity': fields.Integer(description='Kapazität einer Aktivität'),
+    'name': fields.String(attribute='_name', description='Name einer Aktivität'),
+    'capacity': fields.Integer(attribute='_capacity', description='Kapazität einer Aktivität'),
+    'work_time': fields.String(attribute='_work_time', description='Zeit, die für eine Aktivität gearbeitet wurde')
 })
 
 event = api.inherit('Event', bo, {
@@ -54,7 +59,8 @@ project = api.inherit('Project', bo, {
     'project_name': fields.String(attribute='_project_name', description='Name eines Projekts'),
     'client': fields.String(attribute='_client', description='Auftraggeber eines Projekts'),
     'time_interval_id': fields.Integer(attribute='_time_interval_id', description='Laufzeit eines Projekts'),
-    'owner': fields.Integer(attribute='_owner', description='Der Leiter eines Projekts')
+    'owner': fields.Integer(attribute='_owner', description='Der Leiter eines Projekts'),
+    'work_time': fields.String(attribute='_work_time', description='Zeit, die für ein Projekt gearbeitet wurde')
 })
 
 timeinterval = api.inherit('TimeInterval', bo, {
@@ -91,14 +97,11 @@ class WorkTimeAccountContentList(Resource):
     def get(self, id):
         hwa = HdMWebAppAdministration()
         result = []
+        person = hwa.get_person_by_id(id)
         projects = hwa.get_project_by_person_id(id)
+        result.append({"name": "Arbeitszeit", "time": hwa.calculate_sum_of_time_intervals_by_person(person)})
         for p in projects:
-            time_intervals_project = hwa.get_time_interval_by_id(p.get_time_interval_id())
-            test = time_intervals_project.get_time_period()
-            result.append({"name": p._project_name, "time": time_intervals_project.get_time_period()})
-        time_intervals = hwa.get_time_interval_by_person_id(id)
-        result.append({"name": "Arbeitszeit", "time": sum([t.get_time_period() for t in time_intervals])})
-
+            result.append({"name": p.get_project_name(), "time": hwa.calculate_sum_of_project_work_by_person(person)})
         print(result)
         return result
 
@@ -206,15 +209,17 @@ class ProjectWorkOperations(Resource):
         return '', 200
 
 
-h = HdMWebAppAdministration()
-e1 = h.get_event_by_id(1)
-e2 = h.get_event_by_id(3)
-ti = h.get_time_interval_by_id(2)
-pe = h.get_person_by_id(1)
-pe2 = h.get_person_by_id(2)
-pro = h.get_project_by_id(1)
-ac = h.get_activity_by_id(1)
+def worker():
+    hwa = HdMWebAppAdministration()
+    hwa.check_time_for_departure()
+
+
+sub_thread = Thread(target=worker)
+#es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
+sub_thread.setDaemon(True)
+sub_thread.start()
+
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

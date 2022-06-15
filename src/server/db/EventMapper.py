@@ -43,6 +43,40 @@ class EventMapper(Mapper):
 
         return result
 
+    def find_last_by_affiliated_person_id(self, key):
+        """Suchen des letzten Events mit vorgegebener zugheöriger Personen ID. Rückgabe von genau einem Objekt.
+
+        :param key: Fremdschlüsselattribut (->DB)
+        :return Event-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
+        """
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM SoPraTestDB.event " \
+                  "WHERE time_stamp = " \
+                  "(SELECT MAX(time_stamp) FROM Sopratestdb.event WHERE affiliated_person_id = {})".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (event_id, last_edit, event_type, time_stamp, affiliated_person_id) = tuples[0]
+            event = Event()
+            event.set_id(event_id)
+            event.set_last_edit(last_edit)
+            event.set_event_type(event_type)
+            event.set_time_stamp(time_stamp)
+            event.set_affiliated_person(affiliated_person_id)
+
+            result = event
+        except IndexError:
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
     def find_last_start_event_project_work(self, key):
         """Suchen des letzten Startevents einer Projektarbeit mit vorgegebener Personen ID.
         Rückgabe von genau einem Objekt.

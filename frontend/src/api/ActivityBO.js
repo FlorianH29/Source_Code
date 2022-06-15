@@ -9,12 +9,14 @@ export default class ActivityBO extends BusinessObject {
    * @param {String} aName - der Name dieses ActivityBO.
    * @param {String} aCapacity - die Kapazität dieses ActivityBO.
    * @param {String} anAffiliatedProject - das Projekt, das diesem ActivityBO zugeordnet ist.
+   * @param {Number} aWorkTime - die Zeit, die für dieses ActivityBO gearbeitet wurde.
    */
-  constructor(aName, aCapacity, anAffiliatedProject) {
+  constructor(aName, aCapacity, anAffiliatedProject, aWorkTime) {
     super();
     this.name = aName;
     this.capacity = aCapacity;
     this.affiliated_project = anAffiliatedProject;
+    this.work_time = aWorkTime;
   }
 
   /**
@@ -63,6 +65,22 @@ export default class ActivityBO extends BusinessObject {
    */
   getAffiliatedProject() {
     return this.affiliated_project;
+  }
+
+  /**
+   * Setzt eine neue gearbeitet Zeit.
+   *
+   * @param {Number} aWorkTime - die neue gearbeitete Zeit dieses AktivityBO.
+   */
+  setWorkTime(aWorkTime) {
+    this.work_time = aWorkTime;
+  }
+
+    /**
+   * Gibt die gearbeitete Zeit zurück.
+   */
+  getWorkTime() {
+    return this.work_time;
   }
 
   /**

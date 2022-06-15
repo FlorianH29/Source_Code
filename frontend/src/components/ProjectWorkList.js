@@ -3,7 +3,7 @@ import {EventBO, HdMWebAppAPI} from '../api';
 import {Button, Grid, Typography, Divider, Dialog, DialogActions, DialogContent} from '@mui/material';
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
-import ProjectWorkEntry from "./ProjectWorkListEntry";
+import ProjectWorkListEntry from "./ProjectWorkListEntry";
 import ProjectWorkForm from "./dialogs/ProjectWorkForm";
 import PropTypes from "prop-types";
 import {DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
@@ -118,7 +118,7 @@ class ProjectWorkList extends Component {
                 </Grid>
                 <Divider/>
                 {projectWorks.map(pw =>
-                    <ProjectWorkEntry key={pw.getID()} projectWork={pw} onProjectWorkDeleted={this.projectWorkDeleted}/>)
+                    <ProjectWorkListEntry key={pw.getID()} projectWork={pw} onProjectWorkDeleted={this.projectWorkDeleted}/>)
                 }
                 <Grid container direction={'row'} spacing={18}>
                     <Grid item xs={6} align={'center'}>
