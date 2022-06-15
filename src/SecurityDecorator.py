@@ -40,20 +40,16 @@ def secured(function):
                 if claims is not None:
                     hwa = HdMWebAppAdministration()
 
-                    firstname = claims.get("firstname")
-                    lastname = claims.get("lastname")
-                    username = claims.get("name")
-                    mailaddress = claims.get("mailaddress")
-                    firebase_id = claims.get("firebase_id")
-
-
+                    firstname = claims.get("name")
+                    lastname = 'LastName'
+                    mailaddress = claims.get("email")
+                    firebase_id = claims.get("user_id")
 
                     person = hwa.get_person_by_firebase_id(firebase_id)
                     if person is not None:
                         """ Wenn der Benutzer bereits im System hinterlegt ist, kann es sein
                             dass der Username und die Mailadresse sich ändert. Aus diesem 
                             Grund wird hier der Usanme und die Mailadresse geupdatet."""
-                        person.set_username(username)
                         person.set_mailaddress(mailaddress)
                         hwa.save_person(person)
                     else:
@@ -61,7 +57,7 @@ def secured(function):
                             methode generiert."""
                         person = hwa.create_person(firstname, lastname, mailaddress, firebase_id)
 
-                    print(request.method, request.path, "angefragt durch:", username, mailaddress, firebase_id)
+                    print(request.method, request.path, "angefragt durch:",  mailaddress, firebase_id)
 
                     objects = function(*args, **kwargs)
                     return objects
