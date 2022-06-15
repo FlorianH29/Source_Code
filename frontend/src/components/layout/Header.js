@@ -40,7 +40,7 @@ class Header extends Component {
                 <AppBar position={"static"} sx={{bgcolor: "pink", p: 1}}>
                     <Toolbar>
                         <Typography variant='h3' component='div' sx={{flexGrow: 1}}>
-                            HdM Web App
+                            HdM Zeiterfassung
                         </Typography>
                         {person ? (
                             <>

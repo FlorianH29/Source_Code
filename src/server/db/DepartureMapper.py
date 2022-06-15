@@ -44,6 +44,39 @@ class DepartureMapper (Mapper):
 
         return result
 
+    def find_by_affiliated_person_id(self, key):
+        """Suchen eines Departure-Ereignisses mit vorgegebener zugehöriger Personen ID. Rückgabe von genau einem Objekt.
+
+        :param key Fremdschlüsselattribut (->DB)
+        :return End-Ereignis-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
+        """
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM departure WHERE affiliated_person_id={}".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (departure_id, last_edit, time_stamp, affiliated_person_id) = tuples[0]
+            departure = Departure()
+            departure.set_id(departure_id)
+            departure.set_last_edit(last_edit)
+            departure.set_time_stamp(time_stamp)
+            departure.set_affiliated_person(affiliated_person_id)
+
+            result = departure
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
     def find_last_departure_by_person(self, key):
         """Suchen eines Departure-Ereignisses mit der ID der vorgegebenen Person. Rückgabe von genau einem Objekt.
 
