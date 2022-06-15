@@ -37,7 +37,7 @@ class Header extends Component {
 
         return (
             <Box sx={{flexGrow: 1}}>
-                <AppBar position={"static"} sx={{bgcolor: "pink", p: 1}}>
+                <AppBar position={"static"} sx={{bgcolor: "#05353f", p: 1}}>
                     <Toolbar>
                         <Typography variant='h3' component='div' sx={{flexGrow: 1}}>
                             HdM Web App

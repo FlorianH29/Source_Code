@@ -25,11 +25,10 @@ class PersonForm extends Component {
   constructor(props) {
     super(props);
 
-    let fn = '', ln = '', un = '', ma = '', fb = '';
+    let fn = '', ln = '', ma = '', fb = '';
     if (props.person) {
       fn = props.person.getFirstName();
       ln = props.person.getLastName();
-      un = props.person.getUserName();
       ma = props.person.getMailAddress();
       fb = props.person.getFireBaseId();
     }
@@ -42,16 +41,12 @@ class PersonForm extends Component {
       lastName: ln,
       lastNameValidationFailed: false,
       lastNameEdited: false,
-      username: un,
-      userNameValidationFailed: false,
-      userNameEdited: false,
-      mailadress: ma,
-      mailadressValidationFailed: false,
-      mailadressEdited: false,
+      mailAdress: ma,
+      mailAdressValidationFailed: false,
+      mailAdressEdited: false,
       firebase_id: fb,
       firebase_idValidationFailed: false,
       firebase_idEdited: false,
-
       addingInProgress: false,
       updatingInProgress: false,
       addingError: null,
@@ -63,7 +58,7 @@ class PersonForm extends Component {
 
   /** Adds the customer */
   addPerson = () => {
-    let newPerson = new PersonBO(this.state.firstName, this.state.lastName, this.state.username, this.state.mailadress, this.state.firebase_id);
+    let newPerson = new PersonBO(this.state.firstName, this.state.lastName, this.state.mailAdress, this.state.firebase_id);
     HdMWebAppAPI.getAPI().addPerson(newPerson).then(person => {
       this.setState(this.baseState);
       this.props.onClose(person); // call the parent with the customer object from backend
@@ -87,8 +82,7 @@ class PersonForm extends Component {
     // set the new attributes from our dialog
     updatedPerson.setFirstName(this.state.firstName);
     updatedPerson.setLastName(this.state.lastName);
-    updatedPerson.setUserName(this.state.username);
-    updatedPerson.setMailAddress(this.state.mailadress);
+    updatedPerson.setMailAddress(this.state.mailAdress);
     updatedPerson.setFireBaseId(this.state.firebase_id);
     HdMWebAppAPI.getAPI().updatePerson(updatedPerson).then(person => {
       this.setState({
@@ -98,8 +92,7 @@ class PersonForm extends Component {
       // keep the new state as base state
       this.baseState.firstName = this.state.firstName;
       this.baseState.lastName = this.state.lastName;
-      this.baseState.username = this.state.username;
-      this.baseState.mailadress = this.state.mailadress;
+      this.baseState.mailAdress = this.state.mailAdress;
       this.baseState.firebase_id = this.state.firebase_id;
       this.props.onClose(updatedPerson);      // call the parent with the new customer
     }).catch(e =>
@@ -143,7 +136,7 @@ class PersonForm extends Component {
   render() {
     const { classes, person, show } = this.props;
     const { firstName, firstNameValidationFailed, firstNameEdited, lastName, lastNameValidationFailed, lastNameEdited,
-      username, usernameValidationFailed, usernameEdited, mailadress, mailadressValidationFailed, mailadressEdited, firebase_id, firebaseidValidationFailed, firebaseidEdited,
+      mailAdress, mailAdressValidationFailed, mailAdressEdited, firebase_id, firebaseidValidationFailed, firebaseidEdited,
       addingInProgress, addingError, updatingInProgress, updatingError } = this.state;
 
     let title = '';
@@ -177,12 +170,9 @@ class PersonForm extends Component {
               <TextField type='text' required fullWidth margin='normal' id='lastName' label='Last name:' value={lastName}
                 onChange={this.textFieldValueChange} error={lastNameValidationFailed}
                 helperText={lastNameValidationFailed ? 'The last name must contain at least one character' : ' '} />
-              <TextField type='text' required fullWidth margin='normal' id='username' label='User name:' value={username}
-                onChange={this.textFieldValueChange} error={usernameValidationFailed}
-                helperText={usernameValidationFailed ? 'Kein User Name' : ' '} />
-              <TextField type='text' required fullWidth margin='normal' id='mailadress' label='Mailadress:' value={mailadress}
-                onChange={this.textFieldValueChange} error={mailadressValidationFailed}
-                helperText={mailadressValidationFailed ? 'The last name must contain at least one character' : ' '} />
+              <TextField type='text' required fullWidth margin='normal' id='mailadress' label='Mailadress:' value={mailAdress}
+                onChange={this.textFieldValueChange} error={mailAdressValidationFailed}
+                helperText={mailAdressValidationFailed ? 'The last name must contain at least one character' : ' '} />
               <TextField type='token' required fullWidth margin='normal' id='lastName' label='Last name:' value={firebase_id}
                 onChange={this.textFieldValueChange} error={firebaseidValidationFailed}
                 helperText={firebaseidValidationFailed ? 'The last name must contain at least one character' : ' '} />
@@ -203,10 +193,10 @@ class PersonForm extends Component {
             {
               // If a customer is given, show an update button, else an add button
               person ?
-                <Button disabled={firstNameValidationFailed || lastNameValidationFailed} variant='contained' onClick={this.updatePerson} color='primary'>
+                <Button disabled={firstNameValidationFailed || lastNameValidationFailed|| mailAdressValidationFailed || firebaseidValidationFailed} variant='contained' onClick={this.updatePerson} color='primary'>
                   Update
               </Button>
-                : <Button disabled={firstNameValidationFailed || !firstNameEdited || lastNameValidationFailed || !lastNameEdited} variant='contained' onClick={this.addPerson} color='primary'>
+                : <Button disabled={firstNameValidationFailed || !firstNameEdited || lastNameValidationFailed || !lastNameEdited|| mailAdressValidationFailed || !mailAdressEdited || firebaseidValidationFailed|| !firebaseidEdited} variant='contained' onClick={this.addPerson} color='primary'>
                   Add
              </Button>
             }
