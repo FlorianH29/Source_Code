@@ -7,7 +7,7 @@ export default class ActivityBO extends BusinessObject {
    * Konstruktor, erstelt ein Akitvitätsobjekt mit
    *
    * @param {String} aName - der Name dieses ActivityBO.
-   * @param {String} aCapacity - die Kapazität dieses ActivityBO.
+   * @param {Number} aCapacity - die Kapazität dieses ActivityBO.
    * @param {String} anAffiliatedProject - das Projekt, das diesem ActivityBO zugeordnet ist.
    * @param {Number} aWorkTime - die Zeit, die für dieses ActivityBO gearbeitet wurde.
    */

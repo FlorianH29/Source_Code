@@ -30,7 +30,7 @@ export default class HdMWebAppAPI {
   #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
 
   //Activity bezogen
-  #getActivitiesURL = () => `${this.#hdmwebappServerBaseURL}/activities`;
+  #getActivitiesForProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}/activities`;
   #updateActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
   #deleteActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
   #addActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/project/${id}/activities`;
@@ -110,12 +110,12 @@ export default class HdMWebAppAPI {
         })
     }
 
-    getActivities() {
-        return this.#fetchAdvanced(this.#getActivitiesURL()).then((responseJSON) => {
-            let activitiesBO = ActivityBO.fromJSON(responseJSON);
-            console.log(responseJSON);
+    getActivities(id) {
+        return this.#fetchAdvanced(this.#getActivitiesForProjectURL(id)).then((responseJSON) => {
+            let activityBOs = ActivityBO.fromJSON(responseJSON);
+            console.log(activityBOs);
             return new Promise(function (resolve) {
-                resolve(activitiesBO);
+                resolve(activityBOs);
             })
         })
     }
@@ -183,28 +183,6 @@ export default class HdMWebAppAPI {
     })
   }
 
-  /**
-  * Updated ein ActivityBO
-  *
-  * @param {ActivityBO} ActivityBO das geupdated werden soll
-  * @public
-  */
-
-/**  addActivity(projectID) {
-      return this.#fetchAdvanced(this.#addActivityURL(projectID), {
-          method: 'POST'
-      })
-          .then((responseJSON) => {
-              // We always get an array of AccountBO.fromJSON, but only need one object
-              let activityBO = ActivityBO.fromJSON(responseJSON)[0];
-              // console.info(accountBO);
-              return new Promise(function (resolve) {
-                  // We expect only one new account
-                  resolve(activityBO);
-              })
-          })
-  }
-*/
 
     /**
    * Adds a customer and returns a Promise, which resolves to a new CustomerBO object with the

@@ -21,7 +21,7 @@ class ActivityList extends Component {
     };
 
     getActivitiesForProject() {
-        HdMWebAppAPI.getAPI().getActivities()
+        HdMWebAppAPI.getAPI().getActivities(1)
             .then(activityBOs =>
                 this.setState({
                     activities: activityBOs
