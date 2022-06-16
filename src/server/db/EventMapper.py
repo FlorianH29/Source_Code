@@ -43,19 +43,42 @@ class EventMapper(Mapper):
 
         return result
 
-    def find_last_by_affiliated_person_id(self, key):
+    def find_all_by_person_id(self, person_id):
+        """Auslesen aller Events einer Person.
+
+        :return Sammlung aller Event-Objekte einer Person.
+        """
+        result = []
+        cursor = self._cnx.cursor()
+        cursor.execute("SELECT * FROM event WHERE affiliated_person_id = {}".format(person_id))
+        tuples = cursor.fetchall()
+
+        for (event_id, last_edit, event_type, time_stamp, affiliated_person_id) in tuples:
+            event = Event()
+            event.set_id(event_id)
+            event.set_last_edit(last_edit)
+            event.set_event_type(event_type)
+            event.set_time_stamp(time_stamp)
+            event.set_affiliated_person(affiliated_person_id)
+            result.append(event)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_last_by_affiliated_person_id(self, person_id):
         """Suchen des letzten Events mit vorgegebener zugheöriger Personen ID. Rückgabe von genau einem Objekt.
 
-        :param key: Fremdschlüsselattribut (->DB)
+        :param person_id: Fremdschlüsselattribut (->DB)
         :return Event-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
         """
 
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT * FROM SoPraTestDB.event " \
-                  "WHERE time_stamp = " \
-                  "(SELECT MAX(time_stamp) FROM Sopratestdb.event WHERE affiliated_person_id = {})".format(key)
+        command = "SELECT * FROM event WHERE time_stamp = (SELECT MAX(time_stamp) FROM event " \
+                  "WHERE affiliated_person_id = {})".format(person_id)
         cursor.execute(command)
         tuples = cursor.fetchall()
 

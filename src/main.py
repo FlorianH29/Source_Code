@@ -1,4 +1,5 @@
 from datetime import datetime
+from datetime import timedelta
 
 from flask import Flask
 from flask_restx import Api, Resource, fields
@@ -112,6 +113,7 @@ class PersonListOperations(Resource):
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
+
 @hdmwebapp.route('/person-by-name/<string:lastname>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('lastname', 'Der Nachname des Kunden')
@@ -157,7 +159,7 @@ class ActivitiesList(Resource):
         result = []
         activities = hwa.get_all_activities()
         for a in activities:
-            result.append({"name" : a._name, "capacity": a._capacity})
+            result.append({"name": a._name, "capacity": a._capacity})
         print(result)
         return result
 
@@ -217,7 +219,7 @@ class ProjectWorksByActivityOperations(Resource):
         # Die durch die id gegebene Aktivität als Objekt speichern.
 
         if act is not None:
-            projectwork_list = hwa.get_projectworks_of_activity(act)
+            projectwork_list = hwa.get_project_works_of_activity(act)
             # Auslesen der Projektarbeiten, die der Aktivität untergliedert sind.
             return projectwork_list
         else:
@@ -249,25 +251,21 @@ class ProjectWorkOperations(Resource):
         Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
         """
         hwa = HdMWebAppAdministration()
-        pw = hwa.get_projectwork_by_id(id)
+        pw = hwa.get_project_work_by_id(id)
         hwa.delete_project_work(pw)
         return '', 200
 
 
-def worker():
+def check():
     hwa = HdMWebAppAdministration()
     hwa.check_time_for_departure()
 
 
-sub_thread = Thread(target=worker)
+sub_thread = Thread(target=check)
 #es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
 
-h = HdMWebAppAdministration()
-pe = h.get_person_by_id(2)
-print(datetime.now())
-print(h.get_intervals_of_person_between_time_stamps(pe, '12/06/2022', '15/06/2022'))
 
 if __name__ == '__main__':
     app.run(debug=False)
