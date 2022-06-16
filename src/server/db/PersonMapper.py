@@ -2,6 +2,9 @@ from server.bo import Person as p
 from server.db.Mapper import Mapper
 
 
+from src.server.bo.Person import Person
+
+
 class PersonMapper(Mapper):
     """Mapper-Klasse, die Personen-Objekte auf eine relationale
     Datenbank abbildet.
@@ -166,6 +169,45 @@ class PersonMapper(Mapper):
         self._cnx.commit()
         cursor.close()
 
+    def find_by_firebase_id(self, key):
+        """Suchen einer Person mit vorgegebener person_id. Da diese eindeutig ist,
+        wird genau ein Objekt zurückgegeben.
+
+        :param key Primärschlüsselattribut (->DB)
+        :return Person-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+            nicht vorhandenem DB-Tupel.
+        """
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id FROM person " \
+                  "WHERE firebase_id='{}'".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id) = tuples[0]
+            person = p.Person()
+            person.set_id(person_id)
+            person.set_last_edit(last_edit)
+            person.set_firstname(firstname)
+            person.set_lastname(lastname)
+            person.set_mailaddress(mailaddress)
+            person.set_username(username)
+            person.set_firebase_id(firebase_id)
+
+            result = person
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
     def delete(self, employee):
         """Löschen der Daten eines Personen-Objekts aus der Datenbank.
 
@@ -178,6 +220,10 @@ class PersonMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
+
+
+
+
 
 
 """if (__name__ == "__main__"):

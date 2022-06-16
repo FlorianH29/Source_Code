@@ -12,6 +12,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import firebaseConfig from './firebaseconfig';
+import {Person} from "@mui/icons-material";
 
 
 class App extends React.Component {
@@ -34,7 +35,6 @@ class App extends React.Component {
             person.getIdToken().then(token => {
 
                 document.cookie = `token=${token};path=/`;
-
                 this.setState({
                     currentPerson: person,
                     authError: null,
@@ -107,11 +107,14 @@ class App extends React.Component {
                         :
                         <>
                             <SignIn onSignIn={this.handleSignIn}/>
+
                         </>
                 }
             </Router>
         );
     }
 }
+
+console.log(Person);
 
 export default App;

@@ -41,6 +41,11 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             return mapper.find_by_key(number)
 
+    def get_person_by_name(self, lastname):
+        """Alle Kunden mit übergebenem Nachnamen auslesen."""
+        with PersonMapper() as mapper:
+            return mapper.find_by_lastname(lastname)
+
     def get_all_persons(self):
         """Alle in der Datenbank gespeicherten Personen auslesen."""
         with PersonMapper() as mapper:
@@ -87,6 +92,11 @@ class HdMWebAppAdministration(object):
         person.set_last_edit(datetime.datetime.now())
         with PersonMapper() as mapper:
             mapper.update(person)
+
+    def get_person_by_firebase_id(self, id):
+        """Den Benutzer mit der gegebenen Firebase ID auslesen."""
+        with PersonMapper() as mapper:
+            return mapper.find_by_firebase_id(id)
 
     """Methoden für Kommen:"""
 

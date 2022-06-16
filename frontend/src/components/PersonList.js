@@ -34,7 +34,7 @@ class PersonList extends Component {
                 <Grid container spacing={1} justify='flex-start' alignItems='center'>
                     <Grid item>
                         <Typography>
-                            Filter person list by name:
+                            Personen anzeigen:
                         </Typography>
                     </Grid>
                 </Grid>
