@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {AppBar, Typography, Toolbar, IconButton, Menu, Box} from '@mui/material';
+import {AppBar, Typography, Toolbar, IconButton, Menu, MenuList, Box} from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import MenuItem from "@mui/material/MenuItem";
 import firebase from 'firebase/compat/app';
@@ -17,6 +17,7 @@ class Header extends Component {
             person: null
         };
     };
+
 
 
     handleOpenUserMenu = (event) => {
@@ -37,7 +38,7 @@ class Header extends Component {
 
         return (
             <Box sx={{flexGrow: 1}}>
-                <AppBar position={"static"} sx={{bgcolor: "#05353f", p: 1}}>
+                <AppBar position={"static"} sx={{bgcolor: "pink", p: 1}}>
                     <Toolbar>
                         <Typography variant='h3' component='div' sx={{flexGrow: 1}}>
                             HdM Zeiterfassung
@@ -66,8 +67,12 @@ class Header extends Component {
                                     onClose={() => {
                                         this.handleCloseUserMenu()
                                     }}>
+                                    <Typography variant='h11' component='h9' align='center'>
+                                    <MenuList onClick={this.handleLogout}>Profil bearbeiten</MenuList>
+                                    <MenuList onClick={this.handleLogout}>Profil löschen</MenuList>
+                                    <MenuList onClick={this.handleLogout}>LogOut</MenuList>
+                                    </Typography>
 
-                                    <MenuItem onClick={this.handleLogout}>LogOut</MenuItem>
                                 </Menu>
                             </>
                         ) : null}
