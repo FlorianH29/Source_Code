@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import { withStyles, Button, TextField, InputAdornment, IconButton, Grid, Typography } from '@mui/material';
+import {withStyles, Button, TextField, InputAdornment, IconButton, Grid, Typography, Divider} from '@mui/material';
+import ProjectWorkListEntry from "./ProjectWorkListEntry";
 
 class ProjectList extends Component {
 
@@ -29,14 +30,19 @@ class ProjectList extends Component {
     }
 
     render() {
+        const {projects} = this.state
         return (
             <div>
                 <Grid container spacing={1} justify='flex-start' alignItems='center'>
                     <Grid item>
                         <Typography>
-                            Filter projects by name/person:
+                            Meine Projekte:
                         </Typography>
                     </Grid>
+                    <Divider/>
+                    {projects.map(pro =>
+                    <ProjectWorkListEntry key={pro.getID()} projects ={pro}/>)
+                    }
                 </Grid>
                 {
 

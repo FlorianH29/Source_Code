@@ -268,7 +268,8 @@ sub_thread.start()
 
 h = HdMWebAppAdministration()
 id = 'QY7ll5yg71YLWHBpOSN9YgCccrK2'
-print(h.get_person_by_firebase_id(id))
+#print(h.get_person_by_firebase_id(id))
+print(h.get_project_by_firebase_id(2))
 
 if __name__ == '__main__':
     app.run(debug=False)
