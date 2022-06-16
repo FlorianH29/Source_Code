@@ -78,6 +78,10 @@ class HdMWebAppAdministration(object):
             if person is not None:
                 projects = self.get_projectmember_by_person(person)
                 worktimeaccounts = self.get_work_time_account_of_owner(person)
+                event_transactions = []
+                time_interval_transactions = []
+                arrives = []
+                departures = []
 
                 for project in projects:
                     self.delete_project_member(project)
@@ -112,13 +116,12 @@ class HdMWebAppAdministration(object):
             return mapper.insert(arrive), self.create_event_transaction(None, arrive, None)
 
     def delete_arrive_event(self, arrive):
-        """Die gegebene Person aus unserem System löschen."""
-
+        """Das gegebene Kommen Ereignis aus dem System löschen."""
         with ArriveMapper() as mapper:
             mapper.delete(arrive)
 
     def save_arrive_event(self, arrive):
-        """Eine Start-Ereignis-Instanz speichern."""
+        """Eine Kommen-Instanz speichern."""
         arrive.set_last_edit(datetime.datetime.now())
         with ArriveMapper() as mapper:
             mapper.update(arrive)
@@ -128,10 +131,13 @@ class HdMWebAppAdministration(object):
         with ArriveMapper() as mapper:
             return mapper.find_by_key(number)
 
-    def get_arrive_event_by_affiliated_person_id(self, number):
-        """Das Start-Ereignis mit der gegebenen zugehörigen Personen ID auslesen"""
+    def get_arrive_events_by_affiliated_person(self, person):
+        """Die Start-Ereignisse mit der gegebenen zugehörigen Personen ID auslesen"""
         with ArriveMapper() as mapper:
-            return mapper.find_by_affiliated_person_id(number)
+            if person is not None:
+                return mapper.find_by_affiliated_person_id(person.get_id())
+            else:
+                return None
 
     def get_last_arrive_by_person(self, person):
         with ArriveMapper() as mapper:
@@ -523,6 +529,7 @@ class HdMWebAppAdministration(object):
                 project_work.set_start_event(self.get_last_start_event_project_work(person).get_id())
                 project_work.set_end_event(self.get_last_end_event_project_work(person).get_id())
                 project_work.set_time_period(self.calculate_period(project_work))
+                project_work.set_deleted(False)
 
                 project = self.get_project_by_id(activity.get_affiliated_project())  # das Projekt der Aktität speichern
 
