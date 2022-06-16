@@ -416,6 +416,26 @@ class HdMWebAppAdministration(object):
         work_time_account = self.get_work_time_account_of_owner(person)
         time_interval_transactions = self.get_time_interval_transaction_by_affiliated_work_time_account_id(work_time_account)
         # Alle Timeintervaltransaktionen von einem Arbeitszeitkonto speichern
+        event_transactions = self.get_event_transaction_by_affiliated_work_time_account_id(work_time_account.get_id())
+        # Alle Eventtransaktionen von einem Arbeitszeitkonto speichern
+        for e in event_transactions:
+            arrive_id = e.get_arrive()
+            departure_id = e.get_departure()
+            # Wenn das Event kein Arrive oder Departure ist, bleibt ID None und Event wird nicht behandelt
+            if arrive_id is not None:
+                arrive = self.get_arrive_event_by_id(arrive_id)
+                time_stamp = arrive.get_time_stamp()
+                if start_time <= time_stamp <= end_time:
+                    # Überprüfen, ob das Event im übergebenen Zeitraum liegt
+                    event_dict = {'name': 'Kommen', 'start_time': time_stamp, 'end_time': None, 'period': None}
+                    event_list.append(event_dict)
+            if departure_id is not None:
+                departure = self.get_departure_event_by_id(departure_id)
+                time_stamp = departure.get_time_stamp()
+                if start_time <= time_stamp <= end_time:
+                    # Überprüfen, ob das Event im übergebenen Zeitraum liegt
+                    event_dict = {'name': 'Kommen', 'start_time': None, 'end_time': time_stamp, 'period': None}
+                    event_list.append(event_dict)
         for tit in time_interval_transactions:
             break_id = tit.get_affiliated_break()
             project_work_id = tit.get_affiliated_projectwork()
@@ -433,7 +453,7 @@ class HdMWebAppAdministration(object):
                                   'period': time_period}
                     event_list.append(event_dict)
             if project_work_id is not None:
-                project_work = self.get_projectwork_by_id(project_work_id)
+                project_work = self.get_project_work_by_id(project_work_id)
                 start_event_id = project_work.get_start_event()
                 start_event = self.get_event_by_id(start_event_id)
                 end_event_id = project_work.get_end_event()
@@ -747,7 +767,7 @@ class HdMWebAppAdministration(object):
             if time_period is not timedelta(hours=0) and person is not None:
                 interval = TimeInterval()
                 interval.set_id(1)
-                interval.set_last_edit(datetime.datetime.now())
+                interval.set_last_edit(datetime.now())
                 interval.set_time_period(time_period)
                 return mapper.insert(interval), self.create_time_interval_transaction(person, interval, None, None)
             # Zeitintervall Buchung für Arbeitszeit erstellen
@@ -862,6 +882,23 @@ class HdMWebAppAdministration(object):
                 return mapper.insert(event), self.create_event_transaction(event, None, None)
             else:
                 return None
+
+    def create_event_and_check_type(self, event_type, person):
+        last_event = self.get_last_event_by_affiliated_person(person)
+        event_type_last_event = last_event.get_event_type()
+        if event_type == 1:
+            if event_type_last_event == 2 or event_type_last_event == 4:
+                self.create_event(event_type, person)
+        if event_type == 2:
+            if event_type_last_event == 1:
+                self.create_event(event_type, person)
+        if event_type == 3:
+            if event_type_last_event == 2 or event_type_last_event == 4:
+                self.create_event(event_type, person)
+        if event_type == 4:
+            if event_type_last_event == 3:
+                self.create_event(event_type, person)
+
 
     def create_event_with_time_stamp(self, event_type, time_stamp, person):
         """Event mit Zeitpunkt erstellen"""
@@ -978,8 +1015,8 @@ class HdMWebAppAdministration(object):
                 if working_time >= timedelta(hours=10):
                     event_type = self.get_last_event_by_affiliated_person(person).get_event_type()
                     if event_type == 1:
-                        self.create_event(2, person)
+                        self.create_event_and_check_type(2, person)
                     if event_type == 3:
-                        self.create_event(4, person)
+                        self.create_event_and_check_type(4, person)
                         self.create_break(person)
                         self.create_departure_event(person)
