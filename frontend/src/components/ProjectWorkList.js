@@ -99,7 +99,7 @@ class ProjectWorkList extends Component {
   render() {
     const { classes } = this.props;
     const { projectWorks, showProjectWorkForm, disableEnd, disableStart, open } = this.state;
-    // console.log(this.state)
+    console.log(this.state)
 
     return (
         <div>

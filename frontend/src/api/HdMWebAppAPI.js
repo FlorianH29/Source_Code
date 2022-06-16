@@ -23,7 +23,7 @@ export default class HdMWebAppAPI {
 
   //Projekt bezogen
   #getProjectsURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
-
+  //später hier ID übergeben
   // Projektarbeit bezogen
   #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
   #updateProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;

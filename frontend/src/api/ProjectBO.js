@@ -31,7 +31,7 @@ export default class ProjectBO extends BusinessObject {
   }
 
   /**
-   * Gets the projectname.
+   * Gibt den Name zurück.
    */
   getProjectName() {
     return this.projectname;
@@ -99,13 +99,13 @@ export default class ProjectBO extends BusinessObject {
         result.push(p);
       })
     } else {
-      // Es handelt sich offenbar um ein singuläres Objekt
+
       let p = projects;
       Object.setPrototypeOf(p, ProjectBO.prototype);
       result.push(p);
     }
 
-    //console.log(result)
+    console.log(result)
     return result;
   }
 }

@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
 import {withStyles, Button, TextField, InputAdornment, IconButton, Grid, Typography, Divider} from '@mui/material';
-import ProjectWorkListEntry from "./ProjectWorkListEntry";
+import ProjectListEntry from "./ProjectListEntry";
+import PropTypes from "prop-types";
 
 class ProjectList extends Component {
 
@@ -31,6 +32,7 @@ class ProjectList extends Component {
 
     render() {
         const {projects} = this.state
+        console.log(this.state)
         return (
             <div>
                 <Grid container spacing={1} justify='flex-start' alignItems='center'>
@@ -41,8 +43,12 @@ class ProjectList extends Component {
                     </Grid>
                     <Divider/>
                     {projects.map(pro =>
-                    <ProjectWorkListEntry key={pro.getID()} projects ={pro}/>)
+                        <ProjectListEntry key={pro.getID()} project={pro}/>)
                     }
+
+
+
+
                 </Grid>
                 {
 
@@ -53,5 +59,6 @@ class ProjectList extends Component {
     }
 
 }
+
 
 export default ProjectList;

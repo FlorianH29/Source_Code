@@ -18,25 +18,25 @@ class ProjectListEntry extends Component {
         //Zunächst den State initialisieren
 
         this.state = {
-            projects: props.projects,
+            project: props.project
 
         }
     }
 
     render() {
         const { classes } = this.props;
-        const { projects } = this.state;
+        const { project } = this.state;
 
-        console.log(projects)
-        console.log (classes)
+        //console.log(projects)
+        //console.log (classes)
 
         return(
             <div>
                 <ListItem>
-                    <Grid container alignItems={"center"}   >
+                    <Grid container alignItems={"center"}>
                         <Grid item xs={3} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
-                                {projects.getProjectName()}
+                                {project.getProjectName()}
                             </Typography>
                         </Grid>
                     </Grid>
@@ -45,3 +45,19 @@ class ProjectListEntry extends Component {
         );
     }
 }
+/** Kompontenen spezifische Styles*/
+const styles = theme => ({
+  root: {
+    width: '100%',
+  },
+});
+
+/** PropTypes */
+ProjectListEntry.propTypes = {
+  /** Das ProjectBO welches gerendert werden soll */
+  project: PropTypes.object.isRequired,
+
+
+}
+
+export default withStyles(styles)(ProjectListEntry);
