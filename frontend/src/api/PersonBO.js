@@ -4,27 +4,18 @@ import BusinessObject from './BusinessObject';
 export default class PersonBO extends BusinessObject {
 
   /**
-   * Konstruktor, erstelt ein Personobjekt mit
-   *
-   * @param {String} aFirstname - der Vorname dieses PersonBO.
-   * @param {String} aLastname - der Nachname dieses PersonBO.
-   * @param {String} aUserName - der Benutzername dieses PersonBO.
-   * @param {String} aMailAddress - die Mailadresse dieses PersonBO.
-   * @param {String} aFireBaseId - die Firebase ID dieses PersonBO.
+   * Hier wird eine Person mit hilfe des Konstruktur erstellt
    */
-  constructor(aFirstname, aLastname, aUserName, aMailAddress, aFireBaseId) {
+  constructor(aFirstname, aLastname, aMailAddress, aFireBaseId) {
     super();
     this.firstname = aFirstname;
     this.lastname = aLastname;
-    this.username = aUserName;
     this.mailaddress = aMailAddress;
     this.firebase_id = aFireBaseId;
   }
 
   /**
-   * Setzt einen neuen Vornamen.
-   *
-   * @param {String} aFirstname - der neue Vorname dieses PersonBO.
+   * Hier wird der Vorname gesetzt.
    */
   setFirstName(aFirstname) {
     this.firstname = aFirstname;
@@ -38,9 +29,7 @@ export default class PersonBO extends BusinessObject {
   }
 
   /**
-   * Setzt einen neuen Nachnamen.
-   *
-   * @param {*} aLastname - der neue Nachname dieses PersonBO.
+   * Hier wird der Nachnamen gesetzt.
    */
   setLastName(aLastname) {
     this.lastname = aLastname;
@@ -54,25 +43,7 @@ export default class PersonBO extends BusinessObject {
   }
 
   /**
-   * Setzt einen neuen Username.
-   *
-   * @param {String} aUserName - der neue Username dieses PersonBO.
-   */
-  setUserName(aUserName) {
-    this.username = aUserName;
-  }
-
-  /**
-   * Gibt den Username zurück.
-   */
-  getUserName() {
-    return this.username;
-  }
-
-  /**
-   * Setzt eine neue Mailadresse.
-   *
-   * @param aMailAddress - die neue Mailadresse dieses PersonBO
+   * Hier wird die Mailadresse gesetzt
    */
   setMailAddress(aMailAddress) {
     this.mailaddress = aMailAddress;
@@ -86,9 +57,7 @@ export default class PersonBO extends BusinessObject {
   }
 
   /**
-   * Setzt eine neue Firebase ID.
-   *
-   * @param aFireBaseId - die neue Firebase ID dieses PersonBO
+   * Hier wird die FirebaseId gesetzt
    */
   setFireBaseId(aFireBaseId) {
     this.firebase_id = aFireBaseId;

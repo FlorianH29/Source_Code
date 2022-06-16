@@ -12,6 +12,7 @@ from server.bo.Project import Project
 from server.bo.ProjectWork import ProjectWork
 import datetime
 from server.bo.WorkTimeAccount import WorkTimeAccount
+from SecurityDecorator import secured
 
 
 app = Flask(__name__)
@@ -78,15 +79,56 @@ projectwork = api.inherit('ProjectWork', timeinterval, {
 })
 
 
+timeinterval = api.inherit('TimeInterval', bo, {
+    'starttime': fields.DateTime(attribute='__start_time', description='Startzeitpunkt eines Zeitintervalls'),
+    'endtime': fields.DateTime(attribute='__end_time', description='Endzeitpunkt eines Zeitintervalls'),
+    'timeperiod': fields.String(attribute='__time_period', description='Zeitraum des Intervalls')
+})
+
+
 @hdmwebapp.route('/persons')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class PersonListOperations(Resource):
     @hdmwebapp.marshal_list_with(person)
+    @secured
     def get(self):
         hwa = HdMWebAppAdministration()
         persons = hwa.get_all_persons()
-
         return persons
+
+    @hdmwebapp.marshal_with(person, code=200)
+    @hdmwebapp.expect(person)  # Wir erwarten ein Customer-Objekt von Client-Seite.
+    @secured
+    def post(self):
+
+        ha = HdMWebAppAdministration()
+
+        proposal = Person.from_dict(api.payload)
+
+        if proposal is not None:
+            c = ha.create_person(proposal.get_firstname(), proposal.get_lastname, proposal.get_mailaddress,
+                                 proposal.get_firebase_id())
+            return c, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+
+
+@hdmwebapp.route('/person-by-name/<string:lastname>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('lastname', 'Der Nachname des Kunden')
+class CustomersByNameOperations(Resource):
+    @hdmwebapp.marshal_with(person)
+    @secured
+    def get(self, lastname):
+        """ Auslesen von Customer-Objekten, die durch den Nachnamen bestimmt werden.
+
+        Die auszulesenden Objekte werden durch ```lastname``` in dem URI bestimmt.
+        """
+        adm = HdMWebAppAdministration()
+        lel = adm.get_person_by_name(lastname)
+        return lel
+
 
 
 @hdmwebapp.route('/worktimeaccount/<int:id>')
@@ -94,6 +136,7 @@ class PersonListOperations(Resource):
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class WorkTimeAccountContentList(Resource):
     @hdmwebapp.marshal_list_with(work_time_account)
+    @secured
     def get(self, id):
         hwa = HdMWebAppAdministration()
         result = []
@@ -106,16 +149,18 @@ class WorkTimeAccountContentList(Resource):
         return result
 
 
+
 @hdmwebapp.route('/activities')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ActivitiesList(Resource):
     @hdmwebapp.marshal_list_with(activity)
+    @secured
     def get(self):
         hwa = HdMWebAppAdministration()
         result = []
         activities = hwa.get_all_activities()
         for a in activities:
-            result.append({"name": a.get_name(), "capacity": a.get_capacity()})
+            result.append({"name": a._name, "capacity": a._capacity})
         print(result)
         return result
 
@@ -155,6 +200,7 @@ class EventOperations(Resource):
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @hdmwebapp.marshal_list_with(project)
+    @secured
     def get(self):
         hwa = HdMWebAppAdministration()
         projects = hwa.get_all_projects()
@@ -167,6 +213,7 @@ class ProjectListOperations(Resource):
 @hdmwebapp.param('id', 'Die ID der Aktivität')
 class ProjectWorksByActivityOperations(Resource):
     @hdmwebapp.marshal_list_with(projectwork)
+    @secured
     def get(self, id):
         hwa = HdMWebAppAdministration()
         act = hwa.get_activity_by_id(id)
@@ -185,6 +232,7 @@ class ProjectWorksByActivityOperations(Resource):
 @hdmwebapp.param('id', 'Die ID der Projektarbeit')
 class ProjectWorkOperations(Resource):
     @hdmwebapp.marshal_list_with(projectwork)
+    @secured
     def put(self, id):
         """
         Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
