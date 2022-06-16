@@ -20,6 +20,8 @@ export default class HdMWebAppAPI {
   #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
   #addPersonURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
   #updatePersonURL = () => `${this.#hdmwebappServerBaseURL}/persons/`;
+  #deletePersonURL = (id) =>`${this.#hdmwebappServerBaseURL}/persons/${id}`;
+
 
   //Projekt bezogen
   #getProjectsURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
@@ -252,4 +254,26 @@ export default class HdMWebAppAPI {
       })
     })
   }
+
+    deletePerson(personID) {
+    return this.#fetchAdvanced(this.#deletePersonURL(personID), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
+      console.log(responsePersonBO)
+      return new Promise(function (resolve) {
+        resolve(responsePersonBO);
+      })
+    })
+  }
+
+
+
+
+
+
 }
+
+
+

@@ -268,5 +268,14 @@ sub_thread.start()
 
 
 
+
+lel = HdMWebAppAdministration()
+lel.create_person("Klaus", "Yarack", "penis@gmail.com", "usdudhushccu")
+pimmel = lel.get_person_by_id(18)
+print(pimmel)
+#lel.create_project_work("Lol", "LeL", 1, "flospindler", pimmel )
+
+
+
 if __name__ == '__main__':
     app.run(debug=False)

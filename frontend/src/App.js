@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom
 import ActivityList from "./components/ActivityList";
 import PersonList from './components/PersonList';
 import Header from './components/layout/Header';
+import Navigator from './components/layout/Navigator';
 import ProjectList from "./components/ProjectList";
 import ProjectWorkList from "./components/ProjectWorkList";
 import WorktimeAccount from "./components/WorktimeAccount";
@@ -78,6 +79,7 @@ class App extends React.Component {
         return (
             <Router>
                 <Header person={currentPerson}/>
+
 
                 {
                     currentPerson ?
