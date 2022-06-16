@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from flask import Flask
 from flask_restx import Api, Resource, fields
@@ -10,7 +10,6 @@ from server.bo.Event import Event
 from server.bo.Person import Person
 from server.bo.Project import Project
 from server.bo.ProjectWork import ProjectWork
-import datetime
 from server.bo.WorkTimeAccount import WorkTimeAccount
 from SecurityDecorator import secured
 
@@ -144,7 +143,6 @@ class WorkTimeAccountContentList(Resource):
         result.append({"name": "Arbeitszeit", "time": hwa.calculate_sum_of_time_intervals_by_person(person)})
         for p in projects:
             result.append({"name": p.get_project_name(), "time": hwa.calculate_sum_of_project_work_by_person(person)})
-        print(result)
         return result
 
 
@@ -267,8 +265,9 @@ sub_thread.setDaemon(True)
 sub_thread.start()
 
 h = HdMWebAppAdministration()
-id = 'QY7ll5yg71YLWHBpOSN9YgCccrK2'
-print(h.get_person_by_firebase_id(id))
+pe = h.get_person_by_id(2)
+print(datetime.now())
+print(h.get_events_xx_time_by_person(pe, '12/06/2022', '15/06/2022'))
 
 if __name__ == '__main__':
     app.run(debug=False)
