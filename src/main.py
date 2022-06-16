@@ -267,7 +267,7 @@ sub_thread.start()
 h = HdMWebAppAdministration()
 pe = h.get_person_by_id(2)
 print(datetime.now())
-print(h.get_events_xx_time_by_person(pe, '12/06/2022', '15/06/2022'))
+print(h.get_intervals_of_person_between_time_stamps(pe, '12/06/2022', '15/06/2022'))
 
 if __name__ == '__main__':
     app.run(debug=False)

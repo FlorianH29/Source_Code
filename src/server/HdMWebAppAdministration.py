@@ -191,24 +191,30 @@ class HdMWebAppAdministration(object):
             return mapper.find_all()
 
     def get_arrive_and_departure_of_person_between_time_stamps(self, person, start_time, end_time):
+        """Alle Kommen und Gehen einer Person in einem bestimmten Zeitraum ausgeben"""
         event_list = []
         time_stamp = None
         start_time = datetime.strptime(start_time, '%d/%m/%Y')
         end_time = datetime.strptime(end_time, '%d/%m/%Y')
+        # Übergebene Time-Stamps von Str in Datetime konvertieren
         work_time_account = self.get_work_time_account_of_owner(person)
         events = self.get_event_transaction_by_affiliated_work_time_account_id(work_time_account.get_id())
+        # Alle Eventtransaktionen von einem Arbeitszeitkonto speichern
         for e in events:
             arrive_id = e.get_arrive()
             departure_id = e.get_departure()
+            # Wenn das Event kein Arrive oder Departure ist, bleibt ID None und Event wird nicht behandelt
             if arrive_id is not None:
                 arrive = self.get_arrive_event_by_id(arrive_id)
                 time_stamp = arrive.get_time_stamp()
                 if start_time <= time_stamp <= end_time:
+                    # Überprüfen, ob das Event im übergebenen Zeitraum liegt
                     event_list.append(e)
             if departure_id is not None:
                 departure = self.get_departure_event_by_id(departure_id)
                 time_stamp = departure.get_time_stamp()
                 if start_time <= time_stamp <= end_time:
+                    # Überprüfen, ob das Event im übergebenen Zeitraum liegt
                     event_list.append(e)
         return event_list
 
@@ -352,10 +358,10 @@ class HdMWebAppAdministration(object):
         with TimeIntervalTransactionMapper() as mapper:
             return mapper.find_all()
 
-    def get_time_interval_transaction_by_affiliated_work_time_account_id(self, affiliated_work_time_account_id):
+    def get_time_interval_transaction_by_affiliated_work_time_account_id(self, affiliated_work_time_account):
         """Die TimeIntervalTransaction mit der gegebenen WorkTimeAccount-ID auslesen."""
         with TimeIntervalTransactionMapper() as mapper:
-            return mapper.find_by_affiliated_work_time_account_id(affiliated_work_time_account_id)
+            return mapper.find_by_affiliated_work_time_account_id(affiliated_work_time_account.get_id())
 
     def save_time_interval_transaction(self, time_interval_transaction):
         """Die gegebene TimeIntervalTransaction speichern."""
@@ -397,6 +403,47 @@ class HdMWebAppAdministration(object):
             else:
                 return None
 
+    def get_intervals_of_person_between_time_stamps(self, person, start_time, end_time):
+        """Alle Intervalle einer Person in einem bestimmten Zeitraum ausgeben"""
+        event_dict = {}
+        event_list = []
+        time_stamp = None
+        start_time = datetime.strptime(start_time, '%d/%m/%Y')
+        end_time = datetime.strptime(end_time, '%d/%m/%Y')
+        # Übergebene Time-Stamps von Str in Datetime konvertieren
+        work_time_account = self.get_work_time_account_of_owner(person)
+        time_interval_transactions = self.get_time_interval_transaction_by_affiliated_work_time_account_id(work_time_account)
+        # Alle Timeintervaltransaktionen von einem Arbeitszeitkonto speichern
+        for tit in time_interval_transactions:
+            break_id = tit.get_affiliated_break()
+            project_work_id = tit.get_affiliated_projectwork()
+            if break_id is not None:
+                br = self.get_break_by_id(break_id)
+                start_event_id = br.get_start_event()
+                start_event = self.get_event_by_id(start_event_id)
+                end_event_id = br.get_end_event()
+                end_event = self.get_event_by_id(end_event_id)
+                time_stamp_start = start_event.get_time_stamp()
+                time_stamp_end = end_event.get_time_stamp()
+                time_period = br.get_time_period()
+                if start_time <= time_stamp_start <= end_time and start_time <= time_stamp_end <= end_time:
+                    event_dict = {'name': 'break', 'start_time': time_stamp_start, 'end_time': time_stamp_end,
+                                  'period': time_period}
+                    event_list.append(event_dict)
+            if project_work_id is not None:
+                project_work = self.get_projectwork_by_id(project_work_id)
+                start_event_id = project_work.get_start_event()
+                start_event = self.get_event_by_id(start_event_id)
+                end_event_id = project_work.get_end_event()
+                end_event = self.get_event_by_id(end_event_id)
+                time_stamp_start = start_event.get_time_stamp()
+                time_stamp_end = end_event.get_time_stamp()
+                time_period = project_work.get_time_period()
+                if start_time <= time_stamp_start <= end_time and start_time <= time_stamp_end <= end_time:
+                    event_dict = {'name': project_work.get_project_work_name(), 'start_time': time_stamp_start,
+                                  'end_time': time_stamp_end, 'period': time_period}
+                    event_list.append(event_dict)
+        return event_list
 
     """Methoden für WorkTimeAccount:"""
 
