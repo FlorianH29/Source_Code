@@ -266,7 +266,9 @@ sub_thread = Thread(target=worker)
 sub_thread.setDaemon(True)
 sub_thread.start()
 
-
+h = HdMWebAppAdministration()
+id = 'QY7ll5yg71YLWHBpOSN9YgCccrK2'
+print(h.get_person_by_firebase_id(id))
 
 if __name__ == '__main__':
     app.run(debug=False)
