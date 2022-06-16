@@ -4,7 +4,7 @@ import {withStyles, Button, TextField, InputAdornment, IconButton, Grid, Typogra
 import AddIcon from '@material-ui/icons/Add';
 import ActivityForm from "./dialogs/ActivityForm";
 import PropTypes from "prop-types";
-import ActivityListEntry from "./pages/ActivityListEntry";
+import ActivityListEntry from "./ActivityListEntry";
 import Card from "@mui/material/Card";
 
 
@@ -74,11 +74,13 @@ class ActivityList extends Component {
 
         return (
             <Box sx={{m: 2}}>
-                <Card>
-                    <Grid container spacing={1} item xs={12} algin={"center"}>
+                    <Grid container spacing={1} item xs={12} justifyContent={"center"}>
                         <Grid container >
-                            <Typography variant={"h4"} justifyContent={"center"} component={"div"}>
+                            <Typography variant={"h4"} algin={"left"} component={"div"}>
                                 Projekt:
+                            </Typography>
+                            <Typography variant={"h4"} algin={"left"} component={"div"}>
+                                {this.props.projectName}
                             </Typography>
                                 <Button variant={"contained"} color='primary' algin={"right"}>
                                     Projekt bearbeiten
@@ -104,10 +106,8 @@ class ActivityList extends Component {
                         {activities.map(ac =>
                             <ActivityListEntry key={ac.getID()} activity={ac} onActivityDeleted={this.activityDeleted}/>)
                         }
-
                     </Grid>
                         <ActivityForm onClose={this.activityFormClosed} show={showActivityForm}></ActivityForm>
-                </Card>
             </Box>
         )
     }

@@ -5,9 +5,9 @@ import { Button, ButtonGroup } from '@material-ui/core';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ListItem from "@mui/material/ListItem";
-import ActivityDeleteDialog from "../dialogs/ActivityForm";
-import ActivityForm from "../dialogs/ActivityForm";
-import {HdMWebAppAPI} from "../../api";
+import ActivityDeleteDialog from "./dialogs/ActivityForm";
+import ActivityForm from "./dialogs/ActivityForm";
+import {HdMWebAppAPI} from "../api";
 
 
 
@@ -84,11 +84,6 @@ class ActivityListEntry extends Component {
             <Grid item xs={3} align={"center"}>
               <Typography variant={"h5"} component={"div"}>
                 {activity.getActivityWorkTime()}
-              </Typography>
-            </Grid>
-            <Grid item xs={3} align={"center"}>
-              <Typography variant={"h5"} component={"div"}>
-                {activity.getAffiliatedProject()}
               </Typography>
             </Grid>
             <Grid item xs={3} align={"center"}>
