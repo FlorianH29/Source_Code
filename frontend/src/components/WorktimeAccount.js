@@ -10,6 +10,7 @@ import {HdMWebAppAPI} from "../api";
 import ProjectWorkForm from "./dialogs/ProjectWorkForm";
 import ProjectList from './ProjectList';
 import ProjectWorkListEntry from "./ProjectWorkListEntry";
+import BasicButtons from "./BasicButtons";
 
 class WorktimeAccount extends Component {
 
@@ -44,6 +45,7 @@ class WorktimeAccount extends Component {
         return (
             <Box sx={{m: 2}}>
                 <Card>
+                    <BasicButtons></BasicButtons>
                     <Grid container spacing={1} justifyContent={"center"}>
                         <Grid item xs={12} align={"center"}>
                             <ButtonGroup>

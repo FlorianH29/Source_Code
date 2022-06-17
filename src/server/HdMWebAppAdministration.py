@@ -673,6 +673,7 @@ class HdMWebAppAdministration(object):
                     interval.set_end_event(end_event.get_id())
                     interval.set_time_period(self.calculate_period(interval))
 
+
                 return mapper.insert(interval)
             else:
                 return None
