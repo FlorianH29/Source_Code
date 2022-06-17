@@ -15,14 +15,15 @@ class TimeIntervalTransactionListEntry extends Component {
         // den state initialisieren
         this.state = {
             timeIntervalTransaction: props.timeIntervalTransaction,
+            event: props.event,
         };
     }
 
 
     /** Renders the component */
     render() {
-        const {timeIntervalTransaction} = this.state;
-
+        const {timeIntervalTransaction, event} = this.state;
+        console.log(event)
         // console.log(this.state);
         return (
             <div>
@@ -35,7 +36,7 @@ class TimeIntervalTransactionListEntry extends Component {
                         </Grid>
                         <Grid item xs={3} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
-                                {timeIntervalTransaction.getID()}
+                                {event.getTimeStamp()}
                             </Typography>
                         </Grid>
                         <Grid item xs={3} align={"center"}>

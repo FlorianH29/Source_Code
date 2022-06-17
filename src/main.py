@@ -292,6 +292,17 @@ class TimeIntervalTransactionOperations(Resource):
         hwa = HdMWebAppAdministration()
         tits = hwa.get_all_time_interval_transactions()
         return tits
+    
+@hdmwebapp.route('/eventsfortimeintervaltransactions')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class EventsForTimeIntervalTransactions(Resource):
+    @hdmwebapp.marshal_list_with(event)
+    @secured
+    def get(self):
+        hwa = HdMWebAppAdministration()
+        events = hwa.get_all_event_transactions()
+        print(events)
+        return events
 
 def check():
     hwa = HdMWebAppAdministration()
@@ -305,7 +316,7 @@ sub_thread.start()
 
 h = HdMWebAppAdministration()
 pe = h.get_person_by_id(2)
-print(h.get_last_event_by_affiliated_person(pe))
+#print(h.get_last_event_by_affiliated_person(pe))
 h.create_event_and_check_type(4, pe)
 
 

@@ -10,6 +10,7 @@ class TimeIntervalTransactionList extends Component {
 
         this.state = {
             timeIntervalTransactions: [],
+            events: [],
         }
     }
 
@@ -24,30 +25,46 @@ class TimeIntervalTransactionList extends Component {
             }));
     }
 
+    getEventForTimeIntervalTransactions = () => {
+        HdMWebAppAPI.getAPI().getEventsForTimeIntervalTransactions()
+            .then(eventBO =>
+                this.setState({
+                    events: eventBO
+                })).catch(e =>
+            this.setState({
+                events: []
+            }))
+    }
+
     componentDidMount() {
         this.getTimeIntervalTransactions();
+        this.getEventForTimeIntervalTransactions();
     }
 
     render() {
-  const { timeIntervalTransactions } = this.state;
+        const {timeIntervalTransactions, events} = this.state;
+        console.log(events)
         return (
             <div>
                 <Grid container>
                     <Grid item xs={12} align={"center"}>
                         <Grid container>
                             <Grid item xs={3} align={"flex-end"}>
-                                <Typography variant={"h5"} component={"div"}> Projektarbeit </Typography>
+                                <Typography variant={"h5"} component={"div"}> Name </Typography>
                             </Grid>
                             <Grid item xs={3} align={"flex-end"}>
-                                <Typography variant={"h5"} component={"div"}> Beschreibung </Typography>
+                                <Typography variant={"h5"} component={"div"}> Start </Typography>
                             </Grid>
                             <Grid item xs={3} align={"flex-end"}>
-                                <Typography variant={"h5"} component={"div"}> Dauer </Typography>
+                                <Typography variant={"h5"} component={"div"}> Ende </Typography>
                             </Grid>
                         </Grid>
                         <Divider/>
                         {timeIntervalTransactions.map(tit =>
                             <TimeIntervalTransactionListEntry key={tit.getID()} timeIntervalTransaction={tit}/>)
+                        }
+                        {events.map(e =>
+                            <TimeIntervalTransactionListEntry key={e.getID()} event={e}/>)
                         }
                     </Grid>
                 </Grid>
@@ -55,4 +72,5 @@ class TimeIntervalTransactionList extends Component {
         );
     }
 }
+
 export default TimeIntervalTransactionList;
