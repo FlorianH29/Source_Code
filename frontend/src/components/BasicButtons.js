@@ -54,32 +54,13 @@ class BasicButtons extends Component {
       this.setState({
           disableBreakStartEvent: true,
           disableBreakEndEvent: false,
-          disableLeaveEvent: true,  // nach dem "leave wird der Benutzer abgemeldet und der Status des Leave-Event-
+          disableLeaveEvent: true,  // nach dem "leave" wird der Benutzer abgemeldet und der Status des Leave-Event-
                                     // Buttons muss daher nicht geändert werden
           openLeve: false
       });
-  }
-
-  /** Handelen der gedrückten Buttons */
-
-  handleLeaveEventButtonClicked = (event) => {
-    // Dialog öffnen, um abzufragen, ob Mitarbeiter wirklich gehen möchte
-      event.stopPropagation();
-      this.setState({
-          openLeave: true
-      })
-  }
-
-  handleBreakStartEventButtonClicked = (event) => {
-    // Dialog öffnen, um abzufragen, ob Mitarbeiter wirklich gehen möchte
+      // Öffnen eines Dialogs mit der Abfrage, ob Mitarbeiter wirklich gehen möchte
 
   }
-
-  handleBreakEndEventButtonClicked = (event) => {
-    // Dialog öffnen, um abzufragen, ob Mitarbeiter wirklich gehen möchte
-
-  }
-
 
 
   /** Rendern der Komponente */
@@ -94,15 +75,15 @@ class BasicButtons extends Component {
                 <ListItem>
                     <Grid container justifyContent={"center"}>
                         <Grid item xs={6} align={"center"}>
-                            <Button variant='contained' disabled={disableBreakStartEvent} color='primary' onClick={this.handleBreakStartEventButtonClicked}>
+                            <Button variant='contained' disabled={disableBreakStartEvent} color='primary' onClick={this.addNewBreakStartEvent}>
                             Pause starten
                             </Button>
 
-                            <Button variant='contained' disabled={disableBreakEndEvent} color='primary' onClick={this.handleBreakEndEventButtonClicked}>
+                            <Button variant='contained' disabled={disableBreakEndEvent} color='primary' onClick={this.addNewBreakEndEvent}>
                             Pause beenden
                             </Button>
 
-                            <Button variant='contained' disabled={disableLeaveEvent} color='primary' onClick={this.handleLeaveEventButtonClicked}>
+                            <Button variant='contained' disabled={disableLeaveEvent} color='primary' onClick={this.addNewLeaveEvent}>
                             Gehen
                             </Button>
                         </Grid>
