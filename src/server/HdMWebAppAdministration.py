@@ -1040,6 +1040,16 @@ class HdMWebAppAdministration(object):
         except AttributeError:
             return print("Keine Projekte gefunden")
 
+    def get_project_by_person_id(self, person):
+        projects = []
+        projectmembers = self.get_projectmember_by_person(person)
+        for pm in projectmembers:
+            project_id = pm.get_project()
+            project = self.get_project_by_id(project_id)
+            projects.append(project)
+            return projects
+
+
     def check_time_for_departure(self):
         while True:
             time.sleep(60)

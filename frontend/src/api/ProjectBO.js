@@ -13,9 +13,9 @@ export default class ProjectBO extends BusinessObject {
    */
   constructor(aProjectName, aClient, aTimeIntervalID, aOwner) {
     super();
-    this.projectname = aProjectName;
-    this.projectclient = aClient;
-    this.timeintervallid = aTimeIntervalID;
+    this.project_name = aProjectName;
+    this.client = aClient;
+    this.timeinterval_id = aTimeIntervalID;
     this.owner = aOwner;
     this.work_time = 0;
 
@@ -27,14 +27,14 @@ export default class ProjectBO extends BusinessObject {
    * @param {String} aProjectName - the new name of this ProjectBO.
    */
   setProjectName(aProjectName) {
-    this.projectname = aProjectName;
+    this.project_name = aProjectName;
   }
 
   /**
    * Gibt den Name zurück.
    */
   getProjectName() {
-    return this.projectname;
+    return this.project_name;
   }
 
   /**
@@ -43,7 +43,7 @@ export default class ProjectBO extends BusinessObject {
    * @param {*} aClient - the new client of this ProjectBO.
    */
   setClient(aClient) {
-    this.projectclient = aClient;
+    this.client = aClient;
   }
 
   /**
@@ -51,7 +51,7 @@ export default class ProjectBO extends BusinessObject {
    *
    */
   getClient() {
-    return this.projectclient;
+    return this.client;
   }
 
   /**
@@ -60,14 +60,14 @@ export default class ProjectBO extends BusinessObject {
    * @param {Number} aTimeIntervalID - die neue TimeIntervalId dieses ProjectBOs.
    */
   setTimeIntervallID(aTimeIntervalID) {
-    this.timeintervallid = aTimeIntervalID;
+    this.timeinterval_id = aTimeIntervalID;
   }
 
   /**
    * getter der TimeIntervalId
    */
   getTimeInterval() {
-    return this.timeintervallid;
+    return this.timeinterval_id;
   }
 
   /**

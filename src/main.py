@@ -218,13 +218,32 @@ class EventOperations(Resource):
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @hdmwebapp.marshal_list_with(project)
-    @secured
+    #@secured
     def get(self, id):
         hwa = HdMWebAppAdministration()
-        projects = hwa.get_all_projects(id)
-
+        person = hwa.get_person_by_id(id)
+        projects = hwa.get_project_by_person_id(person)
         return projects
 
+@hdmwebapp.route('/projects/<int:id>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des Projekts')
+class ProjectOperations(Resource):
+    @hdmwebapp.marshal_list_with(projectwork)
+    #@secured
+    def put(self, id):
+        """
+        Update eines bestimmten Projektobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pro = Project.from_dict(api.payload)
+
+        if pro is not None:
+            pro.set_id(id)
+            hwa.save_project(pro)
+            return '', 200
+        else:
+            return '', 500
 
 @hdmwebapp.route('/activities/<int:id>/projectworks')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -235,12 +254,15 @@ class ProjectWorksByActivityOperations(Resource):
     def get(self, id):
         hwa = HdMWebAppAdministration()
         act = hwa.get_activity_by_id(id)
+
         # Die durch die id gegebene Aktivität als Objekt speichern.
 
         if act is not None:
             projectwork_list = hwa.get_project_works_of_activity(act)
             # Auslesen der Projektarbeiten, die der Aktivität untergliedert sind.
+            print(projectwork_list)
             return projectwork_list
+
         else:
             return "Activity not found", 500
 
@@ -287,7 +309,8 @@ sub_thread.setDaemon(True)
 sub_thread.start()
 
 h = HdMWebAppAdministration()
-pe = h.get_person_by_id(5)
+pe = h.get_person_by_id(1)
+print(h.get_project_by_person_id(pe))
 
 
 if __name__ == '__main__':
