@@ -13,6 +13,7 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import firebaseConfig from './firebaseconfig';
 import {Person} from "@mui/icons-material";
+import TimeIntervalTransactionList from "./components/TimeIntervalTransactionList";
 
 
 class App extends React.Component {
@@ -97,6 +98,9 @@ class App extends React.Component {
                                 </Route>
                                 <Route exact path='/activities'>
                                     <ActivityList/>
+                                </Route>
+                                <Route exact path='/timeintervaltransactions'>
+                                    <TimeIntervalTransactionList/>
                                 </Route>
                                 <Route path='*'>
                                     <NotFound/>

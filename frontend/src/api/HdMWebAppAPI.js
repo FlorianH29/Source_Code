@@ -3,6 +3,7 @@ import ProjectBO from './ProjectBO';
 import WorktimeAccountBO from "./WorktimeAccountBO";
 import ActivityBO from "./ActivityBO";
 import ProjectWorkBO from "./ProjectWorkBO";
+import TimeIntervalTransactionBO from "./TimeIntervalTransactionBO";
 import TimeIntervalBO from "./TimeIntervalBO";
 import header from "../components/layout/Header";
 import personForm from "../components/dialogs/PersonForm";
@@ -37,6 +38,9 @@ export default class HdMWebAppAPI {
 
   // Ereignis bezogen
   #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
+
+  // TimeIntervalTransaction bezogen
+    #getTimeIntervalTransactionsURL = () => `${this.#hdmwebappServerBaseURL}/timeintervaltransactions`;
 
   /**
    * Gibt die Singelton Instanz zurück
@@ -190,12 +194,13 @@ export default class HdMWebAppAPI {
             })
         })
     }
-    getWorktimeAccount(id) {
-        return this.#fetchAdvanced(this.#getWorktimeAccountURL(id)).then((responseJSON) => {
-            let worktimeaccountBOs = WorktimeAccountBO.fromJSON(responseJSON);
+
+    getTimeIntervalTransactions() {
+        return this.#fetchAdvanced(this.#getTimeIntervalTransactionsURL()).then((responseJSON) => {
+            let timeIntervalTransactionsBOs = TimeIntervalTransactionBO.fromJSON(responseJSON);
             console.log(responseJSON);
             return new Promise(function (resolve) {
-                resolve(worktimeaccountBOs);
+                resolve(timeIntervalTransactionsBOs);
             })
         })
     }

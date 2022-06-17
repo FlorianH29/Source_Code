@@ -85,6 +85,14 @@ projectwork = api.inherit('ProjectWork', timeinterval, {
     'affiliated_activity': fields.Integer(attribute='_affiliated_activity', description='Zugeordnete Aktivität einer P.')
 })
 
+timeintervaltransaction = api.inherit('TimeIntervalTransaction', bo, {
+    'affiliated_time_interval': fields.Integer(attribute='_affiliated_time_interval',
+                                               description='Zugehöriges TimeInterval einer TimIntervalTransaction'),
+    'affiliated_break': fields.Integer(attribute='_affiliated_break',
+                                                description='Zugehörige Pause einer TimeIntervalTransaction'),
+    'affiliated_projectwork': fields.Integer(attribute='_affiliated_projectwork',
+                                             description='Zugehörige ProjectWork einer TimeIntervalTransaction')
+})
 
 timeinterval = api.inherit('TimeInterval', bo, {
     'starttime': fields.DateTime(attribute='__start_time', description='Startzeitpunkt eines Zeitintervalls'),
@@ -275,6 +283,15 @@ class ProjectWorkOperations(Resource):
         hwa.delete_project_work(pw)
         return '', 200
 
+@hdmwebapp.route('/timeintervaltransactions')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class TimeIntervalTransactionOperations(Resource):
+    @hdmwebapp.marshal_list_with(timeintervaltransaction)
+    @secured
+    def get(self):
+        hwa = HdMWebAppAdministration()
+        tits = hwa.get_all_time_interval_transactions()
+        return tits
 
 def check():
     hwa = HdMWebAppAdministration()
