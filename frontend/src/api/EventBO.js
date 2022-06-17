@@ -10,11 +10,11 @@ export default class EventBO extends BusinessObject {
    * @param {Date} aTimeStamp - die Kapazität dieses EventBO.
    * @param {Number} anAffiliatedPerson - die Person, der dieses EventBO zugeordnet ist.
    */
-  constructor(anEventType, anAffiliatedPerson) {
+  constructor(aTimeStamp,anEventType, anAffiliatedPerson) {
     super();
-    this.event_type = 1;
-    this.time_stamp = 0;
-    this.affiliated_person = 0;
+    this.time_stamp = aTimeStamp;
+    this.event_type = anEventType;
+    this.affiliated_person = anAffiliatedPerson;
   }
 
   /**
@@ -70,7 +70,6 @@ export default class EventBO extends BusinessObject {
    */
   static fromJSON(events) {
     let result = [];
-
     if (Array.isArray(events)) {
       events.forEach((e) => {
         Object.setPrototypeOf(e, EventBO.prototype);

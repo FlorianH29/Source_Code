@@ -38,8 +38,8 @@ activity = api.inherit('Activity', bo, {
 })
 
 event = api.inherit('Event', bo, {
-    'event_type': fields.Integer(attribute='_event_type', description='Typ eines Events, Start oder Ende, für B und PW'),
     'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt'),
+    'event_type': fields.Integer(attribute='_event_type', description='Typ eines Events, Start oder Ende, für B und PW'),
     'affiliated_person': fields.Integer(attribute='_affiliated_person', description='ID der Person, die Event besitzt')
 })
 
@@ -322,7 +322,7 @@ class EventsForTimeIntervalTransactions(Resource):
     @secured
     def get(self):
         hwa = HdMWebAppAdministration()
-        events = hwa.get_all_event_transactions()
+        events = hwa.get_all_events()
         print(events)
         return events
 
@@ -337,9 +337,12 @@ sub_thread.setDaemon(True)
 sub_thread.start()
 
 h = HdMWebAppAdministration()
-pe = h.get_person_by_id(2)
-print(h.get_last_event_by_affiliated_person(pe))
-h.create_event_and_check_type(4, pe)
+pe = h.get_all_time_interval_transactions()
+#print(h.get_last_event_by_affiliated_person(pe))
+print(pe)
+te = h.get_all_event_transactions()
+print(te)
+#h.create_event_and_check_type(4, pe)
 
 
 if __name__ == '__main__':

@@ -204,11 +204,6 @@ export default class HdMWebAppAPI {
     })
   }
 
-
-
-
-
-
     getWorktimeAccount(id) {
         return this.#fetchAdvanced(this.#getWorktimeAccountURL(id)).then((responseJSON) => {
             let worktimeaccountBOs = WorktimeAccountBO.fromJSON(responseJSON);
@@ -222,7 +217,7 @@ export default class HdMWebAppAPI {
     getTimeIntervalTransactions() {
         return this.#fetchAdvanced(this.#getTimeIntervalTransactionsURL()).then((responseJSON) => {
             let timeIntervalTransactionsBOs = TimeIntervalTransactionBO.fromJSON(responseJSON);
-            console.log(responseJSON);
+            //console.log(responseJSON);
             return new Promise(function (resolve) {
                 resolve(timeIntervalTransactionsBOs);
             })
@@ -232,7 +227,7 @@ export default class HdMWebAppAPI {
     getEventsForTimeIntervalTransactions() {
         return this.#fetchAdvanced(this.#getEventForTimeIntervalTransactionsURL()).then((responseJSON) => {
             let eventBOs = EventBO.fromJSON(responseJSON);
-            console.log(responseJSON);
+            //console.log(responseJSON);
             return new Promise(function (resolve) {
                 resolve(eventBOs);
             })

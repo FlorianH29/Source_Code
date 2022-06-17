@@ -14,36 +14,38 @@ class TimeIntervalTransactionList extends Component {
         }
     }
 
-    getTimeIntervalTransactions = () => {
-        HdMWebAppAPI.getAPI().getTimeIntervalTransactions()
-            .then(timeIntervalTransactionBO =>
-                this.setState({
-                    timeIntervalTransactions: timeIntervalTransactionBO
-                })).catch(e =>
-            this.setState({
-                timeIntervalTransactions: []
-            }));
+    getTimeIntervalTransactions = async () => {
+       await HdMWebAppAPI.getAPI().getTimeIntervalTransactions()
+            .then(timeIntervalBO => {
+                return timeIntervalBO;
+            }).catch(e => {
+            return [];
+        });
     }
 
-    getEventForTimeIntervalTransactions = () => {
-        HdMWebAppAPI.getAPI().getEventsForTimeIntervalTransactions()
-            .then(eventBO =>
-                this.setState({
-                    events: eventBO
-                })).catch(e =>
-            this.setState({
-                events: []
-            }))
+    getEventForTimeIntervalTransactions = async () => {
+        await HdMWebAppAPI.getAPI().getEventsForTimeIntervalTransactions()
+            .then(eventBO => {
+                return eventBO;
+            }).catch(e => {
+            return [];
+        });
     }
 
     componentDidMount() {
-        this.getTimeIntervalTransactions();
-        this.getEventForTimeIntervalTransactions();
+        const evente = this.getEventForTimeIntervalTransactions()
+        const timeIntervalTransactionen = this.getTimeIntervalTransactions()
+        console.log(evente)
+        this.setState({
+            events: evente,
+            timeIntervalTransactions: timeIntervalTransactionen
+        })
     }
 
     render() {
         const {timeIntervalTransactions, events} = this.state;
-        console.log(events)
+        //console.log(events)
+        //console.log(timeIntervalTransactions)
         return (
             <div>
                 <Grid container>

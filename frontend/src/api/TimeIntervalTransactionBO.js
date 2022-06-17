@@ -81,7 +81,7 @@ export default class TimeIntervalTransactionBO extends BusinessObject {
             Object.setPrototypeOf(tit, TimeIntervalTransactionBO.prototype);
             result.push(tit);
         }
-        console.log(result)
+        //console.log(result)
         return result;
     }
 

@@ -23,7 +23,7 @@ class TimeIntervalTransactionListEntry extends Component {
     /** Renders the component */
     render() {
         const {timeIntervalTransaction, event} = this.state;
-        console.log(event)
+        //console.log(event)
         // console.log(this.state);
         return (
             <div>
