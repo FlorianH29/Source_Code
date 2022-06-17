@@ -13,6 +13,7 @@ from server.bo.Project import Project
 from server.bo.ProjectWork import ProjectWork
 from server.bo.WorkTimeAccount import WorkTimeAccount
 from SecurityDecorator import secured
+from Helper import Helper
 
 
 app = Flask(__name__)
@@ -202,13 +203,13 @@ class EventOperations(Resource):
         """
         hwa = HdMWebAppAdministration()
         proposal = Event.from_dict(api.payload)
-        print(proposal)
+        per = hwa.get_person_by_id(proposal.get_affiliated_person())
 
         if proposal is not None:
             """ 
             Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Eventobjekt erstellt.  
             """
-            e = hwa.create_event(proposal.get_event_type(), proposal.get_affiliated_person())
+            e = hwa.create_event(proposal.get_event_type(), per)
             return e, 200
         else:
             return '', 500
@@ -224,6 +225,33 @@ class ProjectListOperations(Resource):
         projects = hwa.get_all_projects()
 
         return projects
+
+
+@hdmwebapp.route('/projectworks')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectWorksOperations(Resource):
+    @hdmwebapp.marshal_with(projectwork, code=201)
+    @hdmwebapp.expect(projectwork)
+    @secured
+    def post(self):
+        """Erstellen einer neuen Projektarbeit."""
+
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        proposal = ProjectWork.from_dict(api.payload)
+
+        if proposal is not None:
+
+            project_work_name = proposal.get_project_work_name()
+            description = proposal.get_description()
+            act = hwa.get_activity_by_id(1)
+            firebase_id = h.get_firebase_id()
+            per = hwa.get_person_by_firebase_id(firebase_id)
+            result = hwa.create_project_work(project_work_name, description, act, per)
+            return result, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
 
 
 @hdmwebapp.route('/activities/<int:id>/projectworks')
@@ -286,8 +314,10 @@ sub_thread = Thread(target=check)
 sub_thread.setDaemon(True)
 sub_thread.start()
 
-h = HdMWebAppAdministration()
-pe = h.get_person_by_id(5)
+ha = HdMWebAppAdministration()
+pe = ha.get_person_by_firebase_id('QH71Dyy7cLY2TUOxCiQ6EbJpsA43')
+
+
 
 
 if __name__ == '__main__':

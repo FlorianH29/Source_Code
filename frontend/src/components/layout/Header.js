@@ -67,7 +67,7 @@ class Header extends Component {
                                     onClose={() => {
                                         this.handleCloseUserMenu()
                                     }}>
-                                    <Typography variant='h11' component='h9' align='center'>
+                                    <Typography variant='h11' component='h5' align='center'>
                                     <MenuList onClick={this.handleLogout}>Profil bearbeiten</MenuList>
                                     <MenuList onClick={this.handleLogout}>Profil löschen</MenuList>
                                     <MenuList onClick={this.handleLogout}>LogOut</MenuList>

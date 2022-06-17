@@ -18,7 +18,6 @@ export default class HdMWebAppAPI {
 
   // Person bezogen
   #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
-  #addPersonURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
   #updatePersonURL = () => `${this.#hdmwebappServerBaseURL}/persons/`;
 
   //Projekt bezogen
@@ -28,6 +27,7 @@ export default class HdMWebAppAPI {
   #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
   #updateProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
   #deleteProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
+  #addProjectWorkURL = () => `${this.#hdmwebappServerBaseURL}/projectworks`;
 
   //Worktimeaccount bezogen
   #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
@@ -64,40 +64,7 @@ export default class HdMWebAppAPI {
                 return res.json();
             }
         )
-  addEvent(eventBO) {
-    return this.#fetchAdvanced(this.#addEventURL(), {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json, text/plain',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(eventBO)
-    }).then((responseJSON) => {
-      let responseEventBO = EventBO.fromJSON(responseJSON)[0];
-      console.log(responseEventBO);
-      return new Promise(function (resolve) {
-        resolve(responseEventBO);
-      })
-    })
-  }
 
-  addPerson(PersonBO) {
-    return this.#fetchAdvanced(this.#addPersonURL(), {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json, text/plain',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(PersonBO)
-    }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON, but only need one object
-      let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
-      // console.info(accountBOs);
-      return new Promise(function (resolve) {
-        resolve(responsePersonBO);
-      })
-    })
-  }
 
   updatePerson(PersonBO) {
     return this.#fetchAdvanced(this.#updatePersonURL(PersonBO.getID()), {
@@ -209,6 +176,30 @@ export default class HdMWebAppAPI {
             })
         })
     }
+
+   /**
+   * Adds a customer and returns a Promise, which resolves to a new CustomerBO object with the
+   * firstName and lastName of the parameter customerBO object.
+   *
+   * @param {ProjectWorkBO} projectWorkBO to be added. The ID of the new customer is set by the backend
+   * @public
+   */
+  addProjectWork(projectWorkBO) {
+    return this.#fetchAdvanced(this.#addProjectWorkURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(projectWorkBO)
+    }).then((responseJSON) => {
+      let responseProjectWorkBO = ProjectWorkBO.fromJSON(responseJSON)[0];
+      // console.info(accountBOs);
+      return new Promise(function (resolve) {
+        resolve(responseProjectWorkBO);
+      })
+    })
+  }
 
   /**
   * Updated ein ProjectWorkBO

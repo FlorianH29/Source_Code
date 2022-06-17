@@ -17,10 +17,11 @@ class ProjectWorkForm extends Component {
   constructor(props) {
     super(props);
 
-    let pwn = '', de = '';
+    let pwn = '', de = '',  act = 0;
     if (props.projectWork) {
       pwn = props.projectWork.getProjectWorkName();
       de = props.projectWork.getDescription();
+      act = props.projectWork.getAffiliatedActivity();
     }
 
     let et = 1, ts = 0, ap = 1;
@@ -34,6 +35,7 @@ class ProjectWorkForm extends Component {
     this.state = {
       projectWorkName: pwn,
       description: de,
+      affiliatedActivity: act,
       eventType: et,
       timeStamp: ts,
       affilatedPerson: ap,
@@ -52,7 +54,15 @@ class ProjectWorkForm extends Component {
   }
 
   addProjectWork = () => {
-    console.log('Methode noch nicht fertig')
+    let newProjectWorkBO = new ProjectWorkBO(this.state.projectWorkName, this.state.description,
+        this.state.affiliatedActivity);
+    HdMWebAppAPI.getAPI().addProjectWork(newProjectWorkBO).then(projectWork => {
+      // Backend call sucessfull
+      // reinit the dialogs state for a new empty customer
+      this.setState(this.baseState);
+      this.props.onClose(projectWork); // call the parent with the customer object from backend
+    }).catch(e =>
+    console.log(e));
   }
 
   addEvent = () => {
@@ -64,8 +74,7 @@ class ProjectWorkForm extends Component {
       this.setState(this.baseState);
       this.props.onClose(event); // call the parent with the customer object from backend
     }).catch(e =>
-        console.log(e)              // show error message
-        );
+        console.log(e));
   }
 
   addStartEventandProjectWork = () => {

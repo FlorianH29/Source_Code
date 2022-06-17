@@ -57,14 +57,14 @@ export default class ProjectWorkBO extends TimeIntervalBO {
    *
    * @param {Number} anAffiliatedActivity - die neue zugeordnete Aktivität dieses ProjectWorkBO.
    */
-  setAffiliatedProject(anAffiliatedActivity) {
+  setAffiliatedActivity(anAffiliatedActivity) {
     this.affiliated_activity = anAffiliatedActivity;
   }
 
     /**
    * Gibt die zugeordnete Aktivität zurück.
    */
-  getAffiliatedProject() {
+  getAffiliatedActivity() {
     return this.affiliated_activity;
   }
 
