@@ -1047,7 +1047,7 @@ class HdMWebAppAdministration(object):
             project_id = pm.get_project()
             project = self.get_project_by_id(project_id)
             projects.append(project)
-            return projects
+        return projects
 
 
     def check_time_for_departure(self):

@@ -19,6 +19,7 @@ class ProjectList extends Component {
     }
 
     getProjects = () => {
+
         HdMWebAppAPI.getAPI().getProject(1)
             .then(projectBOs =>
                 this.setState({
@@ -35,20 +36,21 @@ class ProjectList extends Component {
         console.log(this.state)
         return (
             <div>
-                <Grid container spacing={1} justify='flex-start' alignItems='center'>
-                    <Grid item>
-                        <Typography>
-                            Meine Projekte:
-                        </Typography>
-                    </Grid>
+                <Grid container>
+                    <Grid item xs={12} align={"center"}>
+                        <Grid container>
+                            <Grid item xs={3} align={"flex-end"}>
+                            <Typography variant={"h5"} component={"div"}> Meine Projekte: </Typography>
+                            </Grid>
+                            <Grid item xs={3} align={"flex-end"}>
+                            <Typography variant={"h5"} component={"div"}> Klient: </Typography>
+                            </Grid>
+                        </Grid>
                     <Divider/>
                     {projects.map(pro =>
                         <ProjectListEntry key={pro.getID()} project={pro}/>)
                     }
-
-
-
-
+                    </Grid>
                 </Grid>
                 {
 

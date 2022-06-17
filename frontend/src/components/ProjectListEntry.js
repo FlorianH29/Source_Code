@@ -67,6 +67,11 @@ class ProjectListEntry extends Component {
                             </Typography>
                         </Grid>
                         <Grid item xs={3} align={"center"}>
+                            <Typography variant={"h5"} component={"div"}>
+                                {project.getClient()}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={3} align={"center"}>
                             <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editProjectButtonClicked}> </Button>
                         </Grid>
                     </Grid>

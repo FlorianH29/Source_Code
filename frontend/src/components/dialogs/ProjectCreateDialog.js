@@ -79,8 +79,8 @@ class ProjectCreateDialog extends Component {
         let header = '';
         let title = '';
 
-        header = 'Geben Sie Name und Beschreibung an';
-        title = 'Neues Projekt erstellen';
+        header = 'Geben Sie einen Projektnamen und den Klienten ein: ';
+        title = 'Projekt bearbeiten: ';
 
         return (
             show ?
