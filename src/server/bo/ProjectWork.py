@@ -7,7 +7,7 @@ class ProjectWork (ti.TimeInterval):
         super().__init__()
         self._project_work_name = ""    # Der Name die ProjectWork. (init als leerer str)
         self._description = ""  # Die Beschreibung für die ProjectWork. (init als leerer str)
-        self._affiliated_activity = None  # Die zugehörige Activity (init als None)
+        self._affiliated_activity_id = None  # Die zugehörige Activity (init als None)
 
     def set_project_work_name(self, project_work_name):
         self._project_work_name = project_work_name
@@ -22,10 +22,10 @@ class ProjectWork (ti.TimeInterval):
         return self._description
 
     def set_affiliated_activity(self, affiliated_activity):
-        self._affiliated_activity = affiliated_activity
+        self._affiliated_activity_id = affiliated_activity
 
     def get_affiliated_activity(self):
-        return self._affiliated_activity
+        return self._affiliated_activity_id
 
     def __str__(self):
         """Ausgabe von: id, last_edit, project_work_name, description, affiliated_activity, end_event_id,
@@ -34,7 +34,7 @@ class ProjectWork (ti.TimeInterval):
                "description: {} affiliated_activity: {} end_event: {}  start_event: {}  " \
                "time_period: {}".format(self.get_id(), self.get_last_edit(),
                                         self.get_project_work_name(), self.get_description(),
-                                        self._affiliated_activity, self._time_period,
+                                        self._affiliated_activity_id(), self._time_period,
                                         self.get_start_event(), self.get_end_event())
 
     @staticmethod
@@ -45,7 +45,7 @@ class ProjectWork (ti.TimeInterval):
         projectwork.set_last_edit("last_edit")  # Setzten des last_edit von projectwork
         projectwork.set_project_work_name(dictionary["project_work_name"])  # Setzt Namen aus dict() für ProjectWork
         projectwork.set_description(dictionary["description"])  # Setzt description aus dict() für ProjectWork
-        projectwork.set_affiliated_activity(dictionary["affiliated_activity"])  # Setzt affiliated_activity aus
+        projectwork.set_affiliated_activity(dictionary["affiliated_activity_id"])  # Setzt affiliated_activity aus
         # dict() für ProjectWork
         projectwork.set_start_event(dictionary["start_event_id"])  # Setzt start_time aus dict() für ProjectWork
         projectwork.set_end_event(dictionary["end_event_id"])  # Setzt end_time aus dict() für ProjectWork
