@@ -215,15 +215,15 @@ class EventOperations(Resource):
             return '', 500
 
 
-@hdmwebapp.route('/projects')
+@hdmwebapp.route('/projects/<int:id>' )
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @hdmwebapp.marshal_list_with(project)
-    @secured
-    def get(self):
+   # @secured
+    def get(self, id):
         hwa = HdMWebAppAdministration()
-        projects = hwa.get_project_by_id(1)
-        print(projects)
+        projects = ["test"]
+        print(type(projects))
         return projects
 
 
@@ -237,7 +237,7 @@ class ProjectWorksByActivityOperations(Resource):
         hwa = HdMWebAppAdministration()
         act = hwa.get_activity_by_id(id)
         # Die durch die id gegebene Aktivität als Objekt speichern.
-
+        print(act)
         if act is not None:
             projectwork_list = hwa.get_project_works_of_activity(act)
             # Auslesen der Projektarbeiten, die der Aktivität untergliedert sind.
@@ -281,15 +281,15 @@ def check():
     hwa.check_time_for_departure()
 
 
-sub_thread = Thread(target=check)
+#sub_thread = Thread(target=check)
 #es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
-sub_thread.setDaemon(True)
-sub_thread.start()
+#sub_thread.setDaemon(True)
+#sub_thread.start()
 
 h = HdMWebAppAdministration()
-pe = h.get_person_by_id(2)
-print(h.get_last_event_by_affiliated_person(pe))
-h.create_event_and_check_type(4, pe)
+#pe = h.get_person_by_id(2)
+#print(h.get_last_event_by_affiliated_person(pe))
+#h.create_event_and_check_type(4, pe)
 
 
 if __name__ == '__main__':

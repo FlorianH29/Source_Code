@@ -22,9 +22,9 @@ export default class HdMWebAppAPI {
   #updatePersonURL = () => `${this.#hdmwebappServerBaseURL}/persons/`;
 
   //Projekt bezogen
-  #getProjectsURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
+  #getProjectsURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
   //später hier ID übergeben
-    #updateProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/project/${id}`;
+    #updateProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
   // Projektarbeit bezogen
   #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
   #updateProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
@@ -182,10 +182,10 @@ export default class HdMWebAppAPI {
         })
     }
 
-    getProject() {
-        return this.#fetchAdvanced(this.#getProjectsURL()).then((responseJSON) => {
+    getProject(id) {
+        return this.#fetchAdvanced(this.#getProjectsURL(id)).then((responseJSON) => {
             let projectBOs = ProjectBO.fromJSON(responseJSON);
-            console.log(responseJSON);
+            //console.log(responseJSON);
             return new Promise(function (resolve) {
                 resolve(projectBOs);
             })

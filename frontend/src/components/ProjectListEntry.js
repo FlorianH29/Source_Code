@@ -54,7 +54,7 @@ class ProjectListEntry extends Component {
         const { classes } = this.props;
         const { project, showProjectCreateDialog } = this.state;
 
-        //console.log(projects)
+        console.log(project)
         //console.log (classes)
 
         return(

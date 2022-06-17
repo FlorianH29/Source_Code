@@ -8,7 +8,7 @@ import ProjectWorkForm from "./dialogs/ProjectWorkForm";
 import PropTypes from "prop-types";
 import {DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
-import BasicButtons from "./BasicButtons";
+//import BasicButtons from "./BasicButtons";
 
 class ProjectWorkList extends Component {
 

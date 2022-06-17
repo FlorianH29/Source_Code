@@ -105,7 +105,7 @@ export default class ProjectBO extends BusinessObject {
       result.push(p);
     }
 
-    console.log(result)
+    //console.log(result)
     return result;
   }
 }

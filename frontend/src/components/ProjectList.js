@@ -19,7 +19,7 @@ class ProjectList extends Component {
     }
 
     getProjects = () => {
-        HdMWebAppAPI.getAPI().getProject()
+        HdMWebAppAPI.getAPI().getProject(1)
             .then(projectBOs =>
                 this.setState({
                     projects: projectBOs
