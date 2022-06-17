@@ -82,7 +82,7 @@ timeinterval = api.inherit('TimeInterval', bo, {
 projectwork = api.inherit('ProjectWork', timeinterval, {
     'project_work_name': fields.String(attribute='_project_work_name', description='Name einer Projektarbeit'),
     'description': fields.String(attribute='_description', description='Beschreibung einer Projektarbeit'),
-    'affiliated_activity': fields.Integer(attribute='_affiliated_activity', description='Zugeordnete Aktivität einer P.')
+    'affiliated_activity': fields.Integer(attribute='_affiliated_activity_id', description='Zugeordnete Aktivität einer P.')
 })
 
 
@@ -135,7 +135,6 @@ class CustomersByNameOperations(Resource):
         adm = HdMWebAppAdministration()
         lel = adm.get_person_by_name(lastname)
         return lel
-
 
 
 @hdmwebapp.route('/worktimeaccount/<int:id>')
@@ -219,11 +218,11 @@ class EventOperations(Resource):
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @hdmwebapp.marshal_list_with(project)
-   # @secured
+    @secured
     def get(self, id):
         hwa = HdMWebAppAdministration()
-        projects = ["test"]
-        print(type(projects))
+        projects = hwa.get_all_projects(id)
+
         return projects
 
 
@@ -237,7 +236,7 @@ class ProjectWorksByActivityOperations(Resource):
         hwa = HdMWebAppAdministration()
         act = hwa.get_activity_by_id(id)
         # Die durch die id gegebene Aktivität als Objekt speichern.
-        print(act)
+
         if act is not None:
             projectwork_list = hwa.get_project_works_of_activity(act)
             # Auslesen der Projektarbeiten, die der Aktivität untergliedert sind.
@@ -246,7 +245,7 @@ class ProjectWorksByActivityOperations(Resource):
             return "Activity not found", 500
 
 
-@hdmwebapp.route('/projectworks/<int:id>/')
+@hdmwebapp.route('/projectworks/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Projektarbeit')
 class ProjectWorkOperations(Resource):
@@ -266,6 +265,7 @@ class ProjectWorkOperations(Resource):
         else:
             return '', 500
 
+    @secured
     def delete(self, id):
         """
         Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
@@ -281,15 +281,13 @@ def check():
     hwa.check_time_for_departure()
 
 
-#sub_thread = Thread(target=check)
+sub_thread = Thread(target=check)
 #es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
-#sub_thread.setDaemon(True)
-#sub_thread.start()
+sub_thread.setDaemon(True)
+sub_thread.start()
 
 h = HdMWebAppAdministration()
-#pe = h.get_person_by_id(2)
-#print(h.get_last_event_by_affiliated_person(pe))
-#h.create_event_and_check_type(4, pe)
+pe = h.get_person_by_id(5)
 
 
 if __name__ == '__main__':

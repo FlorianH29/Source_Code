@@ -21,18 +21,19 @@ class EventMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT * FROM event WHERE event_id={}".format(key)
+        command = "SELECT * FROM event WHERE event_id={} AND deleted=0".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (event_id, last_edit, event_type, time_stamp, affiliated_person_id) = tuples[0]
+            (event_id, last_edit, event_type, time_stamp, affiliated_person_id, deleted) = tuples[0]
             event = Event()
             event.set_id(event_id)
             event.set_last_edit(last_edit)
             event.set_event_type(event_type)
             event.set_time_stamp(time_stamp)
             event.set_affiliated_person(affiliated_person_id)
+            event.set_deleted(deleted)
 
             result = event
         except IndexError:
@@ -50,16 +51,17 @@ class EventMapper(Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT * FROM event WHERE affiliated_person_id = {}".format(person_id))
+        cursor.execute("SELECT * FROM event WHERE affiliated_person_id ={} AND deleted=0".format(person_id))
         tuples = cursor.fetchall()
 
-        for (event_id, last_edit, event_type, time_stamp, affiliated_person_id) in tuples:
+        for (event_id, last_edit, event_type, time_stamp, affiliated_person_id, deleted) in tuples:
             event = Event()
             event.set_id(event_id)
             event.set_last_edit(last_edit)
             event.set_event_type(event_type)
             event.set_time_stamp(time_stamp)
             event.set_affiliated_person(affiliated_person_id)
+            event.set_deleted(deleted)
             result.append(event)
 
         self._cnx.commit()
@@ -78,18 +80,19 @@ class EventMapper(Mapper):
 
         cursor = self._cnx.cursor()
         command = "SELECT * FROM event WHERE time_stamp = (SELECT MAX(time_stamp) FROM event " \
-                  "WHERE affiliated_person_id = {})".format(person_id)
+                  "WHERE affiliated_person_id = {} AND deleted=0)".format(person_id)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (event_id, last_edit, event_type, time_stamp, affiliated_person_id) = tuples[0]
+            (event_id, last_edit, event_type, time_stamp, affiliated_person_id, deleted) = tuples[0]
             event = Event()
             event.set_id(event_id)
             event.set_last_edit(last_edit)
             event.set_event_type(event_type)
             event.set_time_stamp(time_stamp)
             event.set_affiliated_person(affiliated_person_id)
+            event.set_deleted(deleted)
 
             result = event
         except IndexError:
@@ -112,18 +115,19 @@ class EventMapper(Mapper):
 
         cursor = self._cnx.cursor()
         command = "SELECT * FROM event WHERE event_id = (SELECT MAX(event_id) FROM event " \
-                  "WHERE affiliated_person_id={} AND event_type=1)".format(key)
+                  "WHERE affiliated_person_id={} AND event_type=1 AND deleted=0)".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (event_id, last_edit, event_type, time_stamp, affiliated_person_id) = tuples[0]
+            (event_id, last_edit, event_type, time_stamp, affiliated_person_id, deleted) = tuples[0]
             event = Event()
             event.set_id(event_id)
             event.set_last_edit(last_edit)
             event.set_event_type(event_type)
             event.set_time_stamp(time_stamp)
             event.set_affiliated_person(affiliated_person_id)
+            event.set_deleted(deleted)
 
             result = event
         except IndexError:
@@ -146,18 +150,19 @@ class EventMapper(Mapper):
 
         cursor = self._cnx.cursor()
         command = "SELECT * FROM event WHERE event_id = (SELECT MAX(event_id) FROM event " \
-                  "WHERE affiliated_person_id={} AND event_type=2)".format(key)
+                  "WHERE affiliated_person_id={} AND event_type=2 AND deleted=0)".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (event_id, last_edit, event_type, time_stamp, affiliated_person_id) = tuples[0]
+            (event_id, last_edit, event_type, time_stamp, affiliated_person_id, deleted) = tuples[0]
             event = Event()
             event.set_id(event_id)
             event.set_last_edit(last_edit)
             event.set_event_type(event_type)
             event.set_time_stamp(time_stamp)
             event.set_affiliated_person(affiliated_person_id)
+            event.set_deleted(deleted)
 
             result = event
         except IndexError:
@@ -182,18 +187,19 @@ class EventMapper(Mapper):
 
         cursor = self._cnx.cursor()
         command = "SELECT * FROM event WHERE event_id = (SELECT MAX(event_id) FROM event " \
-                  "WHERE affiliated_person_id={} AND event_type=3)".format(key)
+                  "WHERE affiliated_person_id={} AND event_type=3 AND deleted=0)".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (event_id, last_edit, event_type, time_stamp, affiliated_person_id) = tuples[0]
+            (event_id, last_edit, event_type, time_stamp, affiliated_person_id, deleted) = tuples[0]
             event = Event()
             event.set_id(event_id)
             event.set_last_edit(last_edit)
             event.set_event_type(event_type)
             event.set_time_stamp(time_stamp)
             event.set_affiliated_person(affiliated_person_id)
+            event.set_deleted(deleted)
 
             result = event
         except IndexError:
@@ -216,18 +222,19 @@ class EventMapper(Mapper):
 
         cursor = self._cnx.cursor()
         command = "SELECT * FROM event WHERE event_id = (SELECT MAX(event_id) FROM event " \
-                  "WHERE affiliated_person_id={} AND event_type=4)".format(key)
+                  "WHERE affiliated_person_id={} AND event_type=4 AND deleted=0)".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (event_id, last_edit, event_type, time_stamp, affiliated_person_id) = tuples[0]
+            (event_id, last_edit, event_type, time_stamp, affiliated_person_id, deleted) = tuples[0]
             event = Event()
             event.set_id(event_id)
             event.set_last_edit(last_edit)
             event.set_event_type(event_type)
             event.set_time_stamp(time_stamp)
             event.set_affiliated_person(affiliated_person_id)
+            event.set_deleted(deleted)
 
             result = event
         except IndexError:
@@ -241,20 +248,21 @@ class EventMapper(Mapper):
     def find_all(self):
         """Auslesen aller Events.
 
-        :return Sammlung mit Event-Objekten, die sämtliche Arrive-Ereignisse repräsentieren.
+        :return Sammlung mit Event-Objekten, die sämtliche nicht gelöschte Arrive-Ereignisse repräsentieren.
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT * from event")
+        cursor.execute("SELECT * FROM event WHERE deleted=0")
         tuples = cursor.fetchall()
 
-        for (event_id, last_edit, event_type, time_stamp, affiliated_person_id) in tuples:
+        for (event_id, last_edit, event_type, time_stamp, affiliated_person_id, deleted) in tuples:
             event = Event()
             event.set_id(event_id)
             event.set_last_edit(last_edit)
             event.set_event_type(event_type)
             event.set_time_stamp(time_stamp)
             event.set_affiliated_person(affiliated_person_id)
+            event.set_deleted(deleted)
             result.append(event)
 
         self._cnx.commit()
@@ -285,10 +293,10 @@ class EventMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 event.set_id(1)
 
-        command = "INSERT INTO event (event_id, last_edit, event_type, time_stamp, affiliated_person_id) " \
-                  "VALUES (%s,%s,%s,%s,%s)"
+        command = "INSERT INTO event (event_id, last_edit, event_type, time_stamp, affiliated_person_id, deleted) " \
+                  "VALUES (%s,%s,%s,%s,%s,%s)"
         data = (event.get_id(), event.get_last_edit(), event.get_event_type(), event.get_time_stamp(),
-                event.get_affiliated_person())
+                event.get_affiliated_person(), event.get_deleted())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -313,13 +321,13 @@ class EventMapper(Mapper):
         cursor.close()
 
     def delete(self, event):
-        """Löschen der Daten eines Event-Objekts aus der Datenbank.
+        """Setzen der deleted flag auf 1, sodass der Event Eintrag nicht mehr ausgegeben wird.
 
         :param event: das aus der DB zu löschende "Objekt"
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM event WHERE event_id={}".format(event.get_id())
+        command = "UPDATE event SET deleted=1 WHERE event_id={}".format(event.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

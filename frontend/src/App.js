@@ -68,7 +68,6 @@ class App extends React.Component {
         firebase.initializeApp(firebaseConfig);
         firebase.auth().languageCode = 'de';
         firebase.auth().onAuthStateChanged(this.handleAuthStateChange);
-        document.title = "HdM Zeiterfassung"
     }
 
 
