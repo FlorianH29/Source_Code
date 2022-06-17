@@ -1,49 +1,136 @@
 import React, {Component} from 'react';
 import {Dialog, DialogContent, DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
+import {HdMWebAppAPI, ProjectBO, ProjectWorkBO} from '../../api';
+import {Button, DialogActions, TextField} from "@mui/material";
+import PropTypes from "prop-types";
 
-class ProjectWorkDeleteDialog extends Component {
+class ProjectCreateDialog extends Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {};
+        let pro = '', cl ='';
+        if (props.project){
+            pro = props.project.getProjectName();
+            cl = props.project.getClient();
+        }
 
+        // Den State initiieren
+
+        this.state = {
+            projectName: pro,
+            client: cl,
+            projectNameValidationFailed: false,
+            clientValidationFailed: false
+
+        };
+        //speichert den State, für den Fall, dass abgebrochen wird
         this.baseState = this.state;
     }
 
+    //behandelt das Click Event, dass bei "Abbrechen" ausgelöst wird
     handleClose = () => {
-        // den state neu setzen, sodass man wieder auf dem Stand ist wie vor dem Dialog
+        // den State neu setzen, sodass man wieder auf dem Stand ist wie vor dem Dialog
         this.setState(this.baseState);
         this.props.onClose(null);
     }
 
+    addProject = () => {
+        console.log('Werde ich aufgerufen?')
+    }
+
+    /** Behandelt Werteänderungen der textfelder und validiert diese*/
+    textFieldValueChange = (event) => {
+        const value = event.target.value;
+
+        let error = false;
+        if (value.trim().length === 0) {
+            error = true;
+        }
+
+        this.setState({
+            [event.target.id]: event.target.value,
+            [event.target.id + 'ValidationFailed']: error,
+            [event.target.id + 'Edited']: true
+        });
+  }
+
+   /** Im Fall von bearbeiten Überschreibt es das ProjectBO mit neuen Werten */
+  updateProject = () => {
+    // das originale Project klonen, für den Fall, dass der Backend Call fehlschlägt.
+    let updatedProject = Object.assign(new ProjectBO(), this.props.project);
+    // setzen der neuen Attribute aus dem Dialog
+    updatedProject.setProjectName(this.state.projectName);
+    updatedProject.setClient(this.state.client);
+    HdMWebAppAPI.getAPI().updateProject(updatedProject).then(project => {
+      // den neuen state als baseState speichern
+      this.baseState.projectName = this.state.projectName;
+      this.baseState.client = this.state.client;
+      this.props.onClose(updatedProject);
+    })
+  }
+
+  /** Rendert die Komponente */
     render() {
+        const {project, show} = this.props;
+        const {projectName, client, projectNameValidationFailed, clientValidationFailed } = this.state;
 
         let header = '';
         let title = '';
 
-        header = 'Geben Sie Name und Beschreibung an';
-        title = 'Neues Projekt erstellen';
+        header = 'Geben Sie einen Projektnamen und den Klienten ein: ';
+        title = 'Projekt bearbeiten: ';
 
         return (
             show ?
-                <Dialog open={true} onClose={this.handleClose} maxWidth='xs'>
+                <Dialog open={true} onClose={this.handleClose} maxWidth='xl'>
                     <DialogTitle id='form-dialog-title'>{title}
                         <IconButton onClick={this.handleClose}>
                             <CloseIcon/>
                         </IconButton>
                     </DialogTitle>
-                    <DialogContent>
+                     <DialogContent>
                         <DialogContentText>
                             {header}
                         </DialogContentText>
-                    </DialogContent>
+                            <form noValidate autoComplete='off'>
+                            <TextField autoFocus type='text' required fullWidth margin='normal' id='projectName' label='Name:' value={projectName}
+                                onChange={this.textFieldValueChange} error={projectNameValidationFailed}
+                                helperText={projectNameValidationFailed ? 'Bitte geben Sie einen Namen an' : ' '} />
+                            <TextField type='text' required fullWidth margin='normal' id='client' label='Klient: ' value={client}
+                                onChange={this.textFieldValueChange} error={clientValidationFailed}
+                                helperText={clientValidationFailed ? 'Bitte geben Sie einen Klienten an' : ' '} />
+                            </form>
+            </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleClose} color='secondary'>
+                            Abbrechen
+                        </Button>
+
+                        {/**Falls es bereits ein Projekt gibt, soll der sichern Knopf angezeigt werden, sonst erscheint ein Ertsellen Knopf*/
+                            project ?
+                                <Button color={"primary"} onClick={this.updateProject}>
+                                    Sichern
+                                </Button>
+                                : <Button color={"primary"} onClick={this.addProject}>
+                                    Erstellen
+                                </Button>
+                             }
+                    </DialogActions>
                 </Dialog>
-                :
-                null
-        )
+                : null
+        );
     }
 }
 
-export default ProjectWorkDeleteDialog;
+/** PropTypes*/
+ProjectCreateDialog.propTypes = {
+
+    onClose: PropTypes.func.isRequired,
+
+    show: PropTypes.bool.isRequired
+}
+
+
+export default ProjectCreateDialog;

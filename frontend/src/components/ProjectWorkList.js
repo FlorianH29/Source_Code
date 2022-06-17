@@ -8,7 +8,7 @@ import ProjectWorkForm from "./dialogs/ProjectWorkForm";
 import PropTypes from "prop-types";
 import {DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
-import BasicButtons from "./BasicButtons";
+//import BasicButtons from "./BasicButtons";
 
 class ProjectWorkList extends Component {
 
@@ -62,7 +62,7 @@ class ProjectWorkList extends Component {
   }
 
   /**
-   * Behandelt onProjectWorkDeleted Events der CustomerListEntry Komponente
+   * Behandelt onProjectWorkDeleted Events der ProjectWorkListEntry Komponente
    */
   projectWorkDeleted = projectWork => {
     const newProjectWorkList = this.state.projectWorks.filter(projectWorkFromState => projectWorkFromState.getID() !== projectWork.getID());
@@ -72,7 +72,7 @@ class ProjectWorkList extends Component {
     });
   }
 
-  /** Behandelt das onClose Event von CustomerForm */
+  /** Behandelt das onClose Event von ProjectWorkForm */
   projectWorkFormClosed = projectWork => {
     // projectWork ist nicht null und deshalb erstelltI/überarbeitet
     if (projectWork) {
@@ -100,7 +100,7 @@ class ProjectWorkList extends Component {
   render() {
     const { classes } = this.props;
     const { projectWorks, showProjectWorkForm, disableEnd, disableStart, open } = this.state;
-    // console.log(this.state)
+    console.log(this.state)
 
     return (
         <div>

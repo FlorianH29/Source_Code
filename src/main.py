@@ -67,7 +67,7 @@ work_performance = api.inherit('Worktimeaccout', {
 project = api.inherit('Project', bo, {
     'project_name': fields.String(attribute='_project_name', description='Name eines Projekts'),
     'client': fields.String(attribute='_client', description='Auftraggeber eines Projekts'),
-    'time_interval_id': fields.Integer(attribute='_time_interval_id', description='Laufzeit eines Projekts'),
+    'timeinterval_id': fields.Integer(attribute='_time_interval_id', description='Laufzeit eines Projekts'),
     'owner': fields.Integer(attribute='_owner', description='Der Leiter eines Projekts'),
     'work_time': fields.String(attribute='_work_time', description='Zeit, die für ein Projekt gearbeitet wurde')
 })
@@ -215,16 +215,37 @@ class EventOperations(Resource):
             return '', 500
 
 
-@hdmwebapp.route('/projects')
+@hdmwebapp.route('/projects/<int:id>' )
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @hdmwebapp.marshal_list_with(project)
-    @secured
-    def get(self):
+    #@secured
+    def get(self, id):
         hwa = HdMWebAppAdministration()
-        projects = hwa.get_all_projects()
-
+        person = hwa.get_person_by_id(id)
+        projects = hwa.get_project_by_person_id(person)
         return projects
+
+
+@hdmwebapp.route('/projects/<int:id>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des Projekts')
+class ProjectOperations(Resource):
+    @hdmwebapp.marshal_list_with(projectwork)
+    #@secured
+    def put(self, id):
+        """
+        Update eines bestimmten Projektobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pro = Project.from_dict(api.payload)
+
+        if pro is not None:
+            pro.set_id(id)
+            hwa.save_project(pro)
+            return '', 200
+        else:
+            return '', 500
 
 
 @hdmwebapp.route('/projectworks')
@@ -313,10 +334,6 @@ sub_thread = Thread(target=check)
 #es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
-
-ha = HdMWebAppAdministration()
-pe = ha.get_person_by_firebase_id('QH71Dyy7cLY2TUOxCiQ6EbJpsA43')
-
 
 
 
