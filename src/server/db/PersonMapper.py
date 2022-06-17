@@ -51,11 +51,12 @@ class PersonMapper(Mapper):
         cursor.execute("SELECT  P.* FROM person P "
                        "inner join arrive A on A.affiliated_person_id = P.person_id "
                        "inner join departure D on D.affiliated_person_id = P.person_id "
+                       "WHERE deleted=0 "
                        "GROUP BY P.person_id "
                        "HAVING MAX(A.time_stamp) > MAX(D.time_stamp);")
         tuples = cursor.fetchall()
 
-        for (person_id, last_edit, firstName, lastName, username, mailaddress, firebase_id) in tuples:
+        for (person_id, last_edit, firstName, lastName, username, mailaddress, firebase_id, deleted) in tuples:
             employee = p.Person()
             employee.set_id(person_id)
             employee.set_last_edit(last_edit)
@@ -64,6 +65,7 @@ class PersonMapper(Mapper):
             employee.set_username(username)
             employee.set_mailaddress(mailaddress)
             employee.set_firebase_id(firebase_id)
+            employee.set_deleted(deleted)
             result.append(employee)
 
         self._cnx.commit()
@@ -181,13 +183,13 @@ class PersonMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id FROM person " \
-                  "WHERE firebase_id='{}'".format(key)
+        command = "SELECT person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id, deleted " \
+                  "FROM person WHERE firebase_id='{}' AND deleted=0".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id) = tuples[0]
+            (person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id, deleted) = tuples[0]
             person = p.Person()
             person.set_id(person_id)
             person.set_last_edit(last_edit)
@@ -196,6 +198,7 @@ class PersonMapper(Mapper):
             person.set_mailaddress(mailaddress)
             person.set_username(username)
             person.set_firebase_id(firebase_id)
+            person.set_deleted(deleted)
 
             result = person
         except IndexError:
