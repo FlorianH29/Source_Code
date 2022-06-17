@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import { withStyles, Button, TextField, InputAdornment, IconButton, Grid, Typography } from '@mui/material';
+import {withStyles, Button, TextField, InputAdornment, IconButton, Grid, Typography, Divider} from '@mui/material';
+import ProjectListEntry from "./ProjectListEntry";
+import PropTypes from "prop-types";
 
 class ProjectList extends Component {
 
@@ -17,7 +19,8 @@ class ProjectList extends Component {
     }
 
     getProjects = () => {
-        HdMWebAppAPI.getAPI().getProject()
+
+        HdMWebAppAPI.getAPI().getProject(1)
             .then(projectBOs =>
                 this.setState({
                     projects: projectBOs
@@ -29,13 +32,24 @@ class ProjectList extends Component {
     }
 
     render() {
+        const {projects} = this.state
+        console.log(this.state)
         return (
             <div>
-                <Grid container spacing={1} justify='flex-start' alignItems='center'>
-                    <Grid item>
-                        <Typography>
-                            Filter projects by name/person:
-                        </Typography>
+                <Grid container>
+                    <Grid item xs={12} align={"center"}>
+                        <Grid container>
+                            <Grid item xs={3} align={"flex-end"}>
+                            <Typography variant={"h5"} component={"div"}> Meine Projekte: </Typography>
+                            </Grid>
+                            <Grid item xs={3} align={"flex-end"}>
+                            <Typography variant={"h5"} component={"div"}> Klient: </Typography>
+                            </Grid>
+                        </Grid>
+                    <Divider/>
+                    {projects.map(pro =>
+                        <ProjectListEntry key={pro.getID()} project={pro}/>)
+                    }
                     </Grid>
                 </Grid>
                 {
@@ -47,5 +61,6 @@ class ProjectList extends Component {
     }
 
 }
+
 
 export default ProjectList;

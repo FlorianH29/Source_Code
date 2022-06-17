@@ -30,7 +30,7 @@ class ProjectWorkForm extends Component {
       ap = props.event.getAffiliatedPerson();
     }
 
-    // Init the state
+    // Den State initiieren
     this.state = {
       projectWorkName: pwn,
       description: de,
@@ -59,7 +59,7 @@ class ProjectWorkForm extends Component {
     let newEvent = new EventBO(this.state.eventType, this.state.affilatedPerson);
     console.log(this.state);
     HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
-      // Backend call sucessfull
+      // Backend call successfull
       // reinit the dialogs state for a new empty customer
       this.setState(this.baseState);
       this.props.onClose(event); // call the parent with the customer object from backend

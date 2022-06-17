@@ -21,13 +21,13 @@ class ActivityMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT activity_id, last_edit, name, capacity, affiliated_project_id, work_time FROM activity " \
-                  "WHERE activity_id={}".format(key)
+        command = "SELECT activity_id, last_edit, name, capacity, affiliated_project_id, work_time, deleted " \
+                  "FROM activity WHERE activity_id={} AND deleted=0".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (activity_id, last_edit, name, capacity, affiliated_project_id, work_time) = tuples[0]
+            (activity_id, last_edit, name, capacity, affiliated_project_id, work_time, deleted) = tuples[0]
             activity = Activity()
             activity.set_id(activity_id)
             activity.set_last_edit(last_edit)
@@ -35,6 +35,7 @@ class ActivityMapper(Mapper):
             activity.set_capacity(capacity)
             activity.set_affiliated_project(affiliated_project_id)
             activity.set_work_time(work_time)
+            activity.set_deleted(deleted)
 
             result = activity
         except IndexError:
@@ -57,14 +58,14 @@ class ActivityMapper(Mapper):
         all_activities = []
 
         cursor = self._cnx.cursor()
-        command = " SELECT DISTINCT A.activity_id, A.last_edit, A.name, A.capacity, A.affiliated_project_id, A.work_time " \
-                  " FROM SoPraTestDB.activity A" \
-                  " WHERE A.affiliated_project_id = {} ".format(project_id)
+        command = " SELECT activity_id, last_edit, name, capacity, affiliated_project_id, work_time, deleted " \
+                  " FROM activity " \
+                  " WHERE affiliated_project_id = {} AND deleted=0".format(project_id)
 
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (activity_id, last_edit, name, capacity, affiliated_project_id, work_time) in tuples:
+        for (activity_id, last_edit, name, capacity, affiliated_project_id, work_time, deleted) in tuples:
             activity = Activity()
             activity.set_id(activity_id)
             activity.set_last_edit(last_edit)
@@ -72,6 +73,7 @@ class ActivityMapper(Mapper):
             activity.set_capacity(capacity)
             activity.set_affiliated_project(affiliated_project_id)
             activity.set_work_time(work_time)
+            activity.set_deleted(deleted)
             all_activities.append(activity)
 
         self._cnx.commit()
@@ -86,10 +88,10 @@ class ActivityMapper(Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT * from activity")
+        cursor.execute("SELECT * from activity WHERE deleted=0")
         tuples = cursor.fetchall()
 
-        for (activity_id, last_edit, name, capacity, affiliated_project_id, work_time) in tuples:
+        for (activity_id, last_edit, name, capacity, affiliated_project_id, work_time, deleted) in tuples:
             activity = Activity()
             activity.set_id(activity_id)
             activity.set_last_edit(last_edit)
@@ -97,6 +99,7 @@ class ActivityMapper(Mapper):
             activity.set_capacity(capacity)
             activity.set_affiliated_project(affiliated_project_id)
             activity.set_work_time(work_time)
+            activity.set_deleted(deleted)
             result.append(activity)
 
         self._cnx.commit()
@@ -114,7 +117,7 @@ class ActivityMapper(Mapper):
         :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
         """
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(activity_id) AS maxid FROM activity")  # geht nur, wenn schon Wert in Datenbank drin
+        cursor.execute("SELECT MAX(activity_id) AS maxid FROM activity")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
@@ -127,10 +130,10 @@ class ActivityMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 activity.set_id(1)
 
-        command = "INSERT INTO activity (activity_id, last_edit, name, capacity, affiliated_project_id, work_time)" \
-                  " VALUES (%s,%s,%s,%s,%s,%s)"
+        command = "INSERT INTO activity (activity_id, last_edit, name, capacity, affiliated_project_id, work_time, deleted)" \
+                  " VALUES (%s,%s,%s,%s,%s,%s,%s)"
         data = (activity.get_id(), activity.get_last_edit(), activity.get_name(), activity.get_capacity(),
-                activity.get_affiliated_project(), activity.get_work_time())
+                activity.get_affiliated_project(), activity.get_work_time(), activity.get_deleted())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -155,13 +158,13 @@ class ActivityMapper(Mapper):
         cursor.close()
 
     def delete(self, activity):
-        """Löschen der Daten eines Aktivitäts-Objekts aus der Datenbank.
+        """Setzen der deleted flag auf 1, sodass der Aktivitätseintrag nicht mehr ausgegeben wird.
 
         :param activity: das aus der DB zu löschende "Objekt"
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM activity WHERE activity_id={}".format(activity.get_id())
+        command = "UPDATE activity SET deleted=1 WHERE activity_id={}".format(activity.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

@@ -14,7 +14,7 @@ class ProjectMemberMapper (Mapper):
         super().__init__()
 
     def find_by_key(self, key):
-        """Suchen eines Departure-Ereignisses mit vorgegebener Ereignis ID. Rückgabe von genau einem Objekt.
+        """Suchen Project Member Eintrags mit vorgegebener ID. Rückgabe von genau einem Objekt.
 
         :param key Primärschlüsselattribut (->DB)
         :return Projekt-Member-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
@@ -24,17 +24,18 @@ class ProjectMemberMapper (Mapper):
 
         cursor = self._cnx.cursor()
         command = "SELECT projectmember_id, project_id, person_id, last_edit FROM projectmembers " \
-                  "WHERE projectmember_id={}".format(key)
+                  "WHERE projectmember_id={} AND deleted=0".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (projectmember_id, project_id, person_id, last_edit) = tuples[0]
+            (projectmember_id, project_id, person_id, last_edit, deleted) = tuples[0]
             projectmember = ProjectMember()
             projectmember.set_id(projectmember_id)
             projectmember.set_project(project_id)
             projectmember.set_person(person_id)
             projectmember.set_last_edit(last_edit)
+            projectmember.set_deleted(deleted)
 
             result = projectmember
         except IndexError:
@@ -48,26 +49,26 @@ class ProjectMemberMapper (Mapper):
         return result
 
     def find_projects_by_person_id(self, key):
-        """Suchen eines Departure-Ereignisses mit vorgegebener Ereignis ID. Rückgabe von genau einem Objekt.
+        """Suchen eines Project Member Eintrags mit vorgegebener ID.
 
-               :param key Primärschlüsselattribut (->DB)
-               :return Projekt-Member-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
-               """
+        :param key Primärschlüsselattribut (->DB)
+        :return Projekt-Member-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
+        """
 
         result = []
 
         cursor = self._cnx.cursor()
-        command = "SELECT * FROM projectmembers " \
-                  "WHERE person_id={}".format(key)
+        command = "SELECT * FROM projectmembers WHERE person_id={} AND deleted=0".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (projectmember_id, project_id, person_id, last_edit) in tuples:
+        for (projectmember_id, project_id, person_id, last_edit, deleted) in tuples:
             projectmember = ProjectMember()
             projectmember.set_id(projectmember_id)
             projectmember.set_project(project_id)
             projectmember.set_person(person_id)
             projectmember.set_last_edit(last_edit)
+            projectmember.set_deleted(deleted)
 
             result.append(projectmember)
 
@@ -77,7 +78,7 @@ class ProjectMemberMapper (Mapper):
         return result
 
     def insert(self, projectmember):
-        """Einfügen eines Project-Member-Ereignis-Objekts in die Datenbank.
+        """Einfügen eines Project-Member-Objekts in die Datenbank.
 
         Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf. berichtigt.
 
@@ -98,8 +99,10 @@ class ProjectMemberMapper (Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 projectmember.set_id(1)
 
-        command = "INSERT INTO projectmembers (projectmember_id, last_edit, project_id, person_id) VALUES (%s,%s,%s,%s)"
-        data = (projectmember.get_id(), projectmember.get_last_edit(), projectmember.get_project(), projectmember.get_person())
+        command = "INSERT INTO projectmembers (projectmember_id, last_edit, project_id, person_id, deleted) " \
+                  "VALUES (%s,%s,%s,%s,%s)"
+        data = (projectmember.get_id(), projectmember.get_last_edit(), projectmember.get_project(),
+                projectmember.get_person(), projectmember.get_deleted())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -122,13 +125,13 @@ class ProjectMemberMapper (Mapper):
         cursor.close()
 
     def delete(self, projectmember):
-        """Löschen der Daten eines Project-Member-Objekts aus der Datenbank.
+        """Setzen der deleted flag auf 1, sodass der Project Member Eintrag nicht mehr ausgegeben wird.
 
         :param projectmember das aus der DB zu löschende "Objekt"
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM projectmembers WHERE projectmember_id={}".format(projectmember.get_id())
+        command = "UPDATE projectmembers SET deleted=1 WHERE projectmember_id={}".format(projectmember.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
