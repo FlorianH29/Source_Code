@@ -51,11 +51,12 @@ class PersonMapper(Mapper):
         cursor.execute("SELECT  P.* FROM person P "
                        "inner join arrive A on A.affiliated_person_id = P.person_id "
                        "inner join departure D on D.affiliated_person_id = P.person_id "
+                       "WHERE deleted=0 "
                        "GROUP BY P.person_id "
                        "HAVING MAX(A.time_stamp) > MAX(D.time_stamp);")
         tuples = cursor.fetchall()
 
-        for (person_id, last_edit, firstName, lastName, username, mailaddress, firebase_id) in tuples:
+        for (person_id, last_edit, firstName, lastName, username, mailaddress, firebase_id, deleted) in tuples:
             employee = p.Person()
             employee.set_id(person_id)
             employee.set_last_edit(last_edit)
@@ -64,6 +65,7 @@ class PersonMapper(Mapper):
             employee.set_username(username)
             employee.set_mailaddress(mailaddress)
             employee.set_firebase_id(firebase_id)
+            employee.set_deleted(deleted)
             result.append(employee)
 
         self._cnx.commit()
@@ -169,40 +171,45 @@ class PersonMapper(Mapper):
         self._cnx.commit()
         cursor.close()
 
-    def find_person_by_firebase_id(self, key):
-            """Suchen eines Benutzers mit vorgegebener Google ID. Da diese eindeutig ist,
-            wird genau ein Objekt zurückgegeben.
+    def find_by_firebase_id(self, key):
+        """Suchen einer Person mit vorgegebener person_id. Da diese eindeutig ist,
+        wird genau ein Objekt zurückgegeben.
 
-            :param google_user_id die Google ID des gesuchten Users.
-            :return User-Objekt, das die übergebene Google ID besitzt,
-                None bei nicht vorhandenem DB-Tupel.
-            """
+        :param key Primärschlüsselattribut (->DB)
+        :return Person-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+            nicht vorhandenem DB-Tupel.
+        """
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id, deleted " \
+                  "FROM person WHERE firebase_id='{}' AND deleted=0".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id, deleted) = tuples[0]
+            person = p.Person()
+            person.set_id(person_id)
+            person.set_last_edit(last_edit)
+            person.set_firstname(firstname)
+            person.set_lastname(lastname)
+            person.set_mailaddress(mailaddress)
+            person.set_username(username)
+            person.set_firebase_id(firebase_id)
+            person.set_deleted(deleted)
+
+            result = person
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
             result = None
 
-            cursor = self._cnx.cursor()
-            command = "SELECT person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id FROM person " \
-                      "WHERE firebase_id='{}'".format(key)
-            cursor.execute(command)
-            tuples = cursor.fetchall()
+        self._cnx.commit()
+        cursor.close()
 
-            try:
-                (person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id) = tuples[0]
-                fb = p.Person()
-                fb.set_id(person_id)
-                fb.set_last_edit(last_edit)
-                fb.set_firstname(firstname)
-                fb.set_lastname(lastname)
-                fb.set_mailaddress(mailaddress)
-                fb.set_username(username)
-                fb.set_firebase_id(firebase_id)
-
-            except IndexError:
-                result = None
-
-            self._cnx.commit()
-            cursor.close()
-
-            return result
+        return result
 
     def delete(self, employee):
         """Löschen der Daten eines Personen-Objekts aus der Datenbank.

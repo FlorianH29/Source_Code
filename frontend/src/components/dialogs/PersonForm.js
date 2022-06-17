@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { HdMWebAppAPI, PersonBO } from '../../api';
-import ContextErrorMessage from './ContextErrorMessage';
-import LoadingProgress from './LoadingProgress';
+
+
 
 
 /**
@@ -187,14 +187,7 @@ class PersonForm extends Component {
                 onChange={this.textFieldValueChange} error={firebaseidValidationFailed}
                 helperText={firebaseidValidationFailed ? 'The last name must contain at least one character' : ' '} />
             </form>
-            <LoadingProgress show={addingInProgress || updatingInProgress} />
-            {
-              // Show error message in dependency of customer prop
-              person ?
-                <ContextErrorMessage error={updatingError} contextErrorMsg={`The person ${person.getID()} could not be updated.`} onReload={this.updatePerson} />
-                :
-                <ContextErrorMessage error={addingError} contextErrorMsg={`The person could not be added.`} onReload={this.addPerson} />
-            }
+
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color='secondary'>

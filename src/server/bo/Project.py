@@ -5,10 +5,10 @@ class Project (bo.BusinessObject):
 
     def __init__(self):
         super().__init__()
-        self._project_name = ""    # The project_name of the project.
-        self._client = ""  # The name of the client.
-        self._time_interval_id = None  # The project term is an object of TimeInterval
-        self._owner = None  # Der Projektleiter
+        self._project_name = ""    # Bezeichnung des Projekts.
+        self._client = ""  # Name des Auftraggebers.
+        self._time_interval_id = None  # Id welche auf das zugehörige Zeitinterval verweist
+        self._owner = None  # Projektleiter des Projekts
         self._work_time = 0  # Die für das Projekt gearbeitete Zeit
 
     def set_project_name(self, project_name):
