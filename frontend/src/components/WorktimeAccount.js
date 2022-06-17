@@ -45,7 +45,6 @@ class WorktimeAccount extends Component {
         return (
             <Box sx={{m: 2}}>
                 <Card>
-                    <BasicButtons></BasicButtons>
                     <Grid container spacing={1} justifyContent={"center"}>
                         <Grid item xs={12} align={"center"}>
                             <ButtonGroup>

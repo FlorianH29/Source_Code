@@ -7,6 +7,8 @@ import TimeIntervalBO from "./TimeIntervalBO";
 import header from "../components/layout/Header";
 import personForm from "../components/dialogs/PersonForm";
 import EventBO from "./EventBO";
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 export default class HdMWebAppAPI {
 
     // Singelton instance
@@ -17,10 +19,10 @@ export default class HdMWebAppAPI {
   #hdmwebappServerBaseURL = '/hdmwebapp';
 
   // Person bezogen
-  #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
+  #getPersonsURL = (id) => `${this.#hdmwebappServerBaseURL}${id}`;
   #addPersonURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
   #updatePersonURL = () => `${this.#hdmwebappServerBaseURL}/persons/`;
-  #deletePersonURL = (id) =>`${this.#hdmwebappServerBaseURL}/persons/${id}`;
+  #deletePersonURL = (id) =>`${this.#hdmwebappServerBaseURL}${id}`;
 
 
   //Projekt bezogen
@@ -259,7 +261,6 @@ export default class HdMWebAppAPI {
     return this.#fetchAdvanced(this.#deletePersonURL(personID), {
       method: 'DELETE'
     }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
       let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
       console.log(responsePersonBO)
       return new Promise(function (resolve) {
@@ -267,12 +268,6 @@ export default class HdMWebAppAPI {
       })
     })
   }
-
-
-
-
-
-
 }
 
 

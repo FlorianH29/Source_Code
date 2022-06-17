@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
+import {
+  Button,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  TextField
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { HdMWebAppAPI, PersonBO } from '../../api';
 
@@ -13,7 +22,7 @@ import { HdMWebAppAPI, PersonBO } from '../../api';
  * aufgerufen. Wenn der Dialog geschlossen wird, wird onClose null übergeben.
  */
 
-class PersonDeleteDialog extends Component {
+class PersonEditDialog extends Component {
 
   constructor(props) {
     super(props);
@@ -25,8 +34,8 @@ class PersonDeleteDialog extends Component {
     };
   }
 
-  /** Die Person löschen */
-  deletePerson = () => {
+  /** Die Person bearbeiten */
+  editPerson = () => {
     HdMWebAppAPI.getAPI().deletePerson(this.props.person.getID).then(person => {
       this.props.onClose(this.props.person);  // call the parent with the deleted customer
     }).catch(e =>
@@ -45,7 +54,7 @@ class PersonDeleteDialog extends Component {
   /** Renders the component */
   render() {
     const { person, show } = this.props;
-
+    const {personNameValidationFailed,descriptionValidationFailed, personvorname, personnachname}= this.state;
 
     return (
       show ?
@@ -55,19 +64,28 @@ class PersonDeleteDialog extends Component {
               <CloseIcon />
             </IconButton>
           </DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Möchte sie Ihren User wirklich löschen? '{person.getUserName} (ID: {person.getID})'
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.handleClose} color='secondary'>
-              Abbrechen
-            </Button>
-            <Button variant='contained' onClick={this.deletePerson} color='primary'>
-              Löschen
-            </Button>
-          </DialogActions>
+            <form noValidate autoComplete='off'>
+              <TextField autoFocus type='text' required fullWidth margin='normal' id='person' label='Vorname:' value={personvorname}
+                  onChange={this.textFieldValueChange} error={personNameValidationFailed}
+                  helperText={personNameValidationFailed ? 'Bitte geben Sie ihren Vornamen an' : ' '} />
+                <TextField type='text' required fullWidth margin='normal' id='description' label='Nachname:' value={personnachname}
+                  onChange={this.textFieldValueChange} error={descriptionValidationFailed}
+                  helperText={descriptionValidationFailed ? 'Bitte geben Sie ihren Nachnamen an' : ' '} />
+              </form>
+           <DialogActions>
+              <Button onClick={this.handleClose} color='secondary'>
+                Abbrechen
+              </Button>
+              {// Falls eine Projektarbeit gegeben ist, sichern Knopf anzeigen, sonst einen Erstellen Knopf
+                person ?
+                  <Button color='primary' onClick={this.updatePerson}>
+                    Sichern
+                  </Button>
+                  : <Button color='primary' onClick={this.addEvent}>
+                    Erstellen
+                  </Button>
+              }
+            </DialogActions>
         </Dialog>
         : null
     );
@@ -75,7 +93,7 @@ class PersonDeleteDialog extends Component {
 }
 
 /** PropTypes */
-PersonDeleteDialog.propTypes = {
+PersonEditDialog.propTypes = {
   /** Das ProjectWorkBO, das gelöscht werden soll */
   person: PropTypes.object.isRequired,
   /** Wenn show true ist, wird der Dialog gerendert */
@@ -88,4 +106,4 @@ PersonDeleteDialog.propTypes = {
 }
 
 
-export default PersonDeleteDialog;
+export default PersonEditDialog;

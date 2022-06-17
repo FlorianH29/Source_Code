@@ -7,7 +7,6 @@ import 'firebase/compat/firestore';
 import {Link as RouterLink} from "react-router-dom";
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import PersonDeleteDialog from "../dialogs/PersonDeleteDialog";
-import {PersonBO, HdMWebAppAPI} from '../../api';
 
 class Header extends Component {
 
@@ -83,19 +82,21 @@ class Header extends Component {
                         <Typography variant='h3' component='div' sx={{flexGrow: 1}}>
                             HdM Zeiterfassung
                         </Typography>
-                         <Tabs indicatorColor='primary' textColor='primary' centered value={this.state.tabindex} onChange={this.handleTabChange} >
-                         <Tab label='Customers' component={RouterLink} to={`/customers`} />
-                         <Tab label='All Accounts' component={RouterLink} to={`/accounts`} />
-                         <Tab label='About' component={RouterLink} to={`/about`} />
-            </Tabs>
+
+
                 <Drawer
-                className={Drawer}
                 variant={"permanent"}
                 anchor={"left"}
 
                 >
+                    <Tabs indicatorColor='primary' textColor='primary' centered value={this.state.tabindex} onChange={this.handleTabChange} >
+                        <Tab label='Customers' component={RouterLink} to={`/persons`} />
+                        <Tab label='All Accounts' component={RouterLink} to={`/accounts`} />
+                        <Tab label='About' component={RouterLink} to={`/about`} />
+                    </Tabs>
                         <Typography variant='h3' component='div' sx={{flexGrow: 1}}>
-                            <AssignmentIndIcon fontSize={"large"}>
+                            <AssignmentIndIcon fontSize={"large"} component={RouterLink} to={`/customers`}>
+
                             </AssignmentIndIcon>
 
                         </Typography>

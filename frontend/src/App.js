@@ -14,6 +14,7 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import firebaseConfig from './firebaseconfig';
 import {Person} from "@mui/icons-material";
+import SignInHeader from "./components/layout/SignInHeader";
 
 
 class App extends React.Component {
@@ -78,12 +79,11 @@ class App extends React.Component {
 
         return (
             <Router>
-                <Header person={currentPerson}/>
-
 
                 {
                     currentPerson ?
                         <>
+                            <Navigator person={currentPerson}/>
                             <Switch>
                                 <Route exact path='/persons'>
                                     <PersonList/>
@@ -108,6 +108,7 @@ class App extends React.Component {
 
                         :
                         <>
+                            <SignInHeader person={currentPerson}/>
                             <SignIn onSignIn={this.handleSignIn}/>
 
                         </>

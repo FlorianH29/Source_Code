@@ -55,14 +55,14 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             return mapper.find_by_arrive()
 
-    def create_person(self, firstname, lastname, mailaddress, firebase_id):
+    def create_person(self, username, mailaddress, firebase_id):
         """Person anlegen, nach Anlegen der Person Anlegen eines Arbeitszeitkontos für sie."""
         person = Person()
         person.set_id(1)
         person.set_last_edit(datetime.now())
-        person.set_firstname(firstname)
-        person.set_lastname(lastname)
-        person.set_username(firstname + "_" + lastname)
+        person.set_firstname("Vorname noch nachtragen")
+        person.set_lastname("Nachname noch nachtragen")
+        person.set_username(username)
         person.set_mailaddress(mailaddress)
         person.set_firebase_id(firebase_id)
 
