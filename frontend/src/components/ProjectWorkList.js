@@ -61,7 +61,7 @@ class ProjectWorkList extends Component {
   }
 
   /**
-   * Behandelt onProjectWorkDeleted Events der CustomerListEntry Komponente
+   * Behandelt onProjectWorkDeleted Events der ProjectWorkListEntry Komponente
    */
   projectWorkDeleted = projectWork => {
     const newProjectWorkList = this.state.projectWorks.filter(projectWorkFromState => projectWorkFromState.getID() !== projectWork.getID());
@@ -71,7 +71,7 @@ class ProjectWorkList extends Component {
     });
   }
 
-  /** Behandelt das onClose Event von CustomerForm */
+  /** Behandelt das onClose Event von ProjectWorkForm */
   projectWorkFormClosed = projectWork => {
     // projectWork ist nicht null und deshalb erstelltI/überarbeitet
     if (projectWork) {

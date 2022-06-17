@@ -24,6 +24,7 @@ export default class HdMWebAppAPI {
   //Projekt bezogen
   #getProjectsURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
   //später hier ID übergeben
+    #updateProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/project/${id}`;
   // Projektarbeit bezogen
   #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
   #updateProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
@@ -190,6 +191,36 @@ export default class HdMWebAppAPI {
             })
         })
     }
+
+    /**
+  * Updated ein ProjectBO
+  *
+  * @param {ProjectBO} projectBO das geupdated werden soll
+  * @public
+  */
+  updateProject(projectBO) {
+    return this.#fetchAdvanced(this.#updateProjectURL(projectBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(projectBO)
+    }).then((responseJSON) => {
+      // Wir bekommen immer ein Array aus ProjectBOs.fromJSON
+      let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
+      console.log(responseProjectBO)
+      return new Promise(function (resolve) {
+        resolve(responseProjectBO);
+      })
+    })
+  }
+
+
+
+
+
+
     getWorktimeAccount(id) {
         return this.#fetchAdvanced(this.#getWorktimeAccountURL(id)).then((responseJSON) => {
             let worktimeaccountBOs = WorktimeAccountBO.fromJSON(responseJSON);
@@ -225,7 +256,7 @@ export default class HdMWebAppAPI {
       },
       body: JSON.stringify(projectWorkBO)
     }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
+        //Wir bekommen immer ein Array aus ProkectWorkBos.fromJSON
       let responseProjectWorkBO = ProjectWorkBO.fromJSON(responseJSON)[0];
       console.log(responseProjectWorkBO)
       return new Promise(function (resolve) {

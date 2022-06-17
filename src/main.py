@@ -202,8 +202,8 @@ class ProjectListOperations(Resource):
     @secured
     def get(self):
         hwa = HdMWebAppAdministration()
-        projects = hwa.get_all_projects()
-
+        projects = hwa.get_project_by_id(1)
+        print(projects)
         return projects
 
 
@@ -269,7 +269,7 @@ sub_thread.start()
 h = HdMWebAppAdministration()
 id = 'QY7ll5yg71YLWHBpOSN9YgCccrK2'
 #print(h.get_person_by_firebase_id(id))
-print(h.get_project_by_firebase_id(2))
+#print(h.get_project_by_id(1))
 
 if __name__ == '__main__':
     app.run(debug=False)
