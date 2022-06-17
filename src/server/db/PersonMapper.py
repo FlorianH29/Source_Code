@@ -51,7 +51,7 @@ class PersonMapper(Mapper):
         cursor.execute("SELECT  P.* FROM person P "
                        "inner join arrive A on A.affiliated_person_id = P.person_id "
                        "inner join departure D on D.affiliated_person_id = P.person_id "
-                       "WHERE deleted=0 "
+                       "WHERE P.deleted=0 "
                        "GROUP BY P.person_id "
                        "HAVING MAX(A.time_stamp) > MAX(D.time_stamp);")
         tuples = cursor.fetchall()
@@ -137,15 +137,16 @@ class PersonMapper(Mapper):
         INSERT-Befehl um ein Personen Objekt in die Datenbank zu schreiben
         FRAGE: ob die externe Personen ID hier dazukommt noch klären!
         """
-        command = "INSERT INTO person (person_id, last_edit, firstname, lastname, username, mailaddress, firebase_id) " \
-                  "VALUES (%s,%s,%s,%s,%s,%s,%s)"
+        command = "INSERT INTO person (person_id, last_edit, firstname, lastname, username, mailaddress, firebase_id, deleted) " \
+                  "VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
         data = (employee.get_id(),
                 employee.get_last_edit(),
                 employee.get_firstname(),
                 employee.get_lastname(),
                 employee.get_username(),
                 employee.get_mailaddress(),
-                employee.get_firebase_id())
+                employee.get_firebase_id(),
+                employee.get_deleted())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -206,31 +207,22 @@ class PersonMapper(Mapper):
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
             result = None
 
+
         self._cnx.commit()
         cursor.close()
 
         return result
 
     def delete(self, employee):
-        """Löschen der Daten eines Personen-Objekts aus der Datenbank.
+        """Setzen der deleted flag auf 1, sodass der Person Eintrag nicht mehr ausgegeben wird.
 
         :param employee das aus der DB zu löschende "Objekt"
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM person WHERE person_id={}".format(employee.get_id())
+        command = "UPDATE person SET deleted=1 WHERE person_id={}".format(employee.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
         cursor.close()
 
-
-
-
-
-
-"""if (__name__ == "__main__"):
-    with PersonMapper() as mapper:
-        result = mapper.find_all()
-        for t in result:
-            print(t)"""

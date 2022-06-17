@@ -14,11 +14,11 @@ class ProjectMapper(Mapper):
         super().__init__()
 
     def find_by_key(self, key):
-        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
+        """Suchen eines Projekts mit vorgegebener ID. Da diese eindeutig ist,
         wird genau ein Objekt zurückgegeben.
 
         :param key Primärschlüsselattribut (->DB)
-        :return User-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+        :return Projekt-Objekt, das dem übergebenen Schlüssel entspricht, None bei
             nicht vorhandenem DB-Tupel.
         """
 
@@ -26,12 +26,12 @@ class ProjectMapper(Mapper):
 
         cursor = self._cnx.cursor()
         command = "SELECT project_id, last_edit, project_name, client, timeinterval_id, owner " \
-                  "FROM project WHERE project_id={}".format(key)
+                  "FROM project WHERE project_id={} AND deleted=0".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (project_id, last_edit, project_name, client, timeinterval_id, owner) = tuples[0]
+            (project_id, last_edit, project_name, client, timeinterval_id, owner, deleted) = tuples[0]
             project = p.Project()
             project.set_id(project_id)
             project.set_last_edit(last_edit)
@@ -39,6 +39,7 @@ class ProjectMapper(Mapper):
             project.set_client(client)
             project.set_time_interval_id(timeinterval_id)
             project.set_owner(owner)
+            project.set_deleted(deleted)
 
             result = project
         except IndexError:
@@ -91,10 +92,10 @@ class ProjectMapper(Mapper):
     def find_all(self):
         all_projects = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT project_id, last_edit, project_name, client, timeinterval_id, owner FROM project")
+        cursor.execute("SELECT * FROM project WHERE deleted=0")
         tuples = cursor.fetchall()
 
-        for (project_id, last_edit, project_name, client, timeinterval_id, owner) in tuples:
+        for (project_id, last_edit, project_name, client, timeinterval_id, owner, deleted) in tuples:
             project = p.Project()
             project.set_id(project_id)
             project.set_last_edit(last_edit)
@@ -102,6 +103,7 @@ class ProjectMapper(Mapper):
             project.set_client(client)
             project.set_time_interval_id(timeinterval_id)
             project.set_owner(owner)
+            project.set_deleted(deleted)
             all_projects.append(project)
 
         self._cnx.commit()
@@ -124,8 +126,8 @@ class ProjectMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 object.set_id(1)
 
-        command = "INSERT INTO project (project_id, last_edit, project_name, client, timeinterval_id, owner)" \
-                  " VALUES (%s,%s,%s,%s,%s,%s)"
+        command = "INSERT INTO project (project_id, last_edit, project_name, client, timeinterval_id, owner, deleted)" \
+                  " VALUES (%s,%s,%s,%s,%s,%s,%s)"
         data = (object.get_id(),
                 object.get_last_edit(),
                 object.get_project_name(),
@@ -141,7 +143,7 @@ class ProjectMapper(Mapper):
     def delete(self, project):  # Projekt, welches gelöscht werden soll wird übergeben
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM project WHERE project_id={}".format(project.get_id())
+        command = "UPDATE project SET deleted=1 WHERE project_id={}".format(project.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

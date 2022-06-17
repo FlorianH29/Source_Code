@@ -18,15 +18,15 @@ class TimeIntervalTransactionMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, affiliated_time_interval_id, affiliated_break_id, affiliated_projectwork_id " \
-                  "FROM timeintervaltransaction WHERE timeintervaltransaction_id={}".format(key)
+        command = "SELECT * FROM timeintervaltransaction WHERE timeintervaltransaction_id={} AND deleted=0".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         if tuples is not None \
                 and len(tuples) > 0 \
                 and tuples[0] is not None:
-            (timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, affiliated_time_interval_id, affiliated_break_id, affiliated_projectwork_id) = tuples[0]
+            (timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, affiliated_time_interval_id,
+             affiliated_break_id, affiliated_projectwork_id, deleted) = tuples[0]
             time_interval_transaction = tit.TimeIntervalTransaction()
             time_interval_transaction.set_id(timeintervaltransaction_id)
             time_interval_transaction.set_last_edit(last_edit)
@@ -34,6 +34,7 @@ class TimeIntervalTransactionMapper (Mapper):
             time_interval_transaction.set_affiliated_time_interval(affiliated_time_interval_id)
             time_interval_transaction.set_affiliated_break(affiliated_break_id)
             time_interval_transaction.set_affiliated_projectwork(affiliated_projectwork_id)
+            time_interval_transaction.set_deleted(deleted)
 
             result = time_interval_transaction
         else:
@@ -54,13 +55,11 @@ class TimeIntervalTransactionMapper (Mapper):
         cursor = self._cnx.cursor()
 
         cursor.execute(
-            "SELECT timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, affiliated_time_interval_id,"
-            " affiliated_break_id, affiliated_projectwork_id "
-                       "from timeintervaltransaction")
+            "SELECT * FROM timeintervaltransaction WHERE deleted=0")
         tuples = cursor.fetchall()
 
         for (timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, affiliated_time_interval_id,
-             affiliated_break_id, affiliated_projectwork_id) in tuples:
+             affiliated_break_id, affiliated_projectwork_id, deleted) in tuples:
             time_interval_transaction = tit.TimeIntervalTransaction()
             time_interval_transaction.set_id(timeintervaltransaction_id)
             time_interval_transaction.set_last_edit(last_edit)
@@ -68,6 +67,7 @@ class TimeIntervalTransactionMapper (Mapper):
             time_interval_transaction.set_affiliated_time_interval(affiliated_time_interval_id)
             time_interval_transaction.set_affiliated_break(affiliated_break_id)
             time_interval_transaction.set_affiliated_projectwork(affiliated_projectwork_id)
+            time_interval_transaction.set_deleted(deleted)
 
             result.append(time_interval_transaction)
 
@@ -84,15 +84,13 @@ class TimeIntervalTransactionMapper (Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        command = "SELECT timeintervaltransaction_id, last_edit, affiliated_work_time_account_id," \
-                  " affiliated_time_interval_id, affiliated_break_id, affiliated_projectwork_id" \
-                  " FROM timeintervaltransaction WHERE affiliated_work_time_account_id={} " \
+        command = "SELECT * FROM timeintervaltransaction WHERE affiliated_work_time_account_id={} AND deleted=0 " \
                   "ORDER BY timeintervaltransaction_id".format(worktimeaccount_id)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         for (timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, affiliated_time_interval_id,
-             affiliated_break_id, affiliated_projectwork_id) in tuples:
+             affiliated_break_id, affiliated_projectwork_id, deleted) in tuples:
             time_interval_transaction = tit.TimeIntervalTransaction()
             time_interval_transaction.set_id(timeintervaltransaction_id)
             time_interval_transaction.set_last_edit(last_edit)
@@ -100,6 +98,7 @@ class TimeIntervalTransactionMapper (Mapper):
             time_interval_transaction.set_affiliated_time_interval(affiliated_time_interval_id)
             time_interval_transaction.set_affiliated_break(affiliated_break_id)
             time_interval_transaction.set_affiliated_projectwork(affiliated_projectwork_id)
+            time_interval_transaction.set_deleted(deleted)
             result.append(time_interval_transaction)
 
         self._cnx.commit()
@@ -133,7 +132,7 @@ class TimeIntervalTransactionMapper (Mapper):
 
         command = "INSERT INTO timeintervaltransaction (timeintervaltransaction_id, last_edit, " \
                   "affiliated_work_time_account_id, affiliated_time_interval_id, affiliated_break_id," \
-                  " affiliated_projectwork_id) VALUES (%s,%s,%s,%s,%s,%s)"
+                  " affiliated_projectwork_id, deleted) VALUES (%s,%s,%s,%s,%s,%s,%s)"
         data = (time_interval_transaction.get_id(),
                 time_interval_transaction.get_last_edit(),
                 time_interval_transaction.get_affiliated_work_time_account(),
@@ -150,20 +149,20 @@ class TimeIntervalTransactionMapper (Mapper):
     def update(self, time_interval_transaction):
         """Wiederholtes Schreiben eines Objekts in die Datenbank.
 
-        :param timeintervaltransaction das Objekt, das in die DB geschrieben werden soll
+        :param time_interval_transaction das Objekt, das in die DB geschrieben werden soll
         """
         cursor = self._cnx.cursor()
 
         command = "UPDATE timeintervaltransaction " \
-                  "SET  last_edit=%s, affiliated_work_time_account_id=%s, " \
-                  "affiliated_time_interval_id=%s, affiliated_break_id=%s," \
-                  "affiliated_projectwork=%s " \
+                  "SET  last_edit=%s, affiliated_work_time_account_id=%s, affiliated_time_interval_id=%s, " \
+                  "affiliated_break_id=%s, affiliated_projectwork_id=%s, deleted=%s " \
                   "WHERE timeintervaltransaction_id=%s"
         data = (time_interval_transaction.get_last_edit(),
                 time_interval_transaction.get_affiliated_work_time_account(),
                 time_interval_transaction.get_affiliated_time_interval(),
                 time_interval_transaction.get_affiliated_break(),
                 time_interval_transaction.get_affiliated_projectwork(),
+                time_interval_transaction.get_deleted(),
                 time_interval_transaction.get_id())
         cursor.execute(command, data)
 
@@ -171,13 +170,13 @@ class TimeIntervalTransactionMapper (Mapper):
         cursor.close()
 
     def delete(self, time_interval_transaction):
-        """Löschen der Daten eines TimeIntervalTransaction-Objekts aus der Datenbank.
+        """Setzen der deleted flag auf 1, sodass der Timeinterval Transaction Eintrag nicht mehr ausgegeben wird.
 
-        :param timeintervaltransaction das aus der DB zu löschende "Objekt"
+        :param time_interval_transaction das aus der DB zu löschende "Objekt"
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM timeintervaltransaction " \
+        command = "UPDATE timeintervaltransaction SET deleted=1 " \
                   "WHERE timeintervaltransaction_id={}".format(time_interval_transaction.get_id())
         cursor.execute(command)
 

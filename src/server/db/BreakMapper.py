@@ -11,7 +11,7 @@ class BreakMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT * FROM break WHERE break_id={}".format(key)
+        command = "SELECT * FROM break WHERE break_id={} AND deleted=0".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -40,18 +40,19 @@ class BreakMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT * FROM break WHERE start_event_id={}".format(start_event_id)
+        command = "SELECT * FROM break WHERE start_event_id={} AND deleted=0".format(start_event_id)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (break_id, last_edit, start_event_id, end_event_id, time_period) = tuples[0]
+            (break_id, last_edit, start_event_id, end_event_id, time_period, deleted) = tuples[0]
             obj = br.Break()
             obj.set_id(break_id)
             obj.set_last_edit(last_edit)
             obj.set_start_event(start_event_id)
             obj.set_end_event(end_event_id)
             obj.set_time_period(time_period)
+            obj.set_deleted(deleted)
 
             result = obj
         except IndexError:
@@ -80,8 +81,8 @@ class BreakMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 obj.set_id(1)
 
-        command = "INSERT INTO break (break_id, last_edit, start_event_id, end_event_id, time_period) " \
-                  "VALUES (%s,%s,%s,%s,%s)"
+        command = "INSERT INTO break (break_id, last_edit, start_event_id, end_event_id, time_period, deleted) " \
+                  "VALUES (%s,%s,%s,%s,%s,%s)"
         data = (obj.get_id(),
                 obj.get_last_edit(),
                 obj.get_start_event(),
@@ -107,11 +108,11 @@ class BreakMapper(Mapper):
         cursor.close()
 
     def delete(self, obj):
-        """Löschen der Daten eines Zeitintervalls aus der Datenbank.
+        """Setzen der deleted flag auf 1, sodass der Break Eintrag nicht mehr ausgegeben wird.
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM break WHERE break_id={}".format(obj.get_id())
+        command = "UPDATE break SET deleted=1 WHERE break_id={}".format(obj.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
