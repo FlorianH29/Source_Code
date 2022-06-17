@@ -159,25 +159,6 @@ export default class HdMWebAppAPI {
         })
     }
 
-    getPersons() {
-        return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
-            let personBOs = PersonBO.fromJSON(responseJSON);
-            //console.log(responseJSON);
-            return new Promise(function (resolve) {
-                resolve(personBOs);
-            })
-        })
-    }
-
-    getWorktimeAccount(id) {
-        return this.#fetchAdvanced(this.#getWorktimeAccountURL(id)).then((responseJSON) => {
-            let worktimeaccountBOs = WorktimeAccountBO.fromJSON(responseJSON);
-            console.log(responseJSON);
-            return new Promise(function (resolve) {
-                resolve(worktimeaccountBOs);
-            })
-        })
-    }
 
     getActivities() {
         return this.#fetchAdvanced(this.#getActivitiesURL()).then((responseJSON) => {
@@ -231,6 +212,12 @@ export default class HdMWebAppAPI {
     getWorktimeAccount(id) {
         return this.#fetchAdvanced(this.#getWorktimeAccountURL(id)).then((responseJSON) => {
             let worktimeaccountBOs = WorktimeAccountBO.fromJSON(responseJSON);
+            console.log(responseJSON);
+            return new Promise(function (resolve) {
+                resolve(worktimeaccountBOs);
+            })
+        })
+    }
 
     getTimeIntervalTransactions() {
         return this.#fetchAdvanced(this.#getTimeIntervalTransactionsURL()).then((responseJSON) => {
