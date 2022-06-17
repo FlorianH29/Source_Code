@@ -82,7 +82,7 @@ timeinterval = api.inherit('TimeInterval', bo, {
 projectwork = api.inherit('ProjectWork', timeinterval, {
     'project_work_name': fields.String(attribute='_project_work_name', description='Name einer Projektarbeit'),
     'description': fields.String(attribute='_description', description='Beschreibung einer Projektarbeit'),
-    'affiliated_activity': fields.Integer(attribute='_affiliated_activity', description='Zugeordnete Aktivität einer P.')
+    'affiliated_activity': fields.Integer(attribute='_affiliated_activity_id', description='Zugeordnete Aktivität einer P.')
 })
 
 
@@ -135,7 +135,6 @@ class CustomersByNameOperations(Resource):
         adm = HdMWebAppAdministration()
         lel = adm.get_person_by_name(lastname)
         return lel
-
 
 
 @hdmwebapp.route('/worktimeaccount/<int:id>')
@@ -246,7 +245,7 @@ class ProjectWorksByActivityOperations(Resource):
             return "Activity not found", 500
 
 
-@hdmwebapp.route('/projectworks/<int:id>/')
+@hdmwebapp.route('/projectworks/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Projektarbeit')
 class ProjectWorkOperations(Resource):
@@ -266,6 +265,7 @@ class ProjectWorkOperations(Resource):
         else:
             return '', 500
 
+    @secured
     def delete(self, id):
         """
         Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
@@ -289,8 +289,6 @@ sub_thread.start()
 h = HdMWebAppAdministration()
 pe = h.get_person_by_id(5)
 
-h.check_time_difference_events(3, pe)
-# h.check_time_difference_events(1, pe)
 
 if __name__ == '__main__':
     app.run(debug=False)

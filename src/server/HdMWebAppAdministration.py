@@ -61,7 +61,7 @@ class HdMWebAppAdministration(object):
         person.set_id(1)
         person.set_last_edit(datetime.now())
         person.set_deleted(0)
-        person.set_last_edit(datetime.datetime.now())
+        person.set_last_edit(datetime.now())
         person.set_firstname(firstname)
         person.set_lastname(lastname)
         person.set_username(firstname + "_" + lastname)
