@@ -45,32 +45,26 @@ class ArriveMapper (Mapper):
         return result
 
     def find_by_affiliated_person_id(self, key):
-        """Suchen eines Arrive-Ereignisses mit vorgegebener zugehöriger Personen ID. Rückgabe von genau einem Objekt.
+        """Suchen aller Arrive-Ereignisse mit vorgegebener zugehöriger Personen ID.
 
         :param key: Fremdschlüsselattribut (->DB)
-        :return Arrive-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
+        :return Arrive-Objekte, die dem übergebenen Schlüssel entsprechen, None bei nicht vorhandenem DB-Tupel.
         """
 
-        result = None
+        result = []
 
         cursor = self._cnx.cursor()
         command = "SELECT * FROM arrive WHERE affiliated_person_id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        try:
-            (arrive_id, last_edit, time_stamp, affiliated_person_id) = tuples[0]
+        for (arrive_id, last_edit, time_stamp, affiliated_person_id) in tuples:
             arrive = Arrive()
             arrive.set_id(arrive_id)
             arrive.set_last_edit(last_edit)
             arrive.set_time_stamp(time_stamp)
             arrive.set_affiliated_person(affiliated_person_id)
-
-            result = arrive
-        except IndexError:
-            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
-            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
-            result = None
+            result.append(arrive)
 
         self._cnx.commit()
         cursor.close()
@@ -126,7 +120,7 @@ class ArriveMapper (Mapper):
             arrive.set_id(arrive_id)
             arrive.set_last_edit(last_edit)
             arrive.set_time_stamp(time_stamp)
-            arrive.get_affiliated_person(affiliated_person_id)
+            arrive.set_affiliated_person(affiliated_person_id)
             result.append(arrive)
 
         self._cnx.commit()

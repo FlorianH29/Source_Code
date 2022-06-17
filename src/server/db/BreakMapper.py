@@ -35,6 +35,35 @@ class BreakMapper(Mapper):
 
         return result
 
+    def find_by_start_event_id(self, start_event_id):
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM break WHERE start_event_id={}".format(start_event_id)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (break_id, last_edit, start_event_id, end_event_id, time_period) = tuples[0]
+            obj = br.Break()
+            obj.set_id(break_id)
+            obj.set_last_edit(last_edit)
+            obj.set_start_event(start_event_id)
+            obj.set_end_event(end_event_id)
+            obj.set_time_period(time_period)
+
+            result = obj
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
     def insert(self, obj):
 
         cursor = self._cnx.cursor()
