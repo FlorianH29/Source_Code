@@ -153,14 +153,14 @@ class ActivityForm extends Component {
         } else {
             // ProjectWork ist nicht definiert, Erstellungsdialog wird angezeigt
             title = 'Neue Aktivität erstellen';
-            header = 'Geben Sie die Kapazität in Stunden an';
+            header = 'Geben Sie der Akivität einen Namen und eine Kapazität in Stunden';
         }
 
         return (
         show ?
           <Dialog open={true} onClose={this.handleClose} maxWidth='xl'>
             <DialogTitle id='form-dialog-title'>{title}
-              <IconButton onClick={this.handleClose}>
+              <IconButton algin={'right'} onClick={this.handleClose}>
                 <CloseIcon />
               </IconButton>
             </DialogTitle>

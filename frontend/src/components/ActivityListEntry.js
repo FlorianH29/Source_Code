@@ -8,6 +8,8 @@ import ListItem from "@mui/material/ListItem";
 import ActivityDeleteDialog from "./dialogs/ActivityForm";
 import ActivityForm from "./dialogs/ActivityForm";
 import {HdMWebAppAPI} from "../api";
+import ProjectWorkList from "./ProjectWorkList";
+import {Route} from "react-router-dom";
 
 
 
@@ -66,39 +68,45 @@ class ActivityListEntry extends Component {
     const { classes } = this.props;
     const { activity, showActivityForm, showActivityDeleteDialog } = this.state;
 
-    // console.log(this.state);
-    return (
-      <div>
-        <ListItem>
-          <Grid container alignItems='center'>
-            <Grid item xs={3} align={"center"}>
-              <Typography variant={"h5"} component={"div"}>
-                {activity.getActivityName()}
-              </Typography>
-            </Grid>
-            <Grid item xs={3} align={"center"}>
-              <Typography variant={"h5"} component={"div"}>
-                {activity.getActivityCapacity()}
-              </Typography>
-            </Grid>
-            <Grid item xs={3} align={"center"}>
-              <Typography variant={"h5"} component={"div"}>
-                {activity.getActivityWorkTime()}
-              </Typography>
-            </Grid>
-            <Grid item xs={3} align={"center"}>
-                <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editActivityButtonClicked}> </Button>
-                <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteActivityButtonClicked}> </Button>
-            </Grid>
-          </Grid>
-          </ListItem>
-          <Divider/>
-        <ActivityDeleteDialog show={showActivityDeleteDialog} activity={activity} onClose={this.deleteActivityDialogClosed} />
-        <ActivityForm show={showActivityForm} activity={activity} onClose={this.activityFormClosed} />
+      // console.log(this.state);
+      return (
+        <div>
+           <ListItem>
+             <Grid container alignItems='center'>
+               <Grid item xs={3} align={"center"}>
+                 <Typography variant={"h5"} component={"div"}>
+                     {activity.getActivityName()}
+                 </Typography>
+               </Grid>
+               <Grid item xs={3} align={"center"}>
+                 <Typography variant={"h5"} component={"div"}>
+                   {activity.getActivityCapacity()}
+                 </Typography>
+               </Grid>
+               <Grid item xs={3} align={"center"}>
+                 <Typography variant={"h5"} component={"div"}>
+                   {activity.getActivityWorkTime()}
+                 </Typography>
+               </Grid>
+               <Grid item xs={3} align={"center"}>
+                   <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editActivityButtonClicked}> </Button>
+                   <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteActivityButtonClicked}> </Button>
+               </Grid>
+             </Grid>
+           </ListItem>
+           <Divider/>
+          <ActivityDeleteDialog show={showActivityDeleteDialog} activity={activity} onClose={this.deleteActivityDialogClosed} />
+          <ActivityForm show={showActivityForm} activity={activity} onClose={this.activityFormClosed} />
         </div>
-    );
-  }
+      );
+    }
 }
+
+const styles = theme => ({
+  root: {
+    width: '100%',
+  },
+});
 
 ActivityListEntry.propTypes = {
   /** Das ActivityBO welches gerendert werden soll */
@@ -109,4 +117,4 @@ ActivityListEntry.propTypes = {
   show: PropTypes.bool.isRequired
 }
 
-export default ActivityListEntry;
+export default withStyles(styles) (ActivityListEntry);
