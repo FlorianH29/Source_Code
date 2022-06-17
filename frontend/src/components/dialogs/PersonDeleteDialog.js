@@ -55,7 +55,7 @@ class PersonDeleteDialog extends Component {
           </DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Möchte sie Ihren User '{person.getMailAddress()}' (ID: {person.getID()}) wirklich löschen?
+              Möchte sie Ihren User '{person.getUserName()}' (ID: {person.getID()}) wirklich löschen?
             </DialogContentText>
           </DialogContent>
           <DialogActions>

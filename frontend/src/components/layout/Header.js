@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
-import {AppBar, Typography, Toolbar, IconButton, Menu, MenuList, Box, Drawer, Link} from '@mui/material';
+import {AppBar, Typography, Toolbar, IconButton, Menu, Tab, Tabs, Box, Drawer, Button, MenuItem} from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import {Link as RouterLink} from "react-router-dom";
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
-import PersonDeleteDialog from './dialogs/PersonDeleteDialog';
+import PersonDeleteDialog from "../dialogs/PersonDeleteDialog";
+import {PersonBO, HdMWebAppAPI} from '../../api';
 
 class Header extends Component {
 
@@ -36,7 +37,7 @@ class Header extends Component {
     if (person) {
       const newperson = [...this.state.person, person];
       this.setState({
-        projectWorks: newperson,
+        person: newperson,
         showPersonDeleteDialog: false
       });
     } else {
@@ -71,7 +72,8 @@ class Header extends Component {
       this.setState({open: false});
   }
     render() {
-        const {person, showPersonDeleteDialog} = this.props;
+        const {person} = this.props;
+        const {showPersonDeleteDialog} = this.state;
 
 
         return (
@@ -81,17 +83,19 @@ class Header extends Component {
                         <Typography variant='h3' component='div' sx={{flexGrow: 1}}>
                             HdM Zeiterfassung
                         </Typography>
-
+                         <Tabs indicatorColor='primary' textColor='primary' centered value={this.state.tabindex} onChange={this.handleTabChange} >
+                         <Tab label='Customers' component={RouterLink} to={`/customers`} />
+                         <Tab label='All Accounts' component={RouterLink} to={`/accounts`} />
+                         <Tab label='About' component={RouterLink} to={`/about`} />
+            </Tabs>
                 <Drawer
-                class={Drawer}
+                className={Drawer}
                 variant={"permanent"}
                 anchor={"left"}
 
                 >
                         <Typography variant='h3' component='div' sx={{flexGrow: 1}}>
-
-                            <AssignmentIndIcon fontSize={"lage"}>
-
+                            <AssignmentIndIcon fontSize={"large"}>
                             </AssignmentIndIcon>
 
                         </Typography>
@@ -120,19 +124,18 @@ class Header extends Component {
                                     onClose={() => {
                                         this.handleCloseUserMenu()
                                     }}>
-                                    <Typography variant='h11' component='h9' align='center'>
-                                    <MenuList onClick={this.handleLogout}>Profil bearbeiten</MenuList>
-                                    <MenuList onClick={this.handleDelete}>Profil löschen</MenuList>
-                                    <MenuList onClick={this.handleLogout}>LogOut</MenuList>
+                                    <PersonDeleteDialog person={person} show={showPersonDeleteDialog} onClose={this.persondeleteClosed}>
+                                    </PersonDeleteDialog>
+                                    <Typography variant='h5' component='div' align='center'>
+                                    <Button onClick={this.handleLogout}>Profil bearbeiten</Button>
+                                    <Button onClick={this.handleDelete}>Profil löschen</Button>
+                                    <Button onClick={this.handleLogout}>LogOut</Button>
                                     </Typography>
-
                                 </Menu>
                             </>
                         ) : null}
                     </Toolbar>
                 </AppBar>
-                 <PersonDeleteDialog person={person} show={showPersonDeleteDialog} onClose={this.persondeleteClosed}>
-                                    </PersonDeleteDialog>
             </Box>
         )
     }

@@ -52,7 +52,7 @@ class ProjectWorkDeleteDialog extends Component {
           </DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Die Projektarbeit '{projectWork.getProjectWorkName()}' (ID: {projectWork.getID()}) wirklich löschen?
+              Die Projektarbeit '{projectWork.getProjectWorkName}' (ID: {projectWork.getID()}) wirklich löschen?
             </DialogContentText>
           </DialogContent>
           <DialogActions>
