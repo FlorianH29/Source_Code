@@ -1,4 +1,5 @@
-import datetime
+from datetime import datetime
+from datetime import timedelta
 
 from flask import Flask
 from flask_restx import Api, Resource, fields
@@ -10,7 +11,6 @@ from server.bo.Event import Event
 from server.bo.Person import Person
 from server.bo.Project import Project
 from server.bo.ProjectWork import ProjectWork
-import datetime
 from server.bo.WorkTimeAccount import WorkTimeAccount
 from SecurityDecorator import secured
 
@@ -54,6 +54,13 @@ person = api.inherit('Person', bo, {
 work_time_account = api.inherit('Worktimeaccout', {
     'name': fields.String(description='Name des Inhalts'),
     'time': fields.String(description='Dauer des Inhalts')
+})
+
+work_performance = api.inherit('Worktimeaccout', {
+    'name': fields.String(description='Name des Inhalts'),
+    'start_time': fields.String(description='Dauer des Inhalts'),
+    'end_time': fields.String(description='Dauer des Inhalts'),
+    'period': fields.String(description='Dauer des Inhalts')
 })
 
 project = api.inherit('Project', bo, {
@@ -113,6 +120,7 @@ class PersonListOperations(Resource):
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
+
 @hdmwebapp.route('/person-by-name/<string:lastname>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('lastname', 'Der Nachname des Kunden')
@@ -144,9 +152,21 @@ class WorkTimeAccountContentList(Resource):
         result.append({"name": "Arbeitszeit", "time": hwa.calculate_sum_of_time_intervals_by_person(person)})
         for p in projects:
             result.append({"name": p.get_project_name(), "time": hwa.calculate_sum_of_project_work_by_person(person)})
-        print(result)
         return result
 
+
+@hdmwebapp.route('/workperformance/<int:id>')
+@hdmwebapp.param('id', 'Die ID des Arbeitszeitkonto-Objekts')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class WorkTimeAccountContentList(Resource):
+    @hdmwebapp.marshal_list_with(work_performance)
+    @secured
+    def get(self, id, start_time, end_time):
+        hwa = HdMWebAppAdministration()
+        result = []
+        person = hwa.get_person_by_id(id)
+        result = hwa.get_intervals_of_person_between_time_stamps(person, start_time, end_time)
+        return result
 
 
 @hdmwebapp.route('/activities')
@@ -159,7 +179,7 @@ class ActivitiesList(Resource):
         result = []
         activities = hwa.get_all_activities()
         for a in activities:
-            result.append({"name" : a._name, "capacity": a._capacity})
+            result.append({"name": a._name, "capacity": a._capacity})
         print(result)
         return result
 
@@ -219,7 +239,7 @@ class ProjectWorksByActivityOperations(Resource):
         # Die durch die id gegebene Aktivität als Objekt speichern.
 
         if act is not None:
-            projectwork_list = hwa.get_projectworks_of_activity(act)
+            projectwork_list = hwa.get_project_works_of_activity(act)
             # Auslesen der Projektarbeiten, die der Aktivität untergliedert sind.
             return projectwork_list
         else:
@@ -251,25 +271,26 @@ class ProjectWorkOperations(Resource):
         Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
         """
         hwa = HdMWebAppAdministration()
-        pw = hwa.get_projectwork_by_id(id)
+        pw = hwa.get_project_work_by_id(id)
         hwa.delete_project_work(pw)
         return '', 200
 
 
-def worker():
+def check():
     hwa = HdMWebAppAdministration()
     hwa.check_time_for_departure()
 
 
-sub_thread = Thread(target=worker)
+sub_thread = Thread(target=check)
 #es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
 
 h = HdMWebAppAdministration()
-id = 'QY7ll5yg71YLWHBpOSN9YgCccrK2'
-#print(h.get_person_by_firebase_id(id))
-#print(h.get_project_by_id(1))
+pe = h.get_person_by_id(2)
+print(h.get_last_event_by_affiliated_person(pe))
+h.create_event_and_check_type(4, pe)
+
 
 if __name__ == '__main__':
     app.run(debug=False)

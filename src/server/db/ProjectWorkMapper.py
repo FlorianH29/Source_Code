@@ -23,12 +23,12 @@ class ProjectWorkMapper (Mapper):
         result = []
 
         cursor = self._cnx.cursor()
-        command = "SELECT * FROM projectwork WHERE affiliated_activity_id={}".format(activity)
+        command = "SELECT * FROM projectwork WHERE affiliated_activity_id={} AND deleted=0".format(activity)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         for (projectwork_id, last_edit, projectwork_name, description, start_event, end_event, time_period,
-             affiliated_activity_id) in tuples:
+             affiliated_activity_id, deleted) in tuples:
             project_work = pw.ProjectWork()
             project_work.set_id(projectwork_id)
             project_work.set_last_edit(last_edit)
@@ -38,7 +38,49 @@ class ProjectWorkMapper (Mapper):
             project_work.set_end_event(end_event)
             project_work.set_time_period(time_period)
             project_work.set_affiliated_activity(affiliated_activity_id)
+            project_work.set_deleted(deleted)
             result.append(project_work)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_by_start_event(self, key):
+        """Suchen eines ProjectWorks mit vorgegebener ID. Da diese eindeutig ist,
+        wird genau ein Objekt zurückgegeben.
+
+        :param key Primärschlüsselattribut, mit dem das Project_Work eindeutig in DB gefunden werden kann
+        :return ProjectWork-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+            nicht vorhandenem DB-Tupel.
+        """
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM projectwork WHERE start_event_id={} AND deleted=0".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (projectwork_id, last_edit, projectwork_name, description, start_event, end_event, time_period,
+             affiliated_activity_id, deleted) = tuples[0]
+            project_work = pw.ProjectWork()
+            project_work.set_id(projectwork_id)
+            project_work.set_last_edit(last_edit)
+            project_work.set_project_work_name(projectwork_name)
+            project_work.set_description(description)
+            project_work.set_start_event(start_event)
+            project_work.set_end_event(end_event)
+            project_work.set_time_period(time_period)
+            project_work.set_affiliated_activity(affiliated_activity_id)
+            project_work.set_deleted(deleted)
+
+            result = project_work
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
 
         self._cnx.commit()
         cursor.close()
@@ -57,13 +99,13 @@ class ProjectWorkMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT * FROM projectwork WHERE projectwork_id={}".format(key)
+        command = "SELECT * FROM projectwork WHERE projectwork_id={} AND deleted=0".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
             (projectwork_id, last_edit, projectwork_name, description, start_event, end_event, time_period,
-             affiliated_activity_id) = tuples[0]
+             affiliated_activity_id, deleted) = tuples[0]
             project_work = pw.ProjectWork()
             project_work.set_id(projectwork_id)
             project_work.set_last_edit(last_edit)
@@ -73,6 +115,7 @@ class ProjectWorkMapper (Mapper):
             project_work.set_end_event(end_event)
             project_work.set_time_period(time_period)
             project_work.set_affiliated_activity(affiliated_activity_id)
+            project_work.set_deleted(deleted)
 
             result = project_work
         except IndexError:
@@ -88,11 +131,11 @@ class ProjectWorkMapper (Mapper):
     def find_all(self):
         all_project_works = []  # Liste mit allen project_works
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT * FROM projectwork")
+        cursor.execute("SELECT * FROM projectwork WHERE deleted=0")
         tuples = cursor.fetchall()
 
         for (projectwork_id, last_edit, projectwork_name, description, start_event, end_event, time_period,
-             affiliated_activity_id) in tuples:
+             affiliated_activity_id, deleted) in tuples:
             project_work = pw.ProjectWork()
             project_work.set_id(projectwork_id)
             project_work.set_last_edit(last_edit)
@@ -102,6 +145,7 @@ class ProjectWorkMapper (Mapper):
             project_work.set_end_event(end_event)
             project_work.set_time_period(time_period)
             project_work.set_affiliated_activity(affiliated_activity_id)
+            project_work.set_deleted(deleted)
             all_project_works.append(project_work)
 
         self._cnx.commit()
@@ -125,10 +169,11 @@ class ProjectWorkMapper (Mapper):
                 project_work.set_id(1)
 
         command = "INSERT INTO projectwork (projectwork_id, last_edit, projectwork_name, description, " \
-                  "start_event_id, end_event_id, time_period, affiliated_activity_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
+                  "start_event_id, end_event_id, time_period, affiliated_activity_id, deleted) " \
+                  "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
         data = (project_work.get_id(), project_work.get_last_edit(), project_work.get_project_work_name(),
                 project_work.get_description(), project_work.get_start_event(), project_work.get_end_event(),
-                project_work.get_time_period(), project_work.get_affiliated_activity())
+                project_work.get_time_period(), project_work.get_affiliated_activity(), project_work.get_deleted())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -138,7 +183,7 @@ class ProjectWorkMapper (Mapper):
     def delete(self, project_work):  # Projektarbeit, welches gelöscht werden soll wird übergeben
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM projectwork WHERE projectwork_id={}".format(project_work.get_id())
+        command = "UPDATE projectwork SET deleted=1 WHERE projectwork_id={}".format(project_work.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
