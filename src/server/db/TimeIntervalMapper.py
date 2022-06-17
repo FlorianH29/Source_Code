@@ -133,7 +133,8 @@ class TimeIntervalMapper(Mapper):
                 time_interval.get_end_event(),
                 time_interval.get_time_period(),
                 time_interval.get_arrive(),
-                time_interval.get_departure())
+                time_interval.get_departure(),
+                time_interval.get_deleted())
         cursor.execute(command, data)
 
         self._cnx.commit()

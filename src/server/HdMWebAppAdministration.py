@@ -762,16 +762,16 @@ class HdMWebAppAdministration(object):
             return work_time, self.create_time_interval_for_work_time(work_time, person)
             # für berechnete Arbeitszeit ein Zeitintervall anhand der berechneten Zeitperiode erstellen
 
-    def create_time_interval(self, start_event, end_event=None):  # defaultmäßig ee= None, da TI kein Ende haben muss
+    def create_time_interval(self, start_event, end_event):
         """Zeitinterval anlegen"""
         with TimeIntervalMapper() as mapper:
-            if start_event is not None and start_event.get_event_type() == 1:  # 1 für Start Event, evtl noch apassen
+            if start_event and end_event is not None:
                 interval = TimeInterval()
                 interval.set_id(1)
                 interval.set_deleted(0)
                 interval.set_last_edit(datetime.now())
                 interval.set_start_event(start_event.get_id())
-                if end_event is not None:  # wenn ee übergeben wird: Wert setzen und Intervall berechnen
+                if end_event is not None:
                     interval.set_end_event(end_event.get_id())
                     interval.set_time_period(self.calculate_period(interval))
 
@@ -890,6 +890,21 @@ class HdMWebAppAdministration(object):
 
     """Methoden von Event"""
 
+    def check_time_difference_events(self, event_type, person):
+        if person is not None:
+            if event_type == 1 or event_type == 3:
+                last_event = self.get_last_event_by_affiliated_person(person)
+                if last_event is not None:
+                    time_stamp = last_event.get_time_stamp()
+                    time_difference = datetime.now() - time_stamp
+                    if time_difference > timedelta(minutes=2):
+                        work_time_start = self.create_event_with_time_stamp(5, time_stamp, person)
+                        self.create_event_transaction(work_time_start, None, None)
+                        work_time_end = self.create_event(6, person)[0]
+                        work_time = self.create_time_interval(work_time_start, work_time_end)
+                        self.create_time_interval_transaction(person, work_time)
+        return self.create_event_and_check_type(event_type, person)
+
     def create_event(self, event_type, person):
         """Event anlegen"""
         with EventMapper() as mapper:
@@ -909,18 +924,17 @@ class HdMWebAppAdministration(object):
         last_event = self.get_last_event_by_affiliated_person(person)
         event_type_last_event = last_event.get_event_type()
         if event_type == 1:
-            if event_type_last_event == 2 or event_type_last_event == 4:
+            if event_type_last_event == 2 or event_type_last_event == 4 or event_type == 6:
                 self.create_event(event_type, person)
         if event_type == 2:
             if event_type_last_event == 1:
                 self.create_event(event_type, person)
         if event_type == 3:
-            if event_type_last_event == 2 or event_type_last_event == 4:
+            if event_type_last_event == 2 or event_type_last_event == 4 or event_type_last_event == 6:
                 self.create_event(event_type, person)
         if event_type == 4:
             if event_type_last_event == 3:
                 self.create_event(event_type, person)
-
 
     def create_event_with_time_stamp(self, event_type, time_stamp, person):
         """Event mit Zeitpunkt erstellen"""

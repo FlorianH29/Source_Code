@@ -138,7 +138,9 @@ class TimeIntervalTransactionMapper (Mapper):
                 time_interval_transaction.get_affiliated_work_time_account(),
                 time_interval_transaction.get_affiliated_time_interval(),
                 time_interval_transaction.get_affiliated_break(),
-                time_interval_transaction.get_affiliated_projectwork())
+                time_interval_transaction.get_affiliated_projectwork(),
+                time_interval_transaction.get_deleted())
+
         cursor.execute(command, data)
 
         self._cnx.commit()

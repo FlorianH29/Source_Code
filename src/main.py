@@ -287,10 +287,10 @@ sub_thread.setDaemon(True)
 sub_thread.start()
 
 h = HdMWebAppAdministration()
-pe = h.get_person_by_id(2)
-print(h.get_last_event_by_affiliated_person(pe))
-h.create_event_and_check_type(4, pe)
+pe = h.get_person_by_id(5)
 
+h.check_time_difference_events(3, pe)
+# h.check_time_difference_events(1, pe)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
