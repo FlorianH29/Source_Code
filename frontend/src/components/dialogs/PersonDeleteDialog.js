@@ -5,7 +5,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import { HdMWebAppAPI, PersonBO } from '../../api';
 
 
-
 /**
  * Anzeigen eines Löschdialogs, der fragt, ob eine Person gelöscht werden soll. Das ProjectWorkBO welches
  * gelöscht werden soll, muss per prop übergeben werden. Je nach der Nutzerinteraktion wird der entsprechende Backend
