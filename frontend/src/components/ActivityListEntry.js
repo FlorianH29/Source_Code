@@ -7,10 +7,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import ListItem from "@mui/material/ListItem";
 import ActivityDeleteDialog from "./dialogs/ActivityForm";
 import ActivityForm from "./dialogs/ActivityForm";
-import {HdMWebAppAPI} from "../api";
-import ProjectWorkList from "./ProjectWorkList";
-import {Route} from "react-router-dom";
-
 
 
 class ActivityListEntry extends Component {

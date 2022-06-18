@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from '@material-ui/core';
+import { withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText,
+    DialogActions, TextField } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import {HdMWebAppAPI, ActivityBO } from "../../api";
 
@@ -10,16 +11,18 @@ class ActivityForm extends Component {
     constructor(props) {
         super(props);
 
-        let an = '', cap = '';
+        let an = '', cap = '', pro = 0;
         if (props.activity) {
             an = props.activity.getActivityName();
             cap = props.activity.getActivityCapacity();
+            pro = 1
         }
 
 
         this.state = {
             activityName: an,
             capacity: cap,
+            affiliatedProject: pro,
             activityNameValidationFailed: false,
             capacityValidationFailed: false
         };
@@ -48,44 +51,19 @@ class ActivityForm extends Component {
         });
     }
 
-/**    addActivity = () => {
-    HdMWebAppAPI.getAPI().addActivityForProject(this.props.project.getID()).then(activitiesBO => {
-
-      this.setState({  // Set new state when AccountBOs have been fetched
-        activities: [...this.state.activities, activitiesBO],
-        loadingInProgress: false, // loading indicator
-        addingActivityError: null,
-      })
-    }).catch(e =>
-      this.setState({ // Reset state with error from catch
-        activities: [],
-        loadingInProgress: false,
-        addingActivityError: e
-      })
-    );
-
-    // set loading to true
-    this.setState({
-      loadingInProgress: true,
-      addingActivityError: null
-    });
-    }
-*/
-
 
     addActivity = () => {
-    let newActivity = new ActivityBO(this.state.name, this.state.capacity);
+    let newActivity = new ActivityBO(this.state.activityName, this.state.capacity,
+            this.state.affiliatedProject);
     HdMWebAppAPI.getAPI().addActivity(newActivity).then(activity => {
       // Backend call sucessfull
       // reinit the dialogs state for a new empty customer
       this.setState(this.baseState);
       this.props.onClose(activity); // call the parent with the customer object from backend
     }).catch(e =>
-      this.setState({
-        updatingInProgress: false,    // disable loading indicator
-        updatingError: e              // show error message
-      })
+      console.log(e)
     );
+
 
     // set loading to true
     this.setState({
@@ -94,50 +72,20 @@ class ActivityForm extends Component {
     });
   }
 
-/**    updateActivity = () => {
-        // das originale Activity klonen, für den Fall, dass Backend Call fehlschlägt
-        let updatedActivity = Object.assign(new ActivityBO, this.props.activity);
-        // setzen der neuen Attribute aus dem Dialog
+
+    updateActivity = () => {
+        // clone the original activity, in case the backend call fails
+        let updatedActivity = Object.assign(new ActivityBO(), this.props.activity);
+        // set the new attributes from our dialog
         updatedActivity.setActivityName(this.state.activityName);
         updatedActivity.setActivityCapacity(this.state.capacity);
         HdMWebAppAPI.getAPI().updateActivity(updatedActivity).then(activity => {
             // den neuen state als baseState speichern
             this.baseState.activityName = this.state.activityName;
             this.baseState.capacity = this.state.capacity;
-            this.props.onClose(updatedActivity);
+            this.props.onClose(updatedActivity);      // call the parent with the new customer
         })
     }
-*/
-
-
-    updateActivity = () => {
-    // clone the original activity, in case the backend call fails
-    let updatedActivity = Object.assign(new ActivityBO(), this.props.activity);
-    // set the new attributes from our dialog
-    updatedActivity.setActivityName(this.state.name);
-    updatedActivity.setActivityCapacity(this.state.capacity);
-    HdMWebAppAPI.getAPI().updateActivity(updatedActivity).then(activity => {
-      this.setState({
-        updatingInProgress: false,              // disable loading indicator
-        updatingError: null                     // no error message
-      });
-      // keep the new state as base state
-      this.baseState.name = this.state.name;
-      this.baseState.capacity = this.state.capacity;
-      this.props.onClose(updatedActivity);      // call the parent with the new customer
-    }).catch(e =>
-      this.setState({
-        updatingInProgress: false,              // disable loading indicator
-        updatingError: e                        // show error message
-      })
-    );
-
-    // set loading to true
-    this.setState({
-      updatingInProgress: true,                 // show loading indicator
-      updatingError: null                       // disable error message
-    });
-  }
 
     render() {
         const {activity, show} = this.props;

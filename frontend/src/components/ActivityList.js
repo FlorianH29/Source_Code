@@ -1,19 +1,6 @@
 import React, {Component} from 'react';
 import {ActivityBO, HdMWebAppAPI} from "../api";
-import {
-    withStyles,
-    Button,
-    TextField,
-    InputAdornment,
-    IconButton,
-    Grid,
-    Typography,
-    Divider,
-    Box,
-    DialogContent,
-    DialogActions,
-    Dialog
-} from '@mui/material';
+import {withStyles, Button, Grid, Typography, Divider} from '@mui/material';
 import AddIcon from '@material-ui/icons/Add';
 import ActivityForm from "./dialogs/ActivityForm";
 import PropTypes from "prop-types";
