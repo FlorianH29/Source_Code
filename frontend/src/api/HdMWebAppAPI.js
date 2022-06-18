@@ -22,8 +22,8 @@ export default class HdMWebAppAPI {
 
   //Projekt bezogen
   #getProjectsURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
-  //später hier ID übergeben
-    #updateProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
+  #updateProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
+  #addProjectURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
   // Projektarbeit bezogen
   #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
   #updateProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
@@ -177,6 +177,29 @@ export default class HdMWebAppAPI {
       // Wir bekommen immer ein Array aus ProjectBOs.fromJSON
       let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
       console.log(responseProjectBO)
+      return new Promise(function (resolve) {
+        resolve(responseProjectBO);
+      })
+    })
+  }
+
+  /**
+   * Fügt ein Projekt hinzu und gibt einen Promise zurück, der in einem neuen ProjectBO resultiert.
+   *
+   * @param {ProjectBO} projectBO wird geadded. Die ID des Projekts wird durch das Backend gesetzt.
+   * @public
+   */
+  addProject(projectBO) {
+    return this.#fetchAdvanced(this.#addProjectURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(projectBO)
+    }).then((responseJSON) => {
+      let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
+      // console.info(projectBOs);
       return new Promise(function (resolve) {
         resolve(responseProjectBO);
       })

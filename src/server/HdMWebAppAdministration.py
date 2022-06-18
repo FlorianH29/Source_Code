@@ -1021,7 +1021,7 @@ class HdMWebAppAdministration(object):
             return None
 
     # Business Logik für Frontend
-    def get_project_by_person_id(self, person):
+    def get_all_projects_by_person_id(self, person):
         projects = []
         projectmembers = self.get_projectmember_by_person(person)
         for pm in projectmembers:
