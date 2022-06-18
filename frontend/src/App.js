@@ -14,6 +14,7 @@ import 'firebase/compat/firestore';
 import firebaseConfig from './firebaseconfig';
 import Welcome from "./components/pages/Welcome";
 
+import {Person} from "@mui/icons-material";
 
 
 class App extends React.Component {
@@ -36,7 +37,6 @@ class App extends React.Component {
             person.getIdToken().then(token => {
 
                 document.cookie = `token=${token};path=/`;
-
                 this.setState({
                     currentPerson: person,
                     authError: null,
@@ -70,7 +70,6 @@ class App extends React.Component {
         firebase.initializeApp(firebaseConfig);
         firebase.auth().languageCode = 'de';
         firebase.auth().onAuthStateChanged(this.handleAuthStateChange);
-        document.title = "HdM Zeiterfassung"
     }
 
 
@@ -118,5 +117,7 @@ class App extends React.Component {
         );
     }
 }
+
+console.log(Person);
 
 export default App;

@@ -2,11 +2,34 @@ import BusinessObject from './BusinessObject';
 
 export default class WorktimeAccountBO extends BusinessObject {
 
-    constructor() {
-        super();
+      /**
+   * Konstruktor, erstelt ein Arbeitszeitkontoobjekt mit
+   *
+   * @param {Number} aOwner - die Id des Besitzers des Arbeitszeitkontos.
+   */
+
+  constructor(aOwner) {
+    super();
+    this.owner = aOwner;
     }
 
-    static fromJSON(worktimeaccount) {
+  /**
+   * Setzt einen neuen Owner.
+   *
+   * @param aOwner
+   */
+  setOwner(aOwner) {
+    this.owner = aOwner;
+  }
+
+  /**
+   *gibt den Owner zurück.
+   */
+  getOwner() {
+    return this.owner;
+  }
+
+  static fromJSON(worktimeaccount) {
         let result = [];
 
         if (Array.isArray(worktimeaccount)) {
@@ -20,7 +43,6 @@ export default class WorktimeAccountBO extends BusinessObject {
             Object.setPrototypeOf(w, WorktimeAccountBO.prototype);
             result.push(w);
         }
-
         //console.log(result)
         return result;
     }

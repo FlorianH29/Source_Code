@@ -12,6 +12,7 @@ class BusinessObject(ABC):
     def __init__(self):
         self._id = 0  # Die eindeutige Identifikationsnummer einer Instanz dieser Klasse.
         self._last_edit = None  # Datum der letzten Änderung
+        self._deleted = 0  # Wert, der besagt ob das BO gelöscht wurde
 
     def set_last_edit(self, value: datetime):
         """Hier sollte ein Value vom Typ Datetime übergeben werden, genauer datetime.datetime.now()"""
@@ -29,3 +30,10 @@ class BusinessObject(ABC):
         """Setzen der ID."""
         self._id = value
 
+    def get_deleted(self):
+        """Auslesen des gelöscht Werts."""
+        return self._deleted
+
+    def set_deleted(self, value):
+        """Setzen gelöscht Werts."""
+        self._deleted = value

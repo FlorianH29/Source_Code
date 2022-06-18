@@ -11,12 +11,13 @@ class TimeIntervalMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT * FROM timeinterval WHERE timeinterval_id={}".format(key)
+        command = "SELECT * FROM timeinterval WHERE timeinterval_id={} AND deleted=0".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (timeinterval_id, last_edit, start_event_id, end_event_id, time_period, arrive_id, departure_id) = tuples[0]
+            (timeinterval_id, last_edit, start_event_id, end_event_id, time_period, arrive_id, departure_id, deleted) \
+                = tuples[0]
             interval = ti.TimeInterval()
             interval.set_id(timeinterval_id)
             interval.set_last_edit(last_edit)
@@ -25,6 +26,40 @@ class TimeIntervalMapper(Mapper):
             interval.set_time_period(time_period)
             interval.set_arrive(arrive_id)
             interval.set_departure(departure_id)
+            interval.set_deleted(deleted)
+
+            result = interval
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_by_arrive_id(self, key):
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM timeinterval WHERE arrive_id={} AND deleted=0".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (timeinterval_id, last_edit, start_event_id, end_event_id, time_period, arrive_id, departure_id, deleted) \
+                = tuples[0]
+            interval = ti.TimeInterval()
+            interval.set_id(timeinterval_id)
+            interval.set_last_edit(last_edit)
+            interval.set_start_event(start_event_id)
+            interval.set_end_event(end_event_id)
+            interval.set_time_period(time_period)
+            interval.set_arrive(arrive_id)
+            interval.set_departure(departure_id)
+            interval.set_deleted(deleted)
 
             result = interval
         except IndexError:
@@ -91,14 +126,15 @@ class TimeIntervalMapper(Mapper):
                 time_interval.set_id(1)
 
         command = "INSERT INTO timeinterval (timeinterval_id, last_edit, start_event_id, end_event_id, time_period, " \
-                  "arrive_id, departure_id ) VALUES (%s,%s,%s,%s,%s,%s,%s)"
+                  "arrive_id, departure_id, deleted ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
         data = (time_interval.get_id(),
                 time_interval.get_last_edit(),
                 time_interval.get_start_event(),
                 time_interval.get_end_event(),
                 time_interval.get_time_period(),
                 time_interval.get_arrive(),
-                time_interval.get_departure())
+                time_interval.get_departure(),
+                time_interval.get_deleted())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -121,11 +157,11 @@ class TimeIntervalMapper(Mapper):
         cursor.close()
 
     def delete(self, time_interval):
-        """Löschen der Daten eines Zeitintervalls aus der Datenbank.
+        """Setzen der deleted flag auf 1, sodass der Timeinterval Eintrag nicht mehr ausgegeben wird.
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM timeinterval WHERE timeinterval_id={}".format(time_interval.get_id())
+        command = "UPDATE timeinterval SET deleted=1 WHERE timeinterval_id={}".format(time_interval.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

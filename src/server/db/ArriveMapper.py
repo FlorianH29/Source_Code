@@ -21,23 +21,52 @@ class ArriveMapper (Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT * FROM arrive WHERE arrive_id={}".format(key)
+        command = "SELECT * FROM arrive WHERE arrive_id={} AND deleted=0".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (arrive_id, last_edit, time_stamp, affiliated_person_id) = tuples[0]
+            (arrive_id, last_edit, time_stamp, affiliated_person_id, deleted) = tuples[0]
             arrive = Arrive()
             arrive.set_id(arrive_id)
             arrive.set_last_edit(last_edit)
             arrive.set_time_stamp(time_stamp)
             arrive.set_affiliated_person(affiliated_person_id)
+            arrive.set_deleted(deleted)
 
             result = arrive
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
             result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_by_affiliated_person_id(self, key):
+        """Suchen aller Arrive-Ereignisse mit vorgegebener zugehöriger Personen ID.
+
+        :param key: Fremdschlüsselattribut (->DB)
+        :return Arrive-Objekte, die dem übergebenen Schlüssel entsprechen, None bei nicht vorhandenem DB-Tupel.
+        """
+
+        result = []
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM arrive WHERE affiliated_person_id={} AND deleted=0".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        for (arrive_id, last_edit, time_stamp, affiliated_person_id, deleted) in tuples:
+            arrive = Arrive()
+            arrive.set_id(arrive_id)
+            arrive.set_last_edit(last_edit)
+            arrive.set_time_stamp(time_stamp)
+            arrive.set_affiliated_person(affiliated_person_id)
+            arrive.set_deleted(deleted)
+            result.append(arrive)
 
         self._cnx.commit()
         cursor.close()
@@ -55,7 +84,7 @@ class ArriveMapper (Mapper):
 
         cursor = self._cnx.cursor()
         command = "SELECT * FROM arrive WHERE arrive_id = " \
-                  "(SELECT MAX(arrive_id) FROM arrive WHERE affiliated_person_id={})".format(key)
+                  "(SELECT MAX(arrive_id) FROM arrive WHERE affiliated_person_id={} AND deleted=0)".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -85,15 +114,16 @@ class ArriveMapper (Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT * from arrive")
+        cursor.execute("SELECT * FROM arrive WHERE deleted=0")
         tuples = cursor.fetchall()
 
-        for (arrive_id, last_edit, time_stamp, affiliated_person_id) in tuples:
+        for (arrive_id, last_edit, time_stamp, affiliated_person_id, deleted) in tuples:
             arrive = Arrive()
             arrive.set_id(arrive_id)
             arrive.set_last_edit(last_edit)
             arrive.set_time_stamp(time_stamp)
-            arrive.get_affiliated_person(affiliated_person_id)
+            arrive.set_affiliated_person(affiliated_person_id)
+            arrive.set_deleted(deleted)
             result.append(arrive)
 
         self._cnx.commit()
@@ -124,8 +154,8 @@ class ArriveMapper (Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 arrive.set_id(1)
 
-        command = "INSERT INTO arrive (arrive_id, last_edit, time_stamp, affiliated_person_id) " \
-                  "VALUES (%s,%s,%s,%s)"
+        command = "INSERT INTO arrive (arrive_id, last_edit, time_stamp, affiliated_person_id, deleted) " \
+                  "VALUES (%s,%s,%s,%s,%s)"
         data = (arrive.get_id(), arrive.get_last_edit(), arrive.get_time_stamp(), arrive.get_affiliated_person())
         cursor.execute(command, data)
 
@@ -149,13 +179,13 @@ class ArriveMapper (Mapper):
         cursor.close()
 
     def delete(self, arrive):
-        """Löschen der Daten eines Arrive-Objekts aus der Datenbank.
+        """Setzen der deleted flag auf 1, sodass der Arrive Eintrag nicht mehr ausgegeben wird.
 
         :param arrive: das aus der DB zu löschende "Objekt"
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM arrive WHERE arrive_id={}".format(arrive.get_id())
+        command = "UPDATE arrive SET deleted=1 WHERE arrive_id={}".format(arrive.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

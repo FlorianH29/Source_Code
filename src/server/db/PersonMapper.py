@@ -2,6 +2,9 @@ from server.bo import Person as p
 from server.db.Mapper import Mapper
 
 
+from src.server.bo.Person import Person
+
+
 class PersonMapper(Mapper):
     """Mapper-Klasse, die Personen-Objekte auf eine relationale
     Datenbank abbildet.
@@ -30,6 +33,39 @@ class PersonMapper(Mapper):
             employee.set_username(username)
             employee.set_mailaddress(mailaddress)
             employee.set_firebase_id(firebase_id)
+            result.append(employee)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_by_arrive(self):
+        """Auslesen aller Mitarbeiter, welche am entsprechenden Tag eingecheckt haben.
+
+        :return Eine Sammlung mit Personen-Objekten, die sämtliche Kunden
+                repräsentieren.
+        """
+        result = []
+        cursor = self._cnx.cursor()
+        cursor.execute("SELECT  P.* FROM person P "
+                       "inner join arrive A on A.affiliated_person_id = P.person_id "
+                       "inner join departure D on D.affiliated_person_id = P.person_id "
+                       "WHERE P.deleted=0 "
+                       "GROUP BY P.person_id "
+                       "HAVING MAX(A.time_stamp) > MAX(D.time_stamp);")
+        tuples = cursor.fetchall()
+
+        for (person_id, last_edit, firstName, lastName, username, mailaddress, firebase_id, deleted) in tuples:
+            employee = p.Person()
+            employee.set_id(person_id)
+            employee.set_last_edit(last_edit)
+            employee.set_firstname(firstName)
+            employee.set_lastname(lastName)
+            employee.set_username(username)
+            employee.set_mailaddress(mailaddress)
+            employee.set_firebase_id(firebase_id)
+            employee.set_deleted(deleted)
             result.append(employee)
 
         self._cnx.commit()
@@ -101,15 +137,16 @@ class PersonMapper(Mapper):
         INSERT-Befehl um ein Personen Objekt in die Datenbank zu schreiben
         FRAGE: ob die externe Personen ID hier dazukommt noch klären!
         """
-        command = "INSERT INTO person (person_id, last_edit, firstname, lastname, username, mailaddress, firebase_id) " \
-                  "VALUES (%s,%s,%s,%s,%s,%s,%s)"
+        command = "INSERT INTO person (person_id, last_edit, firstname, lastname, username, mailaddress, firebase_id, deleted) " \
+                  "VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
         data = (employee.get_id(),
                 employee.get_last_edit(),
                 employee.get_firstname(),
                 employee.get_lastname(),
                 employee.get_username(),
                 employee.get_mailaddress(),
-                employee.get_firebase_id())
+                employee.get_firebase_id(),
+                employee.get_deleted())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -135,22 +172,57 @@ class PersonMapper(Mapper):
         self._cnx.commit()
         cursor.close()
 
+    def find_by_firebase_id(self, key):
+        """Suchen einer Person mit vorgegebener person_id. Da diese eindeutig ist,
+        wird genau ein Objekt zurückgegeben.
+
+        :param key Primärschlüsselattribut (->DB)
+        :return Person-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+            nicht vorhandenem DB-Tupel.
+        """
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id, deleted " \
+                  "FROM person WHERE firebase_id='{}' AND deleted=0".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id, deleted) = tuples[0]
+            person = p.Person()
+            person.set_id(person_id)
+            person.set_last_edit(last_edit)
+            person.set_firstname(firstname)
+            person.set_lastname(lastname)
+            person.set_mailaddress(mailaddress)
+            person.set_username(username)
+            person.set_firebase_id(firebase_id)
+            person.set_deleted(deleted)
+
+            result = person
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
     def delete(self, employee):
-        """Löschen der Daten eines Personen-Objekts aus der Datenbank.
+        """Setzen der deleted flag auf 1, sodass der Person Eintrag nicht mehr ausgegeben wird.
 
         :param employee das aus der DB zu löschende "Objekt"
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM person WHERE person_id={}".format(employee.get_id())
+        command = "UPDATE person SET deleted=1 WHERE person_id={}".format(employee.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
         cursor.close()
 
-
-"""if (__name__ == "__main__"):
-    with PersonMapper() as mapper:
-        result = mapper.find_all()
-        for t in result:
-            print(t)"""

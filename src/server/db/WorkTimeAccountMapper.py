@@ -13,14 +13,15 @@ class WorkTimeAccountMapper(Mapper):
 
         result = []
         cursor = self._cnx.cursor()  # cursor erlaubt uns SQL befehle hier auszuführen (siehe Verb. Mapper Klasse)
-        cursor.execute("SELECT worktimeaccount_id, last_edit, person_id FROM worktimeaccount")
+        cursor.execute("SELECT * FROM worktimeaccount WHERE deleted=0")
         tuples = cursor.fetchall()
 
-        for (work_time_account_id, last_edit, owner) in tuples:
+        for (work_time_account_id, last_edit, owner, deleted) in tuples:
             work_time_account = wta.WorkTimeAccount()
             work_time_account.set_id(work_time_account_id)
             work_time_account.set_last_edit(last_edit)
             work_time_account.set_owner(owner)
+            work_time_account.set_deleted(deleted)
             result.append(work_time_account)
 
         self._cnx.commit()
@@ -31,51 +32,56 @@ class WorkTimeAccountMapper(Mapper):
     """Hier wird das Konto eines Inhabers ausgelesen anhand des Fremdschlüssels.  """
 
     def find_by_owner_id(self, owner_id):
-        result = []
-        cursor = self._cnx.cursor()
-        command = "SELECT worktimeaccount_id, last_edit, person_id FROM worktimeaccount WHERE person_id={} " \
-                  "ORDER BY worktimeaccount_id".format(owner_id)
-        cursor.execute(command)
-        tuples = cursor.fetchall()
-
-        for (work_time_account_id, last_edit, owner) in tuples:
-            work_time_account = wta.WorkTimeAccount()
-            work_time_account.set_id(work_time_account_id)
-            work_time_account.set_last_edit(last_edit)
-            work_time_account.set_owner(owner)
-            result.append(work_time_account)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
-
-    """Find by Key"""
-
-    def find_by_key(self, key):
-        """Suchen einer EventTransaction mit vorgegebener Nummer. Da diese eindeutig ist,
-        wird genau ein Objekt zurückgegeben.
-
-        :param key Primärschlüsselattribut (->DB)
-        :return EventTransaction-Objekt, das dem übergebenen Schlüssel entspricht, None bei
-            nicht vorhandenem DB-Tupel.
-        """
         result = None
-
         cursor = self._cnx.cursor()
-        command = "SELECT  worktimeaccount_id, last_edit, person_id FROM worktimeaccount " \
-                  "WHERE worktimeaccount_id={}".format(key)
+        command = "SELECT * FROM worktimeaccount WHERE person_id={} AND deleted=0 " \
+                  "ORDER BY worktimeaccount_id".format(owner_id)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         if tuples is not None \
                 and len(tuples) > 0 \
                 and tuples[0] is not None:
-            (work_time_account_id, last_edit, person_id) = tuples[0]
+            (work_time_account_id, last_edit, person_id, deleted) = tuples[0]
             work_time_account = wta.WorkTimeAccount()
             work_time_account.set_id(work_time_account_id)
             work_time_account.set_last_edit(last_edit)
             work_time_account.set_owner(person_id)
+            work_time_account.set_deleted(deleted)
+
+            result = work_time_account
+        else:
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_by_key(self, key):
+        """Suchen eines Worktime Accounts mit vorgegebener Nummer. Da diese eindeutig ist,
+        wird genau ein Objekt zurückgegeben.
+
+        :param key Primärschlüsselattribut (->DB)
+        :return Worktimeaccount-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+            nicht vorhandenem DB-Tupel.
+        """
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM worktimeaccount WHERE worktimeaccount_id={} AND deleted=0".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        if tuples is not None \
+                and len(tuples) > 0 \
+                and tuples[0] is not None:
+            (work_time_account_id, last_edit, person_id, deleted) = tuples[0]
+            work_time_account = wta.WorkTimeAccount()
+            work_time_account.set_id(work_time_account_id)
+            work_time_account.set_last_edit(last_edit)
+            work_time_account.set_owner(person_id)
+            work_time_account.set_deleted(deleted)
 
             result = work_time_account
         else:
@@ -105,9 +111,10 @@ class WorkTimeAccountMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 work_time_account.set_id(1)
 
-        command = "INSERT INTO worktimeaccount (worktimeaccount_id, last_edit, person_id) VALUES (%s,%s,%s)"
+        command = "INSERT INTO worktimeaccount (worktimeaccount_id, last_edit, person_id, deleted) VALUES (%s,%s,%s,%s)"
         # %s als Platzhalter und gibt einen formatierten string zurück
-        data = (work_time_account.get_id(), work_time_account.get_last_edit(), work_time_account.get_owner())
+        data = (work_time_account.get_id(), work_time_account.get_last_edit(), work_time_account.get_owner(),
+                work_time_account.get_deleted())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -126,11 +133,11 @@ class WorkTimeAccountMapper(Mapper):
         self._cnx.commit()
         cursor.close()
 
-    """Löschen von Arbeitszeitkonto Daten aus der Datenbank."""
+    """Setzen der deleted flag auf 1, sodass der Worktime Account Eintrag nicht mehr ausgegeben wird."""
 
     def delete(self, work_time_account):
         cursor = self._cnx.cursor()
-        command = "DELETE FROM worktimeaccount WHERE worktimeaccount_id={}".format(work_time_account.get_id())
+        command = "UPDATE worktimeaccount SET deleted=1 WHERE worktimeaccount_id={}".format(work_time_account.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

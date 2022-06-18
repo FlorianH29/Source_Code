@@ -3,11 +3,12 @@ import {EventBO, HdMWebAppAPI} from '../api';
 import {Button, Grid, Typography, Divider, Dialog, DialogActions, DialogContent} from '@mui/material';
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
-import ProjectWorkEntry from "./ProjectWorkListEntry";
+import ProjectWorkListEntry from "./ProjectWorkListEntry";
 import ProjectWorkForm from "./dialogs/ProjectWorkForm";
 import PropTypes from "prop-types";
 import {DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
+//import BasicButtons from "./BasicButtons";
 
 class ProjectWorkList extends Component {
 
@@ -61,7 +62,7 @@ class ProjectWorkList extends Component {
   }
 
   /**
-   * Behandelt onProjectWorkDeleted Events der CustomerListEntry Komponente
+   * Behandelt onProjectWorkDeleted Events der ProjectWorkListEntry Komponente
    */
   projectWorkDeleted = projectWork => {
     const newProjectWorkList = this.state.projectWorks.filter(projectWorkFromState => projectWorkFromState.getID() !== projectWork.getID());
@@ -71,7 +72,7 @@ class ProjectWorkList extends Component {
     });
   }
 
-  /** Behandelt das onClose Event von CustomerForm */
+  /** Behandelt das onClose Event von ProjectWorkForm */
   projectWorkFormClosed = projectWork => {
     // projectWork ist nicht null und deshalb erstelltI/überarbeitet
     if (projectWork) {
@@ -99,7 +100,7 @@ class ProjectWorkList extends Component {
   render() {
     const { classes } = this.props;
     const { projectWorks, showProjectWorkForm, disableEnd, disableStart, open } = this.state;
-    // console.log(this.state)
+    console.log(this.state)
 
     return (
         <div>
@@ -118,7 +119,7 @@ class ProjectWorkList extends Component {
                 </Grid>
                 <Divider/>
                 {projectWorks.map(pw =>
-                    <ProjectWorkEntry key={pw.getID()} projectWork={pw} onProjectWorkDeleted={this.projectWorkDeleted}/>)
+                    <ProjectWorkListEntry key={pw.getID()} projectWork={pw} onProjectWorkDeleted={this.projectWorkDeleted}/>)
                 }
                 <Grid container direction={'row'} spacing={18}>
                     <Grid item xs={6} align={'center'}>

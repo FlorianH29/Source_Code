@@ -8,6 +8,9 @@ import Card from "@mui/material/Card";
 import ListItem from "@mui/material/ListItem";
 import {HdMWebAppAPI} from "../api";
 import ProjectWorkForm from "./dialogs/ProjectWorkForm";
+import ProjectList from './ProjectList';
+import ProjectWorkListEntry from "./ProjectWorkListEntry";
+import BasicButtons from "./BasicButtons";
 
 class WorktimeAccount extends Component {
 
@@ -15,13 +18,14 @@ class WorktimeAccount extends Component {
         super(props);
 
         this.state = {
-            worktimeaccounts: []
+            worktimeaccounts: [],
+            projects: []
         };
 
     };
 
     componentDidMount() {
-        HdMWebAppAPI.getAPI().getWorktimeAccount(1)
+        HdMWebAppAPI.getAPI().getWorktimeAccount(2)
             .then(worktimeaccountBOs =>
                 this.setState({
                     worktimeaccounts: worktimeaccountBOs
@@ -37,9 +41,11 @@ class WorktimeAccount extends Component {
     }
 
     render() {
+        const {projects} = this.state;
         return (
             <Box sx={{m: 2}}>
                 <Card>
+                    <BasicButtons></BasicButtons>
                     <Grid container spacing={1} justifyContent={"center"}>
                         <Grid item xs={12} align={"center"}>
                             <ButtonGroup>
@@ -56,17 +62,27 @@ class WorktimeAccount extends Component {
                                 Worktimeaccount
                             </Typography>
                         </Grid>
+                        <Grid item xs={6} align={"center"}>
+                            <Typography variant={"h3"} component={"div"}>
+                                Projekte
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} align={"center"}>
+                            <Typography variant={"h3"} component={"div"}>
+                                Zeiten
+                            </Typography>
+                        </Grid>
                         <Grid item xs={12} align={"center"}>
                             {this.state.worktimeaccounts.map((project) => (
                                 <Box key={project}>
                                     <ListItem>
-                                        <Grid container justifyContent={"left"}>
-                                            <Grid item xs={6} align={"left"}>
+                                        <Grid container justifyContent={"center"}>
+                                            <Grid item xs={6} align={"center"}>
                                                 <Typography variant={"h5"} component={"div"}>
                                                     {project.name}
                                                 </Typography>
                                             </Grid>
-                                            <Grid item xs={6} align={"left"}>
+                                            <Grid item xs={6} align={"center"}>
                                                 <Typography variant={"h5"} component={"div"}>
                                                     {project.time}
                                                 </Typography>
