@@ -111,11 +111,11 @@ class ActivityForm extends Component {
 
 
     updateActivity = () => {
-    // clone the original cutomer, in case the backend call fails
+    // clone the original activity, in case the backend call fails
     let updatedActivity = Object.assign(new ActivityBO(), this.props.activity);
     // set the new attributes from our dialog
-    updatedActivity.setName(this.state.name);
-    updatedActivity.setCapacity(this.state.capacity);
+    updatedActivity.setActivityName(this.state.name);
+    updatedActivity.setActivityCapacity(this.state.capacity);
     HdMWebAppAPI.getAPI().updateActivity(updatedActivity).then(activity => {
       this.setState({
         updatingInProgress: false,              // disable loading indicator
