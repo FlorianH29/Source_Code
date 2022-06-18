@@ -5,41 +5,33 @@ class Activity (bo.BusinessObject):
 
     def __init__(self):
         super().__init__()
-        self._activity_name = ''  # Der Name der Aktivität
-        self._capacity = 0  # Kapazität in Personentagen
+        self._name = ''  # Der Name der Aktivität
+        self._capacity = 0  # Kapazität in Stunden
         self._affiliated_project = None  # Der Aktivität zugeordnetes Projekt
         self._work_time = 0  # Die für die Aktivität gearbeitete Zeit
 
-    def get_activity_name(self):
+    def get_name(self):
         """Auslesen des Namens."""
-        return self._activity_name
+        return self._name
 
-    def set_activity_name(self, activity_name):
+    def set_name(self, name):
         """Setzen des Namens."""
-        self._activity_name = activity_name
+        self._name = name
 
     def get_capacity(self):
-        """Auslesen des Namens."""
+        """Auslesen desr kapazität."""
         return self._capacity
 
     def set_capacity(self, capacity):
-        """Setzen des Namens."""
+        """Setzen der Kapazität."""
         self._capacity = capacity
 
-    def get_work_time(self):
-        """Auslesen des Namens."""
-        return self._work_time
-
-    def set_work_time(self, work_time):
-        """Setzen des Namens."""
-        self._work_time = work_time
-
     def get_affiliated_project(self):
-        """Auslesen des Namens."""
+        """Auslesen des zugehörigen Projekts."""
         return self._affiliated_project
 
     def set_affiliated_project(self, affiliated_project):
-        """Setzen des Namens."""
+        """Setzen des zugehörigen Projekts."""
         self._affiliated_project = affiliated_project
 
     def get_work_time(self):
@@ -61,7 +53,7 @@ class Activity (bo.BusinessObject):
         obj = Activity()
         obj.set_id(dictionary["id"])
         obj.set_last_edit(dictionary["last_edit"])
-        obj.set_activity_name(dictionary["activity_name"])
+        obj.set_name(dictionary["name"])
         obj.set_capacity(dictionary["capacity"])
         obj.set_affiliated_project(dictionary["affiliated_project"])
         obj.set_work_time(dictionary["work_time"])

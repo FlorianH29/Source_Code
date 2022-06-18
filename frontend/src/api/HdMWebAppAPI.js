@@ -38,7 +38,7 @@ export default class HdMWebAppAPI {
   #getActivitiesForProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}/activities`;
   #updateActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
   #deleteActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
-  #addActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/project/${id}/activities`;
+  #addActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities`;
 
   // Ereignis bezogen
   #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
@@ -281,39 +281,36 @@ export default class HdMWebAppAPI {
 
 
     /**
-   * Adds a customer and returns a Promise, which resolves to a new CustomerBO object with the
-   * firstName and lastName of the parameter customerBO object.
+   * Fügt eine Aktivität hinzu und gibt ein Promise zurück, das sich in ein neues ActivityBO Objekt mit dem
+   * Namen und der Kapazität des Parameters auflöst.
    *
-   * @param {ProjectBO} projectBO to be added. The ID of the new project is set by the backend
+   * @param {ActivityBO} activityBO to be added. Die ID der neuen Aktivität wird vom Backend gesetzt.
    * @public
    */
-  addActivity(projectBO) {
+  addActivity(activityBO) {
     return this.#fetchAdvanced(this.#addActivityURL(), {
       method: 'POST',
-
-      body: JSON.stringify(projectBO)
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(activityBO)
     }).then((responseJSON) => {
       // We always get an array of CustomerBOs.fromJSON, but only need one object
-      let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
-      // console.info(accountBOs);
+      let responseActivityBO = ActivityBO.fromJSON(responseJSON)[0];
+      console.info(responseActivityBO);
       return new Promise(function (resolve) {
-        resolve(responseProjectBO);
+        resolve(responseActivityBO);
       })
-    })
+    }).catch(e =>
+      console.log(e))
   }
 
-
-/**
-  getActivityWorkTime(activityBO) {
-    return this.#fetchAdvanced(this.#getActivityWorkTimeURL(activityBO))
-      .then(responseJSON => {
-        console.log(responseJSON)
-        return new Promise(function (resolve) {
-          resolve(responseJSON);
-        })
-      })
-  }
-*/
+    /**
+     * Updatet ein AktivityBO
+     * @param {ActivityBO} activityBO das geupdated werden soll
+     * @public
+     */
   updateActivity(activityBO) {
     return this.#fetchAdvanced(this.#updateActivityURL(activityBO.getID()), {
       method: 'PUT',
@@ -332,6 +329,12 @@ export default class HdMWebAppAPI {
     })
   }
 
+  /**
+  * Löscht ein ActivityBO
+  *
+  * @param {Number} activityID des ActivityBO, welches gelöscht werden soll
+  * @public
+  */
   deleteActivity(activityID) {
     return this.#fetchAdvanced(this.#deleteActivityURL(activityID), {
       method: 'DELETE'

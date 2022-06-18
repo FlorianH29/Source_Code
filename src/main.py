@@ -33,7 +33,7 @@ bo = api.model('BusinessObject', {
 })
 
 activity = api.inherit('Activity', bo, {
-    'activity_name': fields.String(attribute='_activity_name', description='Name einer Aktivität'),
+    'name': fields.String(attribute='_name', description='Name einer Aktivität'),
     'capacity': fields.Integer(attribute='_capacity', description='Kapazität einer Aktivität'),
     'affiliated_project': fields.Integer(attribute='_affiliated_project', description='ID des Projekts'),
     'work_time': fields.String(attribute='_work_time', description='Zeit, die für eine Aktivität gearbeitet wurde')
@@ -169,37 +169,33 @@ class WorkTimeAccountContentList(Resource):
         result = hwa.get_intervals_of_person_between_time_stamps(person, start_time, end_time)
         return result
 
+
 @hdmwebapp.route('/activities')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ActivitiesOperations(Resource):
     @hdmwebapp.marshal_with(activity, code=201)
-    @hdmwebapp.expect(activity)
     @secured
     def post(self):
-        """Erstellen einer neuen Projektarbeit."""
+        """Erstellen einer neuen Aktivität."""
 
         hwa = HdMWebAppAdministration()
-        h = Helper()
         proposal = Activity.from_dict(api.payload)
 
         if proposal is not None:
 
-            activity_name = proposal.get_activity_name()
+            activity_name = proposal.get_name()
             capacity = proposal.get_capacity()
-            pro = hwa.get_project_by_id(1)
-            firebase_id = h.get_firebase_id()
-            per = hwa.get_person_by_firebase_id(firebase_id)
-            result = hwa.create_activity_for_project(activity_name, capacity, pro, per)
+            pro = hwa.get_project_by_id(proposal.get_affiliated_project())
+            result = hwa.create_activity_for_project(activity_name, capacity, pro)
             return result, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
 
-
 @hdmwebapp.route('/projects/<int:id>/activities')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class ActivitiesByProjectOperations(Resource):
+class ActivitiesOperations(Resource):
     @hdmwebapp.marshal_list_with(activity)
     @secured
     def get(self, id):
@@ -209,7 +205,7 @@ class ActivitiesByProjectOperations(Resource):
 
         if pro is not None:
             activity_list = hwa.get_activities_of_project(pro)
-            # Auslesen der Projektarbeiten, die der Aktivität untergliedert sind.
+            # Auslesen der Aktivitäten, die dem Projekt untergliedert sind.
             return activity_list
         else:
             return "Project not found", 500
@@ -399,4 +395,4 @@ sub_thread.start()
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)

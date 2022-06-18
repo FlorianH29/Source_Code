@@ -5,13 +5,20 @@ import { withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, Dia
 import CloseIcon from '@material-ui/icons/Close';
 import {HdMWebAppAPI, ActivityBO } from "../../api";
 
+/**
+ * Zeigt einen Dialog, der wenn es eine Aktivität gibt  das editieren dieser Aktivität ermöglicht
+ * und wenn eien Aktivität angelegt werden soll dies ermöglicht, dann sind die Textfelder leer.
+ * Es werden im Backend die Methoden update und add aufgerufen.
+ * Danach wird die OnClose prop Funktion mit dem neuen oder editiertem ActivityBO als
+ * Parameter aufgerufen. Wenn der Dialog ohne Eingabe beendet wird, wird die OnClose mit null aufgerufen.
+ */
 
 class ActivityForm extends Component {
 
     constructor(props) {
         super(props);
 
-        let an = '', cap = '', pro = 0;
+        let an = '', cap = '', pro = 1;
         if (props.activity) {
             an = props.activity.getActivityName();
             cap = props.activity.getActivityCapacity();
@@ -22,20 +29,21 @@ class ActivityForm extends Component {
         this.state = {
             activityName: an,
             capacity: cap,
-            affiliatedProject: pro,
+            affiliatedProject: 1,
             activityNameValidationFailed: false,
             capacityValidationFailed: false
         };
         this.baseState = this.state;
     }
 
+    /** Behandelt das click event für den Button Abbrechen*/
     handleClose = () => {
         // den state neu setzen, sodass man wieder auf dem Stand ist wie vor dem Dialog
         this.setState(this.baseState);
         this.props.onClose(null);
     }
 
-
+    /** Behandelt Wertänderungen der Textfelder und validiert diese */
     textFieldValueChange = (event) => {
         const value = event.target.value;
 
@@ -55,28 +63,27 @@ class ActivityForm extends Component {
     addActivity = () => {
     let newActivity = new ActivityBO(this.state.activityName, this.state.capacity,
             this.state.affiliatedProject);
+    console.log(newActivity);
     HdMWebAppAPI.getAPI().addActivity(newActivity).then(activity => {
-      // Backend call sucessfull
-      // reinit the dialogs state for a new empty customer
+      // Backend call erfolgreich
       this.setState(this.baseState);
       this.props.onClose(activity); // call the parent with the customer object from backend
     }).catch(e =>
       console.log(e)
     );
 
-
-    // set loading to true
+    // laden auf true setzen
     this.setState({
       updatingInProgress: true,       // show loading indicator
       updatingError: null             // disable error message
     });
-  }
+    }
 
-
+    /** Überschreibt das ActivityBO mit neuen Werten */
     updateActivity = () => {
-        // clone the original activity, in case the backend call fails
+        // die originale Activity klonen, für den Fall, dass der Backend Call fehlschlägt
         let updatedActivity = Object.assign(new ActivityBO(), this.props.activity);
-        // set the new attributes from our dialog
+        // setzen der neuen Attribute aus dem Dialog
         updatedActivity.setActivityName(this.state.activityName);
         updatedActivity.setActivityCapacity(this.state.capacity);
         HdMWebAppAPI.getAPI().updateActivity(updatedActivity).then(activity => {
@@ -95,11 +102,11 @@ class ActivityForm extends Component {
         let header = '';
 
         if (activity) {
-            // ProjectWork definiert, Bearbeitungsdialog wird angezeigt
+            // Activity definiert -> Bearbeitungsdialog wird angezeigt
             title = 'Aktivität bearbeiten';
             header = `Aktivität ID: ${activity.getID()}`;
         } else {
-            // ProjectWork ist nicht definiert, Erstellungsdialog wird angezeigt
+            // Activity ist nicht definiert -> Erstellungsdialog wird angezeigt
             title = 'Neue Aktivität erstellen';
             header = 'Geben Sie der Akivität einen Namen und eine Kapazität in Stunden';
         }
