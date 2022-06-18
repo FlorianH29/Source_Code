@@ -69,7 +69,7 @@ class TimeIntervalTransactionListEntry extends Component {
     render() {
         const {event, showEventandTimeIntervalDeleteDialog, showEventandTimeIntervalForm} = this.state;
         //console.log(event)
-        // console.log(this.state);
+        console.log(event.start_time);
         return (
             <div>
                 <ListItem>
@@ -81,12 +81,24 @@ class TimeIntervalTransactionListEntry extends Component {
                         </Grid>
                         <Grid item xs={2} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
-                                {event.start_time}
+                                {
+                                    event.name != 'Gehen' ?
+                                        new Date(event.start_time).toLocaleString('de-DE', {
+                                            dateStyle: "long",
+                                            timeStyle: "short"
+                                        }) : ''
+                                }
                             </Typography>
                         </Grid>
                         <Grid item xs={2} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
-                                {event.end_time}
+                                {
+                                    event.name != 'Kommen' ?
+                                        new Date(event.end_time).toLocaleString('de-DE', {
+                                            dateStyle: "long",
+                                            timeStyle: "short"
+                                        }) : ''
+                                }
                             </Typography>
                         </Grid>
                         <Grid item xs={2} align={"center"}>
@@ -95,8 +107,12 @@ class TimeIntervalTransactionListEntry extends Component {
                             </Typography>
                         </Grid>
                         <Grid item xs={3} align={"center"}>
-                            <Button color='primary' size='small' startIcon={<EditIcon/>}
-                                    onClick={this.editEventAndTimeIntervalButtonClicked}> </Button>
+                            {
+                                event.name != 'Kommen' && event.name != 'Gehen' ?
+                                    <Button color='primary' size='small' startIcon={<EditIcon/>}
+                                            onClick={this.editEventAndTimeIntervalButtonClicked}> </Button>
+                                    : ''
+                            }
                             {/*  <Button color='secondary' size='small' startIcon={<DeleteIcon/>}
                                     onClick={this.deleteEventAndTimeIntervalButtonClicked}> </Button> */}
                         </Grid>
