@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {Divider, Grid, Typography} from "@mui/material";
+import {Divider, Grid, Typography, TextField} from "@mui/material";
 import TimeIntervalTransactionListEntry from "./TimeIntervalTransactionListEntry"
+import {DatePicker, LocalizationProvider} from '@mui/lab';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 
 class TimeIntervalTransactionList extends Component {
 
@@ -10,6 +12,9 @@ class TimeIntervalTransactionList extends Component {
 
         this.state = {
             events: [],
+            startDate: new Date(),
+            endDate: new Date(),
+
         }
     }
 
@@ -31,11 +36,32 @@ class TimeIntervalTransactionList extends Component {
     }
 
     render() {
-        const {timeIntervalTransactions, events} = this.state;
-        console.log(events)
+        const {events, startDate, endDate} = this.state;
+        console.log(startDate)
+        console.log(endDate)
         //console.log(timeIntervalTransactions)
         return (
             <div>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                        label={"Start Date"}
+                        value={startDate}
+                        onChange={(date) => {
+                            this.setState({startDate: date})
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
+                    />
+                </LocalizationProvider>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                        label={"End Date"}
+                        value={endDate}
+                        onChange={(date) => {
+                            this.setState({endDate: date})
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
+                    />
+                </LocalizationProvider>
                 <Grid container>
                     <Grid item xs={12} align={"center"}>
                         <Grid container>
