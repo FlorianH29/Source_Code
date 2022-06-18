@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import {EventBO, HdMWebAppAPI, ProjectWorkBO} from '../../api';
+import EventManager from "../EventManager";
 
 /**
  * Shows a modal form dialog for a CustomerBO in prop customer. If the customer is set, the dialog is configured
@@ -21,14 +22,7 @@ class ProjectWorkForm extends Component {
     if (props.projectWork) {
       pwn = props.projectWork.getProjectWorkName();
       de = props.projectWork.getDescription();
-      act = props.projectWork.getAffiliatedActivity();
-    }
-
-    let et = 1, ts = 0, ap = 1;
-    if (props.event) {
-      et = props.event.getEventType();
-      ts = props.event.getTimeStamp();
-      ap = props.event.getAffiliatedPerson();
+      act = 1;
     }
 
     // Den State initiieren
@@ -36,9 +30,6 @@ class ProjectWorkForm extends Component {
       projectWorkName: pwn,
       description: de,
       affiliatedActivity: act,
-      eventType: et,
-      timeStamp: ts,
-      affilatedPerson: ap,
       projectWorkNameValidationFailed: false,
       descriptionValidationFailed: false
     };
@@ -53,6 +44,7 @@ class ProjectWorkForm extends Component {
     this.props.onClose(null);
   }
 
+  /** Erstellt ein neues ProjectWorkBO */
   addProjectWork = () => {
     let newProjectWorkBO = new ProjectWorkBO(this.state.projectWorkName, this.state.description,
         this.state.affiliatedActivity);
@@ -63,23 +55,6 @@ class ProjectWorkForm extends Component {
       this.props.onClose(projectWork); // call the parent with the customer object from backend
     }).catch(e =>
     console.log(e));
-  }
-
-  addEvent = () => {
-    let newEvent = new EventBO(this.state.eventType, this.state.affilatedPerson);
-    console.log(this.state);
-    HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
-      // Backend call successfull
-      // reinit the dialogs state for a new empty customer
-      this.setState(this.baseState);
-      this.props.onClose(event); // call the parent with the customer object from backend
-    }).catch(e =>
-        console.log(e));
-  }
-
-  addStartEventandProjectWork = () => {
-    this.addEvent();
-    this.addProjectWork();
   }
 
   /** Behandelt Wertänderungen der Textfelder und validiert diese */
@@ -113,7 +88,7 @@ class ProjectWorkForm extends Component {
     })
   }
 
-  /** Renders the component */
+  /** Rendert die Komponente */
   render() {
     const { projectWork, show } = this.props;
     const { projectWorkName, description, projectWorkNameValidationFailed, descriptionValidationFailed } = this.state;
@@ -156,14 +131,14 @@ class ProjectWorkForm extends Component {
               <Button onClick={this.handleClose} color='secondary'>
                 Abbrechen
               </Button>
-              {// Falls eine Projektarbeit gegeben ist, sichern Knopf anzeigen, sonst einen Erstellen Knopf
+              {// Falls eine Projektarbeit gegeben ist, sichern Knopf anzeigen, der diese updatet, sonst Ende buchen
+                // Knopf, der Ereignis mit dem Typ 2 erstellt und daraufhin die Projektarbeit erstellt
                 projectWork ?
                   <Button color='primary' onClick={this.updateProjectWork}>
                     Sichern
                   </Button>
-                  : <Button color='primary' onClick={this.addEvent}>
-                    Erstellen
-                  </Button>
+                  : <EventManager eventType={2} onClose={this.handleClose} functionAddProjectWork={this.addProjectWork}>
+                    </EventManager>
               }
             </DialogActions>
           </Dialog>

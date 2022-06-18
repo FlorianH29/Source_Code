@@ -20,7 +20,8 @@ class ProjectListEntry extends Component {
         //Zunächst den State initialisieren
 
         this.state = {
-            project: props.project
+            project: props.project,
+            showProjectCreateDialog: false
 
         }
     }
@@ -93,6 +94,7 @@ const styles = theme => ({
 ProjectListEntry.propTypes = {
   /** Das ProjectBO welches gerendert werden soll */
   project: PropTypes.object.isRequired,
+
 
 
 }

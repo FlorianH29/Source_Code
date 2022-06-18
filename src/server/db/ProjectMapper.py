@@ -133,7 +133,9 @@ class ProjectMapper(Mapper):
                 object.get_project_name(),
                 object.get_client(),
                 object.get_time_interval_id(),
-                object.get_owner())
+                object.get_owner(),
+                object.get_deleted())
+
         cursor.execute(command, data)
 
         self._cnx.commit()

@@ -30,12 +30,10 @@ class ProjectWork (ti.TimeInterval):
     def __str__(self):
         """Ausgabe von: id, last_edit, project_work_name, description, affiliated_activity, end_event_id,
         start_event_id"""
-        return "ProjectWork:  project_id: {}  last_edit: {}  project_work_name: {}  " \
-               "description: {} affiliated_activity: {} end_event: {}  start_event: {}  " \
-               "time_period: {}".format(self.get_id(), self.get_last_edit(),
-                                        self.get_project_work_name(), self.get_description(),
-                                        self._affiliated_activity_id, self._time_period,
-                                        self.get_start_event(), self.get_end_event())
+        return "ProjectWork: {}, {}, {}, {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(),
+                                                                    self.get_project_work_name(), self.get_description(),
+                                                                    self._affiliated_activity_id, self._time_period,
+                                                                    self.get_start_event(), self.get_end_event())
 
     @staticmethod
     def from_dict(dictionary=dict()):

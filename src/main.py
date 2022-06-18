@@ -201,7 +201,7 @@ class ActivitiesOperations(Resource):
     def get(self, id):
         hwa = HdMWebAppAdministration()
         pro = hwa.get_project_by_id(id)
-        # Die durch die id gegebenes Projekt als Objekt speichern.
+        # Das durch die id gegebene Projekt als Objekt speichern.
 
         if pro is not None:
             activity_list = hwa.get_activities_of_project(pro)
@@ -241,10 +241,12 @@ class ActivityOperations(Resource):
         return '', 200
 
 
+
 @hdmwebapp.route('/events')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class EventOperations(Resource):
     @hdmwebapp.marshal_list_with(event)
+    @secured
     def get(self, id):
         """
         Auslesen eines bestimmten Eventobjektes, das nach der id in der URI bestimmt wird.
@@ -254,19 +256,23 @@ class EventOperations(Resource):
         return ev
 
     @hdmwebapp.marshal_with(event, code=200)
+    @secured
     def post(self):
         """
         Anlegen eines Events. Das neu angelegte Event wird als Ergebnis zurückgegeben.
         """
         hwa = HdMWebAppAdministration()
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        per = hwa.get_person_by_firebase_id(firebase_id)
         proposal = Event.from_dict(api.payload)
-        per = hwa.get_person_by_id(proposal.get_affiliated_person())
 
         if proposal is not None:
             """ 
-            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Eventobjekt erstellt.  
+            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Eventobjekt erstellt.
+            Wenn dieses   
             """
-            e = hwa.create_event(proposal.get_event_type(), per)
+            e = hwa.create_event_and_check_type(proposal.get_event_type(), per)
             return e, 200
         else:
             return '', 500
@@ -276,11 +282,13 @@ class EventOperations(Resource):
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @hdmwebapp.marshal_list_with(project)
-    #@secured
+    @secured
     def get(self, id):
         hwa = HdMWebAppAdministration()
-        person = hwa.get_person_by_id(id)
-        projects = hwa.get_project_by_person_id(person)
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        per = hwa.get_person_by_firebase_id(firebase_id)
+        projects = hwa.get_all_projects_by_person_id(per)
         return projects
 
 
@@ -289,7 +297,7 @@ class ProjectListOperations(Resource):
 @hdmwebapp.param('id', 'Die ID des Projekts')
 class ProjectOperations(Resource):
     @hdmwebapp.marshal_list_with(projectwork)
-    #@secured
+    @secured
     def put(self, id):
         """
         Update eines bestimmten Projektobjektes. Objekt wird durch die id in dem URI bestimmt.
@@ -302,6 +310,33 @@ class ProjectOperations(Resource):
             hwa.save_project(pro)
             return '', 200
         else:
+            return '', 500
+
+
+@hdmwebapp.route('/projects')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectOperations(Resource):
+    @hdmwebapp.marshal_with(project, code=201)
+    @hdmwebapp.expect(project)
+    @secured
+    def post(self):
+        """Erstellen eines neuen Projekts."""
+
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        proposal = Project.from_dict(api.payload)
+
+        if proposal is not None:
+
+            project_name = proposal.get_project_name()
+            client = proposal.get_client()
+            inter = hwa.get_time_interval_by_id(1) #hier muss das echte Zeitintervall rein
+            firebase_id = h.get_firebase_id()
+            per = hwa.get_person_by_firebase_id(firebase_id)
+            result = hwa.create_project(project_name, client, inter, per)
+            return result, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
 
@@ -322,7 +357,7 @@ class ProjectWorksOperations(Resource):
 
             project_work_name = proposal.get_project_work_name()
             description = proposal.get_description()
-            act = hwa.get_activity_by_id(1)
+            act = hwa.get_activity_by_id(proposal.get_affiliated_activity())
             firebase_id = h.get_firebase_id()
             per = hwa.get_person_by_firebase_id(firebase_id)
             result = hwa.create_project_work(project_work_name, description, act, per)
@@ -391,6 +426,11 @@ sub_thread = Thread(target=check)
 #es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
+
+h = HdMWebAppAdministration()
+pe = h.get_person_by_id(4)
+ac = h.get_activity_by_id(1)
+ti = h.get_time_interval_transaction_by_id(1)
 
 
 
