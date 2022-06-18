@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import ListItem from "@mui/material/ListItem";
-import {Grid, Typography} from "@material-ui/core";
+import {Button, Divider, Grid, Typography} from "@material-ui/core";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EventAndTimeIntervalDeleteDialog from "./dialogs/EventAndTimeIntervalDeleteDialog";
+
 
 /**
  * Rendert ein TimeIntervalTransactionBO innerhalb eines auf- und zuklappbaren TimeIntervalTransactionListEntry.
@@ -14,15 +18,56 @@ class TimeIntervalTransactionListEntry extends Component {
 
         // den state initialisieren
         this.state = {
-            timeIntervalTransaction: props.timeIntervalTransaction,
             event: props.event,
+            showEventandTimeIntervalDeleteDialog: false,
+            showEventandTimeIntervalForm: false,
         };
+    }
+
+    /** Behandelt das onClick Event des bearbeiten Buttons */
+    editEventAndTimeIntervalButtonClicked = (event) => {
+        event.stopPropagation();
+        this.setState({
+            showEventandTimeIntervalForm: true
+        });
+    }
+
+    /** Behandelt das onClose Event von showEventandTimeIntervalForm */
+    eventAndTimeIntervalFormClosed = (eventAndTimeInterval) => {
+        if (eventAndTimeInterval) {
+            this.setState({
+                event: eventAndTimeInterval,
+                showEventandTimeIntervalForm: false
+            });
+        } else {
+            this.setState({
+                showEventandTimeIntervalForm: false
+            });
+        }
+    }
+
+    /** Behandelt das onClose Event von eventAndTimeIntervalDeleteDialog */
+    deleteEventAndTimeIntervalDialogClosed = (eventAndTimeInterval) => {
+        if (eventAndTimeInterval) {
+            this.props.onEventAndTimeIntervalDeleted(eventAndTimeInterval);
+        }
+        this.setState({
+            showEventandTimeIntervalDeleteDialog: false // Den Dialog nicht mehr anzeigen
+        });
+    }
+
+    /** Behandelt das onClick Event des löschen Buttons */
+    deleteEventAndTimeIntervalButtonClicked = (event) => {
+        event.stopPropagation();
+        this.setState({
+            showEventandTimeIntervalDeleteDialog: true
+        });
     }
 
 
     /** Renders the component */
     render() {
-        const {event} = this.state;
+        const {event, showEventandTimeIntervalDeleteDialog, showEventandTimeIntervalForm} = this.state;
         //console.log(event)
         // console.log(this.state);
         return (
@@ -49,8 +94,21 @@ class TimeIntervalTransactionListEntry extends Component {
                                 {event.period}
                             </Typography>
                         </Grid>
+                        <Grid item xs={3} align={"center"}>
+                            <Button color='primary' size='small' startIcon={<EditIcon/>}
+                                    onClick={this.editEventAndTimeIntervalButtonClicked}> </Button>
+                            {/*  <Button color='secondary' size='small' startIcon={<DeleteIcon/>}
+                                    onClick={this.deleteEventAndTimeIntervalButtonClicked}> </Button> */}
+                        </Grid>
                     </Grid>
                 </ListItem>
+                <Divider/>
+                {
+                    /*  <ProjectWorkDeleteDialog show={showEventandTimeIntervalDeleteDialog} event={event}
+                                               onClose={this.deleteEventAndTimeIntervalDialogClosed}/>
+                    <ProjectWorkForm show={showEventandTimeIntervalForm} event={event}
+                                     onClose={this.eventAndTimeIntervalFormClosed}/> */
+                }
             </div>
         );
     }

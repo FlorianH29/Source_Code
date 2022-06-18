@@ -320,8 +320,7 @@ class EventsForTimeIntervalTransactions(Resource):
         start_time = datetime.fromtimestamp(startDate/1000.0).date()
         end_time = datetime.fromtimestamp(endDate/1000.0).date()
         events = hwa.get_intervals_of_person_between_time_stamps(pe, start_time, end_time)
-        print(start_time)
-        print(end_time)
+        print(events)
         return events
 
 def check():
