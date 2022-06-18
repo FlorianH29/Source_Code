@@ -1021,25 +1021,6 @@ class HdMWebAppAdministration(object):
             return None
 
     # Business Logik für Frontend
-    def get_project_by_firebase_id(self, value):
-        projectmember = self.get_project_by_employee(value)
-        project_member_list = []
-        project_name_list = []
-        counter = 0
-        try:
-            for i in projectmember:
-                # Um die richtige Firebase Id zu getten, muss hier die get_person Methode angepasst werden
-                firebase_id = i.get_person()
-                project_member_list.append(firebase_id)
-                while counter < len(project_member_list):
-                    firebase_id = self.get_project_by_id(project_member_list[counter])
-                    project = firebase_id.get_project_name()
-                    counter = counter + 1
-                    project_name_list.append(project)
-            return project_name_list
-        except AttributeError:
-            return print("Keine Projekte gefunden")
-
     def get_project_by_person_id(self, person):
         projects = []
         projectmembers = self.get_projectmember_by_person(person)
