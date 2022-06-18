@@ -12,6 +12,9 @@ class SignIn extends Component {
 	handleSignInButtonClicked = () => {
 		this.props.onSignIn();
 	}
+/**	handleButton = () => {
+         this.props.history.push('/welcome')
+	}
 
 	/**  */
 	render() {
@@ -23,7 +26,7 @@ class SignIn extends Component {
 				<Typography className={classes.root} align='center'>Bitte melden Sie sich an</Typography>
 				<Grid container justifyContent='center'>
 					<Grid item>
-						<Button variant='contained' color='primary' onClick={this.handleSignInButtonClicked}>
+						<Button variant='contained' color='primary' onClick={this.handleSignInButtonClicked} /**onClick={this.handleButton()}*/>
 							Sign in with Google
       					</Button>
 					</Grid>
