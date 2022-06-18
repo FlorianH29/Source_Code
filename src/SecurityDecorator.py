@@ -54,9 +54,9 @@ def secured(function):
                         person.set_mailaddress(mailaddress)
                         hwa.save_person(person)
                     else:
-                        """Wenn der benutzer noch nicht im System angelegt, wird dieser hier mit der create 
-                            methode generiert."""
-                        person = hwa.create_person(firstname, lastname, username, mailaddress, firebase_id)
+                        """Wenn der Benutzer noch nicht im System angelegt, wird dieser hier mit der Create 
+                            Methode generiert."""
+                        person = hwa.create_person(firstname, lastname, mailaddress, firebase_id)
 
                     print(request.method, request.path, "angefragt durch:",  mailaddress, firebase_id)
 

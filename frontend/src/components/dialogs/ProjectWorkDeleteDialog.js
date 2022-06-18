@@ -37,10 +37,9 @@ class ProjectWorkDeleteDialog extends Component {
     this.props.onClose(null);
   }
 
-  /** Renders the component */
+  /** Rendert die Komponente */
   render() {
     const { projectWork, show } = this.props;
-    const { deletingInProgress, deletingError } = this.state;
 
     return (
       show ?

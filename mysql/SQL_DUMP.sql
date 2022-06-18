@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`activity` (
   `capacity` INT NULL,
   `affiliated_project_id` INT NULL,
   `work_time` TIME NULL,
+  `deleted` BOOLEAN NULL,
   PRIMARY KEY (`activity_id`),
   FOREIGN KEY (`affiliated_project_id`) REFERENCES Project(`project_id`))
 ENGINE = InnoDB;
@@ -42,6 +43,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`departure` (
   `last_edit` DATETIME NULL,
   `time_stamp` DATETIME NULL,
   `affiliated_person_id`INT NUlL,
+  `deleted` BOOLEAN NULL,
   PRIMARY KEY (`departure_id`),
   FOREIGN KEY (`affiliated_person_id`) REFERENCES person(`person_id`))
 ENGINE = InnoDB;
@@ -59,6 +61,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`eventtransaction` (
   `affiliated_event_id` INT NULL,
   `affiliated_arrive_id` INT NULL,
   `affiliated_departure_id` INT NULL,
+  `deleted` BOOLEAN NULL,
   PRIMARY KEY (`eventtransaction_id`),
   FOREIGN KEY (`affiliated_work_time_account_id`) REFERENCES worktimeaccount(`worktimeaccount_id`),
   FOREIGN KEY (`affiliated_event_id`) REFERENCES event(`event_id`),
@@ -80,6 +83,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`person` (
   `username` VARCHAR(45) NULL,
   `mailaddress` VARCHAR(45) NULL,
   `firebase_id` VARCHAR(45) NULL,
+  `deleted` BOOLEAN NULL,
   PRIMARY KEY (`person_id`))
 ENGINE = InnoDB;
 
@@ -97,6 +101,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`project` (
   `timeinterval_id` INT NULL,
   `owner` INT NULL,
   `work_time`TIME NULL,
+  `deleted` BOOLEAN NULL,
   PRIMARY KEY (`project_id`),
   FOREIGN KEY (`timeinterval_id`) REFERENCES timeinterval(`timeinterval_id`),
   FOREIGN KEY (`owner`) REFERENCES person(`person_id`))
@@ -117,6 +122,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`projectwork` (
   `end_event_id` INT NULL,
   `time_period` TIME,
   `affiliated_activity_id` INT NOT NULL,
+  `deleted` BOOLEAN NULL,
   PRIMARY KEY (`projectwork_id`),
   FOREIGN KEY (`affiliated_activity_id`) REFERENCES activity(`activity_id`),
   FOREIGN KEY (`start_event_id`) REFERENCES event(`event_id`),
@@ -133,6 +139,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`projectmembers` (
   `project_id` INT NOT NULL,
   `person_id` INT NOT NULL,
    `last_edit` DATETIME NULL,
+  `deleted` BOOLEAN NULL,
   PRIMARY KEY (`projectmember_id`),
   FOREIGN KEY (`project_id`) REFERENCES project(`project_id`),
   FOREIGN KEY (`person_id`) REFERENCES person(`person_id`))
@@ -148,6 +155,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`arrive` (
   `last_edit` DATETIME NULL,
   `time_stamp` DATETIME NULL,
   `affiliated_person_id` INT NULL,
+  `deleted` BOOLEAN NULL,
   PRIMARY KEY (`arrive_id`),
   FOREIGN KEY (`affiliated_person_id`) REFERENCES person(`person_id`) )
 ENGINE = InnoDB;
@@ -166,6 +174,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`timeinterval` (
   `time_period` TIME NULL,
   `arrive_id` INT NULL,
   `departure_id` INT NULL,
+  `deleted` BOOLEAN NULL,
   PRIMARY KEY (`timeinterval_id`),
   FOREIGN KEY (`start_event_id`) REFERENCES event(`event_id`),
   FOREIGN KEY (`end_event_id`) REFERENCES event(`event_id`),
@@ -185,6 +194,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`break` (
   `start_event_id` INT NULL,
   `end_event_id` INT NULL,
   `time_period` TIME NULL,
+  `deleted` BOOLEAN NULL,
   PRIMARY KEY (`break_id`),
   FOREIGN KEY (`start_event_id`) REFERENCES event(`event_id`),
   FOREIGN KEY (`end_event_id`) REFERENCES event(`event_id`))
@@ -203,6 +213,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`timeintervaltransaction` (
   `affiliated_time_interval_id` INT NULL,
   `affiliated_break_id` INT NULL,
   `affiliated_projectwork_id` INT NULL,
+  `deleted` BOOLEAN NULL,
   PRIMARY KEY (`timeintervaltransaction_id`),
   FOREIGN KEY (`affiliated_work_time_account_id`) REFERENCES worktimeaccount(`worktimeaccount_id`),
   FOREIGN KEY (`affiliated_time_interval_id`)REFERENCES timeinterval(`timeinterval_id`),
@@ -219,6 +230,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`worktimeaccount` (
   `worktimeaccount_id` INT NOT NULL,
   `last_edit` DATETIME NULL,
   `person_id` INT NULL,
+  `deleted` BOOLEAN NULL,
   PRIMARY KEY (`worktimeaccount_id`),
   FOREIGN KEY (`person_id`) REFERENCES person(`person_id`))
 ENGINE = InnoDB;
@@ -234,6 +246,7 @@ CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`event` (
   `event_type` INT NULL,
   `time_stamp` DATETIME NULL,
   `affiliated_person_id`INT NULL,
+  `deleted` BOOLEAN NULL,
   PRIMARY KEY (`event_id`),
   FOREIGN KEY (`affiliated_person_id`) REFERENCES person(`person_id`))
 ENGINE = InnoDB;

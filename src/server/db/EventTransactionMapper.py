@@ -18,7 +18,7 @@ class EventTransactionMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT  * FROM eventtransaction WHERE eventtransaction_id={}".format(key)
+        command = "SELECT  * FROM eventtransaction WHERE eventtransaction_id={} AND deleted=0".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -26,7 +26,7 @@ class EventTransactionMapper(Mapper):
                 and len(tuples) > 0 \
                 and tuples[0] is not None:
             (eventtransaction_id, last_edit, affiliated_work_time_account_id,
-             event_id, arrive_id, departure_id) = tuples[0]
+             event_id, arrive_id, departure_id, deleted) = tuples[0]
             event_transaction = et.EventTransaction()
             event_transaction.set_id(eventtransaction_id)
             event_transaction.set_last_edit(last_edit)
@@ -34,6 +34,7 @@ class EventTransactionMapper(Mapper):
             event_transaction.set_event(event_id)
             event_transaction.set_arrive(arrive_id)
             event_transaction.set_departure(departure_id)
+            event_transaction.set_deleted(deleted)
 
             result = event_transaction
         else:
@@ -53,11 +54,11 @@ class EventTransactionMapper(Mapper):
         result = []
         cursor = self._cnx.cursor()
 
-        cursor.execute("SELECT * FROM eventtransaction")
+        cursor.execute("SELECT * FROM eventtransaction WHERE deleted=0")
         tuples = cursor.fetchall()
 
         for (eventtransaction_id, last_edit, affiliated_work_time_account_id,
-             event_id, arrive_id, departure_id) in tuples:
+             event_id, arrive_id, departure_id, deleted) in tuples:
             event_transaction = et.EventTransaction()
             event_transaction.set_id(eventtransaction_id)
             event_transaction.set_last_edit(last_edit)
@@ -65,6 +66,7 @@ class EventTransactionMapper(Mapper):
             event_transaction.set_event(event_id)
             event_transaction.set_arrive(arrive_id)
             event_transaction.set_departure(departure_id)
+            event_transaction.set_deleted(deleted)
             result.append(event_transaction)
 
         self._cnx.commit()
@@ -80,13 +82,13 @@ class EventTransactionMapper(Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        command = "SELECT * FROM eventtransaction WHERE affiliated_work_time_account_id={} " \
+        command = "SELECT * FROM eventtransaction WHERE affiliated_work_time_account_id={} AND deleted=0 " \
                   "ORDER BY eventtransaction_id".format(worktimeaccount_id)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         for (eventtransaction_id, last_edit, affiliated_work_time_account_id,
-             event_id, arrive_id, departure_id) in tuples:
+             event_id, arrive_id, departure_id, deleted) in tuples:
             event_transaction = et.EventTransaction()
             event_transaction.set_id(eventtransaction_id)
             event_transaction.set_last_edit(last_edit)
@@ -94,6 +96,7 @@ class EventTransactionMapper(Mapper):
             event_transaction.set_event(event_id)
             event_transaction.set_arrive(arrive_id)
             event_transaction.set_departure(departure_id)
+            event_transaction.set_deleted(deleted)
             result.append(event_transaction)
 
         self._cnx.commit()
@@ -107,7 +110,7 @@ class EventTransactionMapper(Mapper):
         Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
         berichtigt.
 
-        :param eventtransaction das zu speichernde Objekt
+        :param event_transaction das zu speichernde Objekt
         :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
         """
         cursor = self._cnx.cursor()
@@ -125,13 +128,15 @@ class EventTransactionMapper(Mapper):
                 event_transaction.set_id(1)
 
         command = "INSERT INTO eventtransaction (eventtransaction_id, last_edit, affiliated_work_time_account_id, " \
-                  "affiliated_event_id, affiliated_arrive_id, affiliated_departure_id) VALUES (%s,%s,%s,%s,%s,%s)"
+                  "affiliated_event_id, affiliated_arrive_id, affiliated_departure_id, deleted) " \
+                  "VALUES (%s,%s,%s,%s,%s,%s,%s)"
         data = (event_transaction.get_id(),
                 event_transaction.get_last_edit(),
                 event_transaction.get_affiliated_work_time_account(),
                 event_transaction.get_event(),
                 event_transaction.get_arrive(),
-                event_transaction.get_departure())
+                event_transaction.get_departure(),
+                event_transaction.get_deleted())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -142,7 +147,7 @@ class EventTransactionMapper(Mapper):
     def update(self, event_transaction):
         """Wiederholtes Schreiben eines Objekts in die Datenbank.
 
-        :param eventtransaction das Objekt, das in die DB geschrieben werden soll
+        :param event_transaction das Objekt, das in die DB geschrieben werden soll
         """
         cursor = self._cnx.cursor()
 
@@ -161,13 +166,13 @@ class EventTransactionMapper(Mapper):
         cursor.close()
 
     def delete(self, event_transaction):
-        """Löschen der Daten eines EventTransaction-Objekts aus der Datenbank.
+        """Setzen der deleted flag auf 1, sodass der Event Transaction Eintrag nicht mehr ausgegeben wird.
 
-        :param eventtransaction das aus der DB zu löschende "Objekt"
+        :param event_transaction das aus der DB zu löschende "Objekt"
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM eventtransaction WHERE eventtransaction_id={}".format(event_transaction.get_id())
+        command = "UPDATE eventtransaction SET deleted=1 WHERE eventtransaction_id={}".format(event_transaction.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

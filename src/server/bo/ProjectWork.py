@@ -34,7 +34,7 @@ class ProjectWork (ti.TimeInterval):
                "description: {} affiliated_activity: {} end_event: {}  start_event: {}  " \
                "time_period: {}".format(self.get_id(), self.get_last_edit(),
                                         self.get_project_work_name(), self.get_description(),
-                                        self._affiliated_activity_id(), self._time_period,
+                                        self._affiliated_activity_id, self._time_period,
                                         self.get_start_event(), self.get_end_event())
 
     @staticmethod
@@ -43,11 +43,12 @@ class ProjectWork (ti.TimeInterval):
         projectwork = ProjectWork()
         projectwork.set_id(dictionary["id"])  # Eigentlicher Teil von business object.
         projectwork.set_last_edit("last_edit")  # Setzten des last_edit von projectwork
+        projectwork.set_deleted("deleted")
         projectwork.set_project_work_name(dictionary["project_work_name"])  # Setzt Namen aus dict() für ProjectWork
         projectwork.set_description(dictionary["description"])  # Setzt description aus dict() für ProjectWork
-        projectwork.set_affiliated_activity(dictionary["affiliated_activity_id"])  # Setzt affiliated_activity aus
-        # dict() für ProjectWork
+        projectwork.set_affiliated_activity(dictionary["affiliated_activity"])  # Setzt affiliated_activity aus
         projectwork.set_start_event(dictionary["start_event_id"])  # Setzt start_time aus dict() für ProjectWork
         projectwork.set_end_event(dictionary["end_event_id"])  # Setzt end_time aus dict() für ProjectWork
         projectwork.set_time_period(dictionary["time_period"])  # Setzt time_periode aus dict() für ProjectWork
+        projectwork.set_deleted("deleted")
         return projectwork
