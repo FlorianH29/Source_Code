@@ -45,6 +45,11 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             return mapper.find_by_lastname(lastname)
 
+    def get_person_by_username(self, username):
+        """Alle Kunden mit übergebenem Nachnamen auslesen."""
+        with PersonMapper() as mapper:
+            return mapper.find_by_username(username)
+
     def get_all_persons(self):
         """Alle in der Datenbank gespeicherten Personen auslesen."""
         with PersonMapper() as mapper:
@@ -63,13 +68,10 @@ class HdMWebAppAdministration(object):
         person.set_firstname("Vorname noch nachtragen")
         person.set_lastname("Nachname noch nachtragen")
         person.set_username(username)
-        person.set_deleted(0)
-        person.set_last_edit(datetime.now())
-        person.set_firstname(firstname)
-        person.set_lastname(lastname)
-        person.set_username(firstname + "_" + lastname)
         person.set_mailaddress(mailaddress)
         person.set_firebase_id(firebase_id)
+        person.set_deleted(0)
+
 
         with PersonMapper() as mapper:
             return mapper.insert(person), self.create_work_time_account_for_person(person)

@@ -114,7 +114,7 @@ class PersonListOperations(Resource):
         proposal = Person.from_dict(api.payload)
 
         if proposal is not None:
-            c = ha.create_person(proposal.get_firstname(), proposal.get_lastname, proposal.get_mailaddress,
+            c = ha.create_person(proposal.get_username(), proposal.get_mailaddress,
                                  proposal.get_firebase_id())
             return c, 200
         else:
@@ -122,20 +122,79 @@ class PersonListOperations(Resource):
             return '', 500
 
 
-@hdmwebapp.route('/person-by-name/<string:lastname>')
+@hdmwebapp.route('/person-by-username/<string:username>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@hdmwebapp.param('lastname', 'Der Nachname des Kunden')
-class CustomersByNameOperations(Resource):
+@hdmwebapp.param('username', 'Der Username der Person')
+class PersonByusernameOperations(Resource):
     @hdmwebapp.marshal_with(person)
     @secured
-    def get(self, lastname):
-        """ Auslesen von Customer-Objekten, die durch den Nachnamen bestimmt werden.
+    def get(self, username):
+        """ Auslesen von Personen, die durch den Username bestimmt werden.
 
-        Die auszulesenden Objekte werden durch ```lastname``` in dem URI bestimmt.
+        Die auszulesenden Objekte werden durch ```username``` in dem URI bestimmt.
         """
         adm = HdMWebAppAdministration()
-        lel = adm.get_person_by_name(lastname)
+        lel = adm.get_person_by_username(username)
         return lel
+
+@hdmwebapp.route('/persons/<int:id>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID der Person')
+class PersonByIDOperations(Resource):
+    @hdmwebapp.marshal_list_with(person)
+    @secured
+    def get(self, id):
+        hwa = HdMWebAppAdministration()
+        act = hwa.get_person_by_id()
+
+
+        if act is not None:
+            act.set_id(id)
+            hwa.save_person(act)
+            return '', 200
+        else:
+            return '', 500
+
+    @secured
+    def delete(self, id):
+        """
+        Löschen einer bestimmten Person. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        act = hwa.get_person_by_id(id)
+        hwa.delete_person(act)
+        return '', 200
+
+
+@hdmwebapp.route('/projectworks/<int:id>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID der Projektarbeit')
+class ProjectWorkOperations(Resource):
+    @hdmwebapp.marshal_list_with(projectwork)
+    @secured
+    def put(self, id):
+        """
+        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = ProjectWork.from_dict(api.payload)
+
+        if pw is not None:
+            pw.set_id(id)
+            hwa.save_project_work(pw)
+            return '', 200
+        else:
+            return '', 500
+
+    @secured
+    def delete(self, id):
+        """
+        Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = hwa.get_project_work_by_id(id)
+        hwa.delete_project_work(pw)
+        return '', 200
 
 
 @hdmwebapp.route('/worktimeaccount/<int:id>')
@@ -338,11 +397,7 @@ sub_thread.start()
 
 
 
-lel = HdMWebAppAdministration()
-lel.create_person("Klaus", "Yarack", "penis@gmail.com", "usdudhushccu")
-pimmel = lel.get_person_by_id(18)
-print(pimmel)
-#lel.create_project_work("Lol", "LeL", 1, "flospindler", pimmel )
+
 
 
 

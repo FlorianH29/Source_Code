@@ -4,11 +4,12 @@ import WorktimeAccountBO from "./WorktimeAccountBO";
 import ActivityBO from "./ActivityBO";
 import ProjectWorkBO from "./ProjectWorkBO";
 import TimeIntervalBO from "./TimeIntervalBO";
-import header from "../components/layout/Header";
+import navigator from "../components/layout/Navigator";
 import personForm from "../components/dialogs/PersonForm";
 import EventBO from "./EventBO";
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
+
 export default class HdMWebAppAPI {
 
     // Singelton instance
@@ -20,9 +21,8 @@ export default class HdMWebAppAPI {
 
   // Person bezogen
   #getPersonsURL = (id) => `${this.#hdmwebappServerBaseURL}${id}`;
-  #addPersonURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
-  #updatePersonURL = () => `${this.#hdmwebappServerBaseURL}/persons/`;
-  #deletePersonURL = (id) =>`${this.#hdmwebappServerBaseURL}${id}`;
+  #updatePersonURL = (id) => `${this.#hdmwebappServerBaseURL}/persons/${id}`;
+  #deletePersonURL = (id) =>`${this.#hdmwebappServerBaseURL}/persons/${id}`;
 
 
   //Projekt bezogen
@@ -75,7 +75,7 @@ export default class HdMWebAppAPI {
   updatePerson(PersonBO) {
     return this.#fetchAdvanced(this.#updatePersonURL(PersonBO.getID()), {
       method: 'PUT',
-      headers: {
+      navigatori: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
@@ -86,6 +86,15 @@ export default class HdMWebAppAPI {
       // console.info(accountBOs);
       return new Promise(function (resolve) {
         resolve(responsePersonBO);
+      })
+    })
+  }
+    getPersons() {
+    return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
+      let personBOs = PersonBO.fromJSON(responseJSON);
+      //console.log(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(personBOs);
       })
     })
   }
@@ -124,15 +133,6 @@ export default class HdMWebAppAPI {
     })
   }
 
-    getPersons() {
-    return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
-      let personBOs = PersonBO.fromJSON(responseJSON);
-      //console.log(responseJSON);
-      return new Promise(function (resolve) {
-        resolve(personBOs);
-      })
-    })
-  }
 
     getWorktimeAccount(id) {
         return this.#fetchAdvanced(this.#getWorktimeAccountURL(id)).then((responseJSON) => {

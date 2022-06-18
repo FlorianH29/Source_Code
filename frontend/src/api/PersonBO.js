@@ -6,11 +6,11 @@ export default class PersonBO extends BusinessObject {
   /**
    * Hier wird eine Person mit hilfe des Konstruktur erstellt
    */
-  constructor(aFirstname, aLastname, aMailAddress, auserName, aFireBaseId) {
+  constructor(aFirstname, aLastname, aMailAddress, aUserName, aFireBaseId) {
     super();
     this.firstname = aFirstname;
     this.lastname = aLastname;
-    this.username = auserName;
+    this.username = aUserName;
     this.mailaddress = aMailAddress;
     this.firebase_id = aFireBaseId;
   }
@@ -57,8 +57,8 @@ export default class PersonBO extends BusinessObject {
     return this.mailaddress;
   }
 
-  setUserName(auserName) {
-    this.username = auserName;
+  setUserName(aUserName) {
+    this.username = aUserName;
   }
 
   getUserName(){
