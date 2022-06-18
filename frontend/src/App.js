@@ -98,7 +98,7 @@ class App extends React.Component {
                                 <Route exact path='/activities'>
                                     <ActivityList/>
                                 </Route>
-                                <Route exact path='/timeintervaltransactions'>
+                                <Route exact path='/eventtransactionsandtimeintervaltransactions'>
                                     <TimeIntervalTransactionList/>
                                 </Route>
                                 <Route path='*'>

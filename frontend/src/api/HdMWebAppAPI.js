@@ -40,7 +40,8 @@ export default class HdMWebAppAPI {
 
     // Ereignis bezogen
     #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
-    #getEventForTimeIntervalTransactionsURL = () => `${this.#hdmwebappServerBaseURL}/eventsfortimeintervaltransactions`;
+    #getEventTransactionsAndTimeIntervalTransactionsURL = (startDate, endDate) =>
+        `${this.#hdmwebappServerBaseURL}/eventtransactionsandtimeintervaltransactions/${startDate}/${endDate}`;
 
     // TimeIntervalTransaction bezogen
     #getTimeIntervalTransactionsURL = () => `${this.#hdmwebappServerBaseURL}/timeintervaltransactions`;
@@ -224,8 +225,8 @@ export default class HdMWebAppAPI {
         })
     }
 
-    getEventsForTimeIntervalTransactions() {
-        return this.#fetchAdvanced(this.#getEventForTimeIntervalTransactionsURL()).then((responseJSON) => {
+        getEventsForTimeIntervalTransactions(startDate, endDate) {
+        return this.#fetchAdvanced(this.#getEventTransactionsAndTimeIntervalTransactionsURL(startDate, endDate)).then((responseJSON) => {
             let eventBOs = EventBO.fromJSON(responseJSON);
             //console.log(responseJSON);
             return new Promise(function (resolve) {

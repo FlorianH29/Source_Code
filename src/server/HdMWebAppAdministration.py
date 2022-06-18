@@ -426,8 +426,8 @@ class HdMWebAppAdministration(object):
         event_dict = {}
         event_list = []
         time_stamp = None
-        start_time = datetime.strptime(start_time, '%d/%m/%Y')
-        end_time = datetime.strptime(end_time, '%d/%m/%Y')
+        #start_time = datetime.strptime(start_time, '%d/%m/%Y')
+        #end_time = datetime.strptime(end_time, '%d/%m/%Y')
         # Übergebene Time-Stamps von Str in Datetime konvertieren
         work_time_account = self.get_work_time_account_of_owner(person)
         time_interval_transactions = self.get_time_interval_transaction_by_affiliated_work_time_account_id(work_time_account)
@@ -441,14 +441,14 @@ class HdMWebAppAdministration(object):
             if arrive_id is not None:
                 arrive = self.get_arrive_event_by_id(arrive_id)
                 time_stamp = arrive.get_time_stamp()
-                if start_time <= time_stamp <= end_time:
+                if start_time <= time_stamp.date() <= end_time:
                     # Überprüfen, ob das Event im übergebenen Zeitraum liegt
                     event_dict = {'name': 'Kommen', 'start_time': time_stamp, 'end_time': None, 'period': None}
                     event_list.append(event_dict)
             if departure_id is not None:
                 departure = self.get_departure_event_by_id(departure_id)
                 time_stamp = departure.get_time_stamp()
-                if start_time <= time_stamp <= end_time:
+                if start_time <= time_stamp.date() <= end_time:
                     # Überprüfen, ob das Event im übergebenen Zeitraum liegt
                     event_dict = {'name': 'Gehen', 'start_time': time_stamp, 'end_time': time_stamp, 'period': None}
                     event_list.append(event_dict)
@@ -465,7 +465,7 @@ class HdMWebAppAdministration(object):
                 time_stamp_start = start_event.get_time_stamp()
                 time_stamp_end = end_event.get_time_stamp()
                 time_period = br.get_time_period()
-                if start_time <= time_stamp_start <= end_time and start_time <= time_stamp_end <= end_time:
+                if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
                     event_dict = {'name': 'break', 'start_time': time_stamp_start, 'end_time': time_stamp_end,
                                   'period': time_period}
                     event_list.append(event_dict)
@@ -478,7 +478,7 @@ class HdMWebAppAdministration(object):
                 time_stamp_start = start_event.get_time_stamp()
                 time_stamp_end = end_event.get_time_stamp()
                 time_period = project_work.get_time_period()
-                if start_time <= time_stamp_start <= end_time and start_time <= time_stamp_end <= end_time:
+                if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
                     event_dict = {'name': project_work.get_project_work_name(), 'start_time': time_stamp_start,
                                   'end_time': time_stamp_end, 'period': time_period}
                     event_list.append(event_dict)
@@ -491,7 +491,7 @@ class HdMWebAppAdministration(object):
                 time_stamp_start = start_event.get_time_stamp()
                 time_stamp_end = end_event.get_time_stamp()
                 time_period = time_interval.get_time_period()
-                if start_time <= time_stamp_start <= end_time and start_time <= time_stamp_end <= end_time:
+                if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
                     event_dict = {'name': 'Arbeitszeit', 'start_time': time_stamp_start,
                                   'end_time': time_stamp_end, 'period': time_period}
                     event_list.append(event_dict)

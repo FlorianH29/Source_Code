@@ -1,7 +1,7 @@
 from datetime import datetime
 from datetime import timedelta
 
-from flask import Flask
+from flask import Flask, request
 from flask_restx import Api, Resource, fields
 from flask_cors import CORS
 from threading import *
@@ -277,7 +277,6 @@ class ProjectWorksByActivityOperations(Resource):
         else:
             return "Activity not found", 500
 
-
 @hdmwebapp.route('/projectworks/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Projektarbeit')
@@ -308,26 +307,21 @@ class ProjectWorkOperations(Resource):
         hwa.delete_project_work(pw)
         return '', 200
 
-@hdmwebapp.route('/timeintervaltransactions')
+@hdmwebapp.route('/eventtransactionsandtimeintervaltransactions/<int:startDate>/<int:endDate>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class TimeIntervalTransactionOperations(Resource):
-    @hdmwebapp.marshal_list_with(timeintervaltransaction)
-    @secured
-    def get(self):
-        hwa = HdMWebAppAdministration()
-        tits = hwa.get_all_time_interval_transactions()
-        return tits
-
-@hdmwebapp.route('/eventsfortimeintervaltransactions')
-@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('startDate', 'eingegebenes Start-Datum')
+@hdmwebapp.param('endDate', 'eingegebenes Start-Datum')
 class EventsForTimeIntervalTransactions(Resource):
     @hdmwebapp.marshal_list_with(event_transaction_and_timeintervaltransaction)
-    @secured
-    def get(self):
+    #@secured
+    def get(self, startDate, endDate):
         hwa = HdMWebAppAdministration()
         pe = hwa.get_person_by_id(1)
-        events = hwa.get_intervals_of_person_between_time_stamps(pe, '16/06/2022', '18/06/2022')
-        print(events)
+        start_time = datetime.fromtimestamp(startDate/1000.0).date()
+        end_time = datetime.fromtimestamp(endDate/1000.0).date()
+        events = hwa.get_intervals_of_person_between_time_stamps(pe, start_time, end_time)
+        print(start_time)
+        print(end_time)
         return events
 
 def check():
@@ -343,7 +337,7 @@ sub_thread.start()
 h = HdMWebAppAdministration()
 pe = h.get_person_by_id(1)
 #print(h.get_last_event_by_affiliated_person(pe))
-print(h.get_intervals_of_person_between_time_stamps(pe, '16/06/2022', '18/06/2022'))
+#print(h.get_intervals_of_person_between_time_stamps(pe, '16/06/2022', '18/06/2022'))
 #h.create_event_and_check_type(4, pe)
 
 

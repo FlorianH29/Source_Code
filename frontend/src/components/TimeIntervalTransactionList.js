@@ -12,14 +12,13 @@ class TimeIntervalTransactionList extends Component {
 
         this.state = {
             events: [],
-            startDate: new Date(),
-            endDate: new Date(),
-
+            startDate: new Date().getTime(),
+            endDate: new Date().getTime(),
         }
     }
 
-    getEventForTimeIntervalTransactions = () => {
-        HdMWebAppAPI.getAPI().getEventsForTimeIntervalTransactions()
+    getEventForTimeIntervalTransactions = (startDate, endDate) => {
+        HdMWebAppAPI.getAPI().getEventsForTimeIntervalTransactions(startDate, endDate)
             .then(eventAndTransaction =>
                 this.setState({
                     events: eventAndTransaction
@@ -30,16 +29,14 @@ class TimeIntervalTransactionList extends Component {
             }));
     }
 
-
     componentDidMount() {
-        this.getEventForTimeIntervalTransactions()
+        this.getEventForTimeIntervalTransactions(this.state.startDate, this.state.endDate)
     }
 
     render() {
         const {events, startDate, endDate} = this.state;
-        console.log(startDate)
-        console.log(endDate)
-        //console.log(timeIntervalTransactions)
+        //console.log(startDate)
+        //console.log(endDate)
         return (
             <div>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -47,7 +44,8 @@ class TimeIntervalTransactionList extends Component {
                         label={"Start Date"}
                         value={startDate}
                         onChange={(date) => {
-                            this.setState({startDate: date})
+                            this.setState({startDate: date.getTime()});
+                            this.getEventForTimeIntervalTransactions(date.getTime(),this.state.endDate)
                         }}
                         renderInput={(params) => <TextField {...params} />}
                     />
@@ -57,7 +55,9 @@ class TimeIntervalTransactionList extends Component {
                         label={"End Date"}
                         value={endDate}
                         onChange={(date) => {
-                            this.setState({endDate: date})
+                            this.setState({endDate: date.getTime()});
+                            console.log(date.getTime())
+                            this.getEventForTimeIntervalTransactions(this.state.startDate, date.getTime())
                         }}
                         renderInput={(params) => <TextField {...params} />}
                     />
