@@ -178,14 +178,15 @@ class ActivitiesList(Resource):
     def get(self, id):
         hwa = HdMWebAppAdministration()
         pro = hwa.get_project_by_id(id)
-        # Die durch die id gegebenes Projekt als Objekt speichern.
+        # Das durch die id gegebene Projekt als Objekt speichern.
 
         if pro is not None:
             activity_list = hwa.get_activities_of_project(pro)
-            # Auslesen der Projektarbeiten, die der Aktivität untergliedert sind.
+            # Auslesen der Aktivitäten, die dem Projekt untergliedert sind.
             return activity_list
         else:
             return "Activity not found", 500
+
 
 @hdmwebapp.route('/events')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -284,6 +285,7 @@ class ProjectOperations(Resource):
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
+
 @hdmwebapp.route('/projectworks')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectWorksOperations(Resource):
@@ -370,6 +372,12 @@ sub_thread = Thread(target=check)
 #es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
+
+h = HdMWebAppAdministration()
+pe = h.get_person_by_id(4)
+ac = h.get_activity_by_id(1)
+ti = h.get_time_interval_transaction_by_id(1)
+
 
 
 if __name__ == '__main__':

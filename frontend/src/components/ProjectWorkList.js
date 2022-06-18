@@ -138,7 +138,7 @@ class ProjectWorkList extends Component {
                         Start buchen und mit Projektarbeit beginnen?
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions>1
+                <DialogActions>
                     <Button onClick={this.handleClose} color='secondary'>
                         Abbrechen
                     </Button>
