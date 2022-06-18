@@ -7,12 +7,10 @@ export default class EventBO extends BusinessObject {
    * Konstruktor, erstelt ein Eventobjekt mit
    *
    * @param {Number} anEventType - der Typ dieses EventBO.
-   * @param {Date} aTimeStamp - die Kapazität dieses EventBO.
-   * @param {Number} anAffiliatedPerson - die Person, der dieses EventBO zugeordnet ist.
    */
-  constructor(anEventType, anAffiliatedPerson) {
+  constructor(anEventType) {
     super();
-    this.event_type = 1;
+    this.event_type = anEventType;
     this.time_stamp = 0;
     this.affiliated_person = 0;
   }

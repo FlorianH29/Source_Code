@@ -5,6 +5,7 @@ export default class BusinessObject {
   constructor() {
     this.id = 0;
     this.last_edit = 0;
+    this.deleted = 0;
   }
 
   // Setzt die ID des Business Objects

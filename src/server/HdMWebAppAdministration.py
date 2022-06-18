@@ -908,7 +908,7 @@ class HdMWebAppAdministration(object):
     def create_event(self, event_type, person):
         """Event anlegen"""
         with EventMapper() as mapper:
-            if event_type and person is not None:
+            if person is not None:
                 event = Event()
                 event.set_id(1)
                 event.set_deleted(0)
