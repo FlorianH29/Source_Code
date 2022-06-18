@@ -1,5 +1,6 @@
 from datetime import timedelta, datetime
 import time
+import operator
 from .bo.Arrive import Arrive
 from .bo.Break import Break
 from .bo.Departure import Departure
@@ -449,11 +450,12 @@ class HdMWebAppAdministration(object):
                 time_stamp = departure.get_time_stamp()
                 if start_time <= time_stamp <= end_time:
                     # Überprüfen, ob das Event im übergebenen Zeitraum liegt
-                    event_dict = {'name': 'Kommen', 'start_time': None, 'end_time': time_stamp, 'period': None}
+                    event_dict = {'name': 'Gehen', 'start_time': time_stamp, 'end_time': time_stamp, 'period': None}
                     event_list.append(event_dict)
         for tit in time_interval_transactions:
             break_id = tit.get_affiliated_break()
             project_work_id = tit.get_affiliated_projectwork()
+            work_time_id = tit.get_affiliated_time_interval()
             if break_id is not None:
                 br = self.get_break_by_id(break_id)
                 start_event_id = br.get_start_event()
@@ -480,7 +482,21 @@ class HdMWebAppAdministration(object):
                     event_dict = {'name': project_work.get_project_work_name(), 'start_time': time_stamp_start,
                                   'end_time': time_stamp_end, 'period': time_period}
                     event_list.append(event_dict)
-        return event_list
+            if work_time_id is not None:
+                time_interval = self.get_time_interval_by_id(work_time_id)
+                start_event_id = time_interval.get_start_event()
+                start_event = self.get_event_by_id(start_event_id)
+                end_event_id = time_interval.get_end_event()
+                end_event = self.get_event_by_id(end_event_id)
+                time_stamp_start = start_event.get_time_stamp()
+                time_stamp_end = end_event.get_time_stamp()
+                time_period = time_interval.get_time_period()
+                if start_time <= time_stamp_start <= end_time and start_time <= time_stamp_end <= end_time:
+                    event_dict = {'name': 'Arbeitszeit', 'start_time': time_stamp_start,
+                                  'end_time': time_stamp_end, 'period': time_period}
+                    event_list.append(event_dict)
+        sorted_event_list = sorted(event_list, key=lambda x: x['start_time'])
+        return sorted_event_list
 
     """Methoden für WorkTimeAccount:"""
 

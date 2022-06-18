@@ -22,26 +22,31 @@ class TimeIntervalTransactionListEntry extends Component {
 
     /** Renders the component */
     render() {
-        const {timeIntervalTransaction, event} = this.state;
+        const {event} = this.state;
         //console.log(event)
         // console.log(this.state);
         return (
             <div>
                 <ListItem>
                     <Grid container alignItems='center'>
-                        <Grid item xs={3} align={"center"}>
+                        <Grid item xs={2} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
-                                {timeIntervalTransaction.getID()}
+                                {event.name}
                             </Typography>
                         </Grid>
-                        <Grid item xs={3} align={"center"}>
+                        <Grid item xs={2} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
-                                {event.getTimeStamp()}
+                                {event.start_time}
                             </Typography>
                         </Grid>
-                        <Grid item xs={3} align={"center"}>
+                        <Grid item xs={2} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
-                                {timeIntervalTransaction.getID()}
+                                {event.end_time}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={2} align={"center"}>
+                            <Typography variant={"h5"} component={"div"}>
+                                {event.period}
                             </Typography>
                         </Grid>
                     </Grid>

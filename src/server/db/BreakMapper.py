@@ -16,13 +16,14 @@ class BreakMapper(Mapper):
         tuples = cursor.fetchall()
 
         try:
-            (break_id, last_edit, start_event_id, end_event_id, time_period) = tuples[0]
+            (break_id, last_edit, start_event_id, end_event_id, time_period, deleted) = tuples[0]
             obj = br.Break()
             obj.set_id(break_id)
             obj.set_last_edit(last_edit)
             obj.set_start_event(start_event_id)
             obj.set_end_event(end_event_id)
             obj.set_time_period(time_period)
+            obj.set_deleted(deleted)
 
             result = obj
         except IndexError:

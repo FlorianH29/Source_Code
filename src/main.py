@@ -51,9 +51,11 @@ person = api.inherit('Person', bo, {
     'firebase_id': fields.String(attribute='_firebase_id', description='Google User ID eines Benutzers')
 })
 
-work_time_account = api.inherit('Worktimeaccout', {
+event_transaction_and_timeintervaltransaction = api.inherit('EventTransaction', {
     'name': fields.String(description='Name des Inhalts'),
-    'time': fields.String(description='Dauer des Inhalts')
+    'start_time': fields.DateTime(description='Dauer des Inhalts'),
+    'end_time': fields.DateTime(description='Dauer des Inhalts'),
+    'period': fields.String(description='Dauer des Inhalts'),
 })
 
 work_performance = api.inherit('Worktimeaccout', {
@@ -144,7 +146,7 @@ class CustomersByNameOperations(Resource):
         lel = adm.get_person_by_name(lastname)
         return lel
 
-
+"""
 @hdmwebapp.route('/worktimeaccount/<int:id>')
 @hdmwebapp.param('id', 'Die ID des Arbeitszeitkonto-Objekts')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -160,6 +162,7 @@ class WorkTimeAccountContentList(Resource):
         for p in projects:
             result.append({"name": p.get_project_name(), "time": hwa.calculate_sum_of_project_work_by_person(person)})
         return result
+        """
 
 
 @hdmwebapp.route('/workperformance/<int:id>')
@@ -318,11 +321,12 @@ class TimeIntervalTransactionOperations(Resource):
 @hdmwebapp.route('/eventsfortimeintervaltransactions')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class EventsForTimeIntervalTransactions(Resource):
-    @hdmwebapp.marshal_list_with(event)
+    @hdmwebapp.marshal_list_with(event_transaction_and_timeintervaltransaction)
     @secured
     def get(self):
         hwa = HdMWebAppAdministration()
-        events = hwa.get_all_events()
+        pe = hwa.get_person_by_id(1)
+        events = hwa.get_intervals_of_person_between_time_stamps(pe, '16/06/2022', '18/06/2022')
         print(events)
         return events
 
@@ -337,11 +341,9 @@ sub_thread.setDaemon(True)
 sub_thread.start()
 
 h = HdMWebAppAdministration()
-pe = h.get_all_time_interval_transactions()
+pe = h.get_person_by_id(1)
 #print(h.get_last_event_by_affiliated_person(pe))
-print(pe)
-te = h.get_all_event_transactions()
-print(te)
+print(h.get_intervals_of_person_between_time_stamps(pe, '16/06/2022', '18/06/2022'))
 #h.create_event_and_check_type(4, pe)
 
 
