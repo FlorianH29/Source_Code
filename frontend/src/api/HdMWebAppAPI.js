@@ -27,8 +27,8 @@ export default class HdMWebAppAPI {
 
   //Projekt bezogen
   #getProjectsURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
-  //später hier ID übergeben
-    #updateProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
+  #updateProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
+  #addProjectURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
   // Projektarbeit bezogen
   #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
   #updateProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
@@ -38,8 +38,12 @@ export default class HdMWebAppAPI {
   //Worktimeaccount bezogen
   #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
 
-    //Activity bezogen
-    #getActivitiesURL = () => `${this.#hdmwebappServerBaseURL}/activities`;
+  //Activity bezogen
+  #getActivitiesForProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}/activities`;
+  #updateActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
+  #deleteActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
+  #addActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/project/${id}/activities`;
+  //#getActivityWorkTimeURL = (id) => `${this.#hdmwebappServerBaseURL}/work_time/${id}/activities`;
 
   // Ereignis bezogen
   #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
@@ -144,12 +148,12 @@ export default class HdMWebAppAPI {
         })
     }
 
-    getActivities() {
-        return this.#fetchAdvanced(this.#getActivitiesURL()).then((responseJSON) => {
-            let activitiesBO = ActivityBO.fromJSON(responseJSON);
-            console.log(responseJSON);
+    getActivities(id) {
+        return this.#fetchAdvanced(this.#getActivitiesForProjectURL(id)).then((responseJSON) => {
+            let activityBOs = ActivityBO.fromJSON(responseJSON);
+            console.log(activityBOs);
             return new Promise(function (resolve) {
-                resolve(activitiesBO);
+                resolve(activityBOs);
             })
         })
     }
@@ -182,6 +186,29 @@ export default class HdMWebAppAPI {
       // Wir bekommen immer ein Array aus ProjectBOs.fromJSON
       let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
       console.log(responseProjectBO)
+      return new Promise(function (resolve) {
+        resolve(responseProjectBO);
+      })
+    })
+  }
+
+  /**
+   * Fügt ein Projekt hinzu und gibt einen Promise zurück, der in einem neuen ProjectBO resultiert.
+   *
+   * @param {ProjectBO} projectBO wird geadded. Die ID des Projekts wird durch das Backend gesetzt.
+   * @public
+   */
+  addProject(projectBO) {
+    return this.#fetchAdvanced(this.#addProjectURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(projectBO)
+    }).then((responseJSON) => {
+      let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
+      // console.info(projectBOs);
       return new Promise(function (resolve) {
         resolve(responseProjectBO);
       })
@@ -295,3 +322,70 @@ export default class HdMWebAppAPI {
 
 
 
+
+
+    /**
+   * Adds a customer and returns a Promise, which resolves to a new CustomerBO object with the
+   * firstName and lastName of the parameter customerBO object.
+   *
+   * @param {ProjectBO} projectBO to be added. The ID of the new project is set by the backend
+   * @public
+   */
+  addActivity(projectBO) {
+    return this.#fetchAdvanced(this.#addActivityURL(), {
+      method: 'POST',
+
+      body: JSON.stringify(projectBO)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON, but only need one object
+      let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
+      // console.info(accountBOs);
+      return new Promise(function (resolve) {
+        resolve(responseProjectBO);
+      })
+    })
+  }
+
+
+/**
+  getActivityWorkTime(activityBO) {
+    return this.#fetchAdvanced(this.#getActivityWorkTimeURL(activityBO))
+      .then(responseJSON => {
+        console.log(responseJSON)
+        return new Promise(function (resolve) {
+          resolve(responseJSON);
+        })
+      })
+  }
+*/
+  updateActivity(activityBO) {
+    return this.#fetchAdvanced(this.#updateActivityURL(activityBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(activityBO)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseActivityBO = ActivityBO.fromJSON(responseJSON)[0];
+      console.log(responseActivityBO)
+      return new Promise(function (resolve) {
+        resolve(responseActivityBO);
+      })
+    })
+  }
+
+  deleteActivity(activityID) {
+    return this.#fetchAdvanced(this.#deleteActivityURL(activityID), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseActivityBO = ActivityBO.fromJSON(responseJSON)[0];
+      return new Promise(function (resolve) {
+        resolve(responseActivityBO);
+      })
+    })
+  }
+
+}

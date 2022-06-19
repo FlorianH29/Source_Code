@@ -11,12 +11,12 @@ export default class ProjectBO extends BusinessObject {
    * @param {Number} aTimeIntervalID - die TimeIntervalID des ProjectBO.
    * @param {Number} aOwner - der Owner des ProjectBO.
    */
-  constructor(aProjectName, aClient, aTimeIntervalID, aOwner) {
+  constructor(aProjectName, aClient, aTimeIntervalID) {
     super();
     this.project_name = aProjectName;
     this.client = aClient;
-    this.timeinterval_id = aTimeIntervalID;
-    this.owner = aOwner;
+    this.timeinterval_id = 0;
+    this.owner = 0;
     this.work_time = 0;
 
   }
