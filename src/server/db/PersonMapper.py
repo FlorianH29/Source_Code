@@ -162,8 +162,8 @@ class PersonMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "UPDATE person " + "SET firstName=%s, last_edit=%s, lastName=%s, username=%s, mailaddress=%s," \
-                                     "firebase_id=%s WHERE person_id=%s"
+        command = "UPDATE person SET firstName=%s, last_edit=%s, lastName=%s, username=%s, mailaddress=%s," \
+                  "firebase_id=%s WHERE person_id=%s"
 
         data = (employee.get_firstname(), employee.get_last_edit(), employee.get_lastname(), employee.get_username(),
                 employee.get_mailaddress(), employee.get_firebase_id(), employee.get_id())

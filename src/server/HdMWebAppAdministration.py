@@ -616,6 +616,16 @@ class HdMWebAppAdministration(object):
         project.set_work_time(work_time)
         self.save_project(project)
 
+    def get_work_time_of_project_between_two_dates(self, project, start_time, end_time):
+        """Die für ein Projekt gearbeitete Zeit innerhalb eines bestimmten Zeitraums anhand der gebuchten
+        Projektarbeiten berechnen"""
+        activities = self.get_all_activities()
+        work_time = timedelta(hours=0)
+        for activity in activities:
+            if activity.get_affiliated_project() == project.get_id():
+                work_time += self.get_work_time_of_activity_between_two_dates(activity, start_time, end_time)
+        return work_time
+
     """ProjectWork Methoden"""
 
     def get_project_work_by_id(self, number):
