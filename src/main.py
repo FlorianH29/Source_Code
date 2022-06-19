@@ -320,7 +320,7 @@ class ProjectOperations(Resource):
 
 @hdmwebapp.route('/projects')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class ProjectOperations(Resource):
+class ProjectPostOperation(Resource):
     @hdmwebapp.marshal_with(project, code=201)
     @hdmwebapp.expect(project)
     @secured
@@ -343,6 +343,21 @@ class ProjectOperations(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
+
+@hdmwebapp.route('/projects/<int:id>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID der Projektarbeit')
+class ProjectDeleteOperation(Resource):
+    @secured
+    def delete(self, id):
+        """
+        Löschen eines bestimmten Projektobjekts. Objekt wird durch die ID in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = hwa.get_project_by_id(id)
+        hwa.delete_project(pw)
+        return '', 200
+
 
 
 @hdmwebapp.route('/projectworks')
@@ -465,11 +480,6 @@ sub_thread = Thread(target=check)
 #es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
-
-h = HdMWebAppAdministration()
-pe = h.get_person_by_id(4)
-ac = h.get_activity_by_id(1)
-ti = h.get_time_interval_transaction_by_id(1)
 
 
 
