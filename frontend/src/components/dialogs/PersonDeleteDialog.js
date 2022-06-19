@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import firebase from "firebase/compat/app";
 import { HdMWebAppAPI, PersonBO } from '../../api';
+
 
 
 /**
@@ -24,10 +26,14 @@ class PersonDeleteDialog extends Component {
     };
   }
 
+    handleSignOutButtonClicked = () => {
+    firebase.auth().signOut();
+  }
+
   /** Die Person löschen */
   deletePerson = () => {
-    HdMWebAppAPI.getAPI().deletePerson(this.props.person.getID).then(person => {
-      this.props.onClose(this.props.person);  // call the parent with the deleted customer
+    HdMWebAppAPI.getAPI().deletePerson().then(person => {
+      this.props.onClose(null);  // call the parent with the deleted customer
     }).catch(e =>
         console.log(e))
   }
@@ -56,14 +62,14 @@ class PersonDeleteDialog extends Component {
           </DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Möchte sie Ihren User wirklich löschen? '{person.getUserName}' (ID: {person.getID}) lol
+              Möchte sie Ihren User wirklich löschen? '{person.getUserName}' '(ID: {person.getID})'
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color='secondary'>
               Abbrechen
             </Button>
-            <Button variant='contained' onClick={this.deletePerson} color='primary'>
+            <Button variant='contained' onClick={() => {this.deletePerson(); this.handleSignOutButtonClicked(); this.handleClose()}} color='primary'>
               Löschen
             </Button>
           </DialogActions>

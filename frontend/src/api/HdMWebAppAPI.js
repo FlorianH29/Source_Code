@@ -21,8 +21,8 @@ export default class HdMWebAppAPI {
 
   // Person bezogen
   #getPersonsURL = (id) => `${this.#hdmwebappServerBaseURL}${id}`;
-  #updatePersonURL = (id) => `${this.#hdmwebappServerBaseURL}/persons/${id}`;
-  #deletePersonURL = (id) =>`${this.#hdmwebappServerBaseURL}/persons/${id}`;
+  #editPersonURL = () => `${this.#hdmwebappServerBaseURL}/persons/`;
+  #deletePersonURL = () =>`${this.#hdmwebappServerBaseURL}/persons`;
 
 
   //Projekt bezogen
@@ -76,8 +76,8 @@ export default class HdMWebAppAPI {
         )
 
 
-  updatePerson(PersonBO) {
-    return this.#fetchAdvanced(this.#updatePersonURL(PersonBO.getID()), {
+  editPerson(PersonBO) {
+    return this.#fetchAdvanced(this.#editPersonURL(PersonBO.getID()), {
       method: 'PUT',
       navigatori: {
         'Accept': 'application/json, text/plain',
@@ -103,9 +103,9 @@ export default class HdMWebAppAPI {
     })
   }
 
-    getPerson() {
-        return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
-            let personBOs = PersonBO.fromJSON(responseJSON);
+    getPerson(id) {
+        return this.#fetchAdvanced(this.#getPersonsURL(id)).then((responseJSON) => {
+            let personBOs = PersonBO.fromJSON(responseJSON)[0];
             //console.log(responseJSON);
             return new Promise(function (resolve) {
                 resolve(personBOs);
@@ -113,6 +113,17 @@ export default class HdMWebAppAPI {
         })
     }
 
+    deletePerson() {
+    return this.#fetchAdvanced(this.#deletePersonURL(), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
+      console.log(responsePersonBO)
+      return new Promise(function (resolve) {
+        resolve(responsePersonBO);
+      })
+    })
+  }
   /**
    * Erstellt ein Ereignis und gibt eine Promise zurück, die ein neues EventBO
    * Objekt mit dem Eventtyp des Parameters eventBO als Ergebnis hat.
@@ -218,8 +229,6 @@ export default class HdMWebAppAPI {
 
 
 
-
-
     getWorktimeAccount(id) {
         return this.#fetchAdvanced(this.#getWorktimeAccountURL(id)).then((responseJSON) => {
             let worktimeaccountBOs = WorktimeAccountBO.fromJSON(responseJSON);
@@ -307,18 +316,8 @@ export default class HdMWebAppAPI {
     })
   }
 
-    deletePerson(personID) {
-    return this.#fetchAdvanced(this.#deletePersonURL(personID), {
-      method: 'DELETE'
-    }).then((responseJSON) => {
-      let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
-      console.log(responsePersonBO)
-      return new Promise(function (resolve) {
-        resolve(responsePersonBO);
-      })
-    })
-  }
-}
+
+
 
 
 

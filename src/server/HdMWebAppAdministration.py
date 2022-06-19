@@ -83,13 +83,12 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             if person is not None:
                 projects = self.get_projectmember_by_person(person)
-                worktimeaccounts = self.get_work_time_account_of_owner(person)
+                worktimeaccount = self.get_work_time_account_of_owner(person)
 
                 for project in projects:
                     self.delete_project_member(project)
 
-                for worktimeaccount in worktimeaccounts:
-                    self.delete_work_time_account(worktimeaccount)
+                self.delete_work_time_account(worktimeaccount)
 
             mapper.delete(person)
 

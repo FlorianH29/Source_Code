@@ -109,7 +109,6 @@ class App extends React.Component {
                                 </Route>
                             </Switch>
                         </>
-
                         :
                         <>
                             <SignInHeader person={currentPerson}/>

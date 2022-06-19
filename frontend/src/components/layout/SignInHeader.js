@@ -22,7 +22,7 @@ class Header extends Component {
 
     render() {
         const {person} = this.props;
-        const {showPersonDeleteDialog} = this.state;
+        const {} = this.state;
 
         return (
             <Box sx={{flexGrow: 1}}>

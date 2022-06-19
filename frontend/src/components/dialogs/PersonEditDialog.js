@@ -1,15 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  TextField
-} from '@material-ui/core';
+import {Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { HdMWebAppAPI, PersonBO } from '../../api';
 
@@ -36,10 +27,28 @@ class PersonEditDialog extends Component {
 
   /** Die Person bearbeiten */
   editPerson = () => {
-    HdMWebAppAPI.getAPI().deletePerson(this.props.person.getID).then(person => {
-      this.props.onClose(this.props.person);  // call the parent with the deleted customer
+    let editPerson = Object.assign(new PersonBO(), this.props.person);
+    editPerson.setFirstName(this.state.firstname);
+    editPerson.setLastName(this.state.lastname);
+    HdMWebAppAPI.getAPI().editPerson(editPerson).then(person => {
+      this.setState({
+        updatingInProgress: false,
+        updatingError: null
+      });
+      this.baseState.firstname = this.state.firstname;
+      this.baseState.lastname = this.state.lastname;
+      this.props.onClose(editPerson);
     }).catch(e =>
-        console.log(e))
+      this.setState({
+        updatingInProgress: false,
+        updatingError: e
+      })
+    );
+
+    this.setState({
+      updatingInProgress: true,
+      updatingError: null
+    });
   }
 
   /** Behandelt das Click Event des Buttons Abbrechen */
@@ -49,12 +58,25 @@ class PersonEditDialog extends Component {
   }
 
 
+  textFieldValueChange = (event) => {
+    const value = event.target.value;
 
+    let error = false;
+    if (value.trim().length === 0) {
+      error = true;
+    }
+
+    this.setState({
+      [event.target.id]: event.target.value,
+      [event.target.id + 'ValidationFailed']: error,
+      [event.target.id + 'Edited']: true
+    });
+  }
 
   /** Renders the component */
   render() {
     const { person, show } = this.props;
-    const {personNameValidationFailed,descriptionValidationFailed, personvorname, personnachname}= this.state;
+    const {firstnameValidationFailed, lastnameValidationFailed, firstname, lastname}= this.state;
 
     return (
       show ?
@@ -65,26 +87,20 @@ class PersonEditDialog extends Component {
             </IconButton>
           </DialogTitle>
             <form noValidate autoComplete='off'>
-              <TextField autoFocus type='text' required fullWidth margin='normal' id='person' label='Vorname:' value={personvorname}
-                  onChange={this.textFieldValueChange} error={personNameValidationFailed}
-                  helperText={personNameValidationFailed ? 'Bitte geben Sie ihren Vornamen an' : ' '} />
-                <TextField type='text' required fullWidth margin='normal' id='description' label='Nachname:' value={personnachname}
-                  onChange={this.textFieldValueChange} error={descriptionValidationFailed}
-                  helperText={descriptionValidationFailed ? 'Bitte geben Sie ihren Nachnamen an' : ' '} />
+              <TextField autoFocus type='text' required fullWidth margin='normal' id='person' label='Vorname:' value={firstname}
+                  onChange={this.textFieldValueChange} error={firstnameValidationFailed}
+                  helperText={firstnameValidationFailed ? 'Bitte geben Sie ihren Vornamen an' : ' '} />
+                <TextField type='text' required fullWidth margin='normal' id='description' label='Nachname:' value={lastname}
+                  onChange={this.textFieldValueChange} error={lastnameValidationFailed}
+                  helperText={lastnameValidationFailed ? 'Bitte geben Sie ihren Nachnamen an' : ' '} />
               </form>
            <DialogActions>
-              <Button onClick={this.handleClose} color='secondary'>
+              <Button align="left" onClick={this.handleClose} color='secondary'>
                 Abbrechen
               </Button>
-              {// Falls eine Projektarbeit gegeben ist, sichern Knopf anzeigen, sonst einen Erstellen Knopf
-                person ?
-                  <Button color='primary' onClick={this.updatePerson}>
+                  <Button align="right" color='primary' onClick={() => {this.editPerson(); this.handleClose()}}>
                     Sichern
                   </Button>
-                  : <Button color='primary' onClick={this.addEvent}>
-                    Erstellen
-                  </Button>
-              }
             </DialogActions>
         </Dialog>
         : null

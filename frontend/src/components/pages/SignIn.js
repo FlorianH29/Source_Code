@@ -27,7 +27,7 @@ class SignIn extends Component {
 				<Grid container justifyContent='center'>
 					<Grid item>
 						<Button variant='contained' color='primary' onClick={this.handleSignInButtonClicked} /**onClick={this.handleButton()}*/>
-							Sign in with Google
+							Anmelden mit Google
       					</Button>
 					</Grid>
 				</Grid>

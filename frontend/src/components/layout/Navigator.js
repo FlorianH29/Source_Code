@@ -10,13 +10,13 @@ import PersonEditDialog from "../dialogs/PersonEditDialog";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import PersonIcon from "@mui/icons-material/Person";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import {Link as RouterLink} from "react-router-dom";
+import {HdMWebAppAPI, PersonBO} from "../../api";
 
 
 class Navigator extends Component {
@@ -34,7 +34,7 @@ class Navigator extends Component {
 
 
   persondeleteClosed = person => {
-    // projectWork ist nicht null und deshalb erstelltI/überarbeitet
+    // Person ist nicht null und deshalb erstelltI/überarbeitet
     if (person) {
       const newperson = [...this.state.person, person];
       this.setState({
@@ -48,6 +48,26 @@ class Navigator extends Component {
       }
   }
 
+  getPerson = () => {
+    HdMWebAppAPI.getAPI().getPerson()
+      .then(customerBOs =>
+        this.setState({
+          person: PersonBO,
+          error: null
+        })).catch(e =>
+          this.setState({
+            person: [],
+            error: e
+          })
+        );
+
+    // set loading to true
+    this.setState({
+      loadingInProgress: true,
+      error: null
+    });
+  }
+
     handleDelete = () => {
         this.setState({
             showPersonDeleteDialog: true
@@ -56,21 +76,21 @@ class Navigator extends Component {
 
      handleEdit = () => {
         this.setState({
-            showPersonDeleteDialog: true
+            showPersonEditDialog: true
         });
     }
 
       personeditClosed = person => {
-    // projectWork ist nicht null und deshalb erstelltI/überarbeitet
+    // person ist nicht null und deshalb überarbeitet
     if (person) {
       const newperson = [...this.state.person, person];
       this.setState({
         person: newperson,
-        showPersonDeleteDialog: false
+        showPersonEditDialog: false
       });
     } else {
         this.setState({
-          showPersonDeleteDialog: false
+          showPersonEditDialog: false
         });
       }
   }
@@ -83,10 +103,6 @@ class Navigator extends Component {
         this.setState({anchorEl: null});
     };
 
-    handleLogout = () => {
-        this.handleCloseUserMenu();
-        firebase.auth().signOut();
-    }
 
   handleClose = () => {
       // den state neu setzen, sodass open false ist und der Dialog nicht mehr angezeigt wird
@@ -135,20 +151,23 @@ class Navigator extends Component {
                                     onClose={() => {
                                         this.handleCloseUserMenu()
                                     }}>
-                                      <PersonDeleteDialog person={person} show={showPersonDeleteDialog} onClose={this.persondeleteClosed}>
+                                    <PersonDeleteDialog person={person} show={showPersonDeleteDialog} onClose={this.persondeleteClosed}>
                                     </PersonDeleteDialog>
+                                    <PersonEditDialog person={person} show={showPersonEditDialog} onClose={this.personeditClosed}>
+                                    </PersonEditDialog>
                                     <Typography variant='h5' component='div' align='center'>
-                                    <Button onClick={this.handleLogout}>Profil bearbeiten</Button>
-                                    <Button onClick={this.handleEdit}>Profil löschen</Button>
-
+                                    <Button onClick={this.handleEdit}>Profil bearbeiten</Button>
+                                    <Button onClick={this.handleDelete}>Profil löschen</Button>
                                     </Typography>
                                 </Menu>
-                    <Divider />
+
                   <Drawer variant="permanent" top={100} position = "relative" anchor="left"
                         sx={{width: drawerWidth, flexShrink: 2, '& .MuiDrawer-paper': {width: drawerWidth,
-                                flexGrow: 1, boxSizing: 'border-box', p: 1,
+                                flexGrow: 1, boxSizing: 'border-box', bgcolor: "white"
                         },
                     }}>
+                       <Divider sx={{p:7.95, bgcolor:"#05353f"}} />
+                       <Typography variant="h3"  component="div" sx={{flexGrow: 1, p:1}}>
                             <ListItem>
                                  <ListItemButton component={RouterLink} to={`/persons`}>
                                      <ListItemIcon>
@@ -184,6 +203,7 @@ class Navigator extends Component {
                                     <ListItemText primary="Blöder Kerle" />
                                 </ListItemButton>
                             </ListItem>
+                      </Typography>
                   </Drawer>
                      </>
                     ) : null}

@@ -95,34 +95,6 @@ timeinterval = api.inherit('TimeInterval', bo, {
 })
 
 
-@hdmwebapp.route('/persons')
-@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class PersonListOperations(Resource):
-    @hdmwebapp.marshal_list_with(person)
-    @secured
-    def get(self):
-        hwa = HdMWebAppAdministration()
-        persons = hwa.get_all_persons()
-        return persons
-
-    @hdmwebapp.marshal_with(person, code=200)
-    @hdmwebapp.expect(person)  # Wir erwarten ein Customer-Objekt von Client-Seite.
-    @secured
-    def post(self):
-
-        ha = HdMWebAppAdministration()
-
-        proposal = Person.from_dict(api.payload)
-
-        if proposal is not None:
-            c = ha.create_person(proposal.get_username(), proposal.get_mailaddress,
-                                 proposal.get_firebase_id())
-            return c, 200
-        else:
-            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
-            return '', 500
-
-
 @hdmwebapp.route('/person-by-username/<string:username>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('username', 'Der Username der Person')
@@ -138,32 +110,30 @@ class PersonByusernameOperations(Resource):
         lel = adm.get_person_by_username(username)
         return lel
 
-@hdmwebapp.route('/persons/<int:id>')
+@hdmwebapp.route('/persons')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Person')
 class PersonByIDOperations(Resource):
     @hdmwebapp.marshal_list_with(person)
     @secured
-    def get(self, id):
+    def get(self):
         hwa = HdMWebAppAdministration()
-        act = hwa.get_person_by_id()
-
-
-        if act is not None:
-            act.set_id(id)
-            hwa.save_person(act)
-            return '', 200
-        else:
-            return '', 500
+        hil = Helper()
+        firebase_id = hil.get_firebase_id()
+        pers = hwa.get_person_by_firebase_id(firebase_id)
+        lol = hwa.get_person_by_id(pers) #Oder hier kommt sowas wie hwa.aktuelle person hin.
+        return lol
 
     @secured
-    def delete(self, id):
+    def delete(self):
         """
         Löschen einer bestimmten Person. Objekt wird durch die id in dem URI bestimmt.
         """
         hwa = HdMWebAppAdministration()
-        act = hwa.get_person_by_id(id)
-        hwa.delete_person(act)
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        per = hwa.get_person_by_firebase_id(firebase_id)
+        hwa.delete_person(per)
         return '', 200
 
 
