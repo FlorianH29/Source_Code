@@ -60,7 +60,7 @@ class ProjectDeleteDialog extends Component {
             </Button>
             <Button variant='contained' onClick={this.deleteProject} color='primary'>
               Löschen
-            </Button>
+            </Button >
           </DialogActions>
         </Dialog>
         : null
