@@ -667,20 +667,31 @@ class HdMWebAppAdministration(object):
 
     """ProjectMember Methoden"""
 
-    def get_projectmember_by_id(self, number):
+    def get_project_member_by_id(self, number):
         """Das Projekt wird anhand seiner eindeutigen ID ausgelesen."""
         with ProjectMemberMapper() as mapper:
             return mapper.find_by_key(number)
 
-    def get_projectmember_by_person(self, person):
+    def get_project_member_by_person(self, person):
         with ProjectMemberMapper() as mapper:
             result = []
 
             if not (person is None):
-                projectmember = mapper.find_projects_by_person_id(person.get_id())
-                if not (projectmember is None):
-                    result.extend(projectmember)
+                project_member = mapper.find_projects_by_person_id(person.get_id())
+                if not (project_member is None):
+                    result.extend(project_member)
                 return result
+
+    def get_project_members_of_project(self, project):
+        """ Projektarbeiten werden anhand der eindeutigen ID der Aktivität ausgelesen, der sie zugeordnet sind."""
+        with ProjectMemberMapper() as mapper:
+            result = []
+
+            if not (project is None):
+                project_members = mapper.find_by_project(project.get_id())
+                if not (project_members is None):
+                    result.extend(project_members)
+            return result
 
     def create_project_member(self, project, person):
         """Erstellen eines neuen Projekts"""

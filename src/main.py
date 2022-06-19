@@ -94,6 +94,11 @@ timeinterval = api.inherit('TimeInterval', bo, {
     'timeperiod': fields.String(attribute='__time_period', description='Zeitraum des Intervalls')
 })
 
+projectmember = api.inherit('ProjectMember', person, {
+    'affiliated_project': fields.Integer(attribute='_affiliated_project', description='ID des Projekts'),
+    'affiliated_person': fields.Integer(attribute='_affiliated_person', description='ID der Person, die Mitglied ist')
+})
+
 
 @hdmwebapp.route('/persons')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -415,6 +420,40 @@ class ProjectWorkOperations(Resource):
         pw = hwa.get_project_work_by_id(id)
         hwa.delete_project_work(pw)
         return '', 200
+
+@hdmwebapp.route('/projects/<int:id>/projectmembers')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectMemberOperations(Resource):
+    @hdmwebapp.marshal_list_with(projectmember)
+    @secured
+    def get(self, id):
+        hwa = HdMWebAppAdministration()
+        pro = hwa.get_project_by_id(id)
+        # Das durch die id gegebene Projekt als Objekt speichern.
+
+        if pro is not None:
+            projectmember_list = hwa.get_project_members_of_project(pro)
+            # Auslesen der Aktivitäten, die dem Projekt untergliedert sind.
+            return projectmember_list
+        else:
+            return "Project not found", 500
+
+
+@hdmwebapp.route('/projectmembers/<int:id>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID der Projektarbeit')
+class ProjectWorkOperations(Resource):
+    @hdmwebapp.marshal_list_with(projectmember)
+    @secured
+    def delete(self, id):
+        """
+        Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pm = hwa.get_project_member_by_id(id)
+        hwa.delete_project_work(pm)
+        return '', 200
+
 
 
 def check():

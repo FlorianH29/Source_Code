@@ -53,7 +53,7 @@ class ActivityDeleteDialog extends Component {
         return (
         show ?
             <Dialog open={show} onClose={this.handleClose}>
-                <DialogTitle id='delete-dialog-title'>Delete customer
+                <DialogTitle id='delete-dialog-title'>Aktivität löschen
                     <IconButton onClick={this.handleClose}>
                         <CloseIcon />
                     </IconButton>

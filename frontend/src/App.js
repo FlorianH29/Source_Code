@@ -13,6 +13,7 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import firebaseConfig from './firebaseconfig';
 import Welcome from "./components/pages/Welcome";
+import ProjectMemberList from "./components/ProjectMemberList"
 
 import {Person} from "@mui/icons-material";
 
@@ -101,6 +102,9 @@ class App extends React.Component {
                                 </Route>
                                 <Route exact path='/activities'>
                                     <ActivityList/>
+                                </Route>
+                                <Route exact path='/projectmembers'>
+                                    <ProjectMemberList/>
                                 </Route>
                                 <Route path='*'>
                                     <NotFound/>

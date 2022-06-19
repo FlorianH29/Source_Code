@@ -28,10 +28,11 @@ class ProjectMember(bo.BusinessObject):
     @staticmethod
     def from_dict(dictionary=dict()):
         """Umwandeln eines Python dict() in ein Departure-Event()."""
-        obj = ProjectMember()
-        obj.set_id(dictionary["id"])
-        obj.set_last_edit(dictionary["last_edit"])
-        obj.set_project(dictionary["project_id"])
-        obj.set_person(dictionary["person_id"])
+        projectmember = ProjectMember()
+        projectmember.set_id(dictionary["id"])
+        projectmember.set_last_edit(dictionary["last_edit"])
+        projectmember.set_project(dictionary["project_id"])
+        projectmember.set_person(dictionary["person_id"])
+        projectmember.set_deleted("deleted")
 
-        return obj
+        return projectmember
