@@ -104,7 +104,7 @@ class ActivityForm extends Component {
         if (activity) {
             // Activity definiert -> Bearbeitungsdialog wird angezeigt
             title = 'Aktivität bearbeiten';
-            header = `Aktivität ID: ${activity.getID()}`;
+            header = `Aktivität ID: \x22${activity.getID()}\x22`;
         } else {
             // Activity ist nicht definiert -> Erstellungsdialog wird angezeigt
             title = 'Neue Aktivität erstellen';

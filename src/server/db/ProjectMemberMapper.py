@@ -48,6 +48,41 @@ class ProjectMemberMapper (Mapper):
 
         return result
 
+    def find_by_person_id(self, key):
+        """Suchen Project Member Eintrags mit vorgegebener ID. Rückgabe von genau einem Objekt.
+
+        :param key Primärschlüsselattribut (->DB)
+        :return Projekt-Member-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
+        """
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM projectmembers " \
+                  "WHERE person_id={} AND deleted=0".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (projectmember_id, project_id, person_id, last_edit, deleted) = tuples[0]
+            projectmember = ProjectMember()
+            projectmember.set_id(projectmember_id)
+            projectmember.set_project(project_id)
+            projectmember.set_person(person_id)
+            projectmember.set_last_edit(last_edit)
+            projectmember.set_deleted(deleted)
+
+            result = projectmember
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
     def find_projects_by_person_id(self, key):
         """Suchen eines Project Member Eintrags mit vorgegebener ID.
 

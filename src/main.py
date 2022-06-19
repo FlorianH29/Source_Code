@@ -467,14 +467,14 @@ class ProjectMemberOperations(Resource):
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID des Projectmitarbeiters')
 class ProjectWorkOperations(Resource):
-    @hdmwebapp.marshal_list_with(person)
+    @hdmwebapp.marshal_list_with(projectmember)
     @secured
     def delete(self, id):
         """
         Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
         """
         hwa = HdMWebAppAdministration()
-        pm = hwa.get_project_member_by_id(id)
+        pm = hwa.get_project_member_by_person_id(id)
         hwa.delete_project_member(pm)
         return '', 200
 

@@ -676,6 +676,11 @@ class HdMWebAppAdministration(object):
         with ProjectMemberMapper() as mapper:
             return mapper.find_by_key(number)
 
+    def get_project_member_by_person_id(self, number):
+        """Das Projekt wird anhand seiner eindeutigen ID ausgelesen."""
+        with ProjectMemberMapper() as mapper:
+            return mapper.find_by_person_id(number)
+
     def get_project_member_by_person(self, person):
         with ProjectMemberMapper() as mapper:
             result = []
