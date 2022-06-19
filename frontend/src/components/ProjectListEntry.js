@@ -92,6 +92,11 @@ class ProjectListEntry extends Component {
                             </Typography>
                         </Grid>
                         <Grid item xs={3} align={"center"}>
+                            <Typography variant={"h5"} component={"div"}>
+                                {project.getWorkTime()} h
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={3} align={"center"}>
                             <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editProjectButtonClicked}> </Button>
                             <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteProjectButtonClicked}> </Button>
                         </Grid>
