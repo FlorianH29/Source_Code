@@ -173,8 +173,8 @@ class PersonMapper(Mapper):
         cursor.close()
 
     def find_by_firebase_id(self, key):
-        """Suchen einer Person mit vorgegebener person_id. Da diese eindeutig ist,
-        wird genau ein Objekt zurückgegeben.
+        """Suchen einer Person mit vorgegebener Firebase id. Da diese wegen der Löschlogik nicht eindeutig ist,
+        muss noch nach deleted=0  efiltert werden. So wird genau ein Objekt zurückgegeben.
 
         :param key Primärschlüsselattribut (->DB)
         :return Person-Objekt, das dem übergebenen Schlüssel entspricht, None bei

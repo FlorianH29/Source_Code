@@ -254,7 +254,7 @@ class HdMWebAppAdministration(object):
                 for project_work in project_works:
                     self.delete_project_work(project_work)
 
-                mapper.delete(activity)
+                return mapper.delete(activity)
             else:
                 return None
 
@@ -298,6 +298,29 @@ class HdMWebAppAdministration(object):
                         work_time += project_work.get_time_period()
         activity.set_work_time(work_time)
         self.save_activity(activity)
+
+    def get_work_time_of_activity_between_two_dates(self, activity, start_time, end_time):
+        """Die für eine Aktivität gearbeitete Zeit innerhalb eines bestimmten Zeitraums anhand der gebuchten
+        Projektarbeiten berechnen"""
+        time_interval_transactions = self.get_all_time_interval_transactions()
+        work_time = timedelta(hours=0)
+        for time_interval_transaction in time_interval_transactions:
+            project_work_id = time_interval_transaction.get_affiliated_projectwork()
+
+            if project_work_id is not None:
+                project_work = self.get_project_work_by_id(project_work_id)
+
+                if project_work.get_affiliated_activity() == activity.get_id():
+
+                    start_e_pw = self.get_event_by_id(project_work.get_start_event())
+                    end_e_pw = self.get_event_by_id(project_work.get_end_event())
+                    start_time_pw = start_e_pw.get_time_stamp()
+                    end_time_pw = end_e_pw.get_time_stamp()
+
+                    if start_time_pw >= start_time and end_time_pw <= end_time:
+                        work_time += project_work.get_time_period()
+
+        return work_time
 
     """Methoden für EventTransaktionen"""
 
@@ -691,7 +714,6 @@ class HdMWebAppAdministration(object):
         """Alle Projectmember-Einträge ausgeben, die einer Project ID zugeordnet sind"""
         with ProjectMemberMapper() as mapper:
             return mapper.find_projectmembers_by_project_id(project.get_id())
-
 
     def get_projectmember_by_person(self, person):
         with ProjectMemberMapper() as mapper:
