@@ -4,6 +4,7 @@ import {Button, Grid, Typography, Divider, Dialog, DialogActions, DialogContent}
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
 import ProjectWorkListEntry from "./ProjectWorkListEntry";
+import EventManager from "./EventManager";
 import ProjectWorkForm from "./dialogs/ProjectWorkForm";
 import PropTypes from "prop-types";
 import {DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
@@ -88,19 +89,10 @@ class ProjectWorkList extends Component {
       }
   }
 
-  addNewEvent = () => {
-      // hier muss das Startereignis erstellt werden, aktuell nur umschalten der Knöpfe
-      this.setState({
-          disableEnd: false,
-          disableStart: true,
-          open: false
-      });
-  }
-
   render() {
     const { classes } = this.props;
     const { projectWorks, showProjectWorkForm, disableEnd, disableStart, open } = this.state;
-    console.log(this.state)
+    // console.log(this.state)
 
     return (
         <div>
@@ -123,12 +115,12 @@ class ProjectWorkList extends Component {
                 }
                 <Grid container direction={'row'} spacing={18}>
                     <Grid item xs={6} align={'center'}>
-                        <Button variant='contained' disabled={disableStart} color='primary' onClick={this.handleStartEventButtonClicked}>
+                        <Button variant='contained' color='primary' onClick={this.handleStartEventButtonClicked}>
                             Start buchen
                         </Button>
                     </Grid>
                     <Grid item xs={6} align={'center'}>
-                        <Button variant='contained' disabled={disableEnd} color='primary' onClick={this.handleEndEventButtonClicked}>
+                        <Button variant='contained' color='primary' onClick={this.handleEndEventButtonClicked}>
                             Ende buchen
                         </Button>
                     </Grid>
@@ -150,9 +142,8 @@ class ProjectWorkList extends Component {
                     <Button onClick={this.handleClose} color='secondary'>
                         Abbrechen
                     </Button>
-                    <Button color='primary' onClick={this.addNewEvent}>
-                        Start buchen
-                    </Button>
+                    <EventManager eventType={1} onClose={this.handleClose}>
+                    </EventManager>
                 </DialogActions>
             </Dialog>
             <ProjectWorkForm onClose={this.projectWorkFormClosed} show={showProjectWorkForm}></ProjectWorkForm>

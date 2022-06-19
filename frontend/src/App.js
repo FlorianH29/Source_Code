@@ -13,6 +13,8 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import firebaseConfig from './firebaseconfig';
+import Welcome from "./components/pages/Welcome";
+
 import {Person} from "@mui/icons-material";
 import SignInHeader from "./components/layout/SignInHeader";
 
@@ -96,6 +98,9 @@ class App extends React.Component {
                                 <Route exact path='/worktimeaccount'>
                                     <WorktimeAccount/>
                                 </Route>
+                                 <Route exact path='/welcome'>
+                                    <Welcome/>
+                                </Route>
                                 <Route exact path='/activities'>
                                     <ActivityList/>
                                 </Route>
@@ -109,7 +114,6 @@ class App extends React.Component {
                         <>
                             <SignInHeader person={currentPerson}/>
                             <SignIn onSignIn={this.handleSignIn}/>
-
                         </>
                 }
             </Router>
