@@ -26,40 +26,35 @@ class EventManager extends Component {
      * Wird aufgerufen, wenn ein Knopf zum Erstellen eines Ereignisses geklickt wird.
      * Ruft die Funktion addEvent auf und übergibt ihr den EventTyp, welcher in der jeweiligen Komponente angegeben ist.
      */
-    handleCreateEventButtonClicked = () => {
+    handleCreateEventButtonClickedf = () => {
         // wenn der Event Typ 1 ist, wird das Ereignis und die Projektarbeit erstellt
         if (this.state.eventType === 1) {
             this.addEvent(this.state.eventType);
+            this.state.addPW();
         } else {
             this.addEvent(this.state.eventType);
         }
     }
 
-    handlerzwo = () => {
-        if (this.state.eventType === 1) {
-            this.state.addPW();
-        }
-
-    }
-
-         /** handleCreateEventButtonClicked = () => {
+    handleCreateEventButtonClicked = () => {
         // wenn der Event Typ 1 ist, wird das Ereignis und die Projektarbeit erstellt
         if (this.state.eventType === 1) {
             this.addEvent(this.state.eventType).then(() => this.state.addPW());
         } else {
             this.addEvent(this.state.eventType);
         }
-    }      */
+    }
 
     /**
      * Erstellen eines Ereignisses.
      */
-    addEvent = (event) => {
+    addEvent = async (event) => {
         let newEvent = new EventBO(event);
         console.log(this.state);
-        HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
+        await HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
             // Backend call successfull
             // reinit the dialogs state for a new empty customer
+            console.log(event)
             this.setState(this.baseState);
             this.props.onClose(event); // call the parent with the customer object from backend
         }).catch(e =>
@@ -97,7 +92,7 @@ class EventManager extends Component {
 
         return (
             <div>
-                <Button eventType onClick={() => {this.handleCreateEventButtonClicked();this.handlerzwo();}}> {buttonName}</Button>
+                <Button eventType onClick={() => {this.handleCreateEventButtonClicked()}}> {buttonName}</Button>
             </div>
         )
     }

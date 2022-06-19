@@ -307,7 +307,7 @@ class HdMWebAppAdministration(object):
         for time_interval_transaction in time_interval_transactions:
             project_work_id = time_interval_transaction.get_affiliated_projectwork()
 
-            if project_work_id is not None:
+            if project_work_id is not None:  # wenn sich die Zeitintervallbuchung auf eine Projekarbeit bezieht
                 project_work = self.get_project_work_by_id(project_work_id)
 
                 if project_work.get_affiliated_activity() == activity.get_id():
@@ -991,7 +991,7 @@ class HdMWebAppAdministration(object):
             if event_type_last_event == 3:
                 self.create_event(event_type, person)
 
-    def create_event_with_time_stamp(self, event_type, time_stamp, person):
+    def create_event_with_time_stamp(self, event_type, time_stamp, person=None):
         """Event mit Zeitpunkt erstellen"""
         with EventMapper() as mapper:
             if event_type and person and time_stamp is not None:

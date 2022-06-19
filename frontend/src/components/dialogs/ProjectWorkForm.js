@@ -18,7 +18,7 @@ class ProjectWorkForm extends Component {
   constructor(props) {
     super(props);
 
-    let pwn = '', de = '',  act = 0;
+    let pwn = 'tst', de = '',  act = 0;
     if (props.projectWork) {
       pwn = props.projectWork.getProjectWorkName();
       de = props.projectWork.getDescription();
@@ -69,7 +69,7 @@ class ProjectWorkForm extends Component {
     this.setState({
       [event.target.id]: event.target.value,
       [event.target.id + 'ValidationFailed']: error,
-      [event.target.id + 'Edited']: true
+      [event.target.id + 'Edited']: true,
     });
   }
 
@@ -137,7 +137,8 @@ class ProjectWorkForm extends Component {
                   <Button color='primary' onClick={this.updateProjectWork}>
                     Sichern
                   </Button>
-                  : <EventManager eventType={1} onClose={this.handleClose} functionAddProjectWork={this.addProjectWork}>
+                  : <EventManager eventType={1} onClose={this.handleClose} functionAddProjectWork={this.addProjectWork}
+                        projectWorkName={projectWorkName} des={description}>
                     </EventManager>
               }
             </DialogActions>

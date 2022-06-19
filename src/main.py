@@ -395,8 +395,8 @@ h = HdMWebAppAdministration()
 pe = h.get_person_by_id(4)
 ac = h.get_activity_by_id(1)
 ti = h.get_time_interval_transaction_by_id(1)
+pw = h.get_project_work_by_id(16)
 
-print(h.get_work_time_of_activity_between_two_dates(ac, datetime(2022, 6, 15, 0, 0, 0), datetime(2022, 6, 20, 0, 0, 0)))
 
 if __name__ == '__main__':
     app.run(debug=False)
