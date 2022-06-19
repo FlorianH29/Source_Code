@@ -236,6 +236,8 @@ export default class HdMWebAppAPI {
 
 
 
+
+
     getWorktimeAccount(id) {
         return this.#fetchAdvanced(this.#getWorktimeAccountURL(id)).then((responseJSON) => {
             let worktimeaccountBOs = WorktimeAccountBO.fromJSON(responseJSON);
