@@ -42,7 +42,7 @@ class Project (bo.BusinessObject):
         return self._work_time
 
     def __str__(self):
-        """Ausgabe von: id, name, client, project_term_id"""
+        """Ausgabe von: id, Projektname, Klient, project_term_id"""
         return "Project: {}, {}, {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self.get_project_name(),
                                                             self.get_client(), self.get_time_interval_id(),
                                                             self.get_owner(), self.get_work_time())
