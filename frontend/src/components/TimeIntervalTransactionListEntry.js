@@ -4,6 +4,7 @@ import {Button, Divider, Grid, Typography} from "@material-ui/core";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EventAndTimeIntervalDeleteDialog from "./dialogs/EventAndTimeIntervalDeleteDialog";
+import EventAndTimeIntervalForm from "./dialogs/EventAndTimeIntervalForm";
 
 
 /**
@@ -33,10 +34,10 @@ class TimeIntervalTransactionListEntry extends Component {
     }
 
     /** Behandelt das onClose Event von showEventandTimeIntervalForm */
-    eventAndTimeIntervalFormClosed = (eventAndTimeInterval) => {
-        if (eventAndTimeInterval) {
+    eventAndTimeIntervalFormClosed = (event) => {
+        if (event) {
             this.setState({
-                event: eventAndTimeInterval,
+                event: event,
                 showEventandTimeIntervalForm: false
             });
         } else {
@@ -121,10 +122,10 @@ class TimeIntervalTransactionListEntry extends Component {
                 <Divider/>
                 {
                     /*  <ProjectWorkDeleteDialog show={showEventandTimeIntervalDeleteDialog} event={event}
-                                               onClose={this.deleteEventAndTimeIntervalDialogClosed}/>
-                    <ProjectWorkForm show={showEventandTimeIntervalForm} event={event}
-                                     onClose={this.eventAndTimeIntervalFormClosed}/> */
-                }
+                                               onClose={this.deleteEventAndTimeIntervalDialogClosed}/> */ }
+                    <EventAndTimeIntervalForm show={showEventandTimeIntervalForm} event={event}
+                                     onClose={this.eventAndTimeIntervalFormClosed}/>
+
             </div>
         );
     }

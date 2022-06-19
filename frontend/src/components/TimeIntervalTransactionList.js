@@ -15,6 +15,7 @@ class TimeIntervalTransactionList extends Component {
             events: [],
             startDate: new Date().getTime(),
             endDate: new Date().getTime(),
+            showEventAndTimeIntervalForm: false,
         }
     }
 
@@ -34,10 +35,26 @@ class TimeIntervalTransactionList extends Component {
         this.getEventForTimeIntervalTransactions(this.state.startDate, this.state.endDate)
     }
 
+
+  /** Behandelt das onClose Event */
+  eventAndTimeIntervalFormClosed = eventAndTimeInterval => {
+    if (eventAndTimeInterval) {
+      const newEventAndTimeIntervalList = [...this.state.events, eventAndTimeInterval];
+      this.setState({
+        events: newEventAndTimeIntervalList,
+        showEventAndTimeIntervalForm: false
+      });
+    } else {
+        this.setState({
+          showEventAndTimeIntervalForm: false
+        });
+      }
+  }
+
     render() {
         const {events, startDate, endDate} = this.state;
-        const {showEventandTimeIntervalForm} = this.props
-        //console.log(startDate)
+        const {showEventandTimeIntervalForm, getEventForTimeIntervalTransactions} = this.props
+        console.log(events)
         //console.log(endDate)
         return (
             <div>
@@ -84,14 +101,12 @@ class TimeIntervalTransactionList extends Component {
                         </Grid>
                         <Divider/>
                         {events.map(e =>
-                            <TimeIntervalTransactionListEntry key={1} event={e} onEventAndTimeIntervalDeleted={1}/>)
+                            <TimeIntervalTransactionListEntry key={e.name} event={e} onEventAndTimeIntervalDeleted={1}/>)
                         }
                     </Grid>
                 </Grid>
-                {/*
                     <EventAndTimeIntervalForm onClose={this.eventAndTimeIntervalFormClosed}
                                               show={showEventandTimeIntervalForm}></EventAndTimeIntervalForm>
-                */}
                 </div>
         );
     }

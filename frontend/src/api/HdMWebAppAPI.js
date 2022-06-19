@@ -31,6 +31,7 @@ export default class HdMWebAppAPI {
   #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
   #updateProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
   #deleteProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
+  #updateProjectWorkByNameURL = (id, name) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}/${name}`;
 
     //Worktimeaccount bezogen
     #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
@@ -259,6 +260,24 @@ export default class HdMWebAppAPI {
         'Content-type': 'application/json',
       },
       body: JSON.stringify(projectWorkBO)
+    }).then((responseJSON) => {
+        //Wir bekommen immer ein Array aus ProkectWorkBos.fromJSON
+      let responseProjectWorkBO = ProjectWorkBO.fromJSON(responseJSON)[0];
+      console.log(responseProjectWorkBO)
+      return new Promise(function (resolve) {
+        resolve(responseProjectWorkBO);
+      })
+    })
+  }
+
+  updateProjectWorkNameByID(id, name){
+          return this.#fetchAdvanced(this.#updateProjectWorkByNameURL(id, name), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({id: id, name: name})
     }).then((responseJSON) => {
         //Wir bekommen immer ein Array aus ProkectWorkBos.fromJSON
       let responseProjectWorkBO = ProjectWorkBO.fromJSON(responseJSON)[0];

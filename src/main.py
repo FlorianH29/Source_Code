@@ -53,6 +53,7 @@ person = api.inherit('Person', bo, {
 
 event_transaction_and_timeintervaltransaction = api.inherit('EventTransaction', {
     'name': fields.String(description='Name des Inhalts'),
+    'projectworkid': fields.Integer(desctipstion='ID der Projektarbeit'),
     'start_time': fields.DateTime(description='Dauer des Inhalts'),
     'end_time': fields.DateTime(description='Dauer des Inhalts'),
     'period': fields.String(description='Dauer des Inhalts'),
@@ -306,6 +307,27 @@ class ProjectWorkOperations(Resource):
         pw = hwa.get_project_work_by_id(id)
         hwa.delete_project_work(pw)
         return '', 200
+
+@hdmwebapp.route('/projectworks/<int:id>/<string:name>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID der Projektarbeit')
+@hdmwebapp.param('name', 'Der neue Name der Projektarbeit')
+class ProjectWorkUpdateNameOperations(Resource):
+    @hdmwebapp.marshal_list_with(projectwork)
+    #@secured
+    def put(self, id, name):
+        """
+        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = hwa.get_project_work_by_id(id)
+
+        if pw is not None:
+            pw.set_project_work_name(name)
+            hwa.save_project_work(pw)
+            return '', 200
+        else:
+            return '', 500
 
 @hdmwebapp.route('/eventtransactionsandtimeintervaltransactions/<int:startDate>/<int:endDate>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')

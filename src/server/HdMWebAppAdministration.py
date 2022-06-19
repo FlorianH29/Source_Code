@@ -443,14 +443,14 @@ class HdMWebAppAdministration(object):
                 time_stamp = arrive.get_time_stamp()
                 if start_time <= time_stamp.date() <= end_time:
                     # Überprüfen, ob das Event im übergebenen Zeitraum liegt
-                    event_dict = {'name': 'Kommen', 'start_time': time_stamp, 'end_time': None, 'period': None}
+                    event_dict = {'name': 'Kommen', 'projectworkid': None, 'start_time': time_stamp, 'end_time': None, 'period': None}
                     event_list.append(event_dict)
             if departure_id is not None:
                 departure = self.get_departure_event_by_id(departure_id)
                 time_stamp = departure.get_time_stamp()
                 if start_time <= time_stamp.date() <= end_time:
                     # Überprüfen, ob das Event im übergebenen Zeitraum liegt
-                    event_dict = {'name': 'Gehen', 'start_time': time_stamp, 'end_time': time_stamp, 'period': None}
+                    event_dict = {'name': 'Gehen', 'projectworkid': None, 'start_time': time_stamp, 'end_time': time_stamp, 'period': None}
                     event_list.append(event_dict)
         for tit in time_interval_transactions:
             break_id = tit.get_affiliated_break()
@@ -466,7 +466,7 @@ class HdMWebAppAdministration(object):
                 time_stamp_end = end_event.get_time_stamp()
                 time_period = br.get_time_period()
                 if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
-                    event_dict = {'name': 'break', 'start_time': time_stamp_start, 'end_time': time_stamp_end,
+                    event_dict = {'name': 'break', 'projectworkid': None, 'start_time': time_stamp_start, 'end_time': time_stamp_end,
                                   'period': time_period}
                     event_list.append(event_dict)
             if project_work_id is not None:
@@ -479,7 +479,7 @@ class HdMWebAppAdministration(object):
                 time_stamp_end = end_event.get_time_stamp()
                 time_period = project_work.get_time_period()
                 if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
-                    event_dict = {'name': project_work.get_project_work_name(), 'start_time': time_stamp_start,
+                    event_dict = {'name': project_work.get_project_work_name(), 'projectworkid': project_work_id ,'start_time': time_stamp_start,
                                   'end_time': time_stamp_end, 'period': time_period}
                     event_list.append(event_dict)
             if work_time_id is not None:
@@ -492,7 +492,7 @@ class HdMWebAppAdministration(object):
                 time_stamp_end = end_event.get_time_stamp()
                 time_period = time_interval.get_time_period()
                 if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
-                    event_dict = {'name': 'Arbeitszeit', 'start_time': time_stamp_start,
+                    event_dict = {'name': 'Arbeitszeit', 'projectworkid': None, 'start_time': time_stamp_start,
                                   'end_time': time_stamp_end, 'period': time_period}
                     event_list.append(event_dict)
         sorted_event_list = sorted(event_list, key=lambda x: x['start_time'])
