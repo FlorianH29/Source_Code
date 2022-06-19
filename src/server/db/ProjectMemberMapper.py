@@ -77,7 +77,7 @@ class ProjectMemberMapper (Mapper):
 
         return result
 
-    def find_projectmembers_by_project_id(self, key):
+    def find_project_members_by_project_id(self, key):
         """Suchen eines ProjectMembers Eintrags mit vorgegebener project_id.
 
         :param key Fremdschlüsselattribut (->DB)
@@ -91,15 +91,15 @@ class ProjectMemberMapper (Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (projectmember_id, project_id, person_id, last_edit, deleted) in tuples:
-            projectmember = ProjectMember()
-            projectmember.set_id(projectmember_id)
-            projectmember.set_project(project_id)
-            projectmember.set_person(person_id)
-            projectmember.set_last_edit(last_edit)
-            projectmember.set_deleted(deleted)
+        for (project_member_id, project_id, person_id, last_edit, deleted) in tuples:
+            project_member = ProjectMember()
+            project_member.set_id(project_member_id)
+            project_member.set_project(project_id)
+            project_member.set_person(person_id)
+            project_member.set_last_edit(last_edit)
+            project_member.set_deleted(deleted)
 
-            result.append(projectmember)
+            result.append(project_member)
 
         self._cnx.commit()
         cursor.close()

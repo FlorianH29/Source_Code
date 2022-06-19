@@ -7,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ListItem from "@mui/material/ListItem";
 import ActivityDeleteDialog from "./dialogs/ActivityDeleteDialog";
 import ActivityForm from "./dialogs/ActivityForm";
+import { Link } from 'react-router-dom';
 
 
 /**
@@ -78,10 +79,12 @@ class ActivityListEntry extends Component {
         <div>
            <ListItem>
              <Grid container alignItems='center'>
-               <Grid item xs={3} align={"center"}>
+               <Grid className="pw-link" item xs={3} align={"center"}>
+               <Link to='/projectworks'>
                  <Typography variant={"h5"} component={"div"}>
-                     {activity.getActivityName()}
+                    <li> {activity.getActivityName()}</li>
                  </Typography>
+               </Link>
                </Grid>
                <Grid item xs={3} align={"center"}>
                  <Typography variant={"h5"} component={"div"}>

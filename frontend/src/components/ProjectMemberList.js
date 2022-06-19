@@ -4,7 +4,7 @@ import {Grid, Typography,} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ClearIcon from '@material-ui/icons/Clear'
 import { withRouter } from 'react-router-dom';
-import { HdMWebAppAPI } from '../api';
+import { PersonBO, HdMWebAppAPI } from '../api';
 import CloseIcon from "@material-ui/icons/Close";
 import {Button, Divider} from "@mui/material";
 import ProjectMemberListEntry from "./ProjectMemberListEntry";
@@ -14,18 +14,15 @@ import ProjectMemberListEntry from "./ProjectMemberListEntry";
 class ProjectMemberList extends Component {
 
     constructor(props) {
-    super(props);
+        super(props);
 
-    // Den State initiieren
-    this.state = {
-      projectMembers: [],
-    };
-
-    // den state speichern, für den Fall, dass abgebrochen wird
-    this.baseState = this.state;
+        // Den State initiieren
+        this.state = {
+            projectMembers: [],
+        };
     }
 
-    getProjectMembers = () => {
+    getProjectMembersOfProject = () => {
     HdMWebAppAPI.getAPI().getProjectMembers(1)  // statt 1 sollte hier die Id der ausgewählten Person rein
       .then(personBOs =>
         this.setState({
@@ -37,7 +34,8 @@ class ProjectMemberList extends Component {
   }
 
   componentDidMount() {
-    this.getProjectMembers();
+    this.getProjectMembersOfProject();
+    //console.log(this.state)
   }
  /**
   handleAddProjectMemberButtonClicked = (event) => {
@@ -82,7 +80,7 @@ class ProjectMemberList extends Component {
                     </Grid>
                     <Divider/>
                     {projectMembers.map(pm =>
-                        <ProjectMemberListEntry key={pm.getID()} projectmember={pm} onActivityDeleted={this.projectMemberDeleted}/>)
+                        <ProjectMemberListEntry key={pm.getID()} projectMember={pm} onActivityDeleted={this.projectMemberDeleted}/>)
                     }
                     </Grid>
                 </Grid>

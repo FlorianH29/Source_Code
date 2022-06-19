@@ -439,26 +439,35 @@ class ProjectWorkOperations(Resource):
 @hdmwebapp.route('/projects/<int:id>/projectmembers')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectMemberOperations(Resource):
-    @hdmwebapp.marshal_list_with(projectmember)
+    @hdmwebapp.marshal_list_with(person)
     @secured
     def get(self, id):
         hwa = HdMWebAppAdministration()
         pro = hwa.get_project_by_id(id)
-        # Das durch die id gegebene Projekt als Objekt speichern.
 
         if pro is not None:
-            projectmember_list = hwa.get_project_members_of_project(pro)
-            # Auslesen der Aktivitäten, die dem Projekt untergliedert sind.
-            return projectmember_list
+            projectmembers = hwa.get_project_members_by_project(pro)
+
+            projectmember_list = []
+            for i in projectmembers:
+                person_id = i.get_person()
+                projectmember_list.append(person_id)
+
+            persons = []
+            for i in projectmember_list:
+                person = hwa.get_person_by_id(i)
+                persons.append(person)
+
+            return persons
         else:
             return "Project not found", 500
 
 
 @hdmwebapp.route('/projectmembers/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@hdmwebapp.param('id', 'Die ID der Projektarbeit')
+@hdmwebapp.param('id', 'Die ID des Projectmitarbeiters')
 class ProjectWorkOperations(Resource):
-    @hdmwebapp.marshal_list_with(projectmember)
+    @hdmwebapp.marshal_list_with(person)
     @secured
     def delete(self, id):
         """
@@ -466,7 +475,7 @@ class ProjectWorkOperations(Resource):
         """
         hwa = HdMWebAppAdministration()
         pm = hwa.get_project_member_by_id(id)
-        hwa.delete_project_work(pm)
+        hwa.delete_project_member(pm)
         return '', 200
 
 

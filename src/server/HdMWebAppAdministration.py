@@ -686,16 +686,11 @@ class HdMWebAppAdministration(object):
                     result.extend(project_member)
                 return result
 
-    def get_project_members_of_project(self, project):
+    def get_project_members_by_project(self, project):
         """ Projektarbeiten werden anhand der eindeutigen ID der Aktivität ausgelesen, der sie zugeordnet sind."""
         with ProjectMemberMapper() as mapper:
-            result = []
+            return mapper.find_project_members_by_project_id(project.get_id())
 
-            if not (project is None):
-                project_members = mapper.find_by_project(project.get_id())
-                if not (project_members is None):
-                    result.extend(project_members)
-            return result
 
     def create_project_member(self, project, person):
         """Erstellen eines neuen Projekts"""
@@ -712,16 +707,19 @@ class HdMWebAppAdministration(object):
             else:
                 return None
 
-    def delete_project_member(self, project_m):
+    def delete_project_member(self, project_member):
         with ProjectMemberMapper() as mapper:
-            return mapper.delete(project_m)
+            return mapper.delete(project_member)
 
-    def save_project_member(self, project_m):
+    def save_project_member(self, project_member):
         # Vor dem Speichern wird der last_edit zu aktuellen Zeitpunkt gesetzt
-        project_m.set_last_edit(datetime.now())
+        project_member.set_last_edit(datetime.now())
         with ProjectMemberMapper() as mapper:
-            return mapper.update(project_m)
+            return mapper.update(project_member)
 
+    def get_project_by_employee(self, person_id):
+        with ProjectMemberMapper() as mapper:
+            return mapper.find_projects_by_person_id(person_id)
 
     """Methoden von TimeInterval"""
 
