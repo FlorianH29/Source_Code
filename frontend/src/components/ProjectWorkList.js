@@ -44,7 +44,7 @@ class ProjectWorkList extends Component {
     // Dialog öffnen, um damit ein Startevent anlegen zu können
       event.stopPropagation();
       this.setState({
-          open: true
+          showProjectWorkForm: true
       })
   }
 
@@ -52,7 +52,7 @@ class ProjectWorkList extends Component {
     // Dialog öffnen, um damit ein Endevent zu dem Startevent und somit eine Projektarbeit anlegen zu können
       event.stopPropagation();
       this.setState({
-          showProjectWorkForm: true
+          open: true
       })
   }
 
@@ -128,21 +128,21 @@ class ProjectWorkList extends Component {
             </Grid>
           </Grid>
             <Dialog open={open} onClose={this.handleClose}>
-                <DialogTitle>Start buchen
+                <DialogTitle>Ende buchen
                     <IconButton onClick={this.handleClose}>
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Start buchen und mit Projektarbeit beginnen?
+                        Ende buchen und Projektarbeit beenden?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleClose} color='secondary'>
                         Abbrechen
                     </Button>
-                    <EventManager eventType={1} onClose={this.handleClose}>
+                    <EventManager eventType={2} onClose={this.handleClose}>
                     </EventManager>
                 </DialogActions>
             </Dialog>

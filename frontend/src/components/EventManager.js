@@ -16,31 +16,44 @@ class EventManager extends Component {
 
 
         this.state = {
-            addPW : this.props.functionAddProjectWork,
+            addPW: this.props.functionAddProjectWork,
             eventType: this.props.eventType,
             buttonName: '',
         }
     }
 
-   /**
-   * Wird aufgerufen, wenn ein Knopf zum Erstellen eines Ereignisses geklickt wird.
-   * Ruft die Funktion addEvent auf und übergibt ihr den EventTyp, welcher in der jeweiligen Komponente angegeben ist.
-   */
-    handleCreateEventButtonClicked = (event) => {
-        event.stopPropagation();
-        // wenn der Event Typ 2 ist, wird das Ereignis und die Projektarbeit erstellt
-        if (this.state.eventType === 2) {
+    /**
+     * Wird aufgerufen, wenn ein Knopf zum Erstellen eines Ereignisses geklickt wird.
+     * Ruft die Funktion addEvent auf und übergibt ihr den EventTyp, welcher in der jeweiligen Komponente angegeben ist.
+     */
+    handleCreateEventButtonClicked = () => {
+        // wenn der Event Typ 1 ist, wird das Ereignis und die Projektarbeit erstellt
+        if (this.state.eventType === 1) {
             this.addEvent(this.state.eventType);
-            this.state.addPW();
-        }
-        else {
-             this.addEvent(this.state.eventType);
+        } else {
+            this.addEvent(this.state.eventType);
         }
     }
 
-   /**
-   * Erstellen eines Ereignisses.
-   */
+    handlerzwo = () => {
+        if (this.state.eventType === 1) {
+            this.state.addPW();
+        }
+
+    }
+
+         /** handleCreateEventButtonClicked = () => {
+        // wenn der Event Typ 1 ist, wird das Ereignis und die Projektarbeit erstellt
+        if (this.state.eventType === 1) {
+            this.addEvent(this.state.eventType).then(() => this.state.addPW());
+        } else {
+            this.addEvent(this.state.eventType);
+        }
+    }      */
+
+    /**
+     * Erstellen eines Ereignisses.
+     */
     addEvent = (event) => {
         let newEvent = new EventBO(event);
         console.log(this.state);
@@ -53,18 +66,21 @@ class EventManager extends Component {
             console.log(e));
     }
 
-   /**
-   * Bestimmt den Namen des Knopfes zum Erstellen eines Ereignisses, je nach übergebenem Typ andere Benennung.
-   */
+    /**
+     * Bestimmt den Namen des Knopfes zum Erstellen eines Ereignisses, je nach übergebenem Typ andere Benennung.
+     */
     getNameofButton = () => {
         let bName = '';
         if (this.state.eventType === 1) {
             bName = 'Start buchen'
-        } if (this.state.eventType === 2){
+        }
+        if (this.state.eventType === 2) {
             bName = 'Ende buchen'
-        } if (this.state.eventType === 3){
+        }
+        if (this.state.eventType === 3) {
             bName = 'Pause starten'
-        } if (this.state.eventType === 4){
+        }
+        if (this.state.eventType === 4) {
             bName = 'Pause beenden'
         }
         this.setState({
@@ -77,11 +93,11 @@ class EventManager extends Component {
     }
 
     render() {
-        const { buttonName } = this.state
+        const {buttonName} = this.state
 
         return (
             <div>
-                <Button eventType onClick={this.handleCreateEventButtonClicked}> {buttonName}</Button>
+                <Button eventType onClick={() => {this.handleCreateEventButtonClicked();this.handlerzwo();}}> {buttonName}</Button>
             </div>
         )
     }

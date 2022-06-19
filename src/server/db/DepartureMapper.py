@@ -95,12 +95,13 @@ class DepartureMapper (Mapper):
         tuples = cursor.fetchall()
 
         try:
-            (departure_id, last_edit, time_stamp, affiliated_person_id) = tuples[0]
+            (departure_id, last_edit, time_stamp, affiliated_person_id, deleted) = tuples[0]
             departure = Departure()
             departure.set_id(departure_id)
             departure.set_last_edit(last_edit)
             departure.set_time_stamp(time_stamp)
             departure.set_affiliated_person(affiliated_person_id)
+            departure.set_deleted(deleted)
 
             result = departure
         except IndexError:
@@ -158,10 +159,10 @@ class DepartureMapper (Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 departure.set_id(1)
 
-        command = "INSERT INTO departure (departure_id, last_edit, time_stamp, affiliated_person_id) " \
-                  "VALUES (%s,%s,%s,%s)"
+        command = "INSERT INTO departure (departure_id, last_edit, time_stamp, affiliated_person_id, deleted) " \
+                  "VALUES (%s,%s,%s,%s,%s)"
         data = (departure.get_id(), departure.get_last_edit(), departure.get_time_stamp(),
-                departure.get_affiliated_person())
+                departure.get_affiliated_person(), departure.get_deleted())
         cursor.execute(command, data)
 
         self._cnx.commit()

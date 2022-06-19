@@ -211,14 +211,17 @@ class EventOperations(Resource):
         h = Helper()
         firebase_id = h.get_firebase_id()
         per = hwa.get_person_by_firebase_id(firebase_id)
+        start = hwa.get_last_start_event_project_work(per)
+        pw = hwa.get_project_work_by_start_event(start)
         proposal = Event.from_dict(api.payload)
 
         if proposal is not None:
             """ 
-            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Eventobjekt erstellt.
-            Wenn dieses   
+            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Eventobjekt erstellt.  
             """
-            e = hwa.create_event_and_check_type(proposal.get_event_type(), per)
+            e = hwa.check_if_first_event(proposal.get_event_type(), per)
+            if proposal.get_event_type() == 2:
+                hwa.add_end_event_to_project_work(pw, per)
             return e, 200
         else:
             return '', 500
@@ -376,8 +379,9 @@ sub_thread.start()
 h = HdMWebAppAdministration()
 pe = h.get_person_by_id(4)
 ac = h.get_activity_by_id(1)
-ti = h.get_time_interval_transaction_by_id(1)
+pw = h.get_project_work_by_id(15)
 
+# print(h.get_all_persons_by_arrive())
 
 
 if __name__ == '__main__':

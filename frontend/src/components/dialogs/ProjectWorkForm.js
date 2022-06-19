@@ -102,7 +102,7 @@ class ProjectWorkForm extends Component {
       header = `Projektarbeit ID: ${projectWork.getID()}`;
     } else {
       // ProjectWork ist nicht definiert, Erstellungsdialog wird angezeigt
-      title = 'Ende buchen und neue Projektarbeit erstellen';
+      title = 'Start buchen und neue Projektarbeit erstellen';
       header = 'Geben Sie bitte Name und Beschreibung an';
     }
 
@@ -137,7 +137,7 @@ class ProjectWorkForm extends Component {
                   <Button color='primary' onClick={this.updateProjectWork}>
                     Sichern
                   </Button>
-                  : <EventManager eventType={2} onClose={this.handleClose} functionAddProjectWork={this.addProjectWork}>
+                  : <EventManager eventType={1} onClose={this.handleClose} functionAddProjectWork={this.addProjectWork}>
                     </EventManager>
               }
             </DialogActions>
