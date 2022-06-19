@@ -1,5 +1,17 @@
 import * as React from 'react';
-import {AppBar, CssBaseline, Typography, Toolbar, IconButton, Menu, Box, Drawer, Button, Link, Divider} from '@mui/material';
+import {
+    AppBar,
+    CssBaseline,
+    Typography,
+    Toolbar,
+    IconButton,
+    Menu,
+    Box,
+    Drawer,
+    Button,
+    Link,
+    Divider, MenuItem
+} from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -32,41 +44,40 @@ class Navigator extends Component {
         };
     };
 
+    persondeleteClosed = person => {
+        // Person ist nicht null und deshalb erstelltI/überarbeitet
+        if (person) {
+            const newperson = [...this.state.person, person];
+            this.setState({
+                person: newperson,
+                showPersonDeleteDialog: false
+            });
+        } else {
+            this.setState({
+                showPersonDeleteDialog: false
+            });
+        }
+    }
 
-  persondeleteClosed = person => {
-    // Person ist nicht null und deshalb erstelltI/überarbeitet
-    if (person) {
-      const newperson = [...this.state.person, person];
-      this.setState({
-        person: newperson,
-        showPersonDeleteDialog: false
-      });
-    } else {
-        this.setState({
-          showPersonDeleteDialog: false
-        });
-      }
-  }
-
-  getPerson = () => {
-    HdMWebAppAPI.getAPI().getPerson()
-      .then(customerBOs =>
-        this.setState({
-          person: PersonBO,
-          error: null
-        })).catch(e =>
-          this.setState({
-            person: [],
-            error: e
-          })
+    getPerson = () => {
+        HdMWebAppAPI.getAPI().getPerson()
+            .then(customerBOs =>
+                this.setState({
+                    person: PersonBO,
+                    error: null
+                })).catch(e =>
+            this.setState({
+                person: [],
+                error: e
+            })
         );
 
-    // set loading to true
-    this.setState({
-      loadingInProgress: true,
-      error: null
-    });
-  }
+        // set loading to true
+        this.setState({
+            loadingInProgress: true,
+            error: null
+        });
+    }
 
     handleDelete = () => {
         this.setState({
@@ -74,26 +85,26 @@ class Navigator extends Component {
         });
     }
 
-     handleEdit = () => {
+    handleEdit = () => {
         this.setState({
             showPersonEditDialog: true
         });
     }
 
-      personeditClosed = person => {
-    // person ist nicht null und deshalb überarbeitet
-    if (person) {
-      const newperson = [...this.state.person, person];
-      this.setState({
-        person: newperson,
-        showPersonEditDialog: false
-      });
-    } else {
-        this.setState({
-          showPersonEditDialog: false
-        });
-      }
-  }
+    personeditClosed = person => {
+        // person ist nicht null und deshalb überarbeitet
+        if (person) {
+            const newperson = [...this.state.person, person];
+            this.setState({
+                person: newperson,
+                showPersonEditDialog: false
+            });
+        } else {
+            this.setState({
+                showPersonEditDialog: false
+            });
+        }
+    }
 
     handleOpenUserMenu = (event) => {
         this.setState({anchorEl: event.currentTarget});
@@ -103,11 +114,10 @@ class Navigator extends Component {
         this.setState({anchorEl: null});
     };
 
-
-  handleClose = () => {
-      // den state neu setzen, sodass open false ist und der Dialog nicht mehr angezeigt wird
-      this.setState({open: false});
-  }
+    handleClose = () => {
+        // den state neu setzen, sodass open false ist und der Dialog nicht mehr angezeigt wird
+        this.setState({open: false});
+    }
 
     render() {
         const {person} = this.props;
@@ -116,100 +126,109 @@ class Navigator extends Component {
         const lel = 0;
         const boxWidth = 200;
 
-
-
         return (
             <Box sx={{display: 'flex'}}>
                 <CssBaseline/>
-                <AppBar position="static" sx={{width: `calc(100% - ${lel}px)`, bgcolor: "#05353f", ml: `${boxWidth}px`, p:4}}>
+                <AppBar position="fixed" sx={{
+                    width: `calc(100% - ${lel}px)`,
+                    bgcolor: "#05353f",
+                    ml: `${boxWidth}px`,
+                    p: 4,
+                    zIndex: (theme) => theme.zIndex.drawer + 1
+                }}>
                     <Toolbar>
-                        <Typography variant="h3"  component="div" sx={{flexGrow: 1}}>
+                        <Typography variant="h3" component="div" sx={{flexGrow: 1}}>
                             HdM Zeiterfassung
                         </Typography>
+                    {person ? (<>
+                        <IconButton
+                            size="large"
+                            onClick={this.handleOpenUserMenu}
+                            color="inherit">
+                            <PersonIcon/>
+                        </IconButton>
+                        <Menu
+                            anchorEl={this.state.anchorEl}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(this.state.anchorEl)}
+                            onClose={() => {
+                                this.handleCloseUserMenu()
+                            }}>
+                            <PersonDeleteDialog person={person} show={showPersonDeleteDialog}
+                                                onClose={this.persondeleteClosed}>
+                            </PersonDeleteDialog>
+                            <PersonEditDialog person={person} show={showPersonEditDialog}
+                                              onClose={this.personeditClosed}>
+                            </PersonEditDialog>
+                            <Typography variant='h6' component='div' align='center'>
+                                <Button onClick={this.handleEdit}>Profil bearbeiten</Button>
+                                <Button onClick={this.handleDelete}>Profil löschen</Button>
+                            </Typography>
+                        </Menu>
+                         </>) : null
+                    }
+                     </Toolbar>
+                </AppBar>
 
-                    {person ? (
-                        <>
-                                <IconButton
-                                    size="large"
-                                    onClick={this.handleOpenUserMenu}
-                                    color="inherit">
-                                    <PersonIcon/>
-                                </IconButton>
+                {person ? (
+                    <>
+                        <Drawer variant="permanent" top={100} position="relative" anchor="left"
+                                sx={{
+                                    width: drawerWidth, flexShrink: 2, '& .MuiDrawer-paper': {
+                                        width: drawerWidth,
+                                        flexGrow: 1, boxSizing: 'border-box', bgcolor: "white"
+                                    },
+                                }}>
+                            <Divider sx={{p: 7.95, bgcolor: "#05353f"}}/>
+                            <Typography variant="h3" component="div" sx={{flexGrow: 1, p: 1}}>
+                                <ListItem>
+                                    <ListItemButton component={RouterLink} to={`/persons`}>
+                                        <ListItemIcon>
+                                            <PersonSearchIcon/>
+                                        </ListItemIcon>
+                                        <ListItemText primary="Personen"/>
+                                    </ListItemButton>
+                                </ListItem>
 
-                                <Menu
-                                    anchorEl={this.state.anchorEl}
-                                    anchorOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    keepMounted
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    open={Boolean(this.state.anchorEl)}
-                                    onClose={() => {
-                                        this.handleCloseUserMenu()
-                                    }}>
-                                    <PersonDeleteDialog person={person} show={showPersonDeleteDialog} onClose={this.persondeleteClosed}>
-                                    </PersonDeleteDialog>
-                                    <PersonEditDialog person={person} show={showPersonEditDialog} onClose={this.personeditClosed}>
-                                    </PersonEditDialog>
-                                    <Typography variant='h5' component='div' align='center'>
-                                    <Button onClick={this.handleEdit}>Profil bearbeiten</Button>
-                                    <Button onClick={this.handleDelete}>Profil löschen</Button>
-                                    </Typography>
-                                </Menu>
+                                <ListItem>
+                                    <ListItemButton component={RouterLink} to={`/projectworks`}>
+                                        <ListItemIcon>
+                                            <AccessTimeIcon/>
+                                        </ListItemIcon>
+                                        <ListItemText primary="Projekte"/>
+                                    </ListItemButton>
+                                </ListItem>
 
-                  <Drawer variant="permanent" top={100} position = "relative" anchor="left"
-                        sx={{width: drawerWidth, flexShrink: 2, '& .MuiDrawer-paper': {width: drawerWidth,
-                                flexGrow: 1, boxSizing: 'border-box', bgcolor: "white"
-                        },
-                    }}>
-                       <Divider sx={{p:7.95, bgcolor:"#05353f"}} />
-                       <Typography variant="h3"  component="div" sx={{flexGrow: 1, p:1}}>
-                            <ListItem>
-                                 <ListItemButton component={RouterLink} to={`/persons`}>
-                                     <ListItemIcon>
-                                        <PersonSearchIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Personen" />
-                                </ListItemButton>
-                            </ListItem>
+                                <ListItem>
+                                    <ListItemButton component={RouterLink} to={`/worktimeaccount`}>
+                                        <ListItemIcon>
+                                            <AccountCircleIcon/>
+                                        </ListItemIcon>
+                                        <ListItemText primary="Arbeitszeiten"/>
+                                    </ListItemButton>
+                                </ListItem>
 
-                            <ListItem>
-                                 <ListItemButton component={RouterLink} to={`/projectworks`}>
-                                     <ListItemIcon>
-                                        <AccessTimeIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Projekte" />
-                                </ListItemButton>
-                            </ListItem>
-
-                            <ListItem>
-                                 <ListItemButton component={RouterLink} to={`/worktimeaccount`}>
-                                     <ListItemIcon>
-                                        <AccountCircleIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Arbeitszeiten" />
-                                </ListItemButton>
-                            </ListItem>
-
-                            <ListItem>
-                                 <ListItemButton component={Link} to={`https://www.instagram.com/p/CdnFHnzj8UP/`} >
-                                     <ListItemIcon>
-                                        <SportsSoccerIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Blöder Kerle" />
-                                </ListItemButton>
-                            </ListItem>
-                      </Typography>
-                  </Drawer>
-                     </>
-                    ) : null}
-                </Toolbar>
-            </AppBar>
-        </Box>
+                                <ListItem>
+                                    <ListItemButton component={Link} to={`https://www.instagram.com/p/CdnFHnzj8UP/`}>
+                                        <ListItemIcon>
+                                            <SportsSoccerIcon/>
+                                        </ListItemIcon>
+                                        <ListItemText primary="Blöder Kerle"/>
+                                    </ListItemButton>
+                                </ListItem>
+                            </Typography>
+                        </Drawer>
+                    </>
+                ) : null}
+            </Box>
         )
     }
 }
