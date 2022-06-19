@@ -291,9 +291,11 @@ class HdMWebAppAdministration(object):
         work_time = timedelta(hours=0)
         for time_interval_transaction in time_interval_transactions:
             project_work_id = time_interval_transaction.get_affiliated_projectwork()
-            project_work = self.get_project_work_by_id(project_work_id)
-            if project_work.get_affiliated_activity() == activity.get_id():
-                work_time += project_work.get_time_period()
+            if project_work_id is not None:
+                project_work = self.get_project_work_by_id(project_work_id)
+                if project_work is not None:
+                    if project_work.get_affiliated_activity() == activity.get_id():
+                        work_time += project_work.get_time_period()
         activity.set_work_time(work_time)
         self.save_activity(activity)
 
@@ -633,9 +635,8 @@ class HdMWebAppAdministration(object):
 
                 project = self.get_project_by_id(activity.get_affiliated_project())  # das Projekt der Aktität speichern
 
-                return mapper.insert(project_work), self.calculate_work_time_of_activity(activity), \
-                       self.calculate_work_time_of_project(project), \
-                       self.create_time_interval_transaction(person, None, None, project_work)
+                return mapper.insert(project_work), self.create_time_interval_transaction(person, None, None, project_work),\
+                       self.calculate_work_time_of_activity(activity), self.calculate_work_time_of_project(project)
             else:
                 return None
 
@@ -908,7 +909,7 @@ class HdMWebAppAdministration(object):
     def create_event(self, event_type, person):
         """Event anlegen"""
         with EventMapper() as mapper:
-            if event_type and person is not None:
+            if person is not None:
                 event = Event()
                 event.set_id(1)
                 event.set_deleted(0)
