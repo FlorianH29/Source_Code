@@ -4,6 +4,8 @@ import { withStyles, Typography, Accordion, AccordionSummary, AccordionDetails, 
 import {Button, ListItem} from "@mui/material";
 import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
 import EditIcon from '@mui/icons-material/Edit';
+import ProjectDeleteDialog from "./dialogs/ProjectDeleteDialog";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 
 /**
@@ -21,18 +23,36 @@ class ProjectListEntry extends Component {
 
         this.state = {
             project: props.project,
-            showProjectCreateDialog: false
-
+            showProjectCreateDialog: false,
+            showProjectDeleteDialog: false
         }
     }
 
-     /** Behandelt das onClick Event des Project bearbeiten Buttons */
+    /** Behandelt das onClick Event des Project bearbeiten Buttons */
     editProjectButtonClicked = (event) => {
         event.stopPropagation();
         this.setState({
             showProjectCreateDialog: true
-    });
-  }
+        });
+    }
+
+    /** Behandelt das onClick Event des Project löschen Buttons */
+    deleteProjectButtonClicked = (event) => {
+        event.stopPropagation();
+        this.setState({
+            showProjectDeleteDialog: true
+        });
+    }
+
+    /** Behandelt das onClose Event von ProjectDeleteDialog */
+    deleteProjectDialogClosed = (project) => {
+        if (project) {
+            this.props.onProjectDeleted(project);
+        }
+        this.setState({
+            showProjectDeleteDialog: false // Den Dialog nicht mehr anzeigen
+        });
+    }
 
     /** Methode für das onClickEvent des BearbeitenButton von Project*/
       projectCreateDialogClosed = (project) => {
@@ -49,11 +69,10 @@ class ProjectListEntry extends Component {
     }
   }
 
-
-
+    /** Rendert die Komponente*/
     render() {
         const { classes } = this.props;
-        const { project, showProjectCreateDialog } = this.state;
+        const { project, showProjectCreateDialog, showProjectDeleteDialog } = this.state;
 
         console.log(project)
         //console.log (classes)
@@ -74,11 +93,13 @@ class ProjectListEntry extends Component {
                         </Grid>
                         <Grid item xs={3} align={"center"}>
                             <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editProjectButtonClicked}> </Button>
+                            <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteProjectButtonClicked}> </Button>
                         </Grid>
                     </Grid>
                 </ListItem>
                 <Divider/>
                 <ProjectCreateDialog show={showProjectCreateDialog} project={project} onClose={this.projectCreateDialogClosed} />
+                <ProjectDeleteDialog project={project} show={showProjectDeleteDialog} onClose={this.deleteProjectDialogClosed} />
             </div>
         );
     }
@@ -94,9 +115,8 @@ const styles = theme => ({
 ProjectListEntry.propTypes = {
   /** Das ProjectBO welches gerendert werden soll */
   project: PropTypes.object.isRequired,
-
-
-
+  /** Event Handler Funktion, welche aufgerufen wird, nachdem ein Projekt erfolgreich gelöscht wurde. */
+  onProjectDeleted: PropTypes.func.isRequired
 }
 
 export default withStyles(styles)(ProjectListEntry);
