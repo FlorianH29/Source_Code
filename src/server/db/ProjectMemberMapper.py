@@ -77,6 +77,35 @@ class ProjectMemberMapper (Mapper):
 
         return result
 
+    def find_projectmembers_by_project_id(self, key):
+        """Suchen eines ProjectMembers Eintrags mit vorgegebener project_id.
+
+        :param key Fremdschlüsselattribut (->DB)
+        :return Projekt-Member-Objekte, die dem übergebenen Schlüssel entsprechen, None bei nicht vorhandenem DB-Tupel.
+        """
+
+        result = []
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM projectmembers WHERE project_id={} AND deleted=0".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        for (projectmember_id, project_id, person_id, last_edit, deleted) in tuples:
+            projectmember = ProjectMember()
+            projectmember.set_id(projectmember_id)
+            projectmember.set_project(project_id)
+            projectmember.set_person(person_id)
+            projectmember.set_last_edit(last_edit)
+            projectmember.set_deleted(deleted)
+
+            result.append(projectmember)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
     def insert(self, projectmember):
         """Einfügen eines Project-Member-Objekts in die Datenbank.
 

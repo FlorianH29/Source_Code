@@ -559,9 +559,13 @@ class HdMWebAppAdministration(object):
         with ProjectMapper() as mapper:
             if project is not None:
                 activities = self.get_activities_of_project(project)
+                pro_members = self.get_projectmember_by_project(project)
 
                 for activity in activities:
                     self.delete_activity(activity)
+
+                for projectmember in pro_members:
+                    self.delete_project_member(projectmember)
 
                 mapper.delete(project)
             else:
@@ -672,6 +676,12 @@ class HdMWebAppAdministration(object):
         with ProjectMemberMapper() as mapper:
             return mapper.find_by_key(number)
 
+    def get_projectmember_by_project(self, project):
+        """Alle Projectmember-Einträge ausgeben, die einer Project ID zugeordnet sind"""
+        with ProjectMemberMapper() as mapper:
+            return mapper.find_projectmembers_by_project_id(project.get_id())
+
+
     def get_projectmember_by_person(self, person):
         with ProjectMemberMapper() as mapper:
             result = []
@@ -707,9 +717,6 @@ class HdMWebAppAdministration(object):
         with ProjectMemberMapper() as mapper:
             return mapper.update(project_m)
 
-    def get_project_by_employee(self, person_id):
-        with ProjectMemberMapper() as mapper:
-            return mapper.find_projects_by_person_id(person_id)
 
     """Methoden von TimeInterval"""
 
