@@ -74,6 +74,7 @@ class Person(bo.BusinessObject):
         obj.set_last_edit(dictionary["last_edit"])
         obj.set_mailaddress(dictionary["mailaddress"])
         obj.set_firebase_id(dictionary["firebase_id"])
+        obj.set_deleted(dictionary['deleted'])
         return obj
 
 

@@ -414,6 +414,28 @@ class ProjectWorkOperations(Resource):
         return '', 200
 
 
+@hdmwebapp.route('/projectworks/<int:id>/owner')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des ProjectWork-Objekts')
+class ProjectWorkOwnerOperations(Resource):
+    @hdmwebapp.marshal_list_with(person)
+    @secured
+    def get(self, id):
+        """Auslesen des Erstellers eines bestimmten Projektarbeit-Objekts.
+        Das Projektarbeit-Objekt dessen Ersteller ausgelesen werden soll, wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = hwa.get_project_work_by_id(id)
+        start_pw_id = pw.get_start_event()
+        start_pw = hwa.get_event_by_id(start_pw_id)
+
+        if start_pw is not None:
+            owner = hwa.get_person_by_id(start_pw.get_affiliated_person())
+            return owner
+        else:
+            return 0, 500
+
+
 def check():
     hwa = HdMWebAppAdministration()
     hwa.check_time_for_departure()
@@ -426,9 +448,7 @@ sub_thread.start()
 
 h = HdMWebAppAdministration()
 
-pr = h.get_project_by_id(1)
 
-print(h.get_work_time_of_project_between_two_dates(pr, datetime(2022, 6, 19, 0, 0, 0), datetime(2022, 6, 20, 0, 0, 0)))
 
 
 

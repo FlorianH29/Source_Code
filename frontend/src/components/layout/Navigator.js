@@ -1,5 +1,20 @@
 import * as React from 'react';
-import {AppBar, CssBaseline, Typography, Toolbar, IconButton, Menu, Box, Drawer, Button, Link, Divider, MenuItem} from '@mui/material';
+import {
+    AppBar,
+    CssBaseline,
+    Typography,
+    Toolbar,
+    IconButton,
+    Menu,
+    Box,
+    Drawer,
+    Button,
+    Link,
+    Divider,
+    MenuItem,
+    FormGroup,
+    Switch, FormControlLabel
+} from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -14,9 +29,9 @@ import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import PersonIcon from "@mui/icons-material/Person";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
-import {Link as RouterLink} from "react-router-dom";
+import {BrowserRouter, Link as RouterLink} from "react-router-dom";
 import {HdMWebAppAPI, PersonBO} from "../../api";
+import EventManager from "../EventManager";
 
 
 class Navigator extends Component {
@@ -206,12 +221,15 @@ class Navigator extends Component {
                                 </ListItem>
 
                                 <ListItem>
-                                    <ListItemButton component={Link} to={`https://www.instagram.com/p/CdnFHnzj8UP/`}>
-                                        <ListItemIcon>
-                                            <SportsSoccerIcon/>
-                                        </ListItemIcon>
-                                        <ListItemText primary="Blöder Kerle"/>
-                                    </ListItemButton>
+                                    <EventManager eventType={3} onClose={this.handleClose}>
+                                    </EventManager>
+                                    <ListItemText/>
+                                </ListItem>
+
+                                <ListItem>
+                                    <EventManager eventType={4} onClose={this.handleClose}>
+                                    </EventManager>
+                                    <ListItemText/>
                                 </ListItem>
                             </Typography>
                         </Drawer>

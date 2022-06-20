@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {EventBO, HdMWebAppAPI} from '../api';
-import {Button, Grid, Typography, Divider, Dialog, DialogActions, DialogContent} from '@mui/material';
+import {Button, Grid, Typography, Divider, Dialog, DialogActions, DialogContent, List, Collapse} from '@mui/material';
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
 import ProjectWorkListEntry from "./ProjectWorkListEntry";
@@ -9,6 +9,8 @@ import ProjectWorkForm from "./dialogs/ProjectWorkForm";
 import PropTypes from "prop-types";
 import {DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
+import {ExpandLess, ExpandMore} from "@material-ui/icons";
+import ListItemButton from "@mui/material/ListItemButton";
 //import BasicButtons from "./BasicButtons";
 
 class ProjectWorkList extends Component {
@@ -96,6 +98,7 @@ class ProjectWorkList extends Component {
 
     return (
         <div>
+        <Box m={18}  pl={5}>
           <Grid container>
             <Grid item xs={12} align={"center"}>
                 <Grid container>
@@ -103,7 +106,7 @@ class ProjectWorkList extends Component {
                         <Typography variant={"h5"} component={"div"}> Projektarbeit </Typography>
                     </Grid>
                     <Grid item xs={3} align={"flex-end"}>
-                        <Typography variant={"h5"} component={"div"}> Beschreibung </Typography>
+                        <Typography variant={"h5"} component={"div"}> Bearbeiter </Typography>
                     </Grid>
                     <Grid item xs={3} align={"flex-end"}>
                         <Typography variant={"h5"} component={"div"}> Dauer </Typography>
@@ -146,11 +149,28 @@ class ProjectWorkList extends Component {
                     </EventManager>
                 </DialogActions>
             </Dialog>
+            </Box>
             <ProjectWorkForm onClose={this.projectWorkFormClosed} show={showProjectWorkForm}></ProjectWorkForm>
         </div>
         );
     }
 }
+
+/** Component specific styles */
+const styles = theme => ({
+  root: {
+    width: '100%',
+    padding: theme.spacing(1),
+  },
+  subNav: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  },
+  tableHeader: {
+    marginLeft: theme.spacing(1),
+    marginTop: theme.spacing(2),
+  }
+});
 
 /** PropTypes */
 ProjectWorkForm.propTypes = {

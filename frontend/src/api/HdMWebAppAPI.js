@@ -36,6 +36,7 @@ export default class HdMWebAppAPI {
   #updateProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
   #deleteProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
   #addProjectWorkURL = () => `${this.#hdmwebappServerBaseURL}/projectworks`;
+  #getOwnerOfProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}/owner`;
 
   //Worktimeaccount bezogen
   #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
@@ -336,6 +337,21 @@ export default class HdMWebAppAPI {
     })
   }
 
+  /**
+   * Gibt den Ersteller einer Projektarbeit zurück
+   *
+   * @param {Number} projectWorkID for which the balance should be retrieved
+   * @public
+   */
+  getOwnerOfProjectWork(projectWorkID) {
+    return this.#fetchAdvanced(this.#getOwnerOfProjectWorkURL(projectWorkID))
+      .then(responseJSON => {
+        return new Promise(function (resolve) {
+          resolve(responseJSON);
+          // console.log(responseJSON)
+        })
+      })
+  }
 
 
 

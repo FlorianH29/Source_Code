@@ -88,7 +88,7 @@ class EventManager extends Component {
     }
 
     render() {
-        const {buttonName} = this.state
+        const {buttonName, eventType} = this.state
 
         return (
             <div>

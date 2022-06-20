@@ -18,7 +18,7 @@ class ProjectWorkForm extends Component {
   constructor(props) {
     super(props);
 
-    let pwn = '...', de = '',  act = 0;
+    let pwn = '', de = '',  act = 0;
     if (props.projectWork) {
       pwn = props.projectWork.getProjectWorkName();
       de = props.projectWork.getDescription();
