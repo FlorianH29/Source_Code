@@ -26,7 +26,9 @@ export default class HdMWebAppAPI {
   #updateProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
   #addProjectURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
   #deleteProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
+  #addProjectDurationStart = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
 
+  //#addProjectDurationURL = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
   // Projektarbeit bezogen
   #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
   #updateProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
@@ -214,6 +216,22 @@ export default class HdMWebAppAPI {
     }
 
 
+    addProjectDurationStart(eventBO) {
+        return this.#fetchAdvanced(this.#addProjectDurationStart(), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain',
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify(eventBO)
+        }).then((responseJSON) => {
+            let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+            console.log(responseEventBO);
+            return new Promise(function (resolve) {
+                resolve(responseEventBO);
+            })
+        })
+    }
     /**
      * Löscht ein ProjectBO
      *

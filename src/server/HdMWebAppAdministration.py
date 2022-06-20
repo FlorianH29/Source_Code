@@ -944,17 +944,18 @@ class HdMWebAppAdministration(object):
             if event_type_last_event == 3:
                 self.create_event(event_type, person)
 
-    def create_event_with_time_stamp(self, event_type, time_stamp, person):
+    def create_event_with_time_stamp(self, event_type, time_stamp, person=None):
         """Event mit Zeitpunkt erstellen"""
         with EventMapper() as mapper:
-            if event_type and person and time_stamp is not None:
+            if event_type and time_stamp is not None:
                 event = Event()
                 event.set_id(1)
                 event.set_deleted(0)
                 event.set_last_edit(datetime.now())
                 event.set_event_type(event_type)
                 event.set_time_stamp(time_stamp)
-                event.set_affiliated_person(person.get_id())
+                if person is not None:
+                    event.set_affiliated_person(person.get_id())
                 return mapper.insert(event)
             else:
                 return None

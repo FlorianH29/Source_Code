@@ -299,7 +299,30 @@ class ProjectDeleteOperation(Resource):
         hwa.delete_project(pw)
         return '', 200
 
+@hdmwebapp.route('/projectduration')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectDurationOperation(Resource):
+    @hdmwebapp.marshal_with(event, code=201)
+    @hdmwebapp.expect(event)
+    @secured
+    def post(self):
+        """Erstellen eines neuen Events."""
 
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        proposal = Event.from_dict(api.payload)
+
+        if proposal is not None:
+
+            event_type = proposal.get_event_type()
+            time_stamp = proposal.get_time_stamp()
+            start_date = datetime.fromtimestamp(time_stamp / 1000.0).date()
+            print(start_date)
+            result = hwa.create_event_with_time_stamp(event_type, start_date)
+            return result, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
 
 @hdmwebapp.route('/projectworks')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')

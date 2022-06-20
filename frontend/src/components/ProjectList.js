@@ -4,6 +4,8 @@ import {withStyles, Button, TextField, InputAdornment, IconButton, Grid, Typogra
 import ProjectListEntry from "./ProjectListEntry";
 import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
 import PropTypes from "prop-types";
+import ProjectDurationDialog from "./dialogs/ProjectDurationDialog";
+import ViewsDatePicker from "./dialogs/ProjectDurationDialog";
 
 
 class ProjectList extends Component {
@@ -108,6 +110,7 @@ class ProjectList extends Component {
                             <Grid item xs={3} align={"flex-end"}>
                                 <Typography variant={"h5"} component={"div"}> Arbeitsleistung: </Typography>
                             </Grid>
+
                         </Grid>
                         <Divider/>
                         {projects.map(pro =>
@@ -115,6 +118,7 @@ class ProjectList extends Component {
                     </Grid>
                 </Grid>
                 <ProjectCreateDialog onClose={this.projectCreateDialogClosed} show={showProjectCreateDialog}/>
+                <ProjectDurationDialog/>
             </div>);
     }
 }
