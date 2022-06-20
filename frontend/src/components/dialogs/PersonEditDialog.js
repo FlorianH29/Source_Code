@@ -37,12 +37,12 @@ class PersonEditDialog extends Component {
   /** Die Person bearbeiten */
   editPerson = () => {
     let editedPerson = Object.assign(new PersonBO(), this.props.person);
+    console.log(this.state);
     editedPerson.setFirstName(this.state.firstname);
     editedPerson.setLastName(this.state.lastname);
     HdMWebAppAPI.getAPI().editPerson(editedPerson).then(person => {
       this.baseState.firstname = this.state.firstname;
       this.baseState.lastname = this.state.lastname;
-      console.log(this.state);
       this.props.onClose(editedPerson);
       });
   }
