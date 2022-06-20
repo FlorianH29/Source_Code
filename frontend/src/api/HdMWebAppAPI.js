@@ -43,6 +43,7 @@ export default class HdMWebAppAPI {
     #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
     #getEventTransactionsAndTimeIntervalTransactionsURL = (startDate, endDate) =>
         `${this.#hdmwebappServerBaseURL}/eventtransactionsandtimeintervaltransactions/${startDate}/${endDate}`;
+    #updateEventURL = (id, date) => `${this.#hdmwebappServerBaseURL}/events/${id}/${date}`;
 
     // TimeIntervalTransaction bezogen
     #getTimeIntervalTransactionsURL = () => `${this.#hdmwebappServerBaseURL}/timeintervaltransactions`;
@@ -284,6 +285,23 @@ export default class HdMWebAppAPI {
       console.log(responseProjectWorkBO)
       return new Promise(function (resolve) {
         resolve(responseProjectWorkBO);
+      })
+    })
+  }
+
+    updateEventByID(id, date){
+          return this.#fetchAdvanced(this.#updateEventURL(id, date), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({id: id, date: date})
+    }).then((responseJSON) => {
+      let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+      console.log(responseEventBO)
+      return new Promise(function (resolve) {
+        resolve(responseEventBO);
       })
     })
   }

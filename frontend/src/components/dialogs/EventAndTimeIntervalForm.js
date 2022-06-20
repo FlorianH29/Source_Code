@@ -29,11 +29,13 @@ class EventAndTimeIntervalForm extends Component {
         let name = null;
         let projectworkid = null;
         let startdate = null;
+        let starteventid = null;
         let enddate = null;
         if (props.event) {
             name = props.event.name;
             projectworkid = props.event.projectworkid;
             startdate = props.event.start_time;
+            starteventid = props.event.starteventid;
             enddate = props.event.end_time;
         }
         // Den State initiieren
@@ -41,6 +43,7 @@ class EventAndTimeIntervalForm extends Component {
             projectWorkName: name,
             projectWorkID: projectworkid,
             startDate: startdate,
+            starteventid: starteventid,
             endDate: enddate,
             projectWorkNameValidationFailed: false,
             startDateValidationFailed: false,
@@ -81,6 +84,12 @@ class EventAndTimeIntervalForm extends Component {
             let event = this.props.event;
             event.name = this.state.projectWorkName;
             this.props.onClose(event);
+        })
+        HdMWebAppAPI.getAPI().updateEvent(this.state.starteventid, this.state.startDate).then(event =>{
+            this.baseState.startDate = this.state.startDate;
+            let events = this.props.event;
+            events.startDate = this.state.startDate;
+            this.props.onClose(events);
         })
     }
 

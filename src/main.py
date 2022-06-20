@@ -55,6 +55,7 @@ event_transaction_and_timeintervaltransaction = api.inherit('EventTransaction', 
     'name': fields.String(description='Name des Inhalts'),
     'projectworkid': fields.Integer(desctipstion='ID der Projektarbeit'),
     'start_time': fields.DateTime(description='Dauer des Inhalts'),
+    'starteventid': fields.Integer(desctipstion='ID des Startevents'),
     'end_time': fields.DateTime(description='Dauer des Inhalts'),
     'period': fields.String(description='Dauer des Inhalts'),
 })
@@ -325,6 +326,27 @@ class ProjectWorkUpdateNameOperations(Resource):
         if pw is not None:
             pw.set_project_work_name(name)
             hwa.save_project_work(pw)
+            return '', 200
+        else:
+            return '', 500
+
+@hdmwebapp.route('/events/<int:id>/<int:date>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des Events')
+@hdmwebapp.param('date', 'Der neue Timestamp des Events')
+class ProjectWorkUpdateNameOperations(Resource):
+    @hdmwebapp.marshal_list_with(event)
+    #@secured
+    def put(self, id, date):
+        """
+        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        event = hwa.get_event_by_id(id)
+
+        if event is not None:
+            event.set_time_stamp(datetime.fromtimestamp(date/1000.0).date())
+            hwa.save_event(event)
             return '', 200
         else:
             return '', 500
