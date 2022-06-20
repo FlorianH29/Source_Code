@@ -21,7 +21,7 @@ export default class HdMWebAppAPI {
 
   // Person bezogen
   #getPersonsURL = (id) => `${this.#hdmwebappServerBaseURL}${id}`;
-  #editPersonURL = () => `${this.#hdmwebappServerBaseURL}/persons/`;
+  #editPersonURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
   #deletePersonURL = () =>`${this.#hdmwebappServerBaseURL}/persons`;
 
 
@@ -79,7 +79,7 @@ export default class HdMWebAppAPI {
   editPerson(PersonBO) {
     return this.#fetchAdvanced(this.#editPersonURL(PersonBO.getID()), {
       method: 'PUT',
-      navigatori: {
+      navigator: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },

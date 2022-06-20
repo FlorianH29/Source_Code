@@ -95,20 +95,6 @@ timeinterval = api.inherit('TimeInterval', bo, {
 })
 
 
-@hdmwebapp.route('/person-by-username/<string:username>')
-@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@hdmwebapp.param('username', 'Der Username der Person')
-class PersonByusernameOperations(Resource):
-    @hdmwebapp.marshal_with(person)
-    @secured
-    def get(self, username):
-        """ Auslesen von Personen, die durch den Username bestimmt werden.
-
-        Die auszulesenden Objekte werden durch ```username``` in dem URI bestimmt.
-        """
-        adm = HdMWebAppAdministration()
-        lel = adm.get_person_by_username(username)
-        return lel
 
 @hdmwebapp.route('/persons')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -121,8 +107,8 @@ class PersonByIDOperations(Resource):
         hil = Helper()
         firebase_id = hil.get_firebase_id()
         pers = hwa.get_person_by_firebase_id(firebase_id)
-        lol = hwa.get_person_by_id(pers) #Oder hier kommt sowas wie hwa.aktuelle person hin.
-        return lol
+        perso = hwa.get_person_by_id(pers) #Oder hier kommt sowas wie hwa.aktuelle person hin.
+        return perso
 
     @secured
     def delete(self):
@@ -135,6 +121,24 @@ class PersonByIDOperations(Resource):
         per = hwa.get_person_by_firebase_id(firebase_id)
         hwa.delete_person(per)
         return '', 200
+
+
+    @secured
+    def put(self):
+
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        payload = Person.from_dict(api.payload)
+        firebase_id = h.get_firebase_id()
+        fl = hwa.get_person_by_firebase_id(firebase_id)
+
+        if fl is not None:
+            fl.set_firstname(payload.get_firstname())
+            fl.set_lastname(payload.get_lastname())
+            hwa.save_person(fl)
+            return '', 200
+        else:
+            return '', 500
 
 
 @hdmwebapp.route('/projectworks/<int:id>')

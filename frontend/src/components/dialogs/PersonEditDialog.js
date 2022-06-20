@@ -21,7 +21,9 @@ class PersonEditDialog extends Component {
     // den state initialisieren
     this.state = {
       deletingInProgress: false,
-      deletingError: null
+      deletingError: null,
+      firstname: null,
+      lastname: null
     };
   }
 
