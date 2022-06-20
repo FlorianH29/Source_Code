@@ -409,7 +409,6 @@ export default class HdMWebAppAPI {
                 resolve(responseEventBO);
             })
         })
-    }
 }
   /**
   * Löscht ein ProjectWorkBO
@@ -500,5 +499,4 @@ export default class HdMWebAppAPI {
       })
     })
   }
-
 }

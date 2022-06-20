@@ -80,7 +80,7 @@ class TimeIntervalTransactionListEntry extends Component {
                                 {event.name}
                             </Typography>
                         </Grid>
-                        <Grid item xs={2} align={"center"}>
+                        <Grid item xs={3} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 {
                                     event.name != 'Gehen' ?
@@ -91,7 +91,7 @@ class TimeIntervalTransactionListEntry extends Component {
                                 }
                             </Typography>
                         </Grid>
-                        <Grid item xs={2} align={"center"}>
+                        <Grid item xs={3} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 {
                                     event.name != 'Kommen' ?
@@ -107,7 +107,7 @@ class TimeIntervalTransactionListEntry extends Component {
                                 {event.period}
                             </Typography>
                         </Grid>
-                        <Grid item xs={3} align={"center"}>
+                        <Grid item xs={2} align={"center"}>
                             {
                                 event.name != 'Kommen' && event.name != 'Gehen' ? (
                                     <>  <Button color='primary' size='small' startIcon={<EditIcon/>}

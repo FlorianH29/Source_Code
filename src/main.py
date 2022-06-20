@@ -429,7 +429,7 @@ class ProjectWorkOperations(Resource):
 @hdmwebapp.param('name', 'Der neue Name der Projektarbeit')
 class ProjectWorkUpdateNameOperations(Resource):
     @hdmwebapp.marshal_list_with(projectwork)
-    #@secured
+    @secured
     def put(self, id, name):
         """
         Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
@@ -450,7 +450,7 @@ class ProjectWorkUpdateNameOperations(Resource):
 @hdmwebapp.param('date', 'Der neue Timestamp des Events')
 class ProjectWorkUpdateNameOperations(Resource):
     @hdmwebapp.marshal_list_with(event)
-    #@secured
+    @secured
     def put(self, id, date):
         """
         Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
@@ -471,10 +471,12 @@ class ProjectWorkUpdateNameOperations(Resource):
 @hdmwebapp.param('endDate', 'eingegebenes Start-Datum')
 class EventsForTimeIntervalTransactions(Resource):
     @hdmwebapp.marshal_list_with(event_transaction_and_timeintervaltransaction)
-    #@secured
+    @secured
     def get(self, startDate, endDate):
         hwa = HdMWebAppAdministration()
-        pe = hwa.get_person_by_id(1)
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        pe = hwa.get_person_by_firebase_id(firebase_id)
         start_time = datetime.fromtimestamp(startDate/1000.0).date()
         end_time = datetime.fromtimestamp(endDate/1000.0).date()
         events = hwa.get_intervals_of_person_between_time_stamps(pe, start_time, end_time)

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {Divider, Grid, Typography, TextField} from "@mui/material";
+import {Divider, Grid, Typography, TextField, Box} from "@mui/material";
 import TimeIntervalTransactionListEntry from "./TimeIntervalTransactionListEntry"
 import {DatePicker, LocalizationProvider} from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -58,6 +58,7 @@ class TimeIntervalTransactionList extends Component {
         //console.log(endDate)
         return (
             <div>
+                <Box m={20}>
                 <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
@@ -89,10 +90,10 @@ class TimeIntervalTransactionList extends Component {
                             <Grid item xs={2} align={"flex-end"}>
                                 <Typography variant={"h5"} component={"div"}> Name </Typography>
                             </Grid>
-                            <Grid item xs={2} align={"flex-end"}>
+                            <Grid item xs={3} align={"flex-end"}>
                                 <Typography variant={"h5"} component={"div"}> Start </Typography>
                             </Grid>
-                            <Grid item xs={2} align={"flex-end"}>
+                            <Grid item xs={3} align={"flex-end"}>
                                 <Typography variant={"h5"} component={"div"}> Ende </Typography>
                             </Grid>
                             <Grid item xs={2} align={"flex-end"}>
@@ -107,6 +108,7 @@ class TimeIntervalTransactionList extends Component {
                 </Grid>
                     <EventAndTimeIntervalForm onClose={this.eventAndTimeIntervalFormClosed}
                                               show={showEventandTimeIntervalForm}></EventAndTimeIntervalForm>
+                </Box>
                 </div>
         );
     }
