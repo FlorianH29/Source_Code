@@ -443,14 +443,18 @@ class HdMWebAppAdministration(object):
                 time_stamp = arrive.get_time_stamp()
                 if start_time <= time_stamp.date() <= end_time:
                     # Überprüfen, ob das Event im übergebenen Zeitraum liegt
-                    event_dict = {'name': 'Kommen', 'projectworkid': None, 'start_time': time_stamp, 'starteventid': None, 'end_time': None, 'period': None}
+                    event_dict = {'name': 'Kommen', 'projectworkid': None, 'start_time': time_stamp,
+                                  'starteventid': None, 'end_time': None, 'endeventid': None,
+                                  'period': None, 'timeintervaltransactionid': None}
                     event_list.append(event_dict)
             if departure_id is not None:
                 departure = self.get_departure_event_by_id(departure_id)
                 time_stamp = departure.get_time_stamp()
                 if start_time <= time_stamp.date() <= end_time:
                     # Überprüfen, ob das Event im übergebenen Zeitraum liegt
-                    event_dict = {'name': 'Gehen', 'projectworkid': None, 'start_time': time_stamp, 'starteventid': None,'end_time': time_stamp, 'period': None}
+                    event_dict = {'name': 'Gehen', 'projectworkid': None, 'start_time': time_stamp,
+                                  'starteventid': None,'end_time': time_stamp, 'endeventid': None,
+                                  'period': None, 'timeintervaltransactionid': None}
                     event_list.append(event_dict)
         for tit in time_interval_transactions:
             break_id = tit.get_affiliated_break()
@@ -466,8 +470,9 @@ class HdMWebAppAdministration(object):
                 time_stamp_end = end_event.get_time_stamp()
                 time_period = br.get_time_period()
                 if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
-                    event_dict = {'name': 'break', 'projectworkid': None, 'start_time': time_stamp_start, 'starteventid': start_event_id,'end_time': time_stamp_end,
-                                  'period': time_period}
+                    event_dict = {'name': 'break', 'projectworkid': None, 'start_time': time_stamp_start,
+                                  'starteventid': start_event_id,'end_time': time_stamp_end,
+                                  'endeventid': end_event_id, 'period': time_period, 'timeintervaltransactionid': tit.get_id()}
                     event_list.append(event_dict)
             if project_work_id is not None:
                 project_work = self.get_project_work_by_id(project_work_id)
@@ -479,8 +484,10 @@ class HdMWebAppAdministration(object):
                 time_stamp_end = end_event.get_time_stamp()
                 time_period = project_work.get_time_period()
                 if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
-                    event_dict = {'name': project_work.get_project_work_name(), 'projectworkid': project_work_id ,'start_time': time_stamp_start,
-                                  'starteventid': start_event_id, 'end_time': time_stamp_end, 'period': time_period}
+                    event_dict = {'name': project_work.get_project_work_name(), 'projectworkid': project_work_id,
+                                  'start_time': time_stamp_start, 'starteventid': start_event_id,
+                                  'end_time': time_stamp_end,'endeventid': end_event_id,
+                                  'period': time_period, 'timeintervaltransactionid': tit.get_id()}
                     event_list.append(event_dict)
             if work_time_id is not None:
                 time_interval = self.get_time_interval_by_id(work_time_id)
@@ -493,7 +500,8 @@ class HdMWebAppAdministration(object):
                 time_period = time_interval.get_time_period()
                 if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
                     event_dict = {'name': 'Arbeitszeit', 'projectworkid': None, 'start_time': time_stamp_start,
-                                  'starteventid': start_event_id, 'end_time': time_stamp_end, 'period': time_period}
+                                  'starteventid': start_event_id, 'end_time': time_stamp_end,
+                                  'endeventid': end_event_id, 'period': time_period, 'timeintervaltransactionid': tit.get_id()}
                     event_list.append(event_dict)
         sorted_event_list = sorted(event_list, key=lambda x: x['start_time'])
         return sorted_event_list

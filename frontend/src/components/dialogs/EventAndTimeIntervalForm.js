@@ -12,7 +12,9 @@ import {
     TextField
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import {EventBO, HdMWebAppAPI, ProjectWorkBO} from '../../api';
+import {HdMWebAppAPI} from '../../api';
+import {DatePicker, DateTimePicker, LocalizationProvider} from '@mui/lab';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 
 /**
  * Shows a modal form dialog for a CustomerBO in prop customer. If the customer is set, the dialog is configured
@@ -31,12 +33,14 @@ class EventAndTimeIntervalForm extends Component {
         let startdate = null;
         let starteventid = null;
         let enddate = null;
+        let endeventid = null;
         if (props.event) {
             name = props.event.name;
             projectworkid = props.event.projectworkid;
             startdate = props.event.start_time;
             starteventid = props.event.starteventid;
             enddate = props.event.end_time;
+            endeventid = props.event.endeventid;
         }
         // Den State initiieren
         this.state = {
@@ -45,6 +49,7 @@ class EventAndTimeIntervalForm extends Component {
             startDate: startdate,
             starteventid: starteventid,
             endDate: enddate,
+            endeventid: endeventid,
             projectWorkNameValidationFailed: false,
             startDateValidationFailed: false,
             endDateValidationFailed: false
@@ -78,19 +83,31 @@ class EventAndTimeIntervalForm extends Component {
 
     /** Überschreibt das ProjectWorkBO mit neuen Werten */
     handleUpdateClick = () => {
-        HdMWebAppAPI.getAPI().updateProjectWorkNameByID(this.state.projectWorkID, this.state.projectWorkName).then(projectWork => {
-            // den neuen state als baseState speichern
-            this.baseState.projectWorkName = this.state.projectWorkName;
-            let event = this.props.event;
-            event.name = this.state.projectWorkName;
-            this.props.onClose(event);
-        })
-        HdMWebAppAPI.getAPI().updateEvent(this.state.starteventid, this.state.startDate).then(event =>{
-            this.baseState.startDate = this.state.startDate;
-            let events = this.props.event;
-            events.startDate = this.state.startDate;
-            this.props.onClose(events);
-        })
+        if (this.state.projectWorkID != null) {
+            HdMWebAppAPI.getAPI().updateProjectWorkNameByID(this.state.projectWorkID, this.state.projectWorkName).then(projectWork => {
+                // den neuen state als baseState speichern
+                this.baseState.projectWorkName = this.state.projectWorkName;
+                let event = this.props.event;
+                event.name = this.state.projectWorkName;
+                this.props.onClose(event);
+            })
+        }
+        if (this.state.startDate != null) {
+            HdMWebAppAPI.getAPI().updateEventByID(this.state.starteventid, this.state.startDate).then(event => {
+                this.baseState.startDate = this.state.startDate;
+                let events = this.props.event;
+                events.startDate = this.state.startDate;
+                this.props.onClose(events);
+            })
+        }
+        if (this.state.endDate != null) {
+            HdMWebAppAPI.getAPI().updateEventByID(this.state.endeventid, this.state.endDate).then(event => {
+                this.baseState.endDate = this.state.endDate;
+                let events = this.props.event;
+                events.endDate = this.state.endDate;
+                this.props.onClose(events);
+            })
+        }
     }
 
     /** Renders the component */
@@ -117,18 +134,39 @@ class EventAndTimeIntervalForm extends Component {
                             {header}
                         </DialogContentText>
                         <form noValidate autoComplete='off'>
-                            <TextField autoFocus type='text' required fullWidth margin='normal' id='projectWorkName'
-                                       label='Name:' value={projectWorkName}
-                                       onChange={this.textFieldValueChange} error={projectWorkNameValidationFailed}
-                                       helperText={projectWorkNameValidationFailed ? 'Bitte geben Sie einen Namen an' : ' '}/>
-                            <TextField type='text' required fullWidth margin='normal' id='startDate'
-                                       label='Start Datum:' value={startDate}
-                                       onChange={this.textFieldValueChange} error={startDateValidationFailed}
-                                       helperText={startDateValidationFailed ? 'Bitte geben Sie ein Start Datum an' : ' '}/>
-                            <TextField type='text' required fullWidth margin='normal' id='endDate'
-                                       label='End Datum:' value={endDate}
-                                       onChange={this.textFieldValueChange} error={endDateValidationFailed}
-                                       helperText={endDateValidationFailed ? 'Bitte geben Sie ein End Datum an' : ' '}/>
+                            {
+                                this.props.event.name != 'Kommen' && this.props.event.name != 'Gehen' &&
+                                this.props.event.name != 'break' && this.props.event.name != 'Arbeitszeit' ?
+                                    <TextField autoFocus type='text' required fullWidth margin='normal'
+                                               id='projectWorkName'
+                                               label='Name:' value={projectWorkName}
+                                               onChange={this.textFieldValueChange}
+                                               error={projectWorkNameValidationFailed}
+                                               helperText={projectWorkNameValidationFailed ? 'Bitte geben Sie einen Namen an' : ' '}/>
+                                    : ''
+                            }
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <DateTimePicker
+                                    label={"Start wählen"}
+                                    value={startDate}
+                                    onChange={(date) => {
+                                        this.setState({startDate: date.getTime()});
+                                    }}
+                                    renderInput={(params) => <TextField{...params}/>}
+                                />
+
+                            </LocalizationProvider>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <DateTimePicker
+                                    label={"Ende wählen"}
+                                    value={endDate}
+                                    onChange={(date) => {
+                                        this.setState({endDate: date.getTime()});
+                                    }}
+                                    renderInput={(params) => <TextField{...params}/>}
+                                />
+
+                            </LocalizationProvider>
                         </form>
                     </DialogContent>
                     <DialogActions>

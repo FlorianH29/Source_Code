@@ -47,6 +47,7 @@ export default class HdMWebAppAPI {
 
     // TimeIntervalTransaction bezogen
     #getTimeIntervalTransactionsURL = () => `${this.#hdmwebappServerBaseURL}/timeintervaltransactions`;
+    #deleteTimeIntervalURL = (id) => `${this.#hdmwebappServerBaseURL}/timeinterval/${id}`;
 
     /**
      * Gibt die Singelton Instanz zurück
@@ -321,6 +322,19 @@ export default class HdMWebAppAPI {
             console.log(responseProjectWorkBO)
             return new Promise(function (resolve) {
                 resolve(responseProjectWorkBO);
+            })
+        })
+    }
+
+        deleteTimeInterval(timeIntervalID) {
+        return this.#fetchAdvanced(this.#deleteTimeIntervalURL(timeIntervalID), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            // We always get an array of CustomerBOs.fromJSON
+            let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+            console.log(responseEventBO)
+            return new Promise(function (resolve) {
+                resolve(responseEventBO);
             })
         })
     }

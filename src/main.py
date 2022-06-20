@@ -53,11 +53,13 @@ person = api.inherit('Person', bo, {
 
 event_transaction_and_timeintervaltransaction = api.inherit('EventTransaction', {
     'name': fields.String(description='Name des Inhalts'),
-    'projectworkid': fields.Integer(desctipstion='ID der Projektarbeit'),
+    'projectworkid': fields.Integer(description='ID der Projektarbeit'),
     'start_time': fields.DateTime(description='Dauer des Inhalts'),
-    'starteventid': fields.Integer(desctipstion='ID des Startevents'),
+    'starteventid': fields.Integer(description='ID des Startevents'),
     'end_time': fields.DateTime(description='Dauer des Inhalts'),
+    'endeventid': fields.Integer(description='ID des Endevents'),
     'period': fields.String(description='Dauer des Inhalts'),
+    'timeintervaltransactionid': fields.Integer(description='ID des Zeitintervals')
 })
 
 work_performance = api.inherit('Worktimeaccout', {
@@ -345,7 +347,7 @@ class ProjectWorkUpdateNameOperations(Resource):
         event = hwa.get_event_by_id(id)
 
         if event is not None:
-            event.set_time_stamp(datetime.fromtimestamp(date/1000.0).date())
+            event.set_time_stamp(datetime.fromtimestamp(date/1000.0))
             hwa.save_event(event)
             return '', 200
         else:
@@ -367,6 +369,21 @@ class EventsForTimeIntervalTransactions(Resource):
         print(events)
         return events
 
+@hdmwebapp.route('/timeinterval/<int:id>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des Zeitintervalls')
+class DeleteTimeInterval(Resource):
+    @hdmwebapp.marshal_list_with(event_transaction_and_timeintervaltransaction)
+    @secured
+    def delete(self, id):
+        """
+        Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        tit = hwa.get_time_interval_transaction_by_id(id)
+        hwa.delete_time_interval_transaction(tit)
+        return '', 200
+
 def check():
     hwa = HdMWebAppAdministration()
     hwa.check_time_for_departure()
@@ -382,6 +399,7 @@ pe = h.get_person_by_id(1)
 #print(h.get_last_event_by_affiliated_person(pe))
 #print(h.get_intervals_of_person_between_time_stamps(pe, '16/06/2022', '18/06/2022'))
 #h.create_event_and_check_type(4, pe)
+
 
 
 if __name__ == '__main__':

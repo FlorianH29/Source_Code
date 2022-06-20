@@ -109,23 +109,22 @@ class TimeIntervalTransactionListEntry extends Component {
                         </Grid>
                         <Grid item xs={3} align={"center"}>
                             {
-                                event.name != 'Kommen' && event.name != 'Gehen' ?
-                                    <Button color='primary' size='small' startIcon={<EditIcon/>}
-                                            onClick={this.editEventAndTimeIntervalButtonClicked}> </Button>
-                                    : ''
+                                event.name != 'Kommen' && event.name != 'Gehen' ? (
+                                    <>  <Button color='primary' size='small' startIcon={<EditIcon/>}
+                                                onClick={this.editEventAndTimeIntervalButtonClicked}> </Button>
+
+                                        <Button color='secondary' size='small' startIcon={<DeleteIcon/>}
+                                                onClick={this.deleteEventAndTimeIntervalButtonClicked}> </Button>
+                                    </>) : ''
                             }
-                            {/*  <Button color='secondary' size='small' startIcon={<DeleteIcon/>}
-                                    onClick={this.deleteEventAndTimeIntervalButtonClicked}> </Button> */}
                         </Grid>
                     </Grid>
                 </ListItem>
                 <Divider/>
-                {
-                    /*  <ProjectWorkDeleteDialog show={showEventandTimeIntervalDeleteDialog} event={event}
-                                               onClose={this.deleteEventAndTimeIntervalDialogClosed}/> */ }
-                    <EventAndTimeIntervalForm show={showEventandTimeIntervalForm} event={event}
-                                     onClose={this.eventAndTimeIntervalFormClosed}/>
-
+                <EventAndTimeIntervalDeleteDialog show={showEventandTimeIntervalDeleteDialog} event={event}
+                                                  onClose={this.deleteEventAndTimeIntervalDialogClosed}/>
+                <EventAndTimeIntervalForm show={showEventandTimeIntervalForm} event={event}
+                                          onClose={this.eventAndTimeIntervalFormClosed}/>
             </div>
         );
     }

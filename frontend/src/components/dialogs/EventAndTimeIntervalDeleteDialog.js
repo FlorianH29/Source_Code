@@ -19,6 +19,14 @@ class EventAndTimeIntervalDeleteDialog extends Component {
         };
     }
 
+      /** Das Zeitintervall löschen */
+  deleteTimeInterval = () => {
+    HdMWebAppAPI.getAPI().deleteTimeInterval(this.props.event.timeintervaltransactionid).then(timeInterval => {
+      this.props.onClose(this.props.timeintervaltransactionid);  // call the parent with the deleted customer
+    }).catch(e =>
+        console.log(e))
+  }
+
     /** Behandelt das Click Event des Buttons Abbrechen */
     handleClose = () => {
         // console.log(this.props);
@@ -40,15 +48,14 @@ class EventAndTimeIntervalDeleteDialog extends Component {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Die Projektarbeit '{event.name}' (ID: ) wirklich
-                            löschen?
+                            Das Zeitintervall '{event.name}' wirklich löschen?
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleClose} color='secondary'>
                             Abbrechen
                         </Button>
-                        <Button variant='contained' color='primary'>
+                        <Button variant='contained' onClick={this.deleteTimeInterval} color='primary'>
                             Löschen
                         </Button>
                     </DialogActions>

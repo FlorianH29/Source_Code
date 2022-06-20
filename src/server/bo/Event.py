@@ -47,5 +47,5 @@ class Event(bo.BusinessObject):
         obj.set_last_edit(dictionary["last_edit"])
         obj.set_time_stamp(dictionary["time_stamp"])
         obj.set_event_type(dictionary["event_type"])
-        obj.set_time_stamp(dictionary["affiliated_person"])
+        obj.set_affiliated_person(dictionary["affiliated_person"])
         return obj
