@@ -18,41 +18,36 @@ class PersonEditDialog extends Component {
   constructor(props) {
     super(props);
 
+
+    let fn = '', ln = '';
+    if (props.person) {
+      fn = props.person.getFirstName();
+      ln = props.person.getLastName();
+    }
+
     // den state initialisieren
     this.state = {
-      deletingInProgress: false,
-      deletingError: null,
-      firstname: null,
-      lastname: null
+      firstname: fn,
+      lastname: ln,
+      firstnameValidationFailed: false,
+      lastnameValidationFailed: false,
     };
     this.baseState = this.state;
   }
 
   /** Die Person bearbeiten */
   editPerson = () => {
-    let editPerson = Object.assign(new PersonBO(), this.props.person);
-    editPerson.setFirstName(this.state.firstname);
-    editPerson.setLastName(this.state.lastname);
-    HdMWebAppAPI.getAPI().editPerson(editPerson).then(person => {
-      this.setState({
-        updatingInProgress: false,
-        updatingError: null
-      });
+    let editedPerson = Object.assign(new PersonBO(), this.props.person);
+    console.log(this.state)
+    editedPerson.setFirstName(this.state.firstname);
+    editedPerson.setLastName(this.state.lastname);
+    HdMWebAppAPI.getAPI().editPerson(editedPerson).then(person => {
       this.baseState.firstname = this.state.firstname;
       this.baseState.lastname = this.state.lastname;
-      this.props.onClose(editPerson);
-    }).catch(e =>
-      this.setState({
-        updatingInProgress: false,
-        updatingError: e
-      })
-    );
-
-    this.setState({
-      updatingInProgress: true,
-      updatingError: null
-    });
+      this.props.onClose(editedPerson);
+     })
   }
+
 
   /** Behandelt das Click Event des Buttons Abbrechen */
   handleClose = () => {
@@ -91,10 +86,10 @@ class PersonEditDialog extends Component {
             </IconButton>
           </DialogTitle>
             <form noValidate autoComplete='off'>
-              <TextField autoFocus type='text' required fullWidth margin='normal' id='person' label='Vorname:' value={firstname}
+              <TextField autoFocus type='text' required fullWidth margin='normal' id='firstname' label='Vorname:' value={firstname}
                   onChange={this.textFieldValueChange} error={firstnameValidationFailed}
                   helperText={firstnameValidationFailed ? 'Bitte geben Sie ihren Vornamen an' : ' '} />
-                <TextField type='text' required fullWidth margin='normal' id='description' label='Nachname:' value={lastname}
+                <TextField type='text' required fullWidth margin='normal' id='lastname' label='Nachname:' value={lastname}
                   onChange={this.textFieldValueChange} error={lastnameValidationFailed}
                   helperText={lastnameValidationFailed ? 'Bitte geben Sie ihren Nachnamen an' : ' '} />
               </form>
