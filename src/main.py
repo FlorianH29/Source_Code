@@ -48,8 +48,8 @@ event = api.inherit('Event', bo, {
 person = api.inherit('Person', bo, {
     'firstname': fields.String(attribute='_firstname', description='Vorname eines Benutzers'),
     'lastname': fields.String(attribute='_lastname', description='Nachname eines Benutzers'),
-    'mailaddress': fields.String(attribute='_mailaddress', description='E-Mail-Adresse eines Benutzers'),
     'username': fields.String(attribute='_username', description='Username eines Benutzers'),
+    'mailaddress': fields.String(attribute='_mailaddress', description='E-Mail-Adresse eines Benutzers'),
     'firebase_id': fields.String(attribute='_firebase_id', description='Google User ID eines Benutzers')
 })
 
@@ -98,7 +98,6 @@ timeinterval = api.inherit('TimeInterval', bo, {
 
 @hdmwebapp.route('/persons')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@hdmwebapp.param('id', 'Die ID der Person')
 class PersonByIDOperations(Resource):
     @hdmwebapp.marshal_list_with(person)
     @secured
@@ -107,8 +106,8 @@ class PersonByIDOperations(Resource):
         hil = Helper()
         firebase_id = hil.get_firebase_id()
         pers = hwa.get_person_by_firebase_id(firebase_id)
-        perso = hwa.get_person_by_id(pers) #Oder hier kommt sowas wie hwa.aktuelle person hin.
-        return perso
+        print(pers)
+        return pers
 
     @secured
     def delete(self):
@@ -127,8 +126,8 @@ class PersonByIDOperations(Resource):
     def put(self):
 
         hwa = HdMWebAppAdministration()
-        h = Helper()
         payload = Person.from_dict(api.payload)
+        h = Helper()
         firebase_id = h.get_firebase_id()
         fl = hwa.get_person_by_firebase_id(firebase_id)
 
@@ -420,7 +419,6 @@ sub_thread = Thread(target=check)
 #es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
-
 
 
 

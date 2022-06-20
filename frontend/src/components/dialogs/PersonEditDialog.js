@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField} from '@material-ui/core';
+import {Button, IconButton, Dialog, DialogTitle, DialogActions, TextField} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { HdMWebAppAPI, PersonBO } from '../../api';
 
@@ -18,44 +18,39 @@ class PersonEditDialog extends Component {
   constructor(props) {
     super(props);
 
+    let fn = '', ln = '';
+    if (props.person) {
+      fn = props.person.getFirstName();
+      ln = props.person.getLastName();
+    }
+
     // den state initialisieren
     this.state = {
-      deletingInProgress: false,
-      deletingError: null,
-      firstname: null,
-      lastname: null
+      firstname: fn,
+      lastname: ln,
+      firstnameValidationFailed: false,
+      lastnameValidationFailed: false
     };
+    this.baseState = this.state;
   }
 
   /** Die Person bearbeiten */
   editPerson = () => {
-    let editPerson = Object.assign(new PersonBO(), this.props.person);
-    editPerson.setFirstName(this.state.firstname);
-    editPerson.setLastName(this.state.lastname);
-    HdMWebAppAPI.getAPI().editPerson(editPerson).then(person => {
-      this.setState({
-        updatingInProgress: false,
-        updatingError: null
-      });
+    let editedPerson = Object.assign(new PersonBO(), this.props.person);
+    editedPerson.setFirstName(this.state.firstname);
+    editedPerson.setLastName(this.state.lastname);
+    HdMWebAppAPI.getAPI().editPerson(editedPerson).then(person => {
       this.baseState.firstname = this.state.firstname;
       this.baseState.lastname = this.state.lastname;
-      this.props.onClose(editPerson);
-    }).catch(e =>
-      this.setState({
-        updatingInProgress: false,
-        updatingError: e
-      })
-    );
-
-    this.setState({
-      updatingInProgress: true,
-      updatingError: null
-    });
+      console.log(this.state);
+      this.props.onClose(editedPerson);
+      });
   }
 
   /** Behandelt das Click Event des Buttons Abbrechen */
   handleClose = () => {
     // console.log(this.props);
+    this.setState(this.baseState);
     this.props.onClose(null);
   }
 
@@ -82,7 +77,7 @@ class PersonEditDialog extends Component {
 
     return (
       show ?
-        <Dialog open={show} onClose={this.handleClose}>
+        <Dialog open={show} onClose={this.handleClose} maxWidth='xl'>
           <DialogTitle>Person löschen
             <IconButton onClick={this.handleClose}>
               <CloseIcon />
@@ -100,7 +95,7 @@ class PersonEditDialog extends Component {
               <Button align="left" onClick={this.handleClose} color='secondary'>
                 Abbrechen
               </Button>
-                  <Button align="right" color='primary' onClick={() => {this.editPerson(); this.handleClose()}}>
+                  <Button align="right" color='primary' onClick={this.editPerson}>
                     Sichern
                   </Button>
             </DialogActions>
