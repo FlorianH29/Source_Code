@@ -25,6 +25,7 @@ class PersonEditDialog extends Component {
       firstname: null,
       lastname: null
     };
+    this.baseState = this.state;
   }
 
   /** Die Person bearbeiten */
@@ -56,6 +57,7 @@ class PersonEditDialog extends Component {
   /** Behandelt das Click Event des Buttons Abbrechen */
   handleClose = () => {
     // console.log(this.props);
+    this.setState(this.baseState)
     this.props.onClose(null);
   }
 
