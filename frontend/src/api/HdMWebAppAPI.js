@@ -20,7 +20,7 @@ export default class HdMWebAppAPI {
   #hdmwebappServerBaseURL = '/hdmwebapp';
 
   // Person bezogen
-  #getPersonsURL = (id) => `${this.#hdmwebappServerBaseURL}${id}`;
+  #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
   #editPersonURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
   #deletePersonURL = () =>`${this.#hdmwebappServerBaseURL}/persons`;
 
@@ -78,36 +78,34 @@ export default class HdMWebAppAPI {
             }
         )
 
+/**
+  * Updated ein ProjectWorkBO
+  *
+  * @param {PersonBO} personBO das geupdated werden soll
+  * @public
+  */
 
-  editPerson(PersonBO) {
-    return this.#fetchAdvanced(this.#editPersonURL(PersonBO.getID()), {
+  editPerson(personBO) {
+    return this.#fetchAdvanced(this.#editPersonURL(), {
       method: 'PUT',
-      navigator: {
+      headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(PersonBO)
+      body: JSON.stringify(personBO)
     }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
+      // We always get an array of PersonBO.fromJSON
       let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
-      // console.info(accountBOs);
+      console.info(personBO);
       return new Promise(function (resolve) {
         resolve(responsePersonBO);
-      })
-    })
-  }
-    getPersons() {
-    return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
-      let personBOs = PersonBO.fromJSON(responseJSON);
-      //console.log(responseJSON);
-      return new Promise(function (resolve) {
-        resolve(personBOs);
+        console.log(responsePersonBO)
       })
     })
   }
 
-    getPerson(id) {
-        return this.#fetchAdvanced(this.#getPersonsURL(id)).then((responseJSON) => {
+    getPerson() {
+        return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
             let personBOs = PersonBO.fromJSON(responseJSON)[0];
             //console.log(responseJSON);
             return new Promise(function (resolve) {
