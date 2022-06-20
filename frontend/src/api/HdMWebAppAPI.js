@@ -29,6 +29,8 @@ export default class HdMWebAppAPI {
   #getProjectsURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
   #updateProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
   #addProjectURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
+  #deleteProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
+
   // Projektarbeit bezogen
   #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
   #updateProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
@@ -203,30 +205,48 @@ export default class HdMWebAppAPI {
     })
   }
 
-  /**
-   * Fügt ein Projekt hinzu und gibt einen Promise zurück, der in einem neuen ProjectBO resultiert.
-   *
-   * @param {ProjectBO} projectBO wird geadded. Die ID des Projekts wird durch das Backend gesetzt.
-   * @public
-   */
-  addProject(projectBO) {
-    return this.#fetchAdvanced(this.#addProjectURL(), {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json, text/plain',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(projectBO)
-    }).then((responseJSON) => {
-      let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
-      // console.info(projectBOs);
-      return new Promise(function (resolve) {
-        resolve(responseProjectBO);
-      })
-    })
-  }
+    /**
+     * Fügt ein Projekt hinzu und gibt einen Promise zurück, der in einem neuen ProjectBO resultiert.
+     *
+     * @param {ProjectBO} projectBO wird geadded. Die ID des Projekts wird durch das Backend gesetzt.
+     * @public
+     */
+    addProject(projectBO) {
+        return this.#fetchAdvanced(this.#addProjectURL(), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain',
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify(projectBO)
+        }).then((responseJSON) => {
+            let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
+            // console.info(projectBOs);
+            return new Promise(function (resolve) {
+                resolve(responseProjectBO);
+            })
+        })
+    }
 
 
+    /**
+     * Löscht ein ProjectBO
+     *
+     * @param {Number} projectID des ProjectWorkBO, welches gelöscht werden soll
+     * @public
+     */
+    deleteProject(projectID) {
+        return this.#fetchAdvanced(this.#deleteProjectURL(projectID), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            /**Wir bekommen immer ein Array mit ProjectBOs.fromJSON*/
+            let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
+            //console.log(responseProjectBO)
+            return new Promise(function (resolve) {
+                resolve(responseProjectBO);
+            })
+        })
+    }
 
 
     getWorktimeAccount(id) {
