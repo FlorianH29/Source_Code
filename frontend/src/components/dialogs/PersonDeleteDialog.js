@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
+import { Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import { HdMWebAppAPI } from '../../api';
+import firebase from "firebase/compat/app";
+import { HdMWebAppAPI, PersonBO } from '../../api';
+
+
 
 /**
- * Anzeigen eines Löschdialogs, der fragt, ob ein Projektarbeitsobjekt gelöscht werden soll. Das ProjectWorkBO welches
+ * Anzeigen eines Löschdialogs, der fragt, ob eine Person gelöscht werden soll. Das ProjectWorkBO welches
  * gelöscht werden soll, muss per prop übergeben werden. Je nach der Nutzerinteraktion wird der entsprechende Backend
  * Aufruf ausgelöst. Daraufhin wird die Funktion der onClose Property mit dem gelöschten ProjectWork als Parameter
  * aufgerufen. Wenn der Dialog geschlossen wird, wird onClose null übergeben.
  */
 
-class ProjectWorkDeleteDialog extends Component {
+class PersonDeleteDialog extends Component {
 
   constructor(props) {
     super(props);
@@ -23,10 +26,14 @@ class ProjectWorkDeleteDialog extends Component {
     };
   }
 
-  /** Die Projektarbeit löschen */
-  deleteProjectWork = () => {
-    HdMWebAppAPI.getAPI().deleteProjectWork(this.props.projectWork.getID()).then(projectWork => {
-      this.props.onClose(this.props.projectWork);  // call the parent with the deleted customer
+    handleSignOutButtonClicked = () => {
+    firebase.auth().signOut();
+  }
+
+  /** Die Person löschen */
+  deletePerson = () => {
+    HdMWebAppAPI.getAPI().deletePerson().then(person => {
+      this.props.onClose(null);  // call the parent with the deleted customer
     }).catch(e =>
         console.log(e))
   }
@@ -37,28 +44,32 @@ class ProjectWorkDeleteDialog extends Component {
     this.props.onClose(null);
   }
 
-  /** Rendert die Komponente */
+
+
+
+  /** Renders the component */
   render() {
-    const { projectWork, show } = this.props;
+    const { person, show } = this.props;
+
 
     return (
       show ?
         <Dialog open={show} onClose={this.handleClose}>
-          <DialogTitle>Projektarbeit löschen
+          <DialogTitle>Person löschen
             <IconButton onClick={this.handleClose}>
               <CloseIcon />
             </IconButton>
           </DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Die Projektarbeit '{projectWork.getProjectWorkName}' (ID: {projectWork.getID()}) wirklich löschen?
+              Möchte sie Ihr Profil wirklich löschen?
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color='secondary'>
               Abbrechen
             </Button>
-            <Button variant='contained' onClick={this.deleteProjectWork} color='primary'>
+            <Button variant='contained' onClick={() => {this.deletePerson(); this.handleSignOutButtonClicked(); this.handleClose()}} color='primary'>
               Löschen
             </Button>
           </DialogActions>
@@ -69,9 +80,9 @@ class ProjectWorkDeleteDialog extends Component {
 }
 
 /** PropTypes */
-ProjectWorkDeleteDialog.propTypes = {
+PersonDeleteDialog.propTypes = {
   /** Das ProjectWorkBO, das gelöscht werden soll */
-  projectWork: PropTypes.object.isRequired,
+  person: PropTypes.object.isRequired,
   /** Wenn show true ist, wird der Dialog gerendert */
   show: PropTypes.bool.isRequired,
   /**
@@ -81,4 +92,5 @@ ProjectWorkDeleteDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
 }
 
-export default ProjectWorkDeleteDialog;
+
+export default PersonDeleteDialog;

@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom
 import ActivityList from "./components/ActivityList";
 import PersonList from './components/PersonList';
 import Header from './components/layout/Header';
+import Navigator from './components/layout/Navigator';
 import ProjectList from "./components/ProjectList";
 import ProjectWorkList from "./components/ProjectWorkList";
 import WorktimeAccount from "./components/WorktimeAccount";
@@ -12,8 +13,11 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import firebaseConfig from './firebaseconfig';
+import Welcome from "./components/pages/Welcome";
+
 import {Person} from "@mui/icons-material";
 import TimeIntervalTransactionList from "./components/TimeIntervalTransactionList";
+import SignInHeader from "./components/layout/SignInHeader";
 
 
 class App extends React.Component {
@@ -77,11 +81,11 @@ class App extends React.Component {
 
         return (
             <Router>
-                <Header person={currentPerson}/>
 
                 {
                     currentPerson ?
                         <>
+                            <Navigator person={currentPerson}/>
                             <Switch>
                                 <Route exact path='/persons'>
                                     <PersonList/>
@@ -95,6 +99,9 @@ class App extends React.Component {
                                 <Route exact path='/worktimeaccount'>
                                     <WorktimeAccount/>
                                 </Route>
+                                 <Route exact path='/welcome'>
+                                    <Welcome/>
+                                </Route>
                                 <Route exact path='/activities'>
                                     <ActivityList/>
                                 </Route>
@@ -106,11 +113,10 @@ class App extends React.Component {
                                 </Route>
                             </Switch>
                         </>
-
                         :
                         <>
+                            <SignInHeader person={currentPerson}/>
                             <SignIn onSignIn={this.handleSignIn}/>
-
                         </>
                 }
             </Router>

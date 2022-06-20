@@ -25,13 +25,13 @@ class ProjectMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT project_id, last_edit, project_name, client, timeinterval_id, owner, deleted " \
+        command = "SELECT project_id, last_edit, project_name, client, timeinterval_id, owner, work_time, deleted " \
                   "FROM project WHERE project_id={} AND deleted=0".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (project_id, last_edit, project_name, client, timeinterval_id, owner, deleted) = tuples[0]
+            (project_id, last_edit, project_name, client, timeinterval_id, owner, work_time, deleted) = tuples[0]
             project = p.Project()
             project.set_id(project_id)
             project.set_last_edit(last_edit)
@@ -39,6 +39,7 @@ class ProjectMapper(Mapper):
             project.set_client(client)
             project.set_time_interval_id(timeinterval_id)
             project.set_owner(owner)
+            project.set_work_time(work_time)
             project.set_deleted(deleted)
 
             result = project
@@ -95,7 +96,7 @@ class ProjectMapper(Mapper):
         cursor.execute("SELECT * FROM project WHERE deleted=0")
         tuples = cursor.fetchall()
 
-        for (project_id, last_edit, project_name, client, timeinterval_id, owner, deleted) in tuples:
+        for (project_id, last_edit, project_name, client, timeinterval_id, owner, work_time, deleted) in tuples:
             project = p.Project()
             project.set_id(project_id)
             project.set_last_edit(last_edit)
@@ -103,6 +104,7 @@ class ProjectMapper(Mapper):
             project.set_client(client)
             project.set_time_interval_id(timeinterval_id)
             project.set_owner(owner)
+            project.set_work_time(work_time)
             project.set_deleted(deleted)
             all_projects.append(project)
 
@@ -126,14 +128,17 @@ class ProjectMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 object.set_id(1)
 
-        command = "INSERT INTO project (project_id, last_edit, project_name, client, timeinterval_id, owner, deleted)" \
-                  " VALUES (%s,%s,%s,%s,%s,%s,%s)"
+        command = "INSERT INTO project (project_id, last_edit, project_name, client, timeinterval_id, owner, work_time, deleted)" \
+                  " VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
         data = (object.get_id(),
                 object.get_last_edit(),
                 object.get_project_name(),
                 object.get_client(),
                 object.get_time_interval_id(),
-                object.get_owner())
+                object.get_owner(),
+                object.get_work_time(),
+                object.get_deleted())
+
         cursor.execute(command, data)
 
         self._cnx.commit()

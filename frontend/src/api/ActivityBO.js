@@ -7,7 +7,7 @@ export default class ActivityBO extends BusinessObject {
    * Konstruktor, erstelt ein Akitvitätsobjekt mit
    *
    * @param {String} aName - der Name dieses ActivityBO.
-   * @param {String} aCapacity - die Kapazität dieses ActivityBO.
+   * @param {Number} aCapacity - die Kapazität dieses ActivityBO.
    * @param {String} anAffiliatedProject - das Projekt, das diesem ActivityBO zugeordnet ist.
    * @param {Number} aWorkTime - die Zeit, die für dieses ActivityBO gearbeitet wurde.
    */
@@ -24,14 +24,14 @@ export default class ActivityBO extends BusinessObject {
    *
    * @param {String} aName - der neue Name dieses ActivityBO.
    */
-  setName(aName) {
+  setActivityName(aName) {
     this.name = aName;
   }
 
   /**
    * Gibt den Namen zurück.
    */
-  getName() {
+  getActivityName() {
     return this.name;
   }
 
@@ -40,14 +40,14 @@ export default class ActivityBO extends BusinessObject {
    *
    * @param {String} aCapacity - die neue Kapazität dieses ActivityBO.
    */
-  setCapacity(aCapacity) {
+  setActivityCapacity(aCapacity) {
     this.capacity = aCapacity;
   }
 
   /**
    * Gibt die Kapazität zurück.
    */
-  getCapacity() {
+  getActivityCapacity() {
     return this.capacity;
   }
 
@@ -72,14 +72,14 @@ export default class ActivityBO extends BusinessObject {
    *
    * @param {Number} aWorkTime - die neue gearbeitete Zeit dieses AktivityBO.
    */
-  setWorkTime(aWorkTime) {
+  setActivityWorkTime(aWorkTime) {
     this.work_time = aWorkTime;
   }
 
     /**
    * Gibt die gearbeitete Zeit zurück.
    */
-  getWorkTime() {
+  getActivityWorkTime() {
     return this.work_time;
   }
 

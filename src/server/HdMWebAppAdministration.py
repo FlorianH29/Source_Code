@@ -46,6 +46,11 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             return mapper.find_by_lastname(lastname)
 
+    def get_person_by_username(self, username):
+        """Alle Kunden mit übergebenem Nachnamen auslesen."""
+        with PersonMapper() as mapper:
+            return mapper.find_by_username(username)
+
     def get_all_persons(self):
         """Alle in der Datenbank gespeicherten Personen auslesen."""
         with PersonMapper() as mapper:
@@ -56,18 +61,18 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             return mapper.find_by_arrive()
 
-    def create_person(self, firstname, lastname, mailaddress, firebase_id):
+    def create_person(self, username, mailaddress, firebase_id):
         """Person anlegen, nach Anlegen der Person Anlegen eines Arbeitszeitkontos für sie."""
         person = Person()
         person.set_id(1)
         person.set_last_edit(datetime.now())
-        person.set_deleted(0)
-        person.set_last_edit(datetime.now())
-        person.set_firstname(firstname)
-        person.set_lastname(lastname)
-        person.set_username(firstname + "_" + lastname)
+        person.set_firstname("Vorname noch nachtragen")
+        person.set_lastname("Nachname noch nachtragen")
+        person.set_username(username)
         person.set_mailaddress(mailaddress)
         person.set_firebase_id(firebase_id)
+        person.set_deleted(0)
+
 
         with PersonMapper() as mapper:
             return mapper.insert(person), self.create_work_time_account_for_person(person)
@@ -79,13 +84,12 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             if person is not None:
                 projects = self.get_projectmember_by_person(person)
-                worktimeaccounts = self.get_work_time_account_of_owner(person)
+                worktimeaccount = self.get_work_time_account_of_owner(person)
 
                 for project in projects:
                     self.delete_project_member(project)
 
-                for worktimeaccount in worktimeaccounts:
-                    self.delete_work_time_account(worktimeaccount)
+                self.delete_work_time_account(worktimeaccount)
 
             mapper.delete(person)
 
@@ -292,9 +296,11 @@ class HdMWebAppAdministration(object):
         work_time = timedelta(hours=0)
         for time_interval_transaction in time_interval_transactions:
             project_work_id = time_interval_transaction.get_affiliated_projectwork()
-            project_work = self.get_project_work_by_id(project_work_id)
-            if project_work.get_affiliated_activity() == activity.get_id():
-                work_time += project_work.get_time_period()
+            if project_work_id is not None:
+                project_work = self.get_project_work_by_id(project_work_id)
+                if project_work is not None:
+                    if project_work.get_affiliated_activity() == activity.get_id():
+                        work_time += project_work.get_time_period()
         activity.set_work_time(work_time)
         self.save_activity(activity)
 
@@ -581,9 +587,13 @@ class HdMWebAppAdministration(object):
         with ProjectMapper() as mapper:
             if project is not None:
                 activities = self.get_activities_of_project(project)
+                pro_members = self.get_projectmember_by_project(project)
 
                 for activity in activities:
                     self.delete_activity(activity)
+
+                for projectmember in pro_members:
+                    self.delete_project_member(projectmember)
 
                 mapper.delete(project)
             else:
@@ -657,9 +667,8 @@ class HdMWebAppAdministration(object):
 
                 project = self.get_project_by_id(activity.get_affiliated_project())  # das Projekt der Aktität speichern
 
-                return mapper.insert(project_work), self.calculate_work_time_of_activity(activity), \
-                       self.calculate_work_time_of_project(project), \
-                       self.create_time_interval_transaction(person, None, None, project_work)
+                return mapper.insert(project_work), self.create_time_interval_transaction(person, None, None, project_work),\
+                       self.calculate_work_time_of_activity(activity), self.calculate_work_time_of_project(project)
             else:
                 return None
 
@@ -694,6 +703,12 @@ class HdMWebAppAdministration(object):
         """Das Projekt wird anhand seiner eindeutigen ID ausgelesen."""
         with ProjectMemberMapper() as mapper:
             return mapper.find_by_key(number)
+
+    def get_projectmember_by_project(self, project):
+        """Alle Projectmember-Einträge ausgeben, die einer Project ID zugeordnet sind"""
+        with ProjectMemberMapper() as mapper:
+            return mapper.find_projectmembers_by_project_id(project.get_id())
+
 
     def get_projectmember_by_person(self, person):
         with ProjectMemberMapper() as mapper:
@@ -730,9 +745,6 @@ class HdMWebAppAdministration(object):
         with ProjectMemberMapper() as mapper:
             return mapper.update(project_m)
 
-    def get_project_by_employee(self, person_id):
-        with ProjectMemberMapper() as mapper:
-            return mapper.find_projects_by_person_id(person_id)
 
     """Methoden von TimeInterval"""
 
@@ -932,7 +944,7 @@ class HdMWebAppAdministration(object):
     def create_event(self, event_type, person):
         """Event anlegen"""
         with EventMapper() as mapper:
-            if event_type and person is not None:
+            if person is not None:
                 event = Event()
                 event.set_id(1)
                 event.set_deleted(0)
@@ -1045,26 +1057,7 @@ class HdMWebAppAdministration(object):
             return None
 
     # Business Logik für Frontend
-    def get_project_by_firebase_id(self, value):
-        projectmember = self.get_project_by_employee(value)
-        project_member_list = []
-        project_name_list = []
-        counter = 0
-        try:
-            for i in projectmember:
-                # Um die richtige Firebase Id zu getten, muss hier die get_person Methode angepasst werden
-                firebase_id = i.get_person()
-                project_member_list.append(firebase_id)
-                while counter < len(project_member_list):
-                    firebase_id = self.get_project_by_id(project_member_list[counter])
-                    project = firebase_id.get_project_name()
-                    counter = counter + 1
-                    project_name_list.append(project)
-            return project_name_list
-        except AttributeError:
-            return print("Keine Projekte gefunden")
-
-    def get_project_by_person_id(self, person):
+    def get_all_projects_by_person_id(self, person):
         projects = []
         projectmembers = self.get_projectmember_by_person(person)
         for pm in projectmembers:

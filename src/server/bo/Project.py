@@ -42,7 +42,7 @@ class Project (bo.BusinessObject):
         return self._work_time
 
     def __str__(self):
-        """Ausgabe von: id, name, client, project_term_id"""
+        """Ausgabe von: id, Projektname, Klient, project_term_id"""
         return "Project: {}, {}, {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self.get_project_name(),
                                                             self.get_client(), self.get_time_interval_id(),
                                                             self.get_owner(), self.get_work_time())
@@ -56,6 +56,5 @@ class Project (bo.BusinessObject):
         project.set_last_edit("last_edit")  # Set the last edit of the project work.
         project.set_client(dictionary["client"])  # Sets the client from the dict as the client of the object.
         project.set_time_interval_id(dictionary["timeinterval_id"])  # Sets the client from the dict as the client of the object.
-        project.set_owner(dictionary["owner"])  # Setzt owner aus dem dict als owner des Projekts
         project.set_work_time(dictionary["work_time"])
         return project

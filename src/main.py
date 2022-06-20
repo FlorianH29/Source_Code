@@ -13,6 +13,7 @@ from server.bo.Project import Project
 from server.bo.ProjectWork import ProjectWork
 from server.bo.WorkTimeAccount import WorkTimeAccount
 from SecurityDecorator import secured
+from Helper import Helper
 
 
 app = Flask(__name__)
@@ -34,6 +35,7 @@ bo = api.model('BusinessObject', {
 activity = api.inherit('Activity', bo, {
     'name': fields.String(attribute='_name', description='Name einer Aktivität'),
     'capacity': fields.Integer(attribute='_capacity', description='Kapazität einer Aktivität'),
+    'affiliated_project': fields.Integer(attribute='_affiliated_project', description='ID des Projekts'),
     'work_time': fields.String(attribute='_work_time', description='Zeit, die für eine Aktivität gearbeitet wurde')
 })
 
@@ -107,48 +109,81 @@ timeinterval = api.inherit('TimeInterval', bo, {
 })
 
 
+
 @hdmwebapp.route('/persons')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class PersonListOperations(Resource):
+@hdmwebapp.param('id', 'Die ID der Person')
+class PersonByIDOperations(Resource):
     @hdmwebapp.marshal_list_with(person)
     @secured
     def get(self):
         hwa = HdMWebAppAdministration()
-        persons = hwa.get_all_persons()
-        return persons
+        hil = Helper()
+        firebase_id = hil.get_firebase_id()
+        pers = hwa.get_person_by_firebase_id(firebase_id)
+        perso = hwa.get_person_by_id(pers) #Oder hier kommt sowas wie hwa.aktuelle person hin.
+        return perso
 
-    @hdmwebapp.marshal_with(person, code=200)
-    @hdmwebapp.expect(person)  # Wir erwarten ein Customer-Objekt von Client-Seite.
     @secured
-    def post(self):
+    def delete(self):
+        """
+        Löschen einer bestimmten Person. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        per = hwa.get_person_by_firebase_id(firebase_id)
+        hwa.delete_person(per)
+        return '', 200
 
-        ha = HdMWebAppAdministration()
 
-        proposal = Person.from_dict(api.payload)
+    @secured
+    def put(self):
 
-        if proposal is not None:
-            c = ha.create_person(proposal.get_firstname(), proposal.get_lastname, proposal.get_mailaddress,
-                                 proposal.get_firebase_id())
-            return c, 200
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        payload = Person.from_dict(api.payload)
+        firebase_id = h.get_firebase_id()
+        fl = hwa.get_person_by_firebase_id(firebase_id)
+
+        if fl is not None:
+            fl.set_firstname(payload.get_firstname())
+            fl.set_lastname(payload.get_lastname())
+            hwa.save_person(fl)
+            return '', 200
         else:
-            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
 
-@hdmwebapp.route('/person-by-name/<string:lastname>')
+@hdmwebapp.route('/projectworks/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@hdmwebapp.param('lastname', 'Der Nachname des Kunden')
-class CustomersByNameOperations(Resource):
-    @hdmwebapp.marshal_with(person)
+@hdmwebapp.param('id', 'Die ID der Projektarbeit')
+class ProjectWorkOperations(Resource):
+    @hdmwebapp.marshal_list_with(projectwork)
     @secured
-    def get(self, lastname):
-        """ Auslesen von Customer-Objekten, die durch den Nachnamen bestimmt werden.
-
-        Die auszulesenden Objekte werden durch ```lastname``` in dem URI bestimmt.
+    def put(self, id):
         """
-        adm = HdMWebAppAdministration()
-        lel = adm.get_person_by_name(lastname)
-        return lel
+        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = ProjectWork.from_dict(api.payload)
+
+        if pw is not None:
+            pw.set_id(id)
+            hwa.save_project_work(pw)
+            return '', 200
+        else:
+            return '', 500
+
+    @secured
+    def delete(self, id):
+        """
+        Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = hwa.get_project_work_by_id(id)
+        hwa.delete_project_work(pw)
+        return '', 200
 
 """
 @hdmwebapp.route('/worktimeaccount/<int:id>')
@@ -183,25 +218,29 @@ class WorkTimeAccountContentList(Resource):
         return result
 
 
-@hdmwebapp.route('/activities')
+@hdmwebapp.route('/projects/<int:id>/activities')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ActivitiesList(Resource):
     @hdmwebapp.marshal_list_with(activity)
     @secured
-    def get(self):
+    def get(self, id):
         hwa = HdMWebAppAdministration()
-        result = []
-        activities = hwa.get_all_activities()
-        for a in activities:
-            result.append({"name": a._name, "capacity": a._capacity})
-        print(result)
-        return result
+        pro = hwa.get_project_by_id(id)
+        # Das durch die id gegebene Projekt als Objekt speichern.
+
+        if pro is not None:
+            activity_list = hwa.get_activities_of_project(pro)
+            # Auslesen der Aktivitäten, die dem Projekt untergliedert sind.
+            return activity_list
+        else:
+            return "Activity not found", 500
 
 
 @hdmwebapp.route('/events')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class EventOperations(Resource):
     @hdmwebapp.marshal_list_with(event)
+    @secured
     def get(self, id):
         """
         Auslesen eines bestimmten Eventobjektes, das nach der id in der URI bestimmt wird.
@@ -211,19 +250,23 @@ class EventOperations(Resource):
         return ev
 
     @hdmwebapp.marshal_with(event, code=200)
+    @secured
     def post(self):
         """
         Anlegen eines Events. Das neu angelegte Event wird als Ergebnis zurückgegeben.
         """
         hwa = HdMWebAppAdministration()
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        per = hwa.get_person_by_firebase_id(firebase_id)
         proposal = Event.from_dict(api.payload)
-        print(proposal)
 
         if proposal is not None:
             """ 
-            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Eventobjekt erstellt.  
+            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Eventobjekt erstellt.
+            Wenn dieses   
             """
-            e = hwa.create_event(proposal.get_event_type(), proposal.get_affiliated_person())
+            e = hwa.create_event_and_check_type(proposal.get_event_type(), per)
             return e, 200
         else:
             return '', 500
@@ -233,19 +276,22 @@ class EventOperations(Resource):
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @hdmwebapp.marshal_list_with(project)
-    #@secured
+    @secured
     def get(self, id):
         hwa = HdMWebAppAdministration()
-        person = hwa.get_person_by_id(id)
-        projects = hwa.get_project_by_person_id(person)
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        per = hwa.get_person_by_firebase_id(firebase_id)
+        projects = hwa.get_all_projects_by_person_id(per)
         return projects
+
 
 @hdmwebapp.route('/projects/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID des Projekts')
 class ProjectOperations(Resource):
     @hdmwebapp.marshal_list_with(projectwork)
-    #@secured
+    @secured
     def put(self, id):
         """
         Update eines bestimmten Projektobjektes. Objekt wird durch die id in dem URI bestimmt.
@@ -260,6 +306,76 @@ class ProjectOperations(Resource):
         else:
             return '', 500
 
+
+@hdmwebapp.route('/projects')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectPostOperation(Resource):
+    @hdmwebapp.marshal_with(project, code=201)
+    @hdmwebapp.expect(project)
+    @secured
+    def post(self):
+        """Erstellen eines neuen Projekts."""
+
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        proposal = Project.from_dict(api.payload)
+
+        if proposal is not None:
+
+            project_name = proposal.get_project_name()
+            client = proposal.get_client()
+            inter = hwa.get_time_interval_by_id(1) #hier muss das echte Zeitintervall rein
+            firebase_id = h.get_firebase_id()
+            per = hwa.get_person_by_firebase_id(firebase_id)
+            result = hwa.create_project(project_name, client, inter, per)
+            return result, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+
+@hdmwebapp.route('/projects/<int:id>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID der Projektarbeit')
+class ProjectDeleteOperation(Resource):
+    @secured
+    def delete(self, id):
+        """
+        Löschen eines bestimmten Projektobjekts. Objekt wird durch die ID in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = hwa.get_project_by_id(id)
+        hwa.delete_project(pw)
+        return '', 200
+
+
+
+@hdmwebapp.route('/projectworks')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectWorksOperations(Resource):
+    @hdmwebapp.marshal_with(projectwork, code=201)
+    @hdmwebapp.expect(projectwork)
+    @secured
+    def post(self):
+        """Erstellen einer neuen Projektarbeit."""
+
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        proposal = ProjectWork.from_dict(api.payload)
+
+        if proposal is not None:
+
+            project_work_name = proposal.get_project_work_name()
+            description = proposal.get_description()
+            act = hwa.get_activity_by_id(proposal.get_affiliated_activity())
+            firebase_id = h.get_firebase_id()
+            per = hwa.get_person_by_firebase_id(firebase_id)
+            result = hwa.create_project_work(project_work_name, description, act, per)
+            return result, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+
+
 @hdmwebapp.route('/activities/<int:id>/projectworks')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Aktivität')
@@ -269,15 +385,12 @@ class ProjectWorksByActivityOperations(Resource):
     def get(self, id):
         hwa = HdMWebAppAdministration()
         act = hwa.get_activity_by_id(id)
-
         # Die durch die id gegebene Aktivität als Objekt speichern.
 
         if act is not None:
             projectwork_list = hwa.get_project_works_of_activity(act)
             # Auslesen der Projektarbeiten, die der Aktivität untergliedert sind.
-            print(projectwork_list)
             return projectwork_list
-
         else:
             return "Activity not found", 500
 
@@ -393,12 +506,6 @@ sub_thread = Thread(target=check)
 #es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
-
-h = HdMWebAppAdministration()
-pe = h.get_person_by_id(1)
-#print(h.get_last_event_by_affiliated_person(pe))
-#print(h.get_intervals_of_person_between_time_stamps(pe, '16/06/2022', '18/06/2022'))
-#h.create_event_and_check_type(4, pe)
 
 
 

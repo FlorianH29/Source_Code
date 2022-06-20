@@ -13,11 +13,11 @@ export default class ProjectWorkBO extends TimeIntervalBO {
    * @param {String} aDescription - die Beschreibung dieses ProjectWorkBO.
    * @param {Number} anAffiliatedActivity - die Aktivität, die diesem ProjectWorkBO zugeordnet ist.
    */
-  constructor(aStartEventId, anEndEventId, aTimePeriod, aProjectWorkName, aDescription, anAffiliatedActivity) {
-    super(aStartEventId, anEndEventId, aTimePeriod);
+  constructor(aProjectWorkName, aDescription) {
+    super();
     this.project_work_name = aProjectWorkName;
     this.description = aDescription;
-    this.affiliated_activity = anAffiliatedActivity;
+    this.affiliated_activity = 1;
   }
 
   /**
@@ -57,14 +57,14 @@ export default class ProjectWorkBO extends TimeIntervalBO {
    *
    * @param {Number} anAffiliatedActivity - die neue zugeordnete Aktivität dieses ProjectWorkBO.
    */
-  setAffiliatedProject(anAffiliatedActivity) {
+  setAffiliatedActivity(anAffiliatedActivity) {
     this.affiliated_activity = anAffiliatedActivity;
   }
 
-    /**
+   /**
    * Gibt die zugeordnete Aktivität zurück.
    */
-  getAffiliatedProject() {
+  getAffiliatedActivity() {
     return this.affiliated_activity;
   }
 

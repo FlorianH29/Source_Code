@@ -1,12 +1,23 @@
 import React, {Component} from 'react';
-import {HdMWebAppAPI} from "../api";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import Grid from "@mui/material/Grid";
-import {ButtonGroup, Divider} from "@mui/material";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import ListItem from "@mui/material/ListItem";
+import {ActivityBO, HdMWebAppAPI} from "../api";
+import {
+    withStyles,
+    Button,
+    TextField,
+    InputAdornment,
+    IconButton,
+    Grid,
+    Typography,
+    Divider,
+    Box,
+    DialogContent,
+    DialogActions,
+    Dialog
+} from '@mui/material';
+import AddIcon from '@material-ui/icons/Add';
+import ActivityForm from "./dialogs/ActivityForm";
+import PropTypes from "prop-types";
+import ActivityListEntry from "./ActivityListEntry";
 
 
 class ActivityList extends Component {
@@ -15,69 +26,109 @@ class ActivityList extends Component {
         super(props);
 
         this.state = {
-            activities: []
+            activities: [],
+            showActivityForm: false
         };
     };
 
-    componentDidMount() {
-        HdMWebAppAPI.getAPI().getActivities()
-            .then(activitiesBOs =>
+    getActivitiesForProject() {
+        HdMWebAppAPI.getAPI().getActivities(1)
+            .then(activityBOs =>
                 this.setState({
-                    activities: activitiesBOs
+                    activities: activityBOs
                 })).catch(e =>
             this.setState({
                 activities: []
             }));
-        console.log(this.state.activities)
+    }
+
+    componentDidMount() {
+        this.getActivitiesForProject();
+    }
+
+    handleAddActivityButtonClicked = (event) => {
+        // Dialog öffnen, um damit eine Aktivität anlegen zu können
+        event.stopPropagation();
+        this.setState({
+            showActivityForm: true
+        })
+    }
+
+    activityDeleted = activity => {
+        const newActivityList = this.state.activities.filter(activityFromState => activityFromState.getID() !== activity.getID());
+        this.setState({
+            activities: newActivityList,
+            showActivityForm: false
+        });
+    }
+
+    /** Behandelt das onClose Event von CustomerForm */
+    activityFormClosed = activity => {
+        // projectWork ist nicht null und deshalb erstelltI/überarbeitet
+        if (activity) {
+            const newActivityList = [...this.state.activities, activity];
+            this.setState({
+                activities: newActivityList,
+                showActivityForm: false
+            });
+        } else {
+            this.setState({
+                showActivityForm: false
+            });
+        }
     }
 
     render() {
+        const {classes} = this.props;
+        const {activities, showActivityForm} = this.state;
+
         return (
-            <Box sx={{m: 2}}>
-                <Card>
-                    <Grid container spacing={1} justifyContent={"center"}>
-                        <Grid item xs={12} align={"center"}>
-                            <ButtonGroup>
-                                <Button variant={"contained"}>
-                                    Projekt bearbeiten
-                                </Button>
-                            </ButtonGroup>
+            <div>
+                <Typography variant={"h4"} algin={"left"} component={"div"}>
+                    Projekt: {this.props.projectName}
+                </Typography>
+                <Button variant='contained' color='primary' startIcon={<AddIcon/>}
+                        onClick={this.handleAddActivityButtonClicked}>
+                    Aktivität anlegen
+                </Button>
+                <Grid container>
+                    <Grid item xs={12} align={"center"}>
+                    <Grid container>
+                        <Grid item xs={3} align={"flex-end"}>
+                            <Typography variant={"h5"} component={"div"}> Aktivitäten </Typography>
                         </Grid>
-                        <Grid item xs={12} align={"left"}>
-                            <Typography variant={"h3"} component={"div"}>
-                                Aktivität
-                            </Typography>
-                            <Typography variant={"h3"} component={"div"} align={"center"}>
-                                Kapazität
-                            </Typography>
+                        <Grid item xs={3} align={"flex-end"}>
+                            <Typography variant={"h5"} component={"div"}> Kapazität </Typography>
                         </Grid>
-                        <Grid item xs={12} align={"center"}>
-                            {this.state.activities.map((activity) => (
-                                <Box key={activity}>
-                                    <ListItem>
-                                        <Grid container justifyContent={"left"}>
-                                            <Grid item xs={6} align={"left"}>
-                                                <Typography variant={"h5"} component={"div"}>
-                                                    {activity.name}
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={6} align={"left"}>
-                                                <Typography variant={"h5"} component={"div"}>
-                                                    {activity.capacity}
-                                                </Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </ListItem>
-                                    <Divider/>
-                                </Box>
-                            ))}
+                        <Grid item xs={3} align={"flex-end"}>
+                            <Typography variant={"h5"} component={"div"}> Dauer </Typography>
                         </Grid>
                     </Grid>
-                </Card>
-            </Box>
+                    <Divider/>
+                    {activities.map(ac =>
+                        <ActivityListEntry key={ac.getID()} activity={ac} onActivityDeleted={this.activityDeleted}/>)
+                    }
+                    </Grid>
+                </Grid>
+                <ActivityForm onClose={this.activityFormClosed} show={showActivityForm}></ActivityForm>
+            </div>
         )
     }
+}
 
+
+ActivityList.propTypes = {
+    /** @ignore */
+    classes: PropTypes.object.isRequired,
+    /** The CustomerBO of this AccountList */
+    project: PropTypes.object.isRequired,
+    /** If true, accounts are (re)loaded */
+    show: PropTypes.bool.isRequired,
+}
+
+
+ActivityForm.propTypes = {
+    onClose: PropTypes.func.isRequired,
 }
 
 export default ActivityList;

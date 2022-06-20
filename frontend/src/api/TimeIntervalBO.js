@@ -10,12 +10,11 @@ export default class TimeIntervalBO extends BusinessObject {
    * @param {Number} anEndEventId - die Id des Endevents des Zeitintervalls
    * @param {Number} aTimePeriod - der gespeicherte Zeitraum des Zeitintervalls.
    */
-  constructor(aStartEventId, anEndEventId, aTimePeriod) {
+  constructor() {
     super();
-    this.start_event_id = aStartEventId;
-    this.end_event_id = anEndEventId;
-    this.time_period = aTimePeriod;
-
+    this.start_event_id = 0;
+    this.end_event_id = 0;
+    this.time_period = 0;
   }
 
   /**

@@ -5,28 +5,28 @@ import CloseIcon from '@material-ui/icons/Close';
 import { HdMWebAppAPI } from '../../api';
 
 /**
- * Anzeigen eines Löschdialogs, der fragt, ob ein Projektarbeitsobjekt gelöscht werden soll. Das ProjectWorkBO welches
- * gelöscht werden soll, muss per prop übergeben werden. Je nach der Nutzerinteraktion wird der entsprechende Backend
- * Aufruf ausgelöst. Daraufhin wird die Funktion der onClose Property mit dem gelöschten ProjectWork als Parameter
+ * Anzeigen eines Löschdialogs, der fragt, ob ein Projekt gelöscht werden soll. Das ProjectBO, welches
+ * gelöscht werden soll, muss per prop übergeben werden. Je nach der Nutzerinteraktion wird der entsprechende Backend-
+ * Aufruf ausgelöst. Daraufhin wird die Funktion der onClose Property mit dem gelöschten Project als Parameter
  * aufgerufen. Wenn der Dialog geschlossen wird, wird onClose null übergeben.
  */
 
-class ProjectWorkDeleteDialog extends Component {
+class ProjectDeleteDialog extends Component {
 
   constructor(props) {
     super(props);
 
-    // den state initialisieren
+    /** den State initialisieren */
     this.state = {
       deletingInProgress: false,
       deletingError: null
     };
   }
 
-  /** Die Projektarbeit löschen */
-  deleteProjectWork = () => {
-    HdMWebAppAPI.getAPI().deleteProjectWork(this.props.projectWork.getID()).then(projectWork => {
-      this.props.onClose(this.props.projectWork);  // call the parent with the deleted customer
+  /** Das Projekt löschen */
+  deleteProject = () => {
+    HdMWebAppAPI.getAPI().deleteProject(this.props.project.getID()).then(project => {
+      this.props.onClose(this.props.project);  // ruft den Parent mit dem gelöschten Projekt auf.
     }).catch(e =>
         console.log(e))
   }
@@ -39,28 +39,28 @@ class ProjectWorkDeleteDialog extends Component {
 
   /** Rendert die Komponente */
   render() {
-    const { projectWork, show } = this.props;
+    const { project, show } = this.props;
 
     return (
       show ?
         <Dialog open={show} onClose={this.handleClose}>
-          <DialogTitle>Projektarbeit löschen
+          <DialogTitle>Projekt löschen
             <IconButton onClick={this.handleClose}>
               <CloseIcon />
             </IconButton>
           </DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Die Projektarbeit '{projectWork.getProjectWorkName}' (ID: {projectWork.getID()}) wirklich löschen?
+              Das Projekt  "{project.getProjectName()}" mit der ID "{project.getID()}" wirklich löschen?
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color='secondary'>
               Abbrechen
             </Button>
-            <Button variant='contained' onClick={this.deleteProjectWork} color='primary'>
+            <Button variant='contained' onClick={this.deleteProject} color='primary'>
               Löschen
-            </Button>
+            </Button >
           </DialogActions>
         </Dialog>
         : null
@@ -69,16 +69,16 @@ class ProjectWorkDeleteDialog extends Component {
 }
 
 /** PropTypes */
-ProjectWorkDeleteDialog.propTypes = {
-  /** Das ProjectWorkBO, das gelöscht werden soll */
-  projectWork: PropTypes.object.isRequired,
+ProjectDeleteDialog.propTypes = {
+  /** Das ProjectBO, das gelöscht werden soll */
+  project: PropTypes.object.isRequired,
   /** Wenn show true ist, wird der Dialog gerendert */
   show: PropTypes.bool.isRequired,
   /**
    * Handler Funktion, die aufgerufen wird, wenn der Dialog geschlossen wird.
-   * Sendet das gelöschte ProjectWorkBO as Parameter oder null, wenn Abbrechen aufgerufen worden ist.
+   * Sendet das gelöschte ProjectBO als Parameter oder null, wenn Abbrechen aufgerufen worden ist.
    */
   onClose: PropTypes.func.isRequired,
 }
 
-export default ProjectWorkDeleteDialog;
+export default ProjectDeleteDialog;
