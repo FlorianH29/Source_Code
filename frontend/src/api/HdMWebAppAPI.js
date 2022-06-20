@@ -21,7 +21,7 @@ export default class HdMWebAppAPI {
   #hdmwebappServerBaseURL = '/hdmwebapp';
 
   // Person bezogen
-  #getPersonsURL = (id) => `${this.#hdmwebappServerBaseURL}${id}`;
+  #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
   #editPersonURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
   #deletePersonURL = () =>`${this.#hdmwebappServerBaseURL}/persons`;
 
@@ -86,120 +86,34 @@ export default class HdMWebAppAPI {
             }
         )
 
-    addEvent(eventBO) {
-        return this.#fetchAdvanced(this.#addEventURL(), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json, text/plain',
-                'Content-type': 'application/json',
-            },
-            body: JSON.stringify(eventBO)
-        }).then((responseJSON) => {
-            let responseEventBO = EventBO.fromJSON(responseJSON)[0];
-            console.log(responseEventBO);
-            return new Promise(function (resolve) {
-                resolve(responseEventBO);
-            })
-        })
-    }
+/**
+  * Updated ein ProjectWorkBO
+  *
+  * @param {PersonBO} personBO das geupdated werden soll
+  * @public
+  */
 
-    addPerson(PersonBO) {
-        return this.#fetchAdvanced(this.#addPersonURL(), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json, text/plain',
-                'Content-type': 'application/json',
-            },
-            body: JSON.stringify(PersonBO)
-        }).then((responseJSON) => {
-            // We always get an array of CustomerBOs.fromJSON, but only need one object
-            let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
-            // console.info(accountBOs);
-            return new Promise(function (resolve) {
-                resolve(responsePersonBO);
-            })
-        })
-    }
-
-  editPerson(PersonBO) {
-    return this.#fetchAdvanced(this.#editPersonURL(PersonBO.getID()), {
+  editPerson(personBO) {
+    return this.#fetchAdvanced(this.#editPersonURL(), {
       method: 'PUT',
-      navigator: {
+      headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(PersonBO)
+      body: JSON.stringify(personBO)
     }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
+      // We always get an array of PersonBO.fromJSON
       let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
-      // console.info(accountBOs);
+      console.info(personBO);
       return new Promise(function (resolve) {
         resolve(responsePersonBO);
+        console.log(responsePersonBO)
       })
     })
   }
-    getPersons() {
-    return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
-      let personBOs = PersonBO.fromJSON(responseJSON);
-      //console.log(responseJSON);
-      return new Promise(function (resolve) {
-        resolve(personBOs);
-      })
-    })
-  }
-    updatePerson(PersonBO) {
-        return this.#fetchAdvanced(this.#updatePersonURL(PersonBO.getID()), {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json, text/plain',
-                'Content-type': 'application/json',
-            },
-            body: JSON.stringify(PersonBO)
-        }).then((responseJSON) => {
-            // We always get an array of CustomerBOs.fromJSON
-            let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
-            // console.info(accountBOs);
-            return new Promise(function (resolve) {
-                resolve(responsePersonBO);
-            })
-        })
-    }
 
     getPerson() {
         return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
-            let personBOs = PersonBO.fromJSON(responseJSON);
-            //console.log(responseJSON);
-            return new Promise(function (resolve) {
-                resolve(personBOs);
-            })
-        })
-    }
-
-    /**
-     * Erstellt ein Ereignis und gibt eine Promise zurück, die ein neues EventBO
-     * Objekt mit dem Eventtyp des Parameters eventBO als Ergebnis hat.
-     *
-     * @param {EventBO} eventBO welches erstellt werden soll.
-     * @public
-     */
-    addEvent(eventBO) {
-        return this.#fetchAdvanced(this.#addEventURL(), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json, text/plain',
-                'Content-type': 'application/json',
-            },
-            body: JSON.stringify(eventBO)
-        }).then((responseJSON) => {
-            let responseEventBO = EventBO.fromJSON(responseJSON)[0];
-            console.log(responseEventBO);
-            return new Promise(function (resolve) {
-                resolve(responseEventBO);
-            })
-        })
-    }
-    getPerson(id) {
-        return this.#fetchAdvanced(this.#getPersonsURL(id)).then((responseJSON) => {
             let personBOs = PersonBO.fromJSON(responseJSON)[0];
             //console.log(responseJSON);
             return new Promise(function (resolve) {

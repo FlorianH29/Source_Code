@@ -48,24 +48,27 @@ class Navigator extends Component {
         }
     }
 
-    getPerson = () => {
+    getAPerson = () => {
         HdMWebAppAPI.getAPI().getPerson()
-            .then(customerBOs =>
+            .then(personBO =>
                 this.setState({
-                    person: PersonBO,
-                    error: null
+                    person: personBO,
                 })).catch(e =>
             this.setState({
-                person: [],
-                error: e
+                person: null,
             })
         );
+
 
         // set loading to true
         this.setState({
             loadingInProgress: true,
             error: null
         });
+    }
+
+    componentDidMount() {
+        this.getAPerson();
     }
 
     handleDelete = () => {
@@ -80,12 +83,11 @@ class Navigator extends Component {
         });
     }
 
-    personeditClosed = person => {
+    personEditClosed = (person) => {
         // person ist nicht null und deshalb überarbeitet
         if (person) {
-            const newperson = [...this.state.person, person];
             this.setState({
-                person: newperson,
+                person: person,
                 showPersonEditDialog: false
             });
         } else {
@@ -109,11 +111,11 @@ class Navigator extends Component {
     }
 
     render() {
-        const {person} = this.props;
-        const {showPersonDeleteDialog, showPersonEditDialog} = this.state;
+        const {showPersonDeleteDialog, showPersonEditDialog, person} = this.state;
         const drawerWidth = 200;
         const lel = 0;
         const boxWidth = 200;
+        //console.log(person)
 
         return (
             <Box sx={{display: 'flex'}}>
@@ -155,7 +157,7 @@ class Navigator extends Component {
                                                 onClose={this.persondeleteClosed}>
                             </PersonDeleteDialog>
                             <PersonEditDialog person={person} show={showPersonEditDialog}
-                                              onClose={this.personeditClosed}>
+                                              onClose={this.personEditClosed}>
                             </PersonEditDialog>
                             <Typography variant='h6' component='div' align='center'>
                                 <Button onClick={this.handleEdit}>Profil bearbeiten</Button>

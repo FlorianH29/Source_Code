@@ -128,7 +128,7 @@ class ProjectWorkForm extends Component {
               </form>
             </DialogContent>
             <DialogActions>
-              <Button onClick={this.handleClose} color='secondary'>
+              <Button algin="left" onClick={this.handleClose} color='secondary'>
                 Abbrechen
               </Button>
               {// Falls eine Projektarbeit gegeben ist, sichern Knopf anzeigen, der diese updatet, sonst Ende buchen
