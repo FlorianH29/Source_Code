@@ -84,10 +84,10 @@ class PersonEditDialog extends Component {
             </IconButton>
           </DialogTitle>
             <form noValidate autoComplete='off'>
-              <TextField autoFocus type='text' required fullWidth margin='normal' id='person' label='Vorname:' value={firstname}
+              <TextField autoFocus type='text' required fullWidth margin='normal' id='firstname' label='Vorname:' value={firstname}
                   onChange={this.textFieldValueChange} error={firstnameValidationFailed}
                   helperText={firstnameValidationFailed ? 'Bitte geben Sie Ihren Vornamen an' : ' '} />
-                <TextField type='text' required fullWidth margin='normal' id='description' label='Nachname:' value={lastname}
+                <TextField type='text' required fullWidth margin='normal' id='lastname' label='Nachname:' value={lastname}
                   onChange={this.textFieldValueChange} error={lastnameValidationFailed}
                   helperText={lastnameValidationFailed ? 'Bitte geben Sie Ihren Nachnamen an' : ' '} />
               </form>
