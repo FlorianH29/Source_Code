@@ -29,8 +29,31 @@ class Welcome extends Component {
         this.getPersons();
     }
 
+    //addNewArriveEvent = () => {
+        //HdMWebAppAPI.getAPI().addNewArriveEvent()
+    //}
 
+/** Erstellen eines Arrive-Events */
+    addNewArriveEvent = () => {
+      // Umschalten des Status der Knöpfe
+      this.setState({
 
+          updatingError: null
+      });
+      // Erstellen eines Gehen-Ereignis
+      let newArriveEvent = new ArriveBO(this.state.firebase_id)
+      HdMWebAppAPI.getAPI().addArrive().then(arrive => {
+        // Backend call successful
+        // reinit the dialogs state for a new empty customer
+        this.setState(this.baseState);
+        this.props.onClose(arrive); // call the parent with the departure object from backend
+      }).catch(e =>
+        this.setState({
+          updatingInProgress: false,    // disable loading indicator
+          updatingError: e              // show error message
+        })
+      );
+    }
 
     /**handleButton = () => {
          this.props.history.push('/worktimeaccoung')
@@ -46,7 +69,7 @@ class Welcome extends Component {
                         <Grid item xs={12} align={"center"}>
                             <h2>Wilkommen, {this.props.username}</h2>
                             <p>Bitte bestätige deinen Arbeitsbeginn:</p>
-                            <Button variant={"contained"} color="success" /*onClick={this.handleButton()}*/>
+                            <Button variant={"contained"} color="success" onClick={this.addNewArriveEvent()}>
                                     Kommen
                             </Button>
                             <p></p>

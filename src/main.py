@@ -50,6 +50,10 @@ departure = api.inherit('Departure', event, {
     'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt von Gehen')
 })
 
+arrive = api.inherit('Arrive', event, {
+    'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt von Kommen')
+})
+
 person = api.inherit('Person', bo, {
     'firstname': fields.String(attribute='_firstname', description='Vorname eines Benutzers'),
     'lastname': fields.String(attribute='_lastname', description='Nachname eines Benutzers'),
@@ -414,24 +418,33 @@ class ProjectWorkOperations(Resource):
         return '', 200
 
 
-def check():
-    hwa = HdMWebAppAdministration()
-    hwa.check_time_for_departure()
-
-
 @hdmwebapp.route('/departure')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class DepartureOperations(Resource):
-    @hdmwebapp.marshal_list_with(departure)
+    @hdmwebapp.marshal_with(departure, code=200)
     @secured
-    def get(self, id):
+    def post(self):
         """
-        Auslesen eines bestimmten Gehen-Objektes, das nach der id in der URI bestimmt wird.
+        Anlegen eines Events. Das neu angelegte Event wird als Ergebnis zurückgegeben.
         """
         hwa = HdMWebAppAdministration()
-        departure = hwa.get_departure_event_by_id(id)
-        return departure
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        per = hwa.get_person_by_firebase_id(firebase_id)
 
+        if per is not None:
+            """ 
+            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Gehen-Objekt erstellt.
+            """
+            d = hwa.create_departure_event(per)
+            return d, 200
+        else:
+            return '', 500
+
+
+@hdmwebapp.route('/arrive')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ArriveOperations(Resource):
     @hdmwebapp.marshal_with(event, code=200)
     @secured
     def post(self):
@@ -442,18 +455,19 @@ class DepartureOperations(Resource):
         h = Helper()
         firebase_id = h.get_firebase_id()
         per = hwa.get_person_by_firebase_id(firebase_id)
-        proposal = Departure.from_dict(api.payload)
 
-        if proposal is not None:
+        if per is not None:
             """ 
             Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Gehen-Objekt erstellt.
             """
-            e = hwa.create_departure_event(per)
-            return e, 200
+            a = hwa.create_arrive_event(per)
+            return a, 200
         else:
             return '', 500
 
-
+def check():
+    hwa = HdMWebAppAdministration()
+    hwa.check_time_for_departure()
 
 sub_thread = Thread(target=check)
 #es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet

@@ -17,6 +17,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import {Link as RouterLink} from "react-router-dom";
 import {HdMWebAppAPI, PersonBO} from "../../api";
+import Departure from "../Departure";
 
 
 class Navigator extends Component {
@@ -215,6 +216,7 @@ class Navigator extends Component {
                                         <ListItemText primary="Blöder Kerle"/>
                                     </ListItemButton>
                                 </ListItem>
+                                <Departure></Departure>
                             </Typography>
                         </Drawer>
                     </>

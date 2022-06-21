@@ -7,6 +7,8 @@ import TimeIntervalBO from "./TimeIntervalBO";
 import navigator from "../components/layout/Navigator";
 import personForm from "../components/dialogs/PersonForm";
 import EventBO from "./EventBO";
+import DepartureBO from "./DepartureBO";
+import ArriveBO from "./ArriveBO";
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
@@ -49,6 +51,8 @@ export default class HdMWebAppAPI {
 
   // Ereignis bezogen
   #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
+  #addDepartureURL = () => `${this.#hdmwebappServerBaseURL}/departure`;
+  #addArriveURL = () => `${this.#hdmwebappServerBaseURL}/arrives`;
 
   /**
    * Gibt die Singelton Instanz zurück
@@ -148,6 +152,39 @@ export default class HdMWebAppAPI {
     })
   }
 
+  addDeparture() {
+    return this.#fetchAdvanced(this.#addDepartureURL(), {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/jason, text/plain',
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify("")
+    }).then((responseJSON) => {
+        let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+        console.log(responseEventBO);
+        return new Promise(function (resolve) {
+            resolve(responseEventBO);
+        })
+    })
+  }
+
+  addArrive() {
+    return this.#fetchAdvanced(this.#addArriveURL(), {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/jason, text/plain',
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify("")
+    }).then((responseJSON) => {
+        let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+        console.log(responseEventBO);
+        return new Promise(function (resolve) {
+            resolve(responseEventBO);
+        })
+    })
+  }
 
     getWorktimeAccount(id) {
         return this.#fetchAdvanced(this.#getWorktimeAccountURL(id)).then((responseJSON) => {
