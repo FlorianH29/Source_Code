@@ -26,7 +26,6 @@ class ProjectWorkListEntry extends Component {
       owner: null,
       showProjectWorkForm: false,
       showProjectWorkDeleteDialog: false,
-      openExpand: false
     };
   }
 
@@ -95,9 +94,9 @@ class ProjectWorkListEntry extends Component {
   /** Renders the component */
   render() {
     const { classes } = this.props;
-    const { projectWork, showProjectWorkForm, showProjectWorkDeleteDialog, owner, openExpand } = this.state;
+    const { projectWork, showProjectWorkForm, showProjectWorkDeleteDialog, owner } = this.state;
 
-    console.log(this.state);
+    // console.log(this.state);
     return (
         owner ?
         <div>
@@ -111,7 +110,7 @@ class ProjectWorkListEntry extends Component {
                 </Grid>
                 <Grid item xs={3} align={"center"}>
                     <Typography variant={"h5"} component={"div"}>
-                        {owner.username}
+                        {owner.firstname} {owner.lastname}
                     </Typography>
                 </Grid>
                 <Grid item xs={3} align={"center"}>

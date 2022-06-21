@@ -3,6 +3,7 @@ import {EventBO, HdMWebAppAPI} from '../api';
 import PropTypes from "prop-types";
 import ProjectWorkForm from "./dialogs/ProjectWorkForm";
 import {Button} from "@mui/material";
+import Navigator from "./layout/Navigator";
 
 
 /**
@@ -19,6 +20,7 @@ class EventManager extends Component {
             addPW: this.props.functionAddProjectWork,
             eventType: this.props.eventType,
             buttonName: '',
+            color: 'primary'
         }
     }
 
@@ -26,20 +28,25 @@ class EventManager extends Component {
      * Wird aufgerufen, wenn ein Knopf zum Erstellen eines Ereignisses geklickt wird.
      * Ruft die Funktion addEvent auf und übergibt ihr den EventTyp, welcher in der jeweiligen Komponente angegeben ist.
      */
-    handleCreateEventButtonClickedf = () => {
+    handleCreateEventButtonClicked = () => {
         // wenn der Event Typ 1 ist, wird das Ereignis und die Projektarbeit erstellt
         if (this.state.eventType === 1) {
             this.addEvent(this.state.eventType);
-            this.state.addPW();
+            this.aMethod();
+            //this.state.addPW();
         } else {
             this.addEvent(this.state.eventType);
         }
     }
 
-    handleCreateEventButtonClicked = () => {
+    aMethod = () => {
+        setTimeout(this.state.addPW(), 10000);
+    }
+
+    handleCreateEventButtonClickedf = () => {
         // wenn der Event Typ 1 ist, wird das Ereignis und die Projektarbeit erstellt
         if (this.state.eventType === 1) {
-            this.addEvent(this.state.eventType).then(() => this.state.addPW());
+            this.addEvent(this.state.eventType).then(projectWork => this.state.addPW(projectWork));
         } else {
             this.addEvent(this.state.eventType);
         }
@@ -50,12 +57,11 @@ class EventManager extends Component {
      */
     addEvent = async (event) => {
         let newEvent = new EventBO(event);
-        console.log(this.state);
+        // console.log(this.state);
         await HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
             // Backend call successfull
             // reinit the dialogs state for a new empty customer
-            console.log(event)
-            this.setState(this.baseState);
+            // console.log(event)
             this.props.onClose(event); // call the parent with the customer object from backend
         }).catch(e =>
             console.log(e));
@@ -88,11 +94,12 @@ class EventManager extends Component {
     }
 
     render() {
-        const {buttonName, eventType} = this.state
+        const {buttonName, eventType, color} = this.state
 
         return (
             <div>
-                <Button eventType onClick={() => {this.handleCreateEventButtonClicked()}}> {buttonName}</Button>
+                <Button eventType onClick={this.handleCreateEventButtonClicked}> {buttonName}</Button>
+                <Navigator color={color}></Navigator>
             </div>
         )
     }

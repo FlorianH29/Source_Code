@@ -44,7 +44,8 @@ class Navigator extends Component {
         this.state = {
             anchorEl: null,
             person: null,
-            showPersonDelete: false
+            showPersonDelete: false,
+            color: this.props.color
         };
     };
 
@@ -73,13 +74,6 @@ class Navigator extends Component {
                 person: null,
             })
         );
-
-
-        // set loading to true
-        this.setState({
-            loadingInProgress: true,
-            error: null
-        });
     }
 
     componentDidMount() {

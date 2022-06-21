@@ -6,12 +6,12 @@ import {EventBO, HdMWebAppAPI, ProjectWorkBO} from '../../api';
 import EventManager from "../EventManager";
 
 /**
- * Shows a modal form dialog for a CustomerBO in prop customer. If the customer is set, the dialog is configured
- * as an edit dialog and the text fields of the form are filled from the given CustomerBO object.
- * If the customer is null, the dialog is configured as a new customer dialog and the textfields are empty.
- * In dependency of the edit/new state, the respective backend calls are made to update or create a customer.
- * After that, the function of the onClose prop is called with the created/update CustomerBO object as parameter.
- * When the dialog is canceled, onClose is called with null.
+ * Zeigt einen Dialog für eine Projekarbeit. Wenn die Projektarbeit gesetzt ist, stellt der Dialog eine Möglichkeit zum
+ * Bearbeiten dar und die Textfelder sind mit den Werten des gegebenen ProjectWorkBO gefüllt.
+ * Wenn die Projektarbeit null ist, stellt der Dialog eine Möglichkeit zum Erstellen eines neuen ProjectWorkBO dar und
+ * die Textfelder sind leer. Abhängig vom Status des Dialogs werden die entsprechenden Backendcalls ausgeführt.
+ * Danach wird die Funktion des onClose prop mit den erstellten/bearbeiteten ProjectWorkBO als Parameter aufgerufen.
+ * Wenn der Dialog abgebrochen wird, wird onClose mit null aufgerufen.
  */
 class ProjectWorkForm extends Component {
 
@@ -48,6 +48,7 @@ class ProjectWorkForm extends Component {
   addProjectWork = () => {
     let newProjectWorkBO = new ProjectWorkBO(this.state.projectWorkName, this.state.description,
         this.state.affiliatedActivity);
+    console.log(this.state)
     HdMWebAppAPI.getAPI().addProjectWork(newProjectWorkBO).then(projectWork => {
       // Backend call sucessfull
       // reinit the dialogs state for a new empty customer
@@ -151,7 +152,7 @@ class ProjectWorkForm extends Component {
 /** PropTypes */
 ProjectWorkForm.propTypes = {
 
-  onClose: PropTypes.func.isRequired,
+  //onClose: PropTypes.func.isRequired,
 
   show: PropTypes.bool.isRequired,
 }
