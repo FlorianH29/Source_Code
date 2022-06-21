@@ -87,7 +87,8 @@ class BreakMapper(Mapper):
                 obj.get_last_edit(),
                 obj.get_start_event(),
                 obj.get_end_event(),
-                obj.get_time_period())
+                obj.get_time_period(),
+                obj.get_deleted())
         cursor.execute(command, data)
 
         self._cnx.commit()

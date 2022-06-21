@@ -225,13 +225,11 @@ class Navigator extends Component {
                                 <ListItem>
                                     <EventManager eventType={3} onClose={this.handleClose}>
                                     </EventManager>
-                                    <ListItemText/>
                                 </ListItem>
 
                                 <ListItem>
                                     <EventManager eventType={4} onClose={this.handleClose}>
                                     </EventManager>
-                                    <ListItemText/>
                                 </ListItem>
                             </Typography>
                         </Drawer>
