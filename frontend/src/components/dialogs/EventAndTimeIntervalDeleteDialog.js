@@ -22,7 +22,7 @@ class EventAndTimeIntervalDeleteDialog extends Component {
       /** Das Zeitintervall löschen */
   deleteTimeInterval = () => {
     HdMWebAppAPI.getAPI().deleteTimeInterval(this.props.event.timeintervaltransactionid).then(timeInterval => {
-      this.props.onClose(this.props.timeintervaltransactionid);  // call the parent with the deleted customer
+      this.props.onClose(this.props.event);  // call the parent with the deleted customer
     }).catch(e =>
         console.log(e))
   }

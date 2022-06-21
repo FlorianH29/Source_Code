@@ -35,6 +35,7 @@ class TimeIntervalTransactionListEntry extends Component {
 
     /** Behandelt das onClose Event von showEventandTimeIntervalForm */
     eventAndTimeIntervalFormClosed = (event) => {
+        console.log(event)
         if (event) {
             this.setState({
                 event: event,
@@ -95,7 +96,7 @@ class TimeIntervalTransactionListEntry extends Component {
                             <Typography variant={"h5"} component={"div"}>
                                 {
                                     event.name != 'Kommen' ?
-                                        new Date(event.end_time).toLocaleString('de-DE', {
+                                        new Date(event.endtime).toLocaleString('de-DE', {
                                             dateStyle: "long",
                                             timeStyle: "short"
                                         }) : ''

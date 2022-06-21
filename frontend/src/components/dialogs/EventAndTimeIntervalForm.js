@@ -39,7 +39,7 @@ class EventAndTimeIntervalForm extends Component {
             projectworkid = props.event.projectworkid;
             startdate = props.event.start_time;
             starteventid = props.event.starteventid;
-            enddate = props.event.end_time;
+            enddate = props.event.endtime;
             endeventid = props.event.endeventid;
         }
         // Den State initiieren
@@ -52,7 +52,9 @@ class EventAndTimeIntervalForm extends Component {
             endeventid: endeventid,
             projectWorkNameValidationFailed: false,
             startDateValidationFailed: false,
-            endDateValidationFailed: false
+            endDateValidationFailed: false,
+            startDateChanged: false,
+            endDateChanged: false
         };
         // den state speichern, für den Fall, dass abgebrochen wird
         this.baseState = this.state;
@@ -92,19 +94,19 @@ class EventAndTimeIntervalForm extends Component {
                 this.props.onClose(event);
             })
         }
-        if (this.state.startDate != null) {
+        if (this.state.startDateChanged) {
             HdMWebAppAPI.getAPI().updateEventByID(this.state.starteventid, this.state.startDate).then(event => {
                 this.baseState.startDate = this.state.startDate;
                 let events = this.props.event;
-                events.startDate = this.state.startDate;
+                events.starttime = this.state.startDate;
                 this.props.onClose(events);
             })
         }
-        if (this.state.endDate != null) {
+        if (this.state.endDateChanged) {
             HdMWebAppAPI.getAPI().updateEventByID(this.state.endeventid, this.state.endDate).then(event => {
                 this.baseState.endDate = this.state.endDate;
                 let events = this.props.event;
-                events.endDate = this.state.endDate;
+                events.endtime = this.state.endDate;
                 this.props.onClose(events);
             })
         }
@@ -113,10 +115,8 @@ class EventAndTimeIntervalForm extends Component {
     /** Renders the component */
     render() {
         const {show} = this.props;
-        const {
-            projectWorkName, projectWorkID, startDate, endDate, projectWorkNameValidationFailed, startDateValidationFailed,
-            endDateValidationFailed
-        } = this.state;
+        const { projectWorkName, projectWorkID, projectWorkNameValidationFailed, startDateValidationFailed,
+            endDateValidationFailed, startDateChanged, endDateChanged} = this.state;
 
         let title = 'Projectarbeit bearbeiten';
         let header = '';
@@ -148,9 +148,9 @@ class EventAndTimeIntervalForm extends Component {
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DateTimePicker
                                     label={"Start wählen"}
-                                    value={startDate}
+                                    value={this.state.startDate}
                                     onChange={(date) => {
-                                        this.setState({startDate: date.getTime()});
+                                        this.setState({startDate: date.getTime(), startDateChanged: true});
                                     }}
                                     renderInput={(params) => <TextField{...params}/>}
                                 />
@@ -159,9 +159,9 @@ class EventAndTimeIntervalForm extends Component {
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DateTimePicker
                                     label={"Ende wählen"}
-                                    value={endDate}
+                                    value={this.state.endDate}
                                     onChange={(date) => {
-                                        this.setState({endDate: date.getTime()});
+                                        this.setState({endDate: date.getTime(), endDateChanged: true});
                                     }}
                                     renderInput={(params) => <TextField{...params}/>}
                                 />
