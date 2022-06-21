@@ -309,7 +309,6 @@ class ProjectDurationOperation(Resource):
         """Erstellen eines neuen Events."""
 
         hwa = HdMWebAppAdministration()
-        h = Helper()
         proposal = Event.from_dict(api.payload)
 
         if proposal is not None:
@@ -410,6 +409,7 @@ sub_thread = Thread(target=check)
 #es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
+
 
 
 

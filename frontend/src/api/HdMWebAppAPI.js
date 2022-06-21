@@ -26,7 +26,8 @@ export default class HdMWebAppAPI {
   #updateProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
   #addProjectURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
   #deleteProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
-  #addProjectDurationStart = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
+  #addProjectDurationStartEvent = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
+  #addProjectDurationEndEvent = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
 
   //#addProjectDurationURL = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
   // Projektarbeit bezogen
@@ -168,6 +169,7 @@ export default class HdMWebAppAPI {
         })
     }
 
+
     /**
   * Updated ein ProjectBO
   *
@@ -216,8 +218,8 @@ export default class HdMWebAppAPI {
     }
 
 
-    addProjectDurationStart(eventBO) {
-        return this.#fetchAdvanced(this.#addProjectDurationStart(), {
+    addProjectDurationStartEvent(eventBO) {
+        return this.#fetchAdvanced(this.#addProjectDurationStartEvent(), {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain',
@@ -232,6 +234,25 @@ export default class HdMWebAppAPI {
             })
         })
     }
+
+    addProjectDurationEndEvent(eventBO) {
+        return this.#fetchAdvanced(this.#addProjectDurationEndEvent(), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain',
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify(eventBO)
+        }).then((responseJSON) => {
+            let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+            console.log(responseEventBO);
+            return new Promise(function (resolve) {
+                resolve(responseEventBO);
+            })
+        })
+    }
+
+
     /**
      * Löscht ein ProjectBO
      *
