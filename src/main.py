@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from datetime import timedelta
 
 from flask import Flask
@@ -41,6 +41,7 @@ activity = api.inherit('Activity', bo, {
 })
 
 event = api.inherit('Event', bo, {
+    'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt'),
     'event_type': fields.Integer(attribute='_event_type', description='Typ eines Events, Start oder Ende, für B und PW'),
     'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt'),
     'affiliated_person': fields.Integer(attribute='_affiliated_person', description='ID der Person, die Event besitzt')
@@ -62,9 +63,15 @@ person = api.inherit('Person', bo, {
     'firebase_id': fields.String(attribute='_firebase_id', description='Google User ID eines Benutzers')
 })
 
-work_time_account = api.inherit('Worktimeaccout', {
+event_transaction_and_timeintervaltransaction = api.inherit('EventTransaction', {
     'name': fields.String(description='Name des Inhalts'),
-    'time': fields.String(description='Dauer des Inhalts')
+    'projectworkid': fields.Integer(description='ID der Projektarbeit'),
+    'start_time': fields.DateTime(description='Dauer des Inhalts'),
+    'starteventid': fields.Integer(description='ID des Startevents'),
+    'endtime': fields.DateTime(description='Dauer des Inhalts'),
+    'endeventid': fields.Integer(description='ID des Endevents'),
+    'period': fields.String(description='Dauer des Inhalts'),
+    'timeintervaltransactionid': fields.Integer(description='ID des Zeitintervals')
 })
 
 work_performance = api.inherit('Worktimeaccout', {
@@ -96,6 +103,14 @@ projectwork = api.inherit('ProjectWork', timeinterval, {
     'affiliated_activity': fields.Integer(attribute='_affiliated_activity_id', description='Zugeordnete Aktivität einer P.')
 })
 
+timeintervaltransaction = api.inherit('TimeIntervalTransaction', bo, {
+    'affiliated_time_interval': fields.Integer(attribute='_affiliated_time_interval',
+                                               description='Zugehöriges TimeInterval einer TimIntervalTransaction'),
+    'affiliated_break': fields.Integer(attribute='_affiliated_break',
+                                                description='Zugehörige Pause einer TimeIntervalTransaction'),
+    'affiliated_projectwork': fields.Integer(attribute='_affiliated_projectwork',
+                                             description='Zugehörige ProjectWork einer TimeIntervalTransaction')
+})
 
 timeinterval = api.inherit('TimeInterval', bo, {
     'starttime': fields.DateTime(attribute='__start_time', description='Startzeitpunkt eines Zeitintervalls'),
@@ -104,7 +119,7 @@ timeinterval = api.inherit('TimeInterval', bo, {
 })
 
 
-@hdmwebapp.route('/persons')
+@hdmwebapp.route('/person')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class PersonByIDOperations(Resource):
     @hdmwebapp.marshal_list_with(person)
@@ -128,7 +143,6 @@ class PersonByIDOperations(Resource):
         per = hwa.get_person_by_firebase_id(firebase_id)
         hwa.delete_person(per)
         return '', 200
-
 
     @secured
     def put(self):
@@ -178,7 +192,7 @@ class ProjectWorkOperations(Resource):
         hwa.delete_project_work(pw)
         return '', 200
 
-
+"""
 @hdmwebapp.route('/worktimeaccount/<int:id>')
 @hdmwebapp.param('id', 'Die ID des Arbeitszeitkonto-Objekts')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -194,6 +208,7 @@ class WorkTimeAccountContentList(Resource):
         for p in projects:
             result.append({"name": p.get_project_name(), "time": hwa.calculate_sum_of_project_work_by_person(person)})
         return result
+        """
 
 
 @hdmwebapp.route('/workperformance/<int:id>')
@@ -228,6 +243,27 @@ class ActivitiesList(Resource):
             return "Activity not found", 500
 
 
+@hdmwebapp.route('/activities/<int:id>/work_time')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ActivitiyWorkTimeOperations(Resource):
+    @hdmwebapp.marshal_list_with(activity)
+    @secured
+    def get(self, id, start, end):
+        """
+        Auslesen der Zeit, die in einem bestimmten Zeitraum für eine Aktivität gearbeitet wurde.
+        """
+        hwa = HdMWebAppAdministration()
+        act = hwa.get_activity_by_id(id)
+
+        start_date = datetime.fromtimestamp(start / 1000.0).date()
+        end_date = datetime.fromtimestamp(end / 1000.0).date()
+
+        if act is not None:
+            return hwa.get_work_time_of_activity_between_two_dates(act, start_date, end_date)
+        else:
+            return "Activity not found", 500
+
+
 @hdmwebapp.route('/events')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class EventOperations(Resource):
@@ -250,32 +286,55 @@ class EventOperations(Resource):
         hwa = HdMWebAppAdministration()
         h = Helper()
         firebase_id = h.get_firebase_id()
-        per = hwa.get_person_by_firebase_id(firebase_id)
         proposal = Event.from_dict(api.payload)
+        per = hwa.get_person_by_firebase_id(firebase_id)
 
         if proposal is not None:
             """ 
-            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Eventobjekt erstellt.
-            Wenn dieses   
+            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Eventobjekt erstellt.  
             """
-            e = hwa.create_event_and_check_type(proposal.get_event_type(), per)
+            e = hwa.check_if_first_event(proposal.get_event_type(), per)
+            print('event')
             return e, 200
         else:
             return '', 500
 
 
-@hdmwebapp.route('/projects/<int:id>' )
+@hdmwebapp.route('/projects')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @hdmwebapp.marshal_list_with(project)
     @secured
-    def get(self, id):
+    def get(self):
         hwa = HdMWebAppAdministration()
         h = Helper()
         firebase_id = h.get_firebase_id()
         per = hwa.get_person_by_firebase_id(firebase_id)
         projects = hwa.get_all_projects_by_person_id(per)
         return projects
+
+    @hdmwebapp.marshal_with(project, code=201)
+    @hdmwebapp.expect(project)
+    @secured
+    def post(self):
+        """Erstellen eines neuen Projekts."""
+
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        proposal = Project.from_dict(api.payload)
+
+        if proposal is not None:
+
+            project_name = proposal.get_project_name()
+            client = proposal.get_client()
+            inter = hwa.get_time_interval_by_id(1)  # hier muss das echte Zeitintervall rein
+            firebase_id = h.get_firebase_id()
+            per = hwa.get_person_by_firebase_id(firebase_id)
+            result = hwa.create_project(project_name, client, inter, per)
+            return result, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
 
 
 @hdmwebapp.route('/projects/<int:id>')
@@ -298,37 +357,6 @@ class ProjectOperations(Resource):
         else:
             return '', 500
 
-
-@hdmwebapp.route('/projects')
-@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class ProjectPostOperation(Resource):
-    @hdmwebapp.marshal_with(project, code=201)
-    @hdmwebapp.expect(project)
-    @secured
-    def post(self):
-        """Erstellen eines neuen Projekts."""
-
-        hwa = HdMWebAppAdministration()
-        h = Helper()
-        proposal = Project.from_dict(api.payload)
-
-        if proposal is not None:
-
-            project_name = proposal.get_project_name()
-            client = proposal.get_client()
-            inter = hwa.get_time_interval_by_id(1) #hier muss das echte Zeitintervall rein
-            firebase_id = h.get_firebase_id()
-            per = hwa.get_person_by_firebase_id(firebase_id)
-            result = hwa.create_project(project_name, client, inter, per)
-            return result, 200
-        else:
-            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
-            return '', 500
-
-@hdmwebapp.route('/projects/<int:id>')
-@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@hdmwebapp.param('id', 'Die ID der Projektarbeit')
-class ProjectDeleteOperation(Resource):
     @secured
     def delete(self, id):
         """
@@ -339,6 +367,26 @@ class ProjectDeleteOperation(Resource):
         hwa.delete_project(pw)
         return '', 200
 
+
+@hdmwebapp.route('/projects/<int:id>/work_time')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectWorkTimeOperations(Resource):
+    @hdmwebapp.marshal_list_with(activity)
+    @secured
+    def get(self, id, start, end):
+        """
+        Auslesen der Zeit, die in einem bestimmten Zeitraum für ein Projekt gearbeitet wurde.
+        """
+        hwa = HdMWebAppAdministration()
+        pro = hwa.get_project_by_id(id)
+
+        start_date = datetime.fromtimestamp(start / 1000.0).date()
+        end_date = datetime.fromtimestamp(end / 1000.0).date()
+
+        if pro is not None:
+            return hwa.get_work_time_of_project_between_two_dates(pro, start_date, end_date)
+        else:
+            return "Activity not found", 500
 
 
 @hdmwebapp.route('/projectworks')
@@ -362,6 +410,7 @@ class ProjectWorksOperations(Resource):
             firebase_id = h.get_firebase_id()
             per = hwa.get_person_by_firebase_id(firebase_id)
             result = hwa.create_project_work(project_work_name, description, act, per)
+            print('pw')
             return result, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -385,7 +434,6 @@ class ProjectWorksByActivityOperations(Resource):
             return projectwork_list
         else:
             return "Activity not found", 500
-
 
 @hdmwebapp.route('/projectworks/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -417,6 +465,126 @@ class ProjectWorkOperations(Resource):
         hwa.delete_project_work(pw)
         return '', 200
 
+@hdmwebapp.route('/projectworks/<int:id>/<string:name>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID der Projektarbeit')
+@hdmwebapp.param('name', 'Der neue Name der Projektarbeit')
+class ProjectWorkUpdateNameOperations(Resource):
+    @hdmwebapp.marshal_list_with(projectwork)
+    @secured
+    def put(self, id, name):
+        """
+        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = hwa.get_project_work_by_id(id)
+
+        if pw is not None:
+            pw.set_project_work_name(name)
+            hwa.save_project_work(pw)
+            return '', 200
+        else:
+            return '', 500
+
+@hdmwebapp.route('/events/<int:id>/<int:date>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des Events')
+@hdmwebapp.param('date', 'Der neue Timestamp des Events')
+class ProjectWorkUpdateNameOperations(Resource):
+    @hdmwebapp.marshal_list_with(event)
+    @secured
+    def put(self, id, date):
+        """
+        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        event = hwa.get_event_by_id(id)
+
+        if event is not None:
+            event.set_time_stamp(datetime.fromtimestamp(date/1000.0))
+            hwa.save_event(event)
+            return '', 200
+        else:
+            return '', 500
+
+@hdmwebapp.route('/eventtransactionsandtimeintervaltransactions/<int:startDate>/<int:endDate>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('startDate', 'eingegebenes Start-Datum')
+@hdmwebapp.param('endDate', 'eingegebenes Start-Datum')
+class EventsForTimeIntervalTransactions(Resource):
+    @hdmwebapp.marshal_list_with(event_transaction_and_timeintervaltransaction)
+    @secured
+    def get(self, startDate, endDate):
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        pe = hwa.get_person_by_firebase_id(firebase_id)
+        start_time = datetime.fromtimestamp(startDate/1000.0).date()
+        end_time = datetime.fromtimestamp(endDate/1000.0).date()
+        events = hwa.get_intervals_of_person_between_time_stamps(pe, start_time, end_time)
+        print(events)
+        return events
+
+@hdmwebapp.route('/timeinterval/<int:id>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des Zeitintervalls')
+class DeleteTimeInterval(Resource):
+    @hdmwebapp.marshal_list_with(event_transaction_and_timeintervaltransaction)
+    @secured
+    def delete(self, id):
+        """
+        Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        tit = hwa.get_time_interval_transaction_by_id(id)
+        hwa.delete_time_interval_transaction(tit)
+        return '', 200
+
+@hdmwebapp.route('/projectworks/<int:id>/owner')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des ProjectWork-Objekts')
+class ProjectWorkOwnerOperations(Resource):
+    @hdmwebapp.marshal_list_with(person)
+    @secured
+    def get(self, id):
+        """Auslesen des Erstellers eines bestimmten Projektarbeit-Objekts.
+        Das Projektarbeit-Objekt dessen Ersteller ausgelesen werden soll, wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = hwa.get_project_work_by_id(id)
+        start_pw_id = pw.get_start_event()
+        start_pw = hwa.get_event_by_id(start_pw_id)
+
+        if start_pw is not None:
+            owner = hwa.get_person_by_id(start_pw.get_affiliated_person())
+            return owner
+        else:
+            return 0, 500
+
+
+@hdmwebapp.route('/arrive')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ArriveOperations(Resource):
+    @hdmwebapp.marshal_with(event, code=200)
+    @secured
+    def post(self):
+        """
+        Anlegen eines Kommen-Events. Das neu angelegte Kommen-Event wird als Ergebnis zurückgegeben.
+        """
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        per = hwa.get_person_by_firebase_id(firebase_id)
+
+        if per is not None:
+            """ 
+            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Kommen-Objekt erstellt.
+            """
+            a = hwa.create_arrive_event(per)
+            return a, 200
+        else:
+            return '', 500
+
 
 @hdmwebapp.route('/departure')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -425,7 +593,7 @@ class DepartureOperations(Resource):
     @secured
     def post(self):
         """
-        Anlegen eines Events. Das neu angelegte Event wird als Ergebnis zurückgegeben.
+        Anlegen eines Gehen-Events. Das neu angelegte Gehen-Event wird als Ergebnis zurückgegeben.
         """
         hwa = HdMWebAppAdministration()
         h = Helper()
@@ -442,40 +610,17 @@ class DepartureOperations(Resource):
             return '', 500
 
 
-@hdmwebapp.route('/arrive')
-@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class ArriveOperations(Resource):
-    @hdmwebapp.marshal_with(event, code=200)
-    @secured
-    def post(self):
-        """
-        Anlegen eines Events. Das neu angelegte Event wird als Ergebnis zurückgegeben.
-        """
-        hwa = HdMWebAppAdministration()
-        h = Helper()
-        firebase_id = h.get_firebase_id()
-        per = hwa.get_person_by_firebase_id(firebase_id)
-
-        if per is not None:
-            """ 
-            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Gehen-Objekt erstellt.
-            """
-            a = hwa.create_arrive_event(per)
-            return a, 200
-        else:
-            return '', 500
-
 def check():
     hwa = HdMWebAppAdministration()
     hwa.check_time_for_departure()
+
 
 sub_thread = Thread(target=check)
 #es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
 
-
-
+h = HdMWebAppAdministration()
 
 
 
