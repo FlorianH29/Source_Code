@@ -40,8 +40,8 @@ activity = api.inherit('Activity', bo, {
 })
 
 event = api.inherit('Event', bo, {
-    'event_type': fields.Integer(attribute='_event_type', description='Typ eines Events, Start oder Ende, für B und PW'),
     'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt'),
+    'event_type': fields.Integer(attribute='_event_type', description='Typ eines Events, Start oder Ende, für B und PW'),
     'affiliated_person': fields.Integer(attribute='_affiliated_person', description='ID der Person, die Event besitzt')
 })
 
@@ -53,9 +53,15 @@ person = api.inherit('Person', bo, {
     'firebase_id': fields.String(attribute='_firebase_id', description='Google User ID eines Benutzers')
 })
 
-work_time_account = api.inherit('Worktimeaccout', {
+event_transaction_and_timeintervaltransaction = api.inherit('EventTransaction', {
     'name': fields.String(description='Name des Inhalts'),
-    'time': fields.String(description='Dauer des Inhalts')
+    'projectworkid': fields.Integer(description='ID der Projektarbeit'),
+    'start_time': fields.DateTime(description='Dauer des Inhalts'),
+    'starteventid': fields.Integer(description='ID des Startevents'),
+    'endtime': fields.DateTime(description='Dauer des Inhalts'),
+    'endeventid': fields.Integer(description='ID des Endevents'),
+    'period': fields.String(description='Dauer des Inhalts'),
+    'timeintervaltransactionid': fields.Integer(description='ID des Zeitintervals')
 })
 
 work_performance = api.inherit('Worktimeaccout', {
@@ -87,6 +93,14 @@ projectwork = api.inherit('ProjectWork', timeinterval, {
     'affiliated_activity': fields.Integer(attribute='_affiliated_activity_id', description='Zugeordnete Aktivität einer P.')
 })
 
+timeintervaltransaction = api.inherit('TimeIntervalTransaction', bo, {
+    'affiliated_time_interval': fields.Integer(attribute='_affiliated_time_interval',
+                                               description='Zugehöriges TimeInterval einer TimIntervalTransaction'),
+    'affiliated_break': fields.Integer(attribute='_affiliated_break',
+                                                description='Zugehörige Pause einer TimeIntervalTransaction'),
+    'affiliated_projectwork': fields.Integer(attribute='_affiliated_projectwork',
+                                             description='Zugehörige ProjectWork einer TimeIntervalTransaction')
+})
 
 timeinterval = api.inherit('TimeInterval', bo, {
     'starttime': fields.DateTime(attribute='__start_time', description='Startzeitpunkt eines Zeitintervalls'),
@@ -170,7 +184,7 @@ class ProjectWorkOperations(Resource):
         hwa.delete_project_work(pw)
         return '', 200
 
-
+"""
 @hdmwebapp.route('/worktimeaccount/<int:id>')
 @hdmwebapp.param('id', 'Die ID des Arbeitszeitkonto-Objekts')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -186,6 +200,7 @@ class WorkTimeAccountContentList(Resource):
         for p in projects:
             result.append({"name": p.get_project_name(), "time": hwa.calculate_sum_of_project_work_by_person(person)})
         return result
+        """
 
 
 @hdmwebapp.route('/workperformance/<int:id>')
@@ -381,7 +396,6 @@ class ProjectWorksByActivityOperations(Resource):
         else:
             return "Activity not found", 500
 
-
 @hdmwebapp.route('/projectworks/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Projektarbeit')
@@ -412,6 +426,80 @@ class ProjectWorkOperations(Resource):
         hwa.delete_project_work(pw)
         return '', 200
 
+@hdmwebapp.route('/projectworks/<int:id>/<string:name>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID der Projektarbeit')
+@hdmwebapp.param('name', 'Der neue Name der Projektarbeit')
+class ProjectWorkUpdateNameOperations(Resource):
+    @hdmwebapp.marshal_list_with(projectwork)
+    @secured
+    def put(self, id, name):
+        """
+        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = hwa.get_project_work_by_id(id)
+
+        if pw is not None:
+            pw.set_project_work_name(name)
+            hwa.save_project_work(pw)
+            return '', 200
+        else:
+            return '', 500
+
+@hdmwebapp.route('/events/<int:id>/<int:date>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des Events')
+@hdmwebapp.param('date', 'Der neue Timestamp des Events')
+class ProjectWorkUpdateNameOperations(Resource):
+    @hdmwebapp.marshal_list_with(event)
+    @secured
+    def put(self, id, date):
+        """
+        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        event = hwa.get_event_by_id(id)
+
+        if event is not None:
+            event.set_time_stamp(datetime.fromtimestamp(date/1000.0))
+            hwa.save_event(event)
+            return '', 200
+        else:
+            return '', 500
+
+@hdmwebapp.route('/eventtransactionsandtimeintervaltransactions/<int:startDate>/<int:endDate>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('startDate', 'eingegebenes Start-Datum')
+@hdmwebapp.param('endDate', 'eingegebenes Start-Datum')
+class EventsForTimeIntervalTransactions(Resource):
+    @hdmwebapp.marshal_list_with(event_transaction_and_timeintervaltransaction)
+    @secured
+    def get(self, startDate, endDate):
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        pe = hwa.get_person_by_firebase_id(firebase_id)
+        start_time = datetime.fromtimestamp(startDate/1000.0).date()
+        end_time = datetime.fromtimestamp(endDate/1000.0).date()
+        events = hwa.get_intervals_of_person_between_time_stamps(pe, start_time, end_time)
+        print(events)
+        return events
+
+@hdmwebapp.route('/timeinterval/<int:id>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des Zeitintervalls')
+class DeleteTimeInterval(Resource):
+    @hdmwebapp.marshal_list_with(event_transaction_and_timeintervaltransaction)
+    @secured
+    def delete(self, id):
+        """
+        Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        tit = hwa.get_time_interval_transaction_by_id(id)
+        hwa.delete_time_interval_transaction(tit)
+        return '', 200
 
 def check():
     hwa = HdMWebAppAdministration()
@@ -429,7 +517,6 @@ ac = h.get_activity_by_id(1)
 ti = h.get_time_interval_transaction_by_id(1)
 
 print(h.get_work_time_of_activity_between_two_dates(ac, datetime(2022, 6, 15, 0, 0, 0), datetime(2022, 6, 20, 0, 0, 0)))
-
 
 if __name__ == '__main__':
     app.run(debug=False)

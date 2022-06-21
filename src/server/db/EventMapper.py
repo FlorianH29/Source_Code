@@ -311,10 +311,10 @@ class EventMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE event SET last_edit=%s, event_type=%s, time_stamp=%s, affiliated_person_id=%s " \
+        command = "UPDATE event SET last_edit=%s, event_type=%s, time_stamp=%s, affiliated_person_id=%s, deleted=%s " \
                   "WHERE event_id=%s"
-        data = (event.get_last_edit(), event.get_event_type(), event.get_time_stamp(), event.get_id(),
-                event.get_affiliated_person())
+        data = (event.get_last_edit(), event.get_event_type(), event.get_time_stamp(),event.get_affiliated_person(),
+                event.get_deleted(), event.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

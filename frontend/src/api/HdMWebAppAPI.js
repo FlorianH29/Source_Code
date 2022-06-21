@@ -3,9 +3,9 @@ import ProjectBO from './ProjectBO';
 import WorktimeAccountBO from "./WorktimeAccountBO";
 import ActivityBO from "./ActivityBO";
 import ProjectWorkBO from "./ProjectWorkBO";
+import TimeIntervalTransactionBO from "./TimeIntervalTransactionBO";
 import TimeIntervalBO from "./TimeIntervalBO";
 import navigator from "../components/layout/Navigator";
-import personForm from "../components/dialogs/PersonForm";
 import EventBO from "./EventBO";
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
@@ -35,6 +35,7 @@ export default class HdMWebAppAPI {
   #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
   #updateProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
   #deleteProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
+  #updateProjectWorkByNameURL = (id, name) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}/${name}`;
   #addProjectWorkURL = () => `${this.#hdmwebappServerBaseURL}/projectworks`;
 
   //Worktimeaccount bezogen
@@ -47,8 +48,15 @@ export default class HdMWebAppAPI {
   #addActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/project/${id}/activities`;
   //#getActivityWorkTimeURL = (id) => `${this.#hdmwebappServerBaseURL}/work_time/${id}/activities`;
 
-  // Ereignis bezogen
-  #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
+    // Ereignis bezogen
+    #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
+    #getEventTransactionsAndTimeIntervalTransactionsURL = (startDate, endDate) =>
+        `${this.#hdmwebappServerBaseURL}/eventtransactionsandtimeintervaltransactions/${startDate}/${endDate}`;
+    #updateEventURL = (id, date) => `${this.#hdmwebappServerBaseURL}/events/${id}/${date}`;
+
+    // TimeIntervalTransaction bezogen
+    #getTimeIntervalTransactionsURL = () => `${this.#hdmwebappServerBaseURL}/timeintervaltransactions`;
+    #deleteTimeIntervalURL = (id) => `${this.#hdmwebappServerBaseURL}/timeinterval/${id}`;
 
   /**
    * Gibt die Singelton Instanz zurück
@@ -257,6 +265,26 @@ export default class HdMWebAppAPI {
         })
     }
 
+    getTimeIntervalTransactions() {
+        return this.#fetchAdvanced(this.#getTimeIntervalTransactionsURL()).then((responseJSON) => {
+            let timeIntervalTransactionsBOs = TimeIntervalTransactionBO.fromJSON(responseJSON);
+            //console.log(responseJSON);
+            return new Promise(function (resolve) {
+                resolve(timeIntervalTransactionsBOs);
+            })
+        })
+    }
+
+        getEventsForTimeIntervalTransactions(startDate, endDate) {
+        return this.#fetchAdvanced(this.#getEventTransactionsAndTimeIntervalTransactionsURL(startDate, endDate)).then((responseJSON) => {
+            let eventBOs = EventBO.fromJSON(responseJSON);
+            //console.log(responseJSON);
+            return new Promise(function (resolve) {
+                resolve(eventBOs);
+            })
+        })
+    }
+
     getProjectWorks(id) {
         return this.#fetchAdvanced(this.#getProjectWorksforActivityURL(id)).then((responseJSON) => {
             let projectworkBOs = ProjectWorkBO.fromJSON(responseJSON);
@@ -315,6 +343,72 @@ export default class HdMWebAppAPI {
     })
   }
 
+  updateProjectWorkNameByID(id, name){
+          return this.#fetchAdvanced(this.#updateProjectWorkByNameURL(id, name), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({id: id, name: name})
+    }).then((responseJSON) => {
+        //Wir bekommen immer ein Array aus ProkectWorkBos.fromJSON
+      let responseProjectWorkBO = ProjectWorkBO.fromJSON(responseJSON)[0];
+      console.log(responseProjectWorkBO)
+      return new Promise(function (resolve) {
+        resolve(responseProjectWorkBO);
+      })
+    })
+  }
+
+    updateEventByID(id, date){
+          return this.#fetchAdvanced(this.#updateEventURL(id, date), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({id: id, date: date})
+    }).then((responseJSON) => {
+      let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+      console.log(responseEventBO)
+      return new Promise(function (resolve) {
+        resolve(responseEventBO);
+      })
+    })
+  }
+
+    /**
+     * Löscht ein ProjectWorkBO
+     *
+     * @param {Number} projectWorkID des ProjectWorkBO, welches gelöscht werden soll
+     * @public
+     */
+    deleteProjectWork(projectWorkID) {
+        return this.#fetchAdvanced(this.#deleteProjectWorkURL(projectWorkID), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            // We always get an array of CustomerBOs.fromJSON
+            let responseProjectWorkBO = ProjectWorkBO.fromJSON(responseJSON)[0];
+            console.log(responseProjectWorkBO)
+            return new Promise(function (resolve) {
+                resolve(responseProjectWorkBO);
+            })
+        })
+    }
+
+        deleteTimeInterval(timeIntervalID) {
+        return this.#fetchAdvanced(this.#deleteTimeIntervalURL(timeIntervalID), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            // We always get an array of CustomerBOs.fromJSON
+            let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+            console.log(responseEventBO)
+            return new Promise(function (resolve) {
+                resolve(responseEventBO);
+            })
+        })
+}
   /**
   * Löscht ein ProjectWorkBO
   *
