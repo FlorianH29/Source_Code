@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Paper, Popover, AppBar, CssBaseline, Typography, Toolbar, IconButton, Box, Drawer, Button, Link, Divider} from '@mui/material';
+import {AppBar, CssBaseline, Popover, Typography, Toolbar, IconButton, Box, Drawer, Button, Link, Divider} from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -138,7 +138,7 @@ class Navigator extends Component {
                             size="large"
                             onClick={this.handleOpenUserMenu}
                             color="inherit">
-                            <ManageAccountsIcon fontSize="inherit"/>
+                            <ManageAccountsIcon/>
                         </IconButton>
                         <Popover
                             anchorEl={this.state.anchorEl}
@@ -161,21 +161,18 @@ class Navigator extends Component {
                             <PersonEditDialog person={person} show={showPersonEditDialog}
                                               onClose={this.personEditClosed}>
                             </PersonEditDialog>
-                                <IconButton>
-                                <DriveFileRenameOutlineIcon size={"large"} onClick={this.handleEdit}>
-                                </DriveFileRenameOutlineIcon>
-                                <Typography variant='inherit' component='div' align='center'>
-                                    Profil bearbeiten
-                                </Typography>
+
+                            <Typography variant='h6' component='div' align='left'>
+                                <IconButton onClick={this.handleEdit}>
+                                <DriveFileRenameOutlineIcon/>
+                                Profil bearbeiten
                                 </IconButton>
-                                 <Divider sx={{p: 0.2}}/>
-                                <IconButton>
-                                <NoAccountsIcon size={"large"} onClick={this.handleDelete}>
-                                </NoAccountsIcon>
-                                <Typography variant='inherit' component='div' align='center'>
-                                    Profil löschen
-                                </Typography>
+                                <Divider sx={{p: 0}}/>
+                                <IconButton onClick={this.handleDelete}>
+                                <NoAccountsIcon/>
+                                Profil löschen
                                 </IconButton>
+                                </Typography>
                         </Popover>
                          </>) : null
                     }
