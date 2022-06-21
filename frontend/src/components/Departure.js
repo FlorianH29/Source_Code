@@ -13,7 +13,8 @@ class Departure extends Component {
     super(props);
 
       this.state = {
-        openDepartureDialog: false  // Status der Anzeige von Dialog, ob der Mitarbeiter wirklich gehen möchte
+        openDepartureDialog: false,  // Status der Anzeige von Dialog, ob der Mitarbeiter wirklich gehen möchte
+        disableDeparture: false  // Gehen-Button wird disabled, wenn der Mitarbeiter in einer Aktivität oder Pause ist.
       }
   }
 
@@ -22,7 +23,8 @@ class Departure extends Component {
       // Umschalten des Status der Knöpfe
       this.setState({
 
-          openDepartureDialog: true
+          openDepartureDialog: true,
+          disableDeparture: false
       });
       // Erstellen eines Gehen-Ereignis
 
@@ -43,7 +45,8 @@ class Departure extends Component {
                 <ListItem>
                     <Grid container justifyContent={"center"}>
                         <Grid item xs={6} align={"center"}>
-                            <Button variant='contained' disabled={disableBreakStartEvent} color='primary' onClick={this.addNewBreakStartEvent}>
+                            <Button variant='contained' disabled={disableDeparture} color='primary'
+                                    onClick={this.addNewDepartureEvent}>
                             Pause starten
                             </Button>
                         </Grid>

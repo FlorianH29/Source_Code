@@ -446,8 +446,7 @@ class DepartureOperations(Resource):
 
         if proposal is not None:
             """ 
-            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Eventobjekt erstellt.
-            Wenn dieses   
+            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Gehen-Objekt erstellt.
             """
             e = hwa.create_departure_event(per)
             return e, 200
