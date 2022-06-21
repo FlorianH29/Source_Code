@@ -33,31 +33,6 @@ class TimeIntervalTransactionListEntry extends Component {
         });
     }
 
-    /** Behandelt das onClose Event von showEventandTimeIntervalForm */
-    eventAndTimeIntervalFormClosed = (event) => {
-        console.log(event)
-        if (event) {
-            this.setState({
-                event: event,
-                showEventandTimeIntervalForm: false
-            });
-        } else {
-            this.setState({
-                showEventandTimeIntervalForm: false
-            });
-        }
-    }
-
-    /** Behandelt das onClose Event von eventAndTimeIntervalDeleteDialog */
-    deleteEventAndTimeIntervalDialogClosed = (eventAndTimeInterval) => {
-        if (eventAndTimeInterval) {
-            this.props.onEventAndTimeIntervalDeleted(eventAndTimeInterval);
-        }
-        this.setState({
-            showEventandTimeIntervalDeleteDialog: false // Den Dialog nicht mehr anzeigen
-        });
-    }
-
     /** Behandelt das onClick Event des löschen Buttons */
     deleteEventAndTimeIntervalButtonClicked = (event) => {
         event.stopPropagation();
@@ -70,8 +45,6 @@ class TimeIntervalTransactionListEntry extends Component {
     /** Renders the component */
     render() {
         const {event, showEventandTimeIntervalDeleteDialog, showEventandTimeIntervalForm} = this.state;
-        //console.log(event)
-        console.log(event.start_time);
         return (
             <div>
                 <ListItem>
@@ -123,9 +96,9 @@ class TimeIntervalTransactionListEntry extends Component {
                 </ListItem>
                 <Divider/>
                 <EventAndTimeIntervalDeleteDialog show={showEventandTimeIntervalDeleteDialog} event={event}
-                                                  onClose={this.deleteEventAndTimeIntervalDialogClosed}/>
+                                                  onClose={this.props.onClose}/>
                 <EventAndTimeIntervalForm show={showEventandTimeIntervalForm} event={event}
-                                          onClose={this.eventAndTimeIntervalFormClosed}/>
+                                          onClose={this.props.onClose}/>
             </div>
         );
     }

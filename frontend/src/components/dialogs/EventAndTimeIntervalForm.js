@@ -56,15 +56,13 @@ class EventAndTimeIntervalForm extends Component {
             startDateChanged: false,
             endDateChanged: false
         };
-        // den state speichern, für den Fall, dass abgebrochen wird
         this.baseState = this.state;
     }
 
     /** Behandelt das click event für den Button Abbrechen*/
     handleClose = () => {
-        // den state neu setzen, sodass man wieder auf dem Stand ist wie vor dem Dialog
         this.setState(this.baseState);
-        this.props.onClose(null);
+        this.props.onClose();
     }
 
     /** Behandelt Wertänderungen der Textfelder und validiert diese */
@@ -87,11 +85,10 @@ class EventAndTimeIntervalForm extends Component {
     handleUpdateClick = () => {
         if (this.state.projectWorkID != null) {
             HdMWebAppAPI.getAPI().updateProjectWorkNameByID(this.state.projectWorkID, this.state.projectWorkName).then(projectWork => {
-                // den neuen state als baseState speichern
                 this.baseState.projectWorkName = this.state.projectWorkName;
                 let event = this.props.event;
                 event.name = this.state.projectWorkName;
-                this.props.onClose(event);
+                this.props.onClose();
             })
         }
         if (this.state.startDateChanged) {
@@ -99,7 +96,7 @@ class EventAndTimeIntervalForm extends Component {
                 this.baseState.startDate = this.state.startDate;
                 let events = this.props.event;
                 events.starttime = this.state.startDate;
-                this.props.onClose(events);
+                this.props.onClose();
             })
         }
         if (this.state.endDateChanged) {
@@ -107,7 +104,7 @@ class EventAndTimeIntervalForm extends Component {
                 this.baseState.endDate = this.state.endDate;
                 let events = this.props.event;
                 events.endtime = this.state.endDate;
-                this.props.onClose(events);
+                this.props.onClose();
             })
         }
     }
@@ -115,8 +112,7 @@ class EventAndTimeIntervalForm extends Component {
     /** Renders the component */
     render() {
         const {show} = this.props;
-        const { projectWorkName, projectWorkID, projectWorkNameValidationFailed, startDateValidationFailed,
-            endDateValidationFailed, startDateChanged, endDateChanged} = this.state;
+        const { projectWorkName, projectWorkNameValidationFailed} = this.state;
 
         let title = 'Projectarbeit bearbeiten';
         let header = '';
@@ -173,7 +169,7 @@ class EventAndTimeIntervalForm extends Component {
                         <Button onClick={this.handleClose} color='secondary'>
                             Abbrechen
                         </Button>
-                        {// Falls eine Projektarbeit gegeben ist, sichern Knopf anzeigen, sonst einen Erstellen Knopf
+                        {
                             <Button color='primary' onClick={this.handleUpdateClick}>
                                 Sichern
                             </Button>

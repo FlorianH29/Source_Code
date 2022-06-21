@@ -4,7 +4,6 @@ import {Divider, Grid, Typography, TextField, Box} from "@mui/material";
 import TimeIntervalTransactionListEntry from "./TimeIntervalTransactionListEntry"
 import {DatePicker, LocalizationProvider} from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import EventAndTimeIntervalForm from "./dialogs/EventAndTimeIntervalForm";
 
 class TimeIntervalTransactionList extends Component {
 
@@ -37,40 +36,12 @@ class TimeIntervalTransactionList extends Component {
         this.getEventForTimeIntervalTransactions(this.state.startDate, this.state.endDate)
     }
 
-
-    /** Behandelt das onClose Event */
-    eventAndTimeIntervalFormClosed = eventAndTimeInterval => {
-        if (eventAndTimeInterval) {
-            const newEventAndTimeIntervalList = [...this.state.events, eventAndTimeInterval];
-            this.setState({
-                events: newEventAndTimeIntervalList,
-                showEventAndTimeIntervalForm: false
-            });
-        } else {
-            this.setState({
-                showEventAndTimeIntervalForm: false
-            });
-        }
-    }
-
-    timeIntervalDeleted = eventAndTimeInterval => {
-       /* console.log(this.state.events)
-        console.log(eventAndTimeInterval)
-        const newEventAndTimeIntervalList = this.state.events.filter(event => event != eventAndTimeInterval);
-
-        this.setState({
-            events: newEventAndTimeIntervalList,
-            showEventAndTimeIntervalForm: false
-        });
-        console.log(this.state.events)*/
+    timeIntervalRefresh = () => {
         this.getEventForTimeIntervalTransactions(this.state.startDate, this.state.endDate)
     }
 
     render() {
         const {events, startDate, endDate} = this.state;
-        const {showEventandTimeIntervalForm, getEventForTimeIntervalTransactions} = this.props
-        console.log(events)
-        //console.log(endDate)
         return (
             <div>
                 <Box m={20}>
@@ -117,14 +88,10 @@ class TimeIntervalTransactionList extends Component {
                             </Grid>
                             <Divider/>
                             {events.map(e =>
-                                <TimeIntervalTransactionListEntry key={e} event={e}
-                                                                  onEventAndTimeIntervalDeleted={this.timeIntervalDeleted}
-                                                                  getEventForTimeIntervalTransactions={this.getEventForTimeIntervalTransactions}/>)
+                                <TimeIntervalTransactionListEntry key={e} event={e} onClose={this.timeIntervalRefresh}/>)
                             }
                         </Grid>
                     </Grid>
-                    <EventAndTimeIntervalForm onClose={this.eventAndTimeIntervalFormClosed}
-                                              show={showEventandTimeIntervalForm}></EventAndTimeIntervalForm>
                 </Box>
             </div>
         );
