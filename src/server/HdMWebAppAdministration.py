@@ -45,6 +45,11 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             return mapper.find_by_lastname(lastname)
 
+    def get_person_by_username(self, username):
+        """Alle Kunden mit übergebenem Nachnamen auslesen."""
+        with PersonMapper() as mapper:
+            return mapper.find_by_username(username)
+
     def get_all_persons(self):
         """Alle in der Datenbank gespeicherten Personen auslesen."""
         with PersonMapper() as mapper:
@@ -55,18 +60,18 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             return mapper.find_by_arrive()
 
-    def create_person(self, firstname, lastname, mailaddress, firebase_id):
+    def create_person(self, username, mailaddress, firebase_id):
         """Person anlegen, nach Anlegen der Person Anlegen eines Arbeitszeitkontos für sie."""
         person = Person()
         person.set_id(1)
         person.set_last_edit(datetime.now())
-        person.set_deleted(0)
-        person.set_last_edit(datetime.now())
-        person.set_firstname(firstname)
-        person.set_lastname(lastname)
-        person.set_username(firstname + "_" + lastname)
+        person.set_firstname("Vorname noch nachtragen")
+        person.set_lastname("Nachname noch nachtragen")
+        person.set_username(username)
         person.set_mailaddress(mailaddress)
         person.set_firebase_id(firebase_id)
+        person.set_deleted(0)
+
 
         with PersonMapper() as mapper:
             return mapper.insert(person), self.create_work_time_account_for_person(person)
@@ -78,13 +83,12 @@ class HdMWebAppAdministration(object):
         with PersonMapper() as mapper:
             if person is not None:
                 projects = self.get_projectmember_by_person(person)
-                worktimeaccounts = self.get_work_time_account_of_owner(person)
+                worktimeaccount = self.get_work_time_account_of_owner(person)
 
                 for project in projects:
                     self.delete_project_member(project)
 
-                for worktimeaccount in worktimeaccounts:
-                    self.delete_work_time_account(worktimeaccount)
+                self.delete_work_time_account(worktimeaccount)
 
             mapper.delete(person)
 

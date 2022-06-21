@@ -4,9 +4,11 @@ import WorktimeAccountBO from "./WorktimeAccountBO";
 import ActivityBO from "./ActivityBO";
 import ProjectWorkBO from "./ProjectWorkBO";
 import TimeIntervalBO from "./TimeIntervalBO";
-import header from "../components/layout/Header";
+import navigator from "../components/layout/Navigator";
 import personForm from "../components/dialogs/PersonForm";
 import EventBO from "./EventBO";
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 
 export default class HdMWebAppAPI {
 
@@ -19,7 +21,9 @@ export default class HdMWebAppAPI {
 
   // Person bezogen
   #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
-  #updatePersonURL = () => `${this.#hdmwebappServerBaseURL}/persons/`;
+  #editPersonURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
+  #deletePersonURL = () =>`${this.#hdmwebappServerBaseURL}/persons`;
+
 
   //Projekt bezogen
   #getProjectsURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
@@ -45,7 +49,6 @@ export default class HdMWebAppAPI {
   #updateActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
   #deleteActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
   #addActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities`;
-
 
   // Ereignis bezogen
   #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
@@ -77,28 +80,35 @@ export default class HdMWebAppAPI {
             }
         )
 
+/**
+  * Updated ein ProjectWorkBO
+  *
+  * @param {PersonBO} personBO das geupdated werden soll
+  * @public
+  */
 
-  updatePerson(PersonBO) {
-    return this.#fetchAdvanced(this.#updatePersonURL(PersonBO.getID()), {
+  editPerson(personBO) {
+    return this.#fetchAdvanced(this.#editPersonURL(), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(PersonBO)
+      body: JSON.stringify(personBO)
     }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
+      // We always get an array of PersonBO.fromJSON
       let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
-      // console.info(accountBOs);
+      console.info(personBO);
       return new Promise(function (resolve) {
         resolve(responsePersonBO);
+        console.log(responsePersonBO)
       })
     })
   }
 
     getPerson() {
         return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
-            let personBOs = PersonBO.fromJSON(responseJSON);
+            let personBOs = PersonBO.fromJSON(responseJSON)[0];
             //console.log(responseJSON);
             return new Promise(function (resolve) {
                 resolve(personBOs);
@@ -106,6 +116,17 @@ export default class HdMWebAppAPI {
         })
     }
 
+    deletePerson() {
+    return this.#fetchAdvanced(this.#deletePersonURL(), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
+      console.log(responsePersonBO)
+      return new Promise(function (resolve) {
+        resolve(responsePersonBO);
+      })
+    })
+  }
   /**
    * Erstellt ein Ereignis und gibt eine Promise zurück, die ein neues EventBO
    * Objekt mit dem Eventtyp des Parameters eventBO als Ergebnis hat.
@@ -130,15 +151,6 @@ export default class HdMWebAppAPI {
     })
   }
 
-    getPersons() {
-    return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
-      let personBOs = PersonBO.fromJSON(responseJSON);
-      //console.log(responseJSON);
-      return new Promise(function (resolve) {
-        resolve(personBOs);
-      })
-    })
-  }
 
     getWorktimeAccount(id) {
         return this.#fetchAdvanced(this.#getWorktimeAccountURL(id)).then((responseJSON) => {
@@ -236,8 +248,6 @@ export default class HdMWebAppAPI {
             })
         })
     }
-
-
 
 
     getWorktimeAccount(id) {

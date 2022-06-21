@@ -49,8 +49,8 @@ event = api.inherit('Event', bo, {
 person = api.inherit('Person', bo, {
     'firstname': fields.String(attribute='_firstname', description='Vorname eines Benutzers'),
     'lastname': fields.String(attribute='_lastname', description='Nachname eines Benutzers'),
-    'mailaddress': fields.String(attribute='_mailaddress', description='E-Mail-Adresse eines Benutzers'),
     'username': fields.String(attribute='_username', description='Username eines Benutzers'),
+    'mailaddress': fields.String(attribute='_mailaddress', description='E-Mail-Adresse eines Benutzers'),
     'firebase_id': fields.String(attribute='_firebase_id', description='Google User ID eines Benutzers')
 })
 
@@ -101,48 +101,80 @@ projectmember = api.inherit('ProjectMember', person, {
 })
 
 
+
 @hdmwebapp.route('/persons')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class PersonListOperations(Resource):
+class PersonByIDOperations(Resource):
     @hdmwebapp.marshal_list_with(person)
     @secured
     def get(self):
         hwa = HdMWebAppAdministration()
-        persons = hwa.get_all_persons()
-        return persons
+        hil = Helper()
+        firebase_id = hil.get_firebase_id()
+        pers = hwa.get_person_by_firebase_id(firebase_id)
+        print(pers)
+        return pers
 
-    @hdmwebapp.marshal_with(person, code=200)
-    @hdmwebapp.expect(person)  # Wir erwarten ein Customer-Objekt von Client-Seite.
     @secured
-    def post(self):
+    def delete(self):
+        """
+        Löschen einer bestimmten Person. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        per = hwa.get_person_by_firebase_id(firebase_id)
+        hwa.delete_person(per)
+        return '', 200
 
-        ha = HdMWebAppAdministration()
 
-        proposal = Person.from_dict(api.payload)
+    @secured
+    def put(self):
 
-        if proposal is not None:
-            c = ha.create_person(proposal.get_firstname(), proposal.get_lastname, proposal.get_mailaddress,
-                                 proposal.get_firebase_id())
-            return c, 200
+        hwa = HdMWebAppAdministration()
+        payload = Person.from_dict(api.payload)
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        fl = hwa.get_person_by_firebase_id(firebase_id)
+
+        if fl is not None:
+            fl.set_firstname(payload.get_firstname())
+            fl.set_lastname(payload.get_lastname())
+            hwa.save_person(fl)
+            return '', 200
         else:
-            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
 
-@hdmwebapp.route('/person-by-name/<string:lastname>')
+@hdmwebapp.route('/projectworks/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@hdmwebapp.param('lastname', 'Der Nachname des Kunden')
-class CustomersByNameOperations(Resource):
-    @hdmwebapp.marshal_with(person)
+@hdmwebapp.param('id', 'Die ID der Projektarbeit')
+class ProjectWorkOperations(Resource):
+    @hdmwebapp.marshal_list_with(projectwork)
     @secured
-    def get(self, lastname):
-        """ Auslesen von Customer-Objekten, die durch den Nachnamen bestimmt werden.
-
-        Die auszulesenden Objekte werden durch ```lastname``` in dem URI bestimmt.
+    def put(self, id):
         """
-        adm = HdMWebAppAdministration()
-        lel = adm.get_person_by_name(lastname)
-        return lel
+        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = ProjectWork.from_dict(api.payload)
+
+        if pw is not None:
+            pw.set_id(id)
+            hwa.save_project_work(pw)
+            return '', 200
+        else:
+            return '', 500
+
+    @secured
+    def delete(self, id):
+        """
+        Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = hwa.get_project_work_by_id(id)
+        hwa.delete_project_work(pw)
+        return '', 200
 
 
 @hdmwebapp.route('/worktimeaccount/<int:id>')
@@ -512,6 +544,7 @@ sub_thread = Thread(target=check)
 #es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
+
 
 
 
