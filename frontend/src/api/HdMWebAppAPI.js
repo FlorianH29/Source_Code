@@ -6,7 +6,6 @@ import ProjectWorkBO from "./ProjectWorkBO";
 import TimeIntervalTransactionBO from "./TimeIntervalTransactionBO";
 import TimeIntervalBO from "./TimeIntervalBO";
 import navigator from "../components/layout/Navigator";
-import personForm from "../components/dialogs/PersonForm";
 import EventBO from "./EventBO";
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
