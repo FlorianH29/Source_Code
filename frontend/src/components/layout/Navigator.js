@@ -15,7 +15,7 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import {Link as RouterLink} from "react-router-dom";
 import {HdMWebAppAPI, PersonBO} from "../../api";
 import EventManager from "../EventManager";
