@@ -404,5 +404,4 @@ export default class HdMWebAppAPI {
       })
     })
   }
-
 }

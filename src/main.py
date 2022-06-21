@@ -431,7 +431,5 @@ ti = h.get_time_interval_transaction_by_id(1)
 print(h.get_work_time_of_activity_between_two_dates(ac, datetime(2022, 6, 15, 0, 0, 0), datetime(2022, 6, 20, 0, 0, 0)))
 
 
-
-
 if __name__ == '__main__':
     app.run(debug=False)
