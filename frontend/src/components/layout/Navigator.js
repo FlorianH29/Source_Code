@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {AppBar, CssBaseline, Typography, Toolbar, IconButton, Menu, Box, Drawer, Button, Link, Divider, MenuItem} from '@mui/material';
+import {Paper, Popover, AppBar, CssBaseline, Typography, Toolbar, IconButton, Box, Drawer, Button, Link, Divider} from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -11,9 +11,11 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import PersonIcon from "@mui/icons-material/Person";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import {Link as RouterLink} from "react-router-dom";
 import {HdMWebAppAPI, PersonBO} from "../../api";
@@ -136,13 +138,13 @@ class Navigator extends Component {
                             size="large"
                             onClick={this.handleOpenUserMenu}
                             color="inherit">
-                            <PersonIcon/>
+                            <ManageAccountsIcon fontSize="inherit"/>
                         </IconButton>
-                        <Menu
+                        <Popover
                             anchorEl={this.state.anchorEl}
                             anchorOrigin={{
                                 vertical: 'top',
-                                horizontal: 'right',
+                                horizontal: 'left',
                             }}
                             keepMounted
                             transformOrigin={{
@@ -159,11 +161,22 @@ class Navigator extends Component {
                             <PersonEditDialog person={person} show={showPersonEditDialog}
                                               onClose={this.personEditClosed}>
                             </PersonEditDialog>
-                            <Typography variant='h6' component='div' align='center'>
-                                <Button onClick={this.handleEdit}>Profil bearbeiten</Button>
-                                <Button onClick={this.handleDelete}>Profil löschen</Button>
-                            </Typography>
-                        </Menu>
+                                <IconButton>
+                                <DriveFileRenameOutlineIcon size={"large"} onClick={this.handleEdit}>
+                                </DriveFileRenameOutlineIcon>
+                                <Typography variant='inherit' component='div' align='center'>
+                                    Profil bearbeiten
+                                </Typography>
+                                </IconButton>
+                                 <Divider sx={{p: 0.2}}/>
+                                <IconButton>
+                                <NoAccountsIcon size={"large"} onClick={this.handleDelete}>
+                                </NoAccountsIcon>
+                                <Typography variant='inherit' component='div' align='center'>
+                                    Profil löschen
+                                </Typography>
+                                </IconButton>
+                        </Popover>
                          </>) : null
                     }
                      </Toolbar>
