@@ -245,6 +245,60 @@ class EventMapper(Mapper):
 
         return result
 
+    def find_last_project_duration_event(self, key):
+        """Suchen des letzten Events mit vorgegebener zugheöriger Personen ID. Rückgabe von genau einem Objekt.
+
+        :param key: Fremdschlüsselattribut (->DB)
+        :return Event-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
+        """
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM event WHERE event_id = (SELECT MAX(event_id) FROM event " \
+                  "WHERE event_type = {} AND deleted=0)".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (event_id, last_edit, event_type, time_stamp, affiliated_person_id, deleted) = tuples[0]
+            event = Event()
+            event.set_id(event_id)
+            event.set_last_edit(last_edit)
+            event.set_event_type(event_type)
+            event.set_time_stamp(time_stamp)
+            event.set_affiliated_person(affiliated_person_id)
+            event.set_deleted(deleted)
+
+            result = event
+        except IndexError:
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_last_event_type(self):
+        """Suchen des letzten Events und Rückgabe seines Event-Typs in einem Tupel.
+
+        :return ein Tupel mit einem Event-Typ.
+        """
+        result = ""
+        cursor = self._cnx.cursor()
+        cursor.execute("SELECT event_type FROM event WHERE deleted=0 AND event_id = (SELECT MAX(event_id) FROM event)")
+        tuples = cursor.fetchall()
+
+        for (event_type) in tuples:
+            event = Event()
+            event.set_event_type(event_type)
+            result = event.get_event_type()
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
     def find_all(self):
         """Auslesen aller Events.
 
