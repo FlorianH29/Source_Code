@@ -1,10 +1,22 @@
 import React, {Component} from 'react';
 import {EventBO, HdMWebAppAPI, ProjectBO} from "../../api";
-import {Divider, Grid, Typography, TextField, Dialog, Button} from "@mui/material";
+import {
+    Divider,
+    Grid,
+    Typography,
+    TextField,
+    Dialog,
+    Button,
+    DialogTitle,
+    IconButton,
+    DialogContent, DialogActions
+} from "@mui/material";
 import ProjectWorkListEntry from "../ProjectWorkListEntry";
 import {DatePicker, LocalizationProvider} from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import ProjectCreateDialog from "./ProjectCreateDialog";
+import CloseIcon from "@material-ui/icons/Close";
+import {DialogContentText} from "@material-ui/core";
 
 class ProjectDurationDialog extends Component {
 
@@ -16,24 +28,55 @@ class ProjectDurationDialog extends Component {
             endDate: new Date().getTime(),
             eventType: 0,
             showProjectDurationForm: false,
+            disableStartButton: false,
+            disableEndButton: true,
         }
     }
 
-
-    addProjectDurationStart = () => {
+    /** Erzeugt ein Projekt-Laufzeit-Start als EventBO  */
+    addProjectDurationStartEvent = () => {
         let newEventBO = new EventBO(this.state.eventType, this.state.startDate);
-        HdMWebAppAPI.getAPI().addProjectDurationStart(newEventBO).then(projectStart => {
+        HdMWebAppAPI.getAPI().addProjectDurationStartEvent(newEventBO).then(projectStart => {
         this.setState(this.baseState);
         //this.props.onClose(projectStart);
     }).catch (e =>
-        console.log(e, 'Werde ich aufgerufen?'));
+        console.log(e));
     }
 
-     handleStartDate = (date) => {
-    this.setState({
-        startDate: date
-    });
-  };
+    /** Erzeugt ein Projekt-Laufzeit-Ende als EventBO  */
+    addProjectDurationEndEvent = () => {
+        let newEventBO = new EventBO(this.state.eventType, this.state.endDate);
+        HdMWebAppAPI.getAPI().addProjectDurationEndEvent(newEventBO).then(projectStart => {
+            //this.props.onClose(projectStart);
+    }).catch (e =>
+        console.log(e));
+    }
+
+    /** Erzeugt ein TimeInterval mit den Start- und Endevents der Projektlaufzeit */
+    addProjectDuration = () => {
+        HdMWebAppAPI.getAPI().addProjectDuration
+    }
+
+
+    /** Disabled den "Projektstart anlegen" Button, sobald ein ProjektStart ausgewählt wurde und
+     * der Button geclickt wird und ruft die Methode addProjectDurationStart auf
+     */
+    disableStartHandler = () => {
+        this.setState({
+                disableStartButton: true,
+                disableEndButton: false
+            });
+        this.addProjectDurationStartEvent()
+    }
+
+    //behandelt das Click Event, dass bei "Abbrechen" ausgelöst wird
+    handleClose = () => {
+        // den State neu setzen, sodass man wieder auf dem Stand ist wie vor dem Dialog
+        this.setState(this.baseState);
+        this.props.onClose(null);
+    }
+
+
 
    /** getEventForTimeIntervalTransactions = (startDate, endDate) => {
         HdMWebAppAPI.getAPI().getEventsForTimeIntervalTransactions(startDate, endDate)
@@ -69,42 +112,81 @@ class ProjectDurationDialog extends Component {
   }*/
 
     render() {
-        const {startDate, endDate, eventType} = this.state;
+        const {startDate, endDate, eventType, disableStartButton, disableEndButton} = this.state;
         const {showProjectDurationForm, getEventForTimeIntervalTransactions} = this.props
+
+        let header = '';
+        let title = '';
+
+        if (disableStartButton === false ) {
+            /** Beim öffnen des Dialogs, weist der Titel auf den Projektstart hin */
+            title = 'Wann soll das Projekt beginnen?'
+            header = 'Wähle  ein Start-Datum aus und klicke auf "Weiter"...'
+        } else {
+            /** Beim öffnen des Dialogs, weist der Titel auf den Projektstart hin */
+            title = 'Wann soll das Projekt enden?'
+            header = 'Wähle ein End-Datum aus und klicke auf "Fertig"... '
+        }
 
         //console.log(endDate)
         return (
             <div>
-                <Dialog open={true}>
+                <Dialog open={true} onClose={this.handleClose} maxWidth={"xl"}>
+                   <DialogTitle id='form-dialog-title'>
+                       {title}
+                       <IconButton onClick={this.handleClose}>
+                           <CloseIcon/>
+                       </IconButton>
+                   </DialogTitle>
+                   <DialogContent>
+                       <DialogContentText>
+                          {header}
+                      </DialogContentText>
                 <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <LocalizationProvider  dateAdapter={AdapterDateFns}>
                         <DatePicker
+                            disabled={disableStartButton}
                             label={"Start Date"}
                             value={startDate}
                             onChange={(date) => {
                                 this.setState({ eventType: 7, startDate: date.getTime()});
-                                //this.addProjectDurationStart(this.state.eventType, date.getTime(), this.state.startDate)
+                                //this.addProjectDurationStartEvent()
                             }}
                             renderInput={(params) => <TextField {...params} />}
                         />
-                        <Button color={"primary"} onClick={this.addProjectDurationStart}>
-                                  Erstellen
-                              </Button>
                     </LocalizationProvider>
+
+
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
+                            disabled={disableEndButton}
                             label={"End Date"}
                             value={endDate}
                             onChange={(date) => {
-                                this.setState({endDate: date.getTime()});
-                                console.log(date.getTime())
-                                //this.getEventForTimeIntervalTransactions(this.state.startDate, date.getTime())
+                                this.setState({ eventType: 8, endDate: date.getTime()});
+                                //console.log(date.getTime())
+                                //this.addProjectDurationEndEvent()
                             }}
                             renderInput={(params) => <TextField {...params} />}
                         />
-                    </LocalizationProvider>
-                </div>
+                        </LocalizationProvider>
+
+                        </div>
+                       </DialogContent>
+                       <DialogActions>
+                           <Button onClick={this.handleClose} color='secondary'>
+                          Abbrechen
+                      </Button>
+                    <Button color={"primary"} disabled={disableStartButton} onClick={this.disableStartHandler}>
+                                  Weiter
+                              </Button>
+                    <div/>
+                    <Button color={"primary"} disabled={disableEndButton} onClick={this.addProjectDurationEndEvent}>
+                                  Fertig
+                              </Button>
+                       </DialogActions>
                     </Dialog>
+
                 </div>
         );
     }

@@ -50,7 +50,7 @@ class ProjectCreateDialog extends Component {
         console.log(e, 'Werde ich aufgerufen?'));
     }
 
-    /** Behandelt Werteänderungen der textfelder und validiert diese*/
+    /** Behandelt Werteänderungen der Textfelder und validiert diese. */
     textFieldValueChange = (event) => {
         const value = event.target.value;
 
@@ -66,7 +66,7 @@ class ProjectCreateDialog extends Component {
         });
   }
 
-   /** Im Fall von bearbeiten Überschreibt es das ProjectBO mit neuen Werten */
+   /** Im Fall von Bearbeiten, überschreibt es das ProjectBO mit neuen Werten */
    updateProject = () => {
        // das originale Project klonen, für den Fall, dass der Backend Call fehlschlägt.
        let updatedProject = Object.assign(new ProjectBO(), this.props.project);
