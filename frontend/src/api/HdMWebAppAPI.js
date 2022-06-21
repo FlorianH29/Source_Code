@@ -39,8 +39,8 @@ export default class HdMWebAppAPI {
   #updateProjectWorkByNameURL = (id, name) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}/${name}`;
   #addProjectWorkURL = () => `${this.#hdmwebappServerBaseURL}/projectworks`;
 
-    //Worktimeaccount bezogen
-    #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
+  //Worktimeaccount bezogen
+  #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
 
   //Activity bezogen
   #getActivitiesForProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}/activities`;
@@ -59,23 +59,23 @@ export default class HdMWebAppAPI {
     #getTimeIntervalTransactionsURL = () => `${this.#hdmwebappServerBaseURL}/timeintervaltransactions`;
     #deleteTimeIntervalURL = (id) => `${this.#hdmwebappServerBaseURL}/timeinterval/${id}`;
 
-    /**
-     * Gibt die Singelton Instanz zurück
-     *
-     * @public
-     */
-    static getAPI() {
-        if (this.#api == null) {
-            this.#api = new HdMWebAppAPI();
-        }
-        return this.#api;
-    }
+  /**
+   * Gibt die Singelton Instanz zurück
+   *
+   * @public
+   */
+  static getAPI() {
+      if (this.#api == null) {
+          this.#api = new HdMWebAppAPI();
+      }
+      return this.#api;
+  }
 
-    /**
-     *  Returns a Promise which resolves to a json object.
-     *  The Promise returned from fetch() won’t reject on HTTP error status even if the response is an HTTP 404 or 500.
-     *  fetchAdvanced throws an Error also an server status errors
-     */
+  /**
+   *  Returns a Promise which resolves to a json object.
+   *  The Promise returned from fetch() won’t reject on HTTP error status even if the response is an HTTP 404 or 500.
+   *  fetchAdvanced throws an Error also an server status errors
+   */
     #fetchAdvanced = (url, init) => fetch(url, init)
         .then(res => {
                 // The Promise returned from fetch() won’t reject on HTTP error status even if the response is an HTTP 404 or 500.
