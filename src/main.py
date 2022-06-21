@@ -16,9 +16,7 @@ from SecurityDecorator import secured
 from Helper import Helper
 from server.bo.ProjectMember import ProjectMember
 
-
 app = Flask(__name__)
-
 
 CORS(app, resources=r'/hdmwebapp/*')
 
@@ -41,7 +39,8 @@ activity = api.inherit('Activity', bo, {
 })
 
 event = api.inherit('Event', bo, {
-    'event_type': fields.Integer(attribute='_event_type', description='Typ eines Events, Start oder Ende, für B und PW'),
+    'event_type': fields.Integer(attribute='_event_type',
+                                 description='Typ eines Events, Start oder Ende, für B und PW'),
     'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt'),
     'affiliated_person': fields.Integer(attribute='_affiliated_person', description='ID der Person, die Event besitzt')
 })
@@ -85,9 +84,9 @@ timeinterval = api.inherit('TimeInterval', bo, {
 projectwork = api.inherit('ProjectWork', timeinterval, {
     'project_work_name': fields.String(attribute='_project_work_name', description='Name einer Projektarbeit'),
     'description': fields.String(attribute='_description', description='Beschreibung einer Projektarbeit'),
-    'affiliated_activity': fields.Integer(attribute='_affiliated_activity_id', description='Zugeordnete Aktivität einer P.')
+    'affiliated_activity': fields.Integer(attribute='_affiliated_activity_id',
+                                          description='Zugeordnete Aktivität einer P.')
 })
-
 
 timeinterval = api.inherit('TimeInterval', bo, {
     'starttime': fields.DateTime(attribute='__start_time', description='Startzeitpunkt eines Zeitintervalls'),
@@ -99,7 +98,6 @@ projectmember = api.inherit('ProjectMember', person, {
     'affiliated_project': fields.Integer(attribute='_affiliated_project', description='ID des Projekts'),
     'affiliated_person': fields.Integer(attribute='_affiliated_person', description='ID der Person, die Mitglied ist')
 })
-
 
 
 @hdmwebapp.route('/persons')
@@ -126,7 +124,6 @@ class PersonByIDOperations(Resource):
         per = hwa.get_person_by_firebase_id(firebase_id)
         hwa.delete_person(per)
         return '', 200
-
 
     @secured
     def put(self):
@@ -248,6 +245,7 @@ class ActivitiesOperations(Resource):
         else:
             return "Project not found", 500
 
+
 @hdmwebapp.route('/activities/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Aktivität')
@@ -277,7 +275,6 @@ class ActivityOperations(Resource):
         ac = hwa.get_activity_by_id(id)
         hwa.delete_activity(ac)
         return '', 200
-
 
 
 @hdmwebapp.route('/events')
@@ -316,7 +313,7 @@ class EventOperations(Resource):
             return '', 500
 
 
-@hdmwebapp.route('/projects/<int:id>' )
+@hdmwebapp.route('/projects/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @hdmwebapp.marshal_list_with(project)
@@ -368,7 +365,7 @@ class ProjectPostOperation(Resource):
 
             project_name = proposal.get_project_name()
             client = proposal.get_client()
-            inter = hwa.get_time_interval_by_id(1) #hier muss das echte Zeitintervall rein
+            inter = hwa.get_time_interval_by_id(1)  # hier muss das echte Zeitintervall rein
             firebase_id = h.get_firebase_id()
             per = hwa.get_person_by_firebase_id(firebase_id)
             result = hwa.create_project(project_name, client, inter, per)
@@ -376,6 +373,7 @@ class ProjectPostOperation(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
+
 
 @hdmwebapp.route('/projects/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -390,7 +388,6 @@ class ProjectDeleteOperation(Resource):
         pw = hwa.get_project_by_id(id)
         hwa.delete_project(pw)
         return '', 200
-
 
 
 @hdmwebapp.route('/projectworks')
@@ -469,6 +466,7 @@ class ProjectWorkOperations(Resource):
         hwa.delete_project_work(pw)
         return '', 200
 
+
 @hdmwebapp.route('/projects/<int:id>/projectmembers')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectMemberOperations(Resource):
@@ -495,6 +493,31 @@ class ProjectMemberOperations(Resource):
         else:
             return "Project not found", 500
 
+"""
+@hdmwebapp.route('/projects/<int:id>/persons')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectMemberOperations(Resource):
+    @hdmwebapp.marshal_list_with(person)
+    @secured
+
+    def get(self, id):
+        hwa = HdMWebAppAdministration()
+        pro = hwa.get_project_by_id(id)
+
+
+        if pro is not None:
+            notprojectmembers = hwa.get_persons_who_are_not_project_member(project)
+
+            notprojectmember_list = []
+            for i in notprojectmembers:
+                person = hwa.get_person_by_id(i)
+                notprojectmember_list.append(person)
+
+
+            return notprojectmember_list
+        else:
+            return "Project not found", 500
+"""
 
 @hdmwebapp.route('/projectmembers/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -515,24 +538,19 @@ class ProjectWorkOperations(Resource):
 @hdmwebapp.route('/projectmembers')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectMembersOperations(Resource):
-    @hdmwebapp.marshal_with(project, person, code=201)
+    @hdmwebapp.marshal_with(project, code=201)
     @secured
     def post(self):
         """Erstellen einer neuen Aktivität."""
 
         hwa = HdMWebAppAdministration()
-        proposal = ProjectMember.from_dict(api.payload)
+        pro = hwa.get_project_by_id(id)
 
-        if proposal is not None:
-
-            affiliated_project = hwa.get_project_by_id(proposal.get_affilated_project())
-            affiliated_person = hwa.get_person_by_id(proposal.get_affiliated_person())
-            result = hwa.create_project_member_for_project(affiliated_project, affiliated_person)
-            return result, 200
+        if pro is not None:
+            noprojectmembers_list = hwa.get_persons_who_are_not_project_member(pro)
+            return noprojectmembers_list
         else:
-            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
-            return '', 500
-
+            return "Persons not found", 500
 
 
 def check():
@@ -541,12 +559,18 @@ def check():
 
 
 sub_thread = Thread(target=check)
-#es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
+# es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
 
-
-
+"""
+h = HdMWebAppAdministration()
+pro = h.get_project_by_id(1)
+print(h.get_persons_who_are_not_project_member(pro))
+pe = h.get_persons_who_are_not_project_member(pro)
+for p in pe:
+    print(h.get_person_by_id(p.get_id()))
+"""
 
 if __name__ == '__main__':
     app.run(debug=True)

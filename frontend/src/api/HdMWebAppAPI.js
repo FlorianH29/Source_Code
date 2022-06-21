@@ -40,6 +40,7 @@ export default class HdMWebAppAPI {
   #getProjectMembersURL = (id) =>  `${this.#hdmwebappServerBaseURL}/projects/${id}/projectmembers`;
   #deleteProjectMemberURL = (id) => `${this.#hdmwebappServerBaseURL}/projectmembers/${id}`;
   #addProjectMemberURL = () => `${this.#hdmwebappServerBaseURL}/projectmembers`;
+  #getNotProjectMembersURL = (id) =>  `${this.#hdmwebappServerBaseURL}/projects/${id}/persons`;
 
   //Worktimeaccount bezogen
   #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
@@ -414,6 +415,17 @@ export default class HdMWebAppAPI {
           })
       })
   }
+
+  getPersonsNotProjectMembersOfProject(id) {
+      return this.#fetchAdvanced(this.#getNotProjectMembersURL(id)).then((responseJSON) => {
+          let notprojectmembers = PersonBO.fromJSON(responseJSON);
+          //console.log(notprojectmembers);
+          return new Promise(function (resolve) {
+              resolve(notprojectmembers);
+          })
+      })
+  }
+
 
   deleteProjectMember(projectmemberID) {
     return this.#fetchAdvanced(this.#deleteProjectMemberURL(projectmemberID), {

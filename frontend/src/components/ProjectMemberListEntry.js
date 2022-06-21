@@ -19,14 +19,6 @@ class ProjectMemberListEntry extends Component {
         };
     }
 
-    /**    editProjectMemberButtonClicked = (event) => {
-    event.stopPropagation();
-    this.setState({
-      showActivityForm: true
-    });
-    }
-     */
-
     deleteProjectMemberButtonClicked = (event) => {
         event.stopPropagation();
         this.setState({
@@ -62,8 +54,6 @@ class ProjectMemberListEntry extends Component {
                             </Typography>
                         </Grid>
                         <Grid item xs={3} align={"center"}>
-                            {/** <Button color='primary' size='small' startIcon={<EditIcon />}
-                                    onClick={this.editProjectMemberButtonClicked}> </Button>*/}
                             <Button color='secondary' size='small' startIcon={<DeleteIcon/>}
                                     onClick={this.deleteProjectMemberButtonClicked}> </Button>
                         </Grid>

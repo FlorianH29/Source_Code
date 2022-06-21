@@ -730,6 +730,10 @@ class HdMWebAppAdministration(object):
         with ProjectMemberMapper() as mapper:
             return mapper.find_projects_by_person_id(person_id)
 
+    def get_persons_who_are_not_project_member(self, project):
+        with PersonMapper() as mapper:
+            return mapper.find_persons_by_project_id(project.get_id())
+
     """Methoden von TimeInterval"""
 
     def calculate_period(self, timeinterval):

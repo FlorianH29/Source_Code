@@ -21,7 +21,7 @@ class PersonMapper(Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT * from person")
+        cursor.execute("SELECT * from person WHERE deleted=0")
         tuples = cursor.fetchall()
 
         for (person_id, last_edit, firstName, lastName, username, mailaddress, firebase_id) in tuples:
@@ -213,6 +213,41 @@ class PersonMapper(Mapper):
 
         return result
 
+    def find_persons_by_project_id(self, key):
+        """Suchen von Personen die nicht in einem Projekt sind.
+
+        :param key Fremdschlüsselattribut (->DB)
+        :return Person-Objekte, die dem übergebenen Schlüssel entsprechen, None bei nicht vorhandenem DB-Tupel.
+        """
+
+        result = []
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM person WHERE person_id " \
+                  "NOT IN (SELECT person_id FROM projectmembers WHERE project_id={})".format(key)
+
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        for (person_id, last_edit, firstName, lastName, username, mailaddress, firebase_id, deleted) in tuples:
+            employee = p.Person()
+            employee.set_id(person_id)
+            employee.set_last_edit(last_edit)
+            employee.set_firstname(firstName)
+            employee.set_lastname(lastName)
+            employee.set_username(username)
+            employee.set_mailaddress(mailaddress)
+            employee.set_firebase_id(firebase_id)
+            employee.set_deleted(deleted)
+
+
+            result.append(employee)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
     def delete(self, employee):
         """Setzen der deleted flag auf 1, sodass der Person Eintrag nicht mehr ausgegeben wird.
 
@@ -225,4 +260,6 @@ class PersonMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
+
+
 

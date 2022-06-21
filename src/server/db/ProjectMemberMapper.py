@@ -141,6 +141,8 @@ class ProjectMemberMapper (Mapper):
 
         return result
 
+
+
     def insert(self, projectmember):
         """Einfügen eines Project-Member-Objekts in die Datenbank.
 

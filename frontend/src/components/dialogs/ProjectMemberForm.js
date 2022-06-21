@@ -3,8 +3,15 @@ import PropTypes from 'prop-types';
 import {withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText,
     DialogActions, TextField} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import {ActivityBO, HdMWebAppAPI, PersonBO} from "../../api";
+import {HdMWebAppAPI, PersonBO} from "../../api";
 import Select from "react-dropdown-select";
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import MenuItem from "@mui/material/MenuItem";
+import Checkbox from "@mui/material/Checkbox";
+import ListItemText from "@mui/material/ListItemText";
+import FormControl from "@mui/material/FormControl";
+import ActivityList from "../ActivityList";
 
 class ProjectMemberForm extends Component {
 
@@ -12,8 +19,24 @@ class ProjectMemberForm extends Component {
         super(props);
 
         this.state = {
-            projectMember: projectMember
+            projectMember: projectMember,
+            potentailProjectMembers: potentailProjectMembers
         }
+    }
+
+    getPotentialMembersForProject = () => {
+        HdMWebAppAPI.getAPI().getPersonsNotProjectMembersOfProject(1)  // statt 1 sollte hier die Id des ausgewählten Ptojekts rein
+            .then(personBOs =>
+                this.setState({
+                    potentailProjectMembers: personBOs
+                })).catch(e =>
+            this.setState({
+                potentailProjectMembers: []
+            }));
+    }
+
+    componentDidMount() {
+        this.getPotentialMembersForProject();
     }
 
     addProjectMember = () => {
@@ -30,14 +53,14 @@ class ProjectMemberForm extends Component {
     }
 
 
-        render() {
-            const {projectMember, person, show} = this.props;
-            const {activityName, capacity, activityNameValidationFailed, capacityValidationFailed} = this.state;
+    render() {
+        const {projectMember, person, show} = this.props;
+        const {potentailProjectMembers} = this.state;
 
-            let title = 'Mitarbeiter zu dem Projekt hinzufügen';
-            let header = 'Mitartbeiter:';
+        let title = 'Mitarbeiter zu dem Projekt hinzufügen';
+        let header = 'Mitartbeiter:';
 
-            return (
+        return (
 
             show ?
                 <Dialog open={true} onClose={this.handleClose} maxWidth='xl'>
@@ -52,6 +75,7 @@ class ProjectMemberForm extends Component {
                         </DialogContentText>
 
 
+
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleClose} color='secondary'>
@@ -64,8 +88,21 @@ class ProjectMemberForm extends Component {
                 </Dialog>
 
 
-            );
-        }
+        );
+    }
 
 
 }
+
+ActivityList.propTypes = {
+    /** @ignore */
+    projectMember: PropTypes.object.isRequired,
+    person: PropTypes.object.isRequired,
+    /** The CustomerBO of this AccountList */
+    project: PropTypes.object.isRequired,
+    /** If true, accounts are (re)loaded */
+    show: PropTypes.bool.isRequired,
+}
+
+
+export default ProjectMemberForm

@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
 import {ActivityBO, HdMWebAppAPI} from "../api";
 import {withStyles, Button, Grid, Typography, Divider} from '@mui/material';
+import {Card, Box} from "@mui/material";
 import AddIcon from '@material-ui/icons/Add';
 import ActivityForm from "./dialogs/ActivityForm";
 import PropTypes from "prop-types";
 import ActivityListEntry from "./ActivityListEntry";
+import ProjectMemberList from "./ProjectMemberList";
+import {spacing} from '@mui/system'
+import ProjectMemberListEntry from "./ProjectMemberListEntry";
 
 
 class ActivityList extends Component {
@@ -71,33 +75,43 @@ class ActivityList extends Component {
 
         return (
             <div>
-                <Typography variant={"h4"} algin={"left"} component={"div"}>
-                    Projekt: {this.props.projectName}
-                </Typography>
-                <Button variant='contained' color='primary' startIcon={<AddIcon/>}
-                        onClick={this.handleAddActivityButtonClicked}>
-                    Aktivität anlegen
-                </Button>
-                <Grid container>
-                    <Grid item xs={12} align={"center"}>
-                    <Grid container>
-                        <Grid item xs={3} align={"flex-end"}>
-                            <Typography variant={"h5"} component={"div"}> Aktivitäten </Typography>
+                <Box m={25}>
+                    <Card>
+                        <Grid container spacing={1} justifyContent={"center"}>
+                            <Grid item xs={12}>
+                                <Typography variant={"h4"} algin={"left"} component={"div"}>
+                                    Projekt: {this.props.projectName}
+                                </Typography>
+                                <Button variant='contained' color='primary' startIcon={<AddIcon/>} algin={"center"}
+                                        onClick={this.handleAddActivityButtonClicked}>
+                                    Aktivität anlegen
+                                </Button>
+                            </Grid>
+                            <Grid container spacing={1} justifyContent={"center"}>
+                                <Grid item xs={12} align={"center"}>
+                                    <Grid container>
+                                        <Grid item xs={3} align={"flex-end"}>
+                                            <Typography variant={"h5"} component={"div"}> Aktivitäten </Typography>
+                                        </Grid>
+                                        <Grid item xs={3} align={"flex-end"}>
+                                            <Typography variant={"h5"} component={"div"}> Kapazität </Typography>
+                                        </Grid>
+                                        <Grid item xs={3} align={"flex-end"}>
+                                            <Typography variant={"h5"} component={"div"}> Dauer </Typography>
+                                        </Grid>
+                                    </Grid>
+                                    <Divider/>
+                                    {activities.map(ac => <ActivityListEntry key={ac.getID()} activity={ac}
+                                                                             onActivityDeleted={this.activityDeleted}/>)
+                                    }
+                                </Grid>
+                            </Grid>
+                            <ActivityForm onClose={this.activityFormClosed} show={showActivityForm}></ActivityForm>
+
                         </Grid>
-                        <Grid item xs={3} align={"flex-end"}>
-                            <Typography variant={"h5"} component={"div"}> Kapazität </Typography>
-                        </Grid>
-                        <Grid item xs={3} align={"flex-end"}>
-                            <Typography variant={"h5"} component={"div"}> Dauer </Typography>
-                        </Grid>
-                    </Grid>
-                    <Divider/>
-                    {activities.map(ac =>
-                        <ActivityListEntry key={ac.getID()} activity={ac} onActivityDeleted={this.activityDeleted}/>)
-                    }
-                    </Grid>
-                </Grid>
-                <ActivityForm onClose={this.activityFormClosed} show={showActivityForm}></ActivityForm>
+                    </Card>
+                </Box>
+                    <ProjectMemberList> show={ProjectMemberList} </ProjectMemberList>
             </div>
         )
     }
