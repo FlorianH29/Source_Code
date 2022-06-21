@@ -45,7 +45,6 @@ class Navigator extends Component {
             anchorEl: null,
             person: null,
             showPersonDelete: false,
-            color: this.props.color
         };
     };
 

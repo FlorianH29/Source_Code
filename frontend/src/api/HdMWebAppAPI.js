@@ -20,16 +20,17 @@ export default class HdMWebAppAPI {
   #hdmwebappServerBaseURL = '/hdmwebapp';
 
   // Person bezogen
-  #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
-  #editPersonURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
-  #deletePersonURL = () =>`${this.#hdmwebappServerBaseURL}/persons`;
-
+  #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/person`;
+  #editPersonURL = () => `${this.#hdmwebappServerBaseURL}/person`;
+  #deletePersonURL = () =>`${this.#hdmwebappServerBaseURL}/person`;
 
   //Projekt bezogen
-  #getProjectsURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
+  #getProjectsURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
   #updateProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
   #addProjectURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
   #deleteProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
+  #getProjectWorkTimeURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}/work_time`;
+
 
   // Projektarbeit bezogen
   #getProjectWorksforActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
@@ -46,7 +47,7 @@ export default class HdMWebAppAPI {
   #updateActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
   #deleteActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
   #addActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/project/${id}/activities`;
-  //#getActivityWorkTimeURL = (id) => `${this.#hdmwebappServerBaseURL}/work_time/${id}/activities`;
+  #getActivityWorkTimeURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}/work_time`;
 
   // Ereignis bezogen
   #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
@@ -132,8 +133,8 @@ export default class HdMWebAppAPI {
    * @param {EventBO} eventBO welches erstellt werden soll.
    * @public
    */
-  addEvent(eventBO) {
-    return this.#fetchAdvanced(this.#addEventURL(), {
+  async addEvent(eventBO) {
+    return await this.#fetchAdvanced(this.#addEventURL(), {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',

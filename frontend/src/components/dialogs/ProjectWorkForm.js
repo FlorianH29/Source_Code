@@ -18,7 +18,7 @@ class ProjectWorkForm extends Component {
   constructor(props) {
     super(props);
 
-    let pwn = '', de = '',  act = 0;
+    let pwn = '...', de = '',  act = 0;
     if (props.projectWork) {
       pwn = props.projectWork.getProjectWorkName();
       de = props.projectWork.getDescription();
@@ -42,7 +42,23 @@ class ProjectWorkForm extends Component {
     // den state neu setzen, sodass man wieder auf dem Stand ist wie vor dem Dialog
     this.setState(this.baseState);
     this.props.onClose(null);
+    console.log(this.state);
   }
+
+      /**
+     * Erstellen eines Ereignisses.
+     */
+    addEvent = async (event) => {
+        let newEvent = new EventBO(event);
+        // console.log(this.state);
+         await HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
+            // Backend call successfull
+            // reinit the dialogs state for a new empty customer
+            console.log(event)
+            this.props.onClose(event); // call the parent with the customer object from backend
+        }).catch(e =>
+            console.log(e));
+    }
 
   /** Erstellt ein neues ProjectWorkBO */
   addProjectWork = () => {
@@ -56,6 +72,12 @@ class ProjectWorkForm extends Component {
       this.props.onClose(projectWork); // call the parent with the customer object from backend
     }).catch(e =>
     console.log(e));
+  }
+
+  newF = () => {
+      let test = new Promise((resolve, reject) => {
+          resolve(this.addEvent(1));})
+      test.then(this.addProjectWork)
   }
 
   /** Behandelt Wertänderungen der Textfelder und validiert diese */
@@ -138,9 +160,9 @@ class ProjectWorkForm extends Component {
                   <Button color='primary' onClick={this.updateProjectWork}>
                     Sichern
                   </Button>
-                  : <EventManager eventType={1} onClose={this.handleClose} functionAddProjectWork={this.addProjectWork}
-                        projectWorkName={projectWorkName} des={description}>
-                    </EventManager>
+                  : <Button onClick={this.newF}>
+                      tst
+                    </Button>
               }
             </DialogActions>
           </Dialog>

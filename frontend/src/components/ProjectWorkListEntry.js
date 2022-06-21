@@ -22,7 +22,7 @@ class ProjectWorkListEntry extends Component {
 
     // den state initialisieren
     this.state = {
-      projectWork: props.projectWork,
+      projectWork: this.props.projectWork,
       owner: null,
       showProjectWorkForm: false,
       showProjectWorkDeleteDialog: false,
@@ -76,14 +76,15 @@ class ProjectWorkListEntry extends Component {
 
   /** gets the balance for this account */
   getProjectWorkOwner = () => {
-    HdMWebAppAPI.getAPI().getOwnerOfProjectWork(this.props.projectWork.getID()).then(owner =>
+    if (this.props.projectWork.getID() > 0) {
+      HdMWebAppAPI.getAPI().getOwnerOfProjectWork(this.props.projectWork.getID()).then(owner =>
       this.setState({
         owner: owner,
       })).catch(e =>
         this.setState({ // Reset state with error from catch
           owner: null,
         })
-      );
+      );}
   }
 
   handleClick = () => {
