@@ -12,6 +12,7 @@ from server.bo.Person import Person
 from server.bo.Project import Project
 from server.bo.ProjectWork import ProjectWork
 from server.bo.WorkTimeAccount import WorkTimeAccount
+from server.bo.Departure import Departure
 from SecurityDecorator import secured
 from Helper import Helper
 
@@ -43,6 +44,10 @@ event = api.inherit('Event', bo, {
     'event_type': fields.Integer(attribute='_event_type', description='Typ eines Events, Start oder Ende, für B und PW'),
     'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt'),
     'affiliated_person': fields.Integer(attribute='_affiliated_person', description='ID der Person, die Event besitzt')
+})
+
+departure = api.inherit('Departure', event, {
+    'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt von Gehen')
 })
 
 person = api.inherit('Person', bo, {
@@ -93,7 +98,6 @@ timeinterval = api.inherit('TimeInterval', bo, {
     'endtime': fields.DateTime(attribute='__end_time', description='Endzeitpunkt eines Zeitintervalls'),
     'timeperiod': fields.String(attribute='__time_period', description='Zeitraum des Intervalls')
 })
-
 
 
 @hdmwebapp.route('/persons')
@@ -413,6 +417,43 @@ class ProjectWorkOperations(Resource):
 def check():
     hwa = HdMWebAppAdministration()
     hwa.check_time_for_departure()
+
+
+@hdmwebapp.route('/departure')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class DepartureOperations(Resource):
+    @hdmwebapp.marshal_list_with(departure)
+    @secured
+    def get(self, id):
+        """
+        Auslesen eines bestimmten Gehen-Objektes, das nach der id in der URI bestimmt wird.
+        """
+        hwa = HdMWebAppAdministration()
+        departure = hwa.get_departure_event_by_id(id)
+        return departure
+
+    @hdmwebapp.marshal_with(event, code=200)
+    @secured
+    def post(self):
+        """
+        Anlegen eines Events. Das neu angelegte Event wird als Ergebnis zurückgegeben.
+        """
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        per = hwa.get_person_by_firebase_id(firebase_id)
+        proposal = Departure.from_dict(api.payload)
+
+        if proposal is not None:
+            """ 
+            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Eventobjekt erstellt.
+            Wenn dieses   
+            """
+            e = hwa.create_departure_event(per)
+            return e, 200
+        else:
+            return '', 500
+
 
 
 sub_thread = Thread(target=check)
