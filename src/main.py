@@ -14,6 +14,7 @@ from server.bo.ProjectWork import ProjectWork
 from server.bo.WorkTimeAccount import WorkTimeAccount
 from SecurityDecorator import secured
 from Helper import Helper
+from server.bo.ProjectMember import ProjectMember
 
 
 app = Flask(__name__)
@@ -477,6 +478,28 @@ class ProjectWorkOperations(Resource):
         pm = hwa.get_project_member_by_person_id(id)
         hwa.delete_project_member(pm)
         return '', 200
+
+
+@hdmwebapp.route('/projectmembers')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectMembersOperations(Resource):
+    @hdmwebapp.marshal_with(project, person, code=201)
+    @secured
+    def post(self):
+        """Erstellen einer neuen Aktivität."""
+
+        hwa = HdMWebAppAdministration()
+        proposal = ProjectMember.from_dict(api.payload)
+
+        if proposal is not None:
+
+            affiliated_project = hwa.get_project_by_id(proposal.get_affilated_project())
+            affiliated_person = hwa.get_person_by_id(proposal.get_affiliated_person())
+            result = hwa.create_project_member_for_project(affiliated_project, affiliated_person)
+            return result, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
 
 
 

@@ -697,18 +697,18 @@ class HdMWebAppAdministration(object):
             return mapper.find_project_members_by_project_id(project.get_id())
 
 
-    def create_project_member(self, project, person):
+    def create_project_member_for_project(self, project, person):
         """Erstellen eines neuen Projekts"""
         with ProjectMemberMapper() as mapper:
             if project and person is not None:
-                project_m = ProjectMember()
-                project_m.set_id(1)
-                project_m.set_deleted(0)
-                project_m.set_last_edit(datetime.now())
-                project_m.set_project(project.get_id())
-                project_m.set_person(person.get_id())
+                project_member = ProjectMember()
+                project_member.set_id(1)
+                project_member.set_deleted(0)
+                project_member.set_last_edit(datetime.now())
+                project_member.set_project(project.get_id())
+                project_member.set_person(person.get_id())
 
-                return mapper.insert(project_m)
+                return mapper.insert(project_member)
             else:
                 return None
 

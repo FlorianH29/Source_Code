@@ -35,6 +35,7 @@ export default class HdMWebAppAPI {
   //Projectbeteiligte bezogen
   #getProjectMembersURL = (id) =>  `${this.#hdmwebappServerBaseURL}/projects/${id}/projectmembers`;
   #deleteProjectMemberURL = (id) => `${this.#hdmwebappServerBaseURL}/projectmembers/${id}`;
+  #addProjectMemberURL = () => `${this.#hdmwebappServerBaseURL}/projectmembers`;
 
   //Worktimeaccount bezogen
   #getWorktimeAccountURL = (id) => `${this.#hdmwebappServerBaseURL}/worktimeaccount/${id}`;
@@ -414,6 +415,25 @@ export default class HdMWebAppAPI {
         resolve(responsePersonBO);
       })
     })
+  }
+
+  addProjectMember(personBO) {
+    return this.#fetchAdvanced(this.#addProjectMemberURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(personBO)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON, but only need one object
+      let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
+      console.info(responsePersonBO);
+      return new Promise(function (resolve) {
+        resolve(responsePersonBO);
+      })
+    }).catch(e =>
+      console.log(e))
   }
 
 }
