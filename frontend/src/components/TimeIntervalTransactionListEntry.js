@@ -82,7 +82,7 @@ class TimeIntervalTransactionListEntry extends Component {
                                 {event.period}
                             </Typography>
                         </Grid>
-                        <Grid item xs={2} align={"center"}>
+                        <Grid item xs={2} align={"left"}>
                             <Button color='primary' size='small' startIcon={<EditIcon/>}
                                     onClick={this.editEventAndTimeIntervalButtonClicked}> </Button>
                             {
