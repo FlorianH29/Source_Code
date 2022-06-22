@@ -95,12 +95,13 @@ class DepartureMapper (Mapper):
         tuples = cursor.fetchall()
 
         try:
-            (departure_id, last_edit, time_stamp, affiliated_person_id) = tuples[0]
+            (departure_id, last_edit, time_stamp, affiliated_person_id, deleted) = tuples[0]
             departure = Departure()
             departure.set_id(departure_id)
             departure.set_last_edit(last_edit)
             departure.set_time_stamp(time_stamp)
             departure.set_affiliated_person(affiliated_person_id)
+            departure.set_deleted(deleted)
 
             result = departure
         except IndexError:

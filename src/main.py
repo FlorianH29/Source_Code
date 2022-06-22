@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime
 from datetime import timedelta
 
 from flask import Flask
@@ -43,7 +43,6 @@ activity = api.inherit('Activity', bo, {
 event = api.inherit('Event', bo, {
     'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt'),
     'event_type': fields.Integer(attribute='_event_type', description='Typ eines Events, Start oder Ende, für B und PW'),
-    'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt'),
     'affiliated_person': fields.Integer(attribute='_affiliated_person', description='ID der Person, die Event besitzt')
 })
 
@@ -368,6 +367,31 @@ class ProjectOperations(Resource):
         return '', 200
 
 
+@hdmwebapp.route('/projectduration')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectDurationOperation(Resource):
+    @hdmwebapp.marshal_with(event, code=201)
+    @hdmwebapp.expect(event)
+    @secured
+    def post(self):
+        """Erstellen eines neuen Events."""
+
+        hwa = HdMWebAppAdministration()
+        proposal = Event.from_dict(api.payload)
+
+        if proposal is not None:
+
+            event_type = proposal.get_event_type()
+            time_stamp = proposal.get_time_stamp()
+            start_date = datetime.fromtimestamp(time_stamp / 1000.0).date()
+            print(start_date)
+            result = hwa.create_event_with_time_stamp(event_type, start_date)
+            return result, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+
+
 @hdmwebapp.route('/projects/<int:id>/work_time')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectWorkTimeOperations(Resource):
@@ -434,6 +458,7 @@ class ProjectWorksByActivityOperations(Resource):
             return projectwork_list
         else:
             return "Activity not found", 500
+
 
 @hdmwebapp.route('/projectworks/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -616,13 +641,9 @@ def check():
 
 
 sub_thread = Thread(target=check)
-#es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
+# es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
-
-h = HdMWebAppAdministration()
-
-
 
 if __name__ == '__main__':
     app.run(debug=False)

@@ -7,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ProjectWorkForm from './dialogs/ProjectWorkForm';
 import ListItem from "@mui/material/ListItem";
 import ProjectWorkDeleteDialog from "./dialogs/ProjectWorkDeleteDialog";
+import {HdMWebAppAPI} from "../api";
 
 
 /**
@@ -21,7 +22,8 @@ class ProjectWorkListEntry extends Component {
 
     // den state initialisieren
     this.state = {
-      projectWork: props.projectWork,
+      projectWork: this.props.projectWork,
+      owner: null,
       showProjectWorkForm: false,
       showProjectWorkDeleteDialog: false,
     };
@@ -68,41 +70,72 @@ class ProjectWorkListEntry extends Component {
     });
   }
 
+  componentDidMount() {
+    this.getProjectWorkOwner();
+  }
+
+  /** gets the balance for this account */
+  getProjectWorkOwner = () => {
+    if (this.props.projectWork.getID() > 0) {
+      HdMWebAppAPI.getAPI().getOwnerOfProjectWork(this.props.projectWork.getID()).then(owner =>
+      this.setState({
+        owner: owner,
+      })).catch(e =>
+        this.setState({ // Reset state with error from catch
+          owner: null,
+        })
+      );}
+  }
+
+  handleClick = () => {
+    this.setState({
+    openExpand: !this.state.openExpand}
+    )}
+
   /** Renders the component */
   render() {
     const { classes } = this.props;
-    const { projectWork, showProjectWorkForm, showProjectWorkDeleteDialog } = this.state;
+    const { projectWork, showProjectWorkForm, showProjectWorkDeleteDialog, owner } = this.state;
 
     // console.log(this.state);
     return (
-      <div>
-        <ListItem>
-          <Grid container alignItems='center'>
-            <Grid item xs={3} align={"center"}>
-              <Typography variant={"h5"} component={"div"}>
-                {projectWork.getProjectWorkName()}
-              </Typography>
+        owner ?
+        <div>
+            <Accordion>
+                <AccordionSummary>
+            <Grid container alignItems='center'>
+                <Grid item xs={3} align={"center"}>
+                    <Typography variant={"h5"} component={"div"}>
+                        {projectWork.getProjectWorkName()}
+                    </Typography>
+                </Grid>
+                <Grid item xs={3} align={"center"}>
+                    <Typography variant={"h5"} component={"div"}>
+                        {owner.firstname} {owner.lastname}
+                    </Typography>
+                </Grid>
+                <Grid item xs={3} align={"center"}>
+                    <Typography variant={"h5"} component={"div"}>
+                    {projectWork.getTimeIPeriod()}
+                    </Typography>
+                </Grid>
+                <Grid item xs={3} align={"center"}>
+                    <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editProjectWorkButtonClicked}> </Button>
+                    <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteProjectWorkButtonClicked}> </Button>
+                </Grid>
             </Grid>
-            <Grid item xs={3} align={"center"}>
-              <Typography variant={"h5"} component={"div"}>
-                {projectWork.getDescription()}
-              </Typography>
-            </Grid>
-            <Grid item xs={3} align={"center"}>
-              <Typography variant={"h5"} component={"div"}>
-                {projectWork.getTimeIPeriod()}
-              </Typography>
-            </Grid>
-            <Grid item xs={3} align={"center"}>
-                <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editProjectWorkButtonClicked}> </Button>
-                <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteProjectWorkButtonClicked}> </Button>
-            </Grid>
-          </Grid>
-          </ListItem>
-          <Divider/>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Typography variant={"h5"} component={"div"}>
+                    Beschreibung: {projectWork.getDescription()}
+                    </Typography>
+                </AccordionDetails>
+            </Accordion>
+            <Divider/>
         <ProjectWorkDeleteDialog show={showProjectWorkDeleteDialog} projectWork={projectWork} onClose={this.deleteProjectWorkDialogClosed} />
         <ProjectWorkForm show={showProjectWorkForm} projectWork={projectWork} onClose={this.projectWorkFormClosed} />
       </div>
+        : null
     );
   }
 }

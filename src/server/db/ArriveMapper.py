@@ -89,12 +89,13 @@ class ArriveMapper (Mapper):
         tuples = cursor.fetchall()
 
         try:
-            (arrive_id, last_edit, time_stamp, affiliated_person_id) = tuples[0]
+            (arrive_id, last_edit, time_stamp, affiliated_person_id, deleted) = tuples[0]
             arrive = Arrive()
             arrive.set_id(arrive_id)
             arrive.set_last_edit(last_edit)
             arrive.set_time_stamp(time_stamp)
             arrive.set_affiliated_person(affiliated_person_id)
+            arrive.set_deleted(deleted)
 
             result = arrive
         except IndexError:
@@ -156,7 +157,8 @@ class ArriveMapper (Mapper):
 
         command = "INSERT INTO arrive (arrive_id, last_edit, time_stamp, affiliated_person_id, deleted) " \
                   "VALUES (%s,%s,%s,%s,%s)"
-        data = (arrive.get_id(), arrive.get_last_edit(), arrive.get_time_stamp(), arrive.get_affiliated_person())
+        data = (arrive.get_id(), arrive.get_last_edit(), arrive.get_time_stamp(), arrive.get_affiliated_person(),
+                arrive.get_deleted())
         cursor.execute(command, data)
 
         self._cnx.commit()

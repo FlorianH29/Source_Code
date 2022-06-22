@@ -11,12 +11,14 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import PersonIcon from "@mui/icons-material/Person";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import {Link as RouterLink} from "react-router-dom";
 import {HdMWebAppAPI, PersonBO} from "../../api";
+import EventManager from "../EventManager";
 import Departure from "../Departure";
 
 
@@ -59,13 +61,6 @@ class Navigator extends Component {
                 person: null,
             })
         );
-
-
-        // set loading to true
-        this.setState({
-            loadingInProgress: true,
-            error: null
-        });
     }
 
     componentDidMount() {
@@ -137,13 +132,13 @@ class Navigator extends Component {
                             size="large"
                             onClick={this.handleOpenUserMenu}
                             color="inherit">
-                            <PersonIcon/>
+                            <ManageAccountsIcon/>
                         </IconButton>
-                        <Menu
+                        <Popover
                             anchorEl={this.state.anchorEl}
                             anchorOrigin={{
                                 vertical: 'top',
-                                horizontal: 'right',
+                                horizontal: 'left',
                             }}
                             keepMounted
                             transformOrigin={{
@@ -160,11 +155,19 @@ class Navigator extends Component {
                             <PersonEditDialog person={person} show={showPersonEditDialog}
                                               onClose={this.personEditClosed}>
                             </PersonEditDialog>
-                            <Typography variant='h6' component='div' align='center'>
-                                <Button onClick={this.handleEdit}>Profil bearbeiten</Button>
-                                <Button onClick={this.handleDelete}>Profil löschen</Button>
-                            </Typography>
-                        </Menu>
+
+                            <Typography variant='h6' component='div' align='left'>
+                                <IconButton onClick={this.handleEdit}>
+                                <DriveFileRenameOutlineIcon/>
+                                Profil bearbeiten
+                                </IconButton>
+                                <Divider sx={{p: 0}}/>
+                                <IconButton onClick={this.handleDelete}>
+                                <NoAccountsIcon/>
+                                Profil löschen
+                                </IconButton>
+                                </Typography>
+                        </Popover>
                          </>) : null
                     }
                      </Toolbar>
@@ -209,12 +212,13 @@ class Navigator extends Component {
                                 </ListItem>
 
                                 <ListItem>
-                                    <ListItemButton component={Link} to={`https://www.instagram.com/p/CdnFHnzj8UP/`}>
-                                        <ListItemIcon>
-                                            <SportsSoccerIcon/>
-                                        </ListItemIcon>
-                                        <ListItemText primary="Blöder Kerle"/>
-                                    </ListItemButton>
+                                    <EventManager eventType={3} onClose={this.handleClose}>
+                                    </EventManager>
+                                </ListItem>
+
+                                <ListItem>
+                                    <EventManager eventType={4} onClose={this.handleClose}>
+                                    </EventManager>
                                 </ListItem>
                                 <Departure></Departure>
                             </Typography>

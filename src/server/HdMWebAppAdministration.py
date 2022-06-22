@@ -1,5 +1,6 @@
 from datetime import timedelta, datetime
 import time
+import operator
 from .bo.Arrive import Arrive
 from .bo.Break import Break
 from .bo.Departure import Departure
@@ -71,7 +72,6 @@ class HdMWebAppAdministration(object):
         person.set_mailaddress(mailaddress)
         person.set_firebase_id(firebase_id)
         person.set_deleted(0)
-
 
         with PersonMapper() as mapper:
             return mapper.insert(person), self.create_work_time_account_for_person(person)
@@ -229,7 +229,6 @@ class HdMWebAppAdministration(object):
                     event_list.append(e)
         return event_list
 
-
     """Methoden für Aktivität:"""
 
     def create_activity_for_project(self, name, capacity, project):
@@ -258,7 +257,7 @@ class HdMWebAppAdministration(object):
                 for project_work in project_works:
                     self.delete_project_work(project_work)
 
-                mapper.delete(activity)
+                return mapper.delete(activity)
             else:
                 return None
 
@@ -302,6 +301,29 @@ class HdMWebAppAdministration(object):
                         work_time += project_work.get_time_period()
         activity.set_work_time(work_time)
         self.save_activity(activity)
+
+    def get_work_time_of_activity_between_two_dates(self, activity, start_time, end_time):
+        """Die für eine Aktivität gearbeitete Zeit innerhalb eines bestimmten Zeitraums anhand der gebuchten
+        Projektarbeiten berechnen"""
+        time_interval_transactions = self.get_all_time_interval_transactions()
+        work_time = timedelta(hours=0)
+        for time_interval_transaction in time_interval_transactions:
+            project_work_id = time_interval_transaction.get_affiliated_projectwork()
+
+            if project_work_id is not None:  # wenn sich die Zeitintervallbuchung auf eine Projekarbeit bezieht
+                project_work = self.get_project_work_by_id(project_work_id)
+
+                if project_work.get_affiliated_activity() == activity.get_id():
+
+                    start_e_pw = self.get_event_by_id(project_work.get_start_event())
+                    end_e_pw = self.get_event_by_id(project_work.get_end_event())
+                    start_time_pw = start_e_pw.get_time_stamp()
+                    end_time_pw = end_e_pw.get_time_stamp()
+
+                    if start_time_pw >= start_time and end_time_pw <= end_time:
+                        work_time += project_work.get_time_period()
+
+        return work_time
 
     """Methoden für EventTransaktionen"""
 
@@ -431,11 +453,12 @@ class HdMWebAppAdministration(object):
         event_dict = {}
         event_list = []
         time_stamp = None
-        start_time = datetime.strptime(start_time, '%d/%m/%Y')
-        end_time = datetime.strptime(end_time, '%d/%m/%Y')
+        # start_time = datetime.strptime(start_time, '%d/%m/%Y')
+        # end_time = datetime.strptime(end_time, '%d/%m/%Y')
         # Übergebene Time-Stamps von Str in Datetime konvertieren
         work_time_account = self.get_work_time_account_of_owner(person)
-        time_interval_transactions = self.get_time_interval_transaction_by_affiliated_work_time_account_id(work_time_account)
+        time_interval_transactions = self.get_time_interval_transaction_by_affiliated_work_time_account_id(
+            work_time_account)
         # Alle Timeintervaltransaktionen von einem Arbeitszeitkonto speichern
         event_transactions = self.get_event_transaction_by_affiliated_work_time_account_id(work_time_account.get_id())
         # Alle Eventtransaktionen von einem Arbeitszeitkonto speichern
@@ -446,20 +469,25 @@ class HdMWebAppAdministration(object):
             if arrive_id is not None:
                 arrive = self.get_arrive_event_by_id(arrive_id)
                 time_stamp = arrive.get_time_stamp()
-                if start_time <= time_stamp <= end_time:
+                if start_time <= time_stamp.date() <= end_time:
                     # Überprüfen, ob das Event im übergebenen Zeitraum liegt
-                    event_dict = {'name': 'Kommen', 'start_time': time_stamp, 'end_time': None, 'period': None}
+                    event_dict = {'name': 'Kommen', 'projectworkid': None, 'start_time': time_stamp,
+                                  'starteventid': None, 'endtime': None, 'endeventid': None,
+                                  'period': None, 'timeintervaltransactionid': None}
                     event_list.append(event_dict)
             if departure_id is not None:
                 departure = self.get_departure_event_by_id(departure_id)
                 time_stamp = departure.get_time_stamp()
-                if start_time <= time_stamp <= end_time:
+                if start_time <= time_stamp.date() <= end_time:
                     # Überprüfen, ob das Event im übergebenen Zeitraum liegt
-                    event_dict = {'name': 'Kommen', 'start_time': None, 'end_time': time_stamp, 'period': None}
+                    event_dict = {'name': 'Gehen', 'projectworkid': None, 'start_time': time_stamp,
+                                  'starteventid': None, 'endtime': time_stamp, 'endeventid': None,
+                                  'period': None, 'timeintervaltransactionid': None}
                     event_list.append(event_dict)
         for tit in time_interval_transactions:
             break_id = tit.get_affiliated_break()
             project_work_id = tit.get_affiliated_projectwork()
+            work_time_id = tit.get_affiliated_time_interval()
             if break_id is not None:
                 br = self.get_break_by_id(break_id)
                 start_event_id = br.get_start_event()
@@ -469,9 +497,11 @@ class HdMWebAppAdministration(object):
                 time_stamp_start = start_event.get_time_stamp()
                 time_stamp_end = end_event.get_time_stamp()
                 time_period = br.get_time_period()
-                if start_time <= time_stamp_start <= end_time and start_time <= time_stamp_end <= end_time:
-                    event_dict = {'name': 'break', 'start_time': time_stamp_start, 'end_time': time_stamp_end,
-                                  'period': time_period}
+                if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
+                    event_dict = {'name': 'break', 'projectworkid': None, 'start_time': time_stamp_start,
+                                  'starteventid': start_event_id, 'endtime': time_stamp_end,
+                                  'endeventid': end_event_id, 'period': time_period,
+                                  'timeintervaltransactionid': tit.get_id()}
                     event_list.append(event_dict)
             if project_work_id is not None:
                 project_work = self.get_project_work_by_id(project_work_id)
@@ -482,11 +512,29 @@ class HdMWebAppAdministration(object):
                 time_stamp_start = start_event.get_time_stamp()
                 time_stamp_end = end_event.get_time_stamp()
                 time_period = project_work.get_time_period()
-                if start_time <= time_stamp_start <= end_time and start_time <= time_stamp_end <= end_time:
-                    event_dict = {'name': project_work.get_project_work_name(), 'start_time': time_stamp_start,
-                                  'end_time': time_stamp_end, 'period': time_period}
+                if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
+                    event_dict = {'name': project_work.get_project_work_name(), 'projectworkid': project_work_id,
+                                  'start_time': time_stamp_start, 'starteventid': start_event_id,
+                                  'endtime': time_stamp_end, 'endeventid': end_event_id,
+                                  'period': time_period, 'timeintervaltransactionid': tit.get_id()}
                     event_list.append(event_dict)
-        return event_list
+            if work_time_id is not None:
+                time_interval = self.get_time_interval_by_id(work_time_id)
+                start_event_id = time_interval.get_start_event()
+                start_event = self.get_event_by_id(start_event_id)
+                end_event_id = time_interval.get_end_event()
+                end_event = self.get_event_by_id(end_event_id)
+                time_stamp_start = start_event.get_time_stamp()
+                time_stamp_end = end_event.get_time_stamp()
+                time_period = time_interval.get_time_period()
+                if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
+                    event_dict = {'name': 'Arbeitszeit', 'projectworkid': None, 'start_time': time_stamp_start,
+                                  'starteventid': start_event_id, 'endtime': time_stamp_end,
+                                  'endeventid': end_event_id, 'period': time_period,
+                                  'timeintervaltransactionid': tit.get_id()}
+                    event_list.append(event_dict)
+        sorted_event_list = sorted(event_list, key=lambda x: x['start_time'])
+        return sorted_event_list
 
     """Methoden für WorkTimeAccount:"""
 
@@ -597,6 +645,16 @@ class HdMWebAppAdministration(object):
         project.set_work_time(work_time)
         self.save_project(project)
 
+    def get_work_time_of_project_between_two_dates(self, project, start_time, end_time):
+        """Die für ein Projekt gearbeitete Zeit innerhalb eines bestimmten Zeitraums anhand der gebuchten
+        Projektarbeiten berechnen"""
+        activities = self.get_all_activities()
+        work_time = timedelta(hours=0)
+        for activity in activities:
+            if activity.get_affiliated_project() == project.get_id():
+                work_time += self.get_work_time_of_activity_between_two_dates(activity, start_time, end_time)
+        return work_time
+
     """ProjectWork Methoden"""
 
     def get_project_work_by_id(self, number):
@@ -638,15 +696,26 @@ class HdMWebAppAdministration(object):
                 project_work.set_description(description)
                 project_work.set_affiliated_activity(activity.get_id())
                 project_work.set_start_event(self.get_last_start_event_project_work(person).get_id())
-                project_work.set_end_event(self.get_last_end_event_project_work(person).get_id())
-                project_work.set_time_period(self.calculate_period(project_work))
+                # project_work.set_end_event(self.get_last_end_event_project_work(person).get_id())
+                # project_work.set_time_period(self.calculate_period(project_work))
 
                 project = self.get_project_by_id(activity.get_affiliated_project())  # das Projekt der Aktität speichern
 
-                return mapper.insert(project_work), self.create_time_interval_transaction(person, None, None, project_work),\
-                       self.calculate_work_time_of_activity(activity), self.calculate_work_time_of_project(project)
+                return mapper.insert(project_work)
             else:
                 return None
+
+    def add_end_event_to_project_work(self, project_work, person):
+        """Einer Projektarbeit ein End Event hinzufügen und die Zeit der PA berechnen"""
+        with ProjectWorkMapper() as mapper:
+            if project_work and person is not None:
+                project_work.set_end_event(self.get_last_end_event_project_work(person).get_id())
+                project_work.set_time_period(self.calculate_period(project_work))
+                activity = self.get_activity_by_id(project_work.get_affiliated_activity())
+                project = self.get_project_by_id(activity.get_affiliated_project())
+
+            return mapper.update(project_work), self.create_time_interval_transaction(person, None, None, project_work), \
+                   self.calculate_work_time_of_activity(activity), self.calculate_work_time_of_project(project)
 
     def delete_project_work(self, project_work):
         """Löschen einer Projektarbeit"""
@@ -685,7 +754,6 @@ class HdMWebAppAdministration(object):
         with ProjectMemberMapper() as mapper:
             return mapper.find_projectmembers_by_project_id(project.get_id())
 
-
     def get_projectmember_by_person(self, person):
         with ProjectMemberMapper() as mapper:
             result = []
@@ -721,7 +789,6 @@ class HdMWebAppAdministration(object):
         with ProjectMemberMapper() as mapper:
             return mapper.update(project_m)
 
-
     """Methoden von TimeInterval"""
 
     def calculate_period(self, timeinterval):
@@ -745,6 +812,7 @@ class HdMWebAppAdministration(object):
             return time_period
 
     def calculate_work_time(self, person):
+        # kann eventuell noch raus, berechnen ja jetzt die Arbeitszeit immer zwischen zwei Projektarbeiten/Pausen
         """Arbeitszeit einer Person an einem Tag berechnen,
         Zeit zwischen Kommen und Gehen minus Projektarbeiten und Pausen"""
         if person is not None:
@@ -874,7 +942,6 @@ class HdMWebAppAdministration(object):
                 br.set_start_event(self.get_last_start_event_break(person).get_id())
                 br.set_end_event(self.get_last_end_event_break(person).get_id())
                 br.set_time_period(self.calculate_period(br))
-
                 return mapper.insert(br), self.create_time_interval_transaction(person, None, br, None)
             else:
                 return None
@@ -903,6 +970,7 @@ class HdMWebAppAdministration(object):
     """Methoden von Event"""
 
     def check_time_difference_events(self, event_type, person):
+        """Zeitunterschied zwischen Events berechnen, um Arbeitszeit zu ermitteln"""
         if person is not None:
             if event_type == 1 or event_type == 3:
                 last_event = self.get_last_event_by_affiliated_person(person)
@@ -932,7 +1000,19 @@ class HdMWebAppAdministration(object):
             else:
                 return None
 
+    def check_if_first_event(self, event_type, person):
+        """Überprüfen, ob das anzulegende Event das erste der Person ist."""
+        last_event = self.get_last_event_by_affiliated_person(person)
+        if last_event is None:
+            if event_type == 1 or event_type == 3:  # anlegen wenn Start einer Projektarbeit oder Pause, sonst nicht
+                self.create_event(event_type, person)
+            else:
+                return None
+        else:
+            return self.create_event_and_check_type(event_type, person)  # wenn es letztes Event gibt, dieses checken
+
     def create_event_and_check_type(self, event_type, person):
+        """Überprüfen, ob das Event angelegt werden darf."""
         last_event = self.get_last_event_by_affiliated_person(person)
         event_type_last_event = last_event.get_event_type()
         if event_type == 1:
@@ -941,27 +1021,47 @@ class HdMWebAppAdministration(object):
         if event_type == 2:
             if event_type_last_event == 1:
                 self.create_event(event_type, person)
+                start = self.get_last_start_event_project_work(person)
+                pw = self.get_project_work_by_start_event(start)
+                self.add_end_event_to_project_work(pw, person)
         if event_type == 3:
             if event_type_last_event == 2 or event_type_last_event == 4 or event_type_last_event == 6:
                 self.create_event(event_type, person)
         if event_type == 4:
             if event_type_last_event == 3:
                 self.create_event(event_type, person)
+                self.create_break(person)
 
-    def create_event_with_time_stamp(self, event_type, time_stamp, person):
+    def create_event_with_time_stamp(self, event_type, time_stamp, person=None):
         """Event mit Zeitpunkt erstellen"""
         with EventMapper() as mapper:
-            if event_type and person and time_stamp is not None:
+            if event_type and time_stamp is not None:
                 event = Event()
                 event.set_id(1)
                 event.set_deleted(0)
                 event.set_last_edit(datetime.now())
                 event.set_event_type(event_type)
                 event.set_time_stamp(time_stamp)
-                event.set_affiliated_person(person.get_id())
-                return mapper.insert(event)
+                if person is not None:
+                    event.set_affiliated_person(person.get_id())
+                return mapper.insert(event), self.create_time_interval_for_project_duration()
             else:
                 return None
+
+    def create_time_interval_for_project_duration(self):
+        """Methode um ein TimeInterval zu erstellen, welches eine Projektlaufzeit für ein Projekt abbildet"""
+        last_event = self.get_last_event_for_type_check()  # Hier wird der letzte EventType übergeben.
+
+        if last_event[0] == 8:  # Hier wird abgefragt, ob der EventType = 8, also ein Projektende, ist.
+            startevent = self.get_last_event_by_event_type(7)
+            endevent = self.get_last_event_by_event_type(8)
+            self.create_time_interval(startevent, endevent)
+        else:
+            pass
+
+    def get_last_event_for_type_check(self):
+        with EventMapper() as mapper:
+            return mapper.find_last_event_type()
 
     def get_last_start_event_project_work(self, person):
         """Gibt das letzte Startevent für eine Projektarbeit einer bestimmten Person zurück"""
@@ -1000,6 +1100,14 @@ class HdMWebAppAdministration(object):
         with EventMapper() as mapper:
             if person is not None:
                 return mapper.find_last_by_affiliated_person_id(person.get_id())
+            else:
+                return None
+
+    def get_last_event_by_event_type(self, event_type):
+        """Das letzte Event anhand der zugehörigen Personen Id ausgeben."""
+        with EventMapper() as mapper:
+            if event_type is not None:
+                return mapper.find_last_project_duration_event(event_type)
             else:
                 return None
 
@@ -1042,21 +1150,23 @@ class HdMWebAppAdministration(object):
             projects.append(project)
         return projects
 
-
     def check_time_for_departure(self):
         while True:
             time.sleep(60)
             persons = self.get_all_persons_by_arrive()
             for person in persons:
-                person_id = person.get_id()
                 arrive = self.get_last_arrive_by_person(person).get_time_stamp()
                 datetime_now = datetime.now()
                 working_time = datetime_now - arrive
+                last_event = self.get_last_event_by_affiliated_person(person)
                 if working_time >= timedelta(hours=10):
-                    event_type = self.get_last_event_by_affiliated_person(person).get_event_type()
+                    event_type = last_event.get_event_type()
                     if event_type == 1:
                         self.create_event_and_check_type(2, person)
+                        self.create_event(2, person)
+                        project_work = self.get_project_work_by_start_event(last_event)
+                        self.add_end_event_to_project_work(project_work, person)
                     if event_type == 3:
                         self.create_event_and_check_type(4, person)
                         self.create_break(person)
-                        self.create_departure_event(person)
+                    self.create_departure_event(person)
