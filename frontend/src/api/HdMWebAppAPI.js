@@ -58,7 +58,7 @@ export default class HdMWebAppAPI {
     // Ereignis bezogen
     #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
     #addDepartureURL = () => `${this.#hdmwebappServerBaseURL}/departure`;
-    #addArriveURL = () => `${this.#hdmwebappServerBaseURL}/arrives`;
+    #addArriveURL = () => `${this.#hdmwebappServerBaseURL}/arrive`;
     #getEventTransactionsAndTimeIntervalTransactionsURL = (startDate, endDate) =>
         `${this.#hdmwebappServerBaseURL}/eventtransactionsandtimeintervaltransactions/${startDate}/${endDate}`;
     #updateEventURL = (id, date) => `${this.#hdmwebappServerBaseURL}/events/${id}/${date}`;

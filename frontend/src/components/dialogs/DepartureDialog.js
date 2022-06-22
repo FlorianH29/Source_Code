@@ -20,9 +20,7 @@ class DepartureDialog extends Component {
 
     // den state initialisieren
     this.state = {
-      openDepartureDialog: true,
-      disableDeparture: false,
-      updatingError: null
+      openDepartureDialog: true
     };
   }
 
@@ -30,10 +28,7 @@ class DepartureDialog extends Component {
     addNewDepartureEvent = () => {
         // Umschalten des Status der Knöpfe
         this.setState({
-
             openDepartureDialog: true,
-            disableDeparture: false,
-            updatingError: null
         });
         // Erstellen eines Gehen-Ereignis
         let newDepartureEvent = new DepartureBO()

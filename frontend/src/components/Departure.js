@@ -18,7 +18,6 @@ class Departure extends Component {
 
         this.state = {
             openDepartureDialog: false,  // Status der Anzeige von Dialog, ob der Mitarbeiter wirklich gehen möchte
-            updatingError: null
         }
     }
 
@@ -26,9 +25,7 @@ class Departure extends Component {
     addNewDepartureEvent = () => {
         // Umschalten des Status der Knöpfe
         this.setState({
-
-            openDepartureDialog: true,
-            updatingError: null
+            openDepartureDialog: true
         });
         // Erstellen eines Gehen-Ereignis
         let newDepartureEvent = new DepartureBO()
@@ -47,7 +44,6 @@ class Departure extends Component {
     handleDepartureButtonClicked = () => {
         // Umschalten des Status der Knöpfe
         this.setState({
-
             openDepartureDialog: true
         });
 
@@ -101,8 +97,6 @@ class Departure extends Component {
 }
 
 Departure.propTypes = {
-  /** Das ProjectWorkBO, das gelöscht werden soll */
-  person: PropTypes.object.isRequired,
   /** Wenn show true ist, wird der Dialog gerendert */
   show: PropTypes.bool.isRequired,
   /**
