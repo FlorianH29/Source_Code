@@ -55,6 +55,8 @@ person = api.inherit('Person', bo, {
 
 event_transaction_and_timeintervaltransaction = api.inherit('EventTransaction', {
     'name': fields.String(description='Name des Inhalts'),
+    'arriveid': fields.Integer(description='ID des Kommens'),
+    'departureid': fields.Integer(description='ID des Gehens'),
     'projectworkid': fields.Integer(description='ID der Projektarbeit'),
     'start_time': fields.DateTime(description='Dauer des Inhalts'),
     'starteventid': fields.Integer(description='ID des Startevents'),
@@ -425,6 +427,7 @@ class ProjectWorksByActivityOperations(Resource):
         else:
             return "Activity not found", 500
 
+
 @hdmwebapp.route('/projectworks/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Projektarbeit')
@@ -455,6 +458,7 @@ class ProjectWorkOperations(Resource):
         hwa.delete_project_work(pw)
         return '', 200
 
+
 @hdmwebapp.route('/projectworks/<int:id>/<string:name>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Projektarbeit')
@@ -476,11 +480,12 @@ class ProjectWorkUpdateNameOperations(Resource):
         else:
             return '', 500
 
+
 @hdmwebapp.route('/events/<int:id>/<int:date>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID des Events')
 @hdmwebapp.param('date', 'Der neue Timestamp des Events')
-class ProjectWorkUpdateNameOperations(Resource):
+class EventUpdateDateOperations(Resource):
     @hdmwebapp.marshal_list_with(event)
     @secured
     def put(self, id, date):
@@ -496,6 +501,50 @@ class ProjectWorkUpdateNameOperations(Resource):
             return '', 200
         else:
             return '', 500
+
+
+@hdmwebapp.route('/arrive/<int:id>/<int:date>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des Events')
+@hdmwebapp.param('date', 'Der neue Timestamp des Events')
+class ArriveUpdateDateOperations(Resource):
+    @hdmwebapp.marshal_list_with(event)
+    @secured
+    def put(self, id, date):
+        """
+        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        arrive = hwa.get_arrive_event_by_id(id)
+
+        if arrive is not None:
+            arrive.set_time_stamp(datetime.fromtimestamp(date/1000.0))
+            hwa.save_arrive_event(arrive)
+            return '', 200
+        else:
+            return '', 500
+
+@hdmwebapp.route('/departure/<int:id>/<int:date>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des Events')
+@hdmwebapp.param('date', 'Der neue Timestamp des Events')
+class DepartureUpdateDateOperations(Resource):
+    @hdmwebapp.marshal_list_with(event)
+    @secured
+    def put(self, id, date):
+        """
+        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        departure = hwa.get_departure_event_by_id(id)
+
+        if departure is not None:
+            departure.set_time_stamp(datetime.fromtimestamp(date / 1000.0))
+            hwa.save_departure_event(departure)
+            return '', 200
+        else:
+            return '', 500
+
 
 @hdmwebapp.route('/eventtransactionsandtimeintervaltransactions/<int:startDate>/<int:endDate>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -515,6 +564,7 @@ class EventsForTimeIntervalTransactions(Resource):
         print(events)
         return events
 
+
 @hdmwebapp.route('/timeinterval/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID des Zeitintervalls')
@@ -529,6 +579,7 @@ class DeleteTimeInterval(Resource):
         tit = hwa.get_time_interval_transaction_by_id(id)
         hwa.delete_time_interval_transaction(tit)
         return '', 200
+
 
 @hdmwebapp.route('/projectworks/<int:id>/owner')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')

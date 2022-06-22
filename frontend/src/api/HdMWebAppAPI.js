@@ -55,6 +55,8 @@ export default class HdMWebAppAPI {
     #getEventTransactionsAndTimeIntervalTransactionsURL = (startDate, endDate) =>
         `${this.#hdmwebappServerBaseURL}/eventtransactionsandtimeintervaltransactions/${startDate}/${endDate}`;
     #updateEventURL = (id, date) => `${this.#hdmwebappServerBaseURL}/events/${id}/${date}`;
+    #updateArriveURL = (id, date) => `${this.#hdmwebappServerBaseURL}/arrive/${id}/${date}`;
+    #updateDepartureURL = (id, date) => `${this.#hdmwebappServerBaseURL}/departure/${id}/${date}`;
 
     // TimeIntervalTransaction bezogen
     #getTimeIntervalTransactionsURL = () => `${this.#hdmwebappServerBaseURL}/timeintervaltransactions`;
@@ -365,6 +367,40 @@ export default class HdMWebAppAPI {
 
     updateEventByID(id, date){
           return this.#fetchAdvanced(this.#updateEventURL(id, date), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({id: id, date: date})
+    }).then((responseJSON) => {
+      let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+      console.log(responseEventBO)
+      return new Promise(function (resolve) {
+        resolve(responseEventBO);
+      })
+    })
+  }
+
+      updateDepartureByID(id, date){
+          return this.#fetchAdvanced(this.#updateDepartureURL(id, date), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({id: id, date: date})
+    }).then((responseJSON) => {
+      let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+      console.log(responseEventBO)
+      return new Promise(function (resolve) {
+        resolve(responseEventBO);
+      })
+    })
+  }
+
+      updateArriveByID(id, date){
+          return this.#fetchAdvanced(this.#updateArriveURL(id, date), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
