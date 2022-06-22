@@ -330,6 +330,20 @@ class ProjectListOperations(Resource):
             return '', 500
 
 
+@hdmwebapp.route('/projectsowner')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectOwnerOperations(Resource):
+    @hdmwebapp.marshal_list_with(project)
+    @secured
+    def get(self):
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        per = hwa.get_person_by_firebase_id(firebase_id)
+        projects = hwa.get_projects_by_owner(per)
+        return projects
+
+
 @hdmwebapp.route('/projects/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID des Projekts')
@@ -595,6 +609,11 @@ sub_thread = Thread(target=check)
 # es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
+
+h = HdMWebAppAdministration()
+ti = h.get_time_interval_by_id(23)
+pe = h.get_person_by_id(4)
+
 
 if __name__ == '__main__':
     app.run(debug=False)

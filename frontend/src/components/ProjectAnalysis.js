@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from "../api";
 import PropTypes from "prop-types";
-import {Box, Typography} from "@mui/material";
+import {Box, Divider, Grid, Typography} from "@mui/material";
+import ProjectListEntry from "./ProjectListEntry";
+import ProjectAnalysisProjectEntry from "./ProjectAnalysisProjectEntry";
 
 class ProjectAnalysis extends Component {
 
@@ -13,8 +15,7 @@ class ProjectAnalysis extends Component {
       startDate: null,
       endDate: null,
       workTimeProject: null,
-      showProjectWorkForm: false,
-      showProjectWorkDeleteDialog: false,
+      projects: [],
     };
 
     }
@@ -45,15 +46,48 @@ class ProjectAnalysis extends Component {
       );}
   }
 
+  /** Gibt die Projekte einer Person zurück, in denen sie Projektleiter ist.*/
+  getProjects = () => {
+    HdMWebAppAPI.getAPI().getProjectsByOwner()
+        .then(projectBOs =>
+            this.setState({
+                projects: projectBOs
+            })).catch(e =>
+        this.setState({
+            projects: []
+        }));
+        // console.log(this.state.projects)
+  }
+
+    componentDidMount() {
+        this.getProjects();
+    }
+
   render() {
-      const {startDate} = this.state
+      const {startDate, projects} = this.state
+      console.log(this.state.projects)
 
       return(
           <div>
               <Box m={18} pl={8}>
-              <Typography>
-                  TEST
-              </Typography>
+                  <Grid container>
+                    <Grid item xs={12} align={"center"}>
+                        <Grid container>
+                            <Grid item xs={3} align={"center"}>
+                                <Typography variant={"h5"} component={"div"}> Projekte: </Typography>
+                            </Grid>
+                            <Grid item xs={3} align={"center"}>
+                                <Typography variant={"h5"} component={"div"}> Klient: </Typography>
+                            </Grid>
+                            <Grid item xs={3} align={"center"}>
+                                <Typography variant={"h5"} component={"div"}> Arbeitsleistung: </Typography>
+                            </Grid>
+                        </Grid>
+                        <Divider/>
+                        {projects.map(pro =>
+                            <ProjectAnalysisProjectEntry key={pro.getID()} project={pro} />)}
+                    </Grid>
+                </Grid>
               </Box>
           </div>
       );

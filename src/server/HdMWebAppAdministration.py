@@ -631,9 +631,16 @@ class HdMWebAppAdministration(object):
     def get_project_by_person_id(self, person_id):
         """ ProjektWorks werden anhand der eindeutigen ID der Aktivität ausgelesen, der sie zugeordnet sind."""
         with ProjectMapper() as mapper:
-            result = []
             if not (person_id is None):
                 return mapper.find_by_person_id(person_id)
+
+    def get_projects_by_owner(self, owner):
+        """Gibt alle Projekte zurück, in denen übergebene Person Projektleiter ist zurück"""
+        with ProjectMapper() as mapper:
+            if owner is not None:
+                return mapper.find_projects_by_owner(owner.get_id())
+            else:
+                return None
 
     def calculate_work_time_of_project(self, project):
         """Die für ein Projekt gearbeitete Zeit berechnen"""

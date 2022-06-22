@@ -31,6 +31,7 @@ export default class HdMWebAppAPI {
   #addProjectDurationStartEvent = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
   #addProjectDurationEndEvent = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
   #getProjectWorkTimeURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}/work_time`;
+  #getProjectByOwnerURL = () => `${this.#hdmwebappServerBaseURL}/projectsowner`;
 
 
   //#addProjectDurationURL = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
@@ -162,17 +163,6 @@ export default class HdMWebAppAPI {
     })
   }
 
-
-    getWorktimeAccount(id) {
-        return this.#fetchAdvanced(this.#getWorktimeAccountURL(id)).then((responseJSON) => {
-            let worktimeaccountBOs = WorktimeAccountBO.fromJSON(responseJSON);
-            console.log(responseJSON);
-            return new Promise(function (resolve) {
-                resolve(worktimeaccountBOs);
-            })
-        })
-    }
-
     getActivities(id) {
         return this.#fetchAdvanced(this.#getActivitiesForProjectURL(id)).then((responseJSON) => {
             let activityBOs = ActivityBO.fromJSON(responseJSON);
@@ -193,6 +183,15 @@ export default class HdMWebAppAPI {
         })
     }
 
+    getProjectsByOwner() {
+        return this.#fetchAdvanced(this.#getProjectByOwnerURL()).then((responseJSON) => {
+            let projectBOs = ProjectBO.fromJSON(responseJSON);
+            //console.log(responseJSON);
+            return new Promise(function (resolve) {
+                resolve(projectBOs);
+            })
+        })
+    }
 
     /**
   * Updated ein ProjectBO
