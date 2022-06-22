@@ -68,12 +68,13 @@ class Person(bo.BusinessObject):
         """Umwandeln eines Python dict() in eine Person()."""
         obj = Person()
         obj.set_id(dictionary["id"])
+        obj.set_last_edit(dictionary["last_edit"])
         obj.set_firstname(dictionary["firstname"])
         obj.set_lastname(dictionary["lastname"])
         obj.set_username(dictionary["username"])
-        obj.set_last_edit(dictionary["last_edit"])
         obj.set_mailaddress(dictionary["mailaddress"])
         obj.set_firebase_id(dictionary["firebase_id"])
+        obj.set_deleted(dictionary['deleted'])
         return obj
 
 

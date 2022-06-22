@@ -52,10 +52,10 @@ class ProjectDurationDialog extends Component {
         console.log(e));
     }
 
-    /** Erzeugt ein TimeInterval mit den Start- und Endevents der Projektlaufzeit */
+    /** Erzeugt ein TimeInterval mit den Start- und Endevents der Projektlaufzeit
     addProjectDuration = () => {
         HdMWebAppAPI.getAPI().addProjectDuration
-    }
+    }*/
 
 
     /** Disabled den "Projektstart anlegen" Button, sobald ein ProjektStart ausgewählt wurde und
@@ -131,7 +131,7 @@ class ProjectDurationDialog extends Component {
         //console.log(endDate)
         return (
             <div>
-                <Dialog open={true} onClose={this.handleClose} maxWidth={"xl"}>
+                <Dialog open={false} onClose={this.handleClose} maxWidth={"xl"}>
                    <DialogTitle id='form-dialog-title'>
                        {title}
                        <IconButton onClick={this.handleClose}>

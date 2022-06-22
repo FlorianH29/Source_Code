@@ -40,8 +40,9 @@ def secured(function):
                 if claims is not None:
                     hwa = HdMWebAppAdministration()
 
-                    firstname = claims.get("name")
-                    lastname = 'LastName'
+                    firstname = 'Vorname noch nachtragen'
+                    lastname = 'Nachname noch nachtragen'
+                    username = claims.get("name")
                     mailaddress = claims.get("email")
                     firebase_id = claims.get("user_id")
 
@@ -55,9 +56,9 @@ def secured(function):
                     else:
                         """Wenn der Benutzer noch nicht im System angelegt, wird dieser hier mit der Create 
                             Methode generiert."""
-                        person = hwa.create_person(firstname, lastname, mailaddress, firebase_id)
+                        person = hwa.create_person(username, mailaddress, firebase_id)
 
-                    print(request.method, request.path, "angefragt durch:",  mailaddress, firebase_id)
+                    print(request.method, request.path, "angefragt durch:", username, mailaddress, firebase_id)
 
                     objects = function(*args, **kwargs)
                     return objects
