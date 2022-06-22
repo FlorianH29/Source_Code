@@ -598,7 +598,8 @@ class HdMWebAppAdministration(object):
                 project.set_last_edit(datetime.now())
                 project.set_project_name(project_name)
                 project.set_client(client)
-                project.set_time_interval_id(time_interval.get_id())
+                interval = self.get_max_time_interval_for_project()
+                project.set_time_interval_id(interval.get_id())
                 project.set_owner(person.get_id())
 
                 return mapper.insert(project), self.create_project_member(project, person)
@@ -908,6 +909,11 @@ class HdMWebAppAdministration(object):
         """Timeinterval suchen über gegebene Arrive ID"""
         with TimeIntervalMapper() as mapper:
             return mapper.find_by_arrive_id(number)
+
+    def get_max_time_interval_for_project(self):
+        """Zeitinterval für ein Projekt suchen """
+        with TimeIntervalMapper() as mapper:
+            return mapper.find_by_max_id_for_project()
 
     def save_time_interval(self, value):
         value.set_last_edit(datetime.now())
