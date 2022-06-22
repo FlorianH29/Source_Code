@@ -8,7 +8,6 @@ import {DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import DepartureBO from "../api/DepartureBO";
 import firebase from "firebase/compat/app";
-import PersonDeleteDialog from "./dialogs/PersonDeleteDialog";
 import DepartureDialog from "./dialogs/DepartureDialog";
 
 class Departure extends Component {
@@ -21,26 +20,10 @@ class Departure extends Component {
         }
     }
 
-    /** Erstellen eines Departure-Events und Abmelden des Mitarbeiters*/
-    addNewDepartureEvent = () => {
-        // Umschalten des Status der Knöpfe
-        this.setState({
-            openDepartureDialog: true
-        });
-        // Erstellen eines Gehen-Ereignis
-        let newDepartureEvent = new DepartureBO()
-        HdMWebAppAPI.getAPI().addDeparture().then(departure => {
-            // Backend call successful
-            // reinit the dialogs state for a new empty customer
-            this.setState(this.baseState);
-            this.props.onClose(departure); // call the parent with the departure object from backend
-        }).catch(e =>
-            console.log(e)
-        );
-        // Mitarbeiter ausloggen, wenn Gehen-Event erstellt wurde
-        firebase.auth().signOut();
-    }
-
+    /** Wenn Gehen-Button gedrückt wird soll der Dialog mit der
+     * "Wirklich gehen?"-Abfrage angezeigt werden. Hierfür wird
+     * "openDepartureDialog" auf true gesetzt.
+     */
     handleDepartureButtonClicked = () => {
         // Umschalten des Status der Knöpfe
         this.setState({
@@ -56,19 +39,6 @@ class Departure extends Component {
           openDepartureDialog: false
       })
     }
-
-    // let newCustomer = new CustomerBO(this.state.firstName, this.state.lastName);
-    // BankAPI.getAPI().addCustomer(newCustomer).then(customer => {
-    //   // Backend call sucessfull
-    //   // reinit the dialogs state for a new empty customer
-    //   this.setState(this.baseState);
-    //   this.props.onClose(customer); // call the parent with the customer object from backend
-    // }).catch(e =>
-    //   this.setState({
-    //     updatingInProgress: false,    // disable loading indicator
-    //     updatingError: e              // show error message
-    //   })
-    // );
 
 
     /** Rendern der Komponente */
