@@ -15,9 +15,7 @@ from server.bo.WorkTimeAccount import WorkTimeAccount
 from SecurityDecorator import secured
 from Helper import Helper
 
-
 app = Flask(__name__)
-
 
 CORS(app, resources=r'/hdmwebapp/*')
 
@@ -41,7 +39,8 @@ activity = api.inherit('Activity', bo, {
 
 event = api.inherit('Event', bo, {
     'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt'),
-    'event_type': fields.Integer(attribute='_event_type', description='Typ eines Events, Start oder Ende, für B und PW'),
+    'event_type': fields.Integer(attribute='_event_type',
+                                 description='Typ eines Events, Start oder Ende, für B und PW'),
     'affiliated_person': fields.Integer(attribute='_affiliated_person', description='ID der Person, die Event besitzt')
 })
 
@@ -90,22 +89,17 @@ timeinterval = api.inherit('TimeInterval', bo, {
 projectwork = api.inherit('ProjectWork', timeinterval, {
     'project_work_name': fields.String(attribute='_project_work_name', description='Name einer Projektarbeit'),
     'description': fields.String(attribute='_description', description='Beschreibung einer Projektarbeit'),
-    'affiliated_activity': fields.Integer(attribute='_affiliated_activity_id', description='Zugeordnete Aktivität einer P.')
+    'affiliated_activity': fields.Integer(attribute='_affiliated_activity_id',
+                                          description='Zugeordnete Aktivität einer P.')
 })
 
 timeintervaltransaction = api.inherit('TimeIntervalTransaction', bo, {
     'affiliated_time_interval': fields.Integer(attribute='_affiliated_time_interval',
                                                description='Zugehöriges TimeInterval einer TimIntervalTransaction'),
     'affiliated_break': fields.Integer(attribute='_affiliated_break',
-                                                description='Zugehörige Pause einer TimeIntervalTransaction'),
+                                       description='Zugehörige Pause einer TimeIntervalTransaction'),
     'affiliated_projectwork': fields.Integer(attribute='_affiliated_projectwork',
                                              description='Zugehörige ProjectWork einer TimeIntervalTransaction')
-})
-
-timeinterval = api.inherit('TimeInterval', bo, {
-    'starttime': fields.DateTime(attribute='__start_time', description='Startzeitpunkt eines Zeitintervalls'),
-    'endtime': fields.DateTime(attribute='__end_time', description='Endzeitpunkt eines Zeitintervalls'),
-    'timeperiod': fields.String(attribute='__time_period', description='Zeitraum des Intervalls')
 })
 
 
@@ -181,6 +175,7 @@ class ProjectWorkOperations(Resource):
         pw = hwa.get_project_work_by_id(id)
         hwa.delete_project_work(pw)
         return '', 200
+
 
 """
 @hdmwebapp.route('/worktimeaccount/<int:id>')
@@ -381,6 +376,55 @@ class ProjectDurationOperation(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
+
+
+@hdmwebapp.route('/projectduration/<int:id>/startevent')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des ProjectWork-Objekts')
+class ProjectWorkOwnerOperations(Resource):
+    @hdmwebapp.marshal_list_with(event)
+    @secured
+    def get(self, id):
+        """Auslesen des Start Events eines bestimmten TimeInterval-Objekts.
+        Das Projekt-Objekt dessen Time_Intervall-Objekt, dessen Start-Event
+         ausgelesen werden soll, wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pro = hwa.get_project_by_id(id)
+        ti_id = pro.get_time_interval_id()
+        ti = hwa.get_time_interval_by_id(ti_id)
+        se_id = ti.get_start_event()
+
+        if se_id is not None:
+            start_event = hwa.get_event_by_id(se_id)
+            return start_event
+        else:
+            return 0, 500
+
+
+@hdmwebapp.route('/projectduration/<int:id>/endevent')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des ProjectWork-Objekts')
+class ProjectWorkOwnerOperations(Resource):
+    @hdmwebapp.marshal_list_with(event)
+    @secured
+    def get(self, id):
+        """Auslesen des Start Events eines bestimmten TimeInterval-Objekts.
+        Das Projekt-Objekt dessen Time_Intervall-Objekt, dessen Start-Event
+         ausgelesen werden soll, wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pro = hwa.get_project_by_id(id)
+        ti_id = pro.get_time_interval_id()
+        ti = hwa.get_time_interval_by_id(ti_id)
+        se_id = ti.get_end_event()
+
+        if se_id is not None:
+            end_event = hwa.get_event_by_id(se_id)
+            return end_event
+        else:
+            return 0, 500
+
 
 
 @hdmwebapp.route('/projects/<int:id>/work_time')
@@ -587,6 +631,8 @@ def check():
     hwa = HdMWebAppAdministration()
     hwa.check_time_for_departure()
 
+hwa = HdMWebAppAdministration()
+print(hwa.get_max_time_interval_for_project())
 
 sub_thread = Thread(target=check)
 # es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet

@@ -32,7 +32,8 @@ export default class HdMWebAppAPI {
   #addProjectDurationStartEvent = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
   #addProjectDurationEndEvent = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
   #getProjectWorkTimeURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}/work_time`;
-
+  #getStartEventURL = (id) => `${this.#hdmwebappServerBaseURL}/projectduration/${id}/startevent`;
+  #getEndEventURL = (id) => `${this.#hdmwebappServerBaseURL}/projectduration/${id}/endevent`
 
   //#addProjectDurationURL = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
   // Projektarbeit bezogen
@@ -275,6 +276,41 @@ export default class HdMWebAppAPI {
         })
     }
 
+    /**
+     * Gibt das Start-Event eines Time Intervalls, eines Projekts zurück
+     *
+     * @param {Number} projectID für welche das Start_Event zurückgegeben werden soll
+     * @public
+     */
+    getStartEvent(projectID) {
+        console.log("test")
+        return this.#fetchAdvanced(this.#getStartEventURL(projectID))
+            .then(responseJSON => {
+                return new Promise(function (resolve) {
+                    resolve(responseJSON);
+                    console.log(responseJSON)
+                })
+            })
+    }
+
+
+    /**
+     * Gibt das End-Event eines Time Intervalls, eines Projekts zurück
+     *
+     * @param {Number} projectID für welche das End-Event zurückgegeben werden soll
+     * @public
+     */
+    getEndEvent(projectID) {
+        console.log("test")
+        return this.#fetchAdvanced(this.#getEndEventURL(projectID))
+            .then(responseJSON => {
+                return new Promise(function (resolve) {
+                    resolve(responseJSON);
+                    console.log(responseJSON)
+                })
+            })
+    }
+
 
     /**
      * Löscht ein ProjectBO
@@ -294,9 +330,6 @@ export default class HdMWebAppAPI {
             })
         })
     }
-
-
-
 
 
 
