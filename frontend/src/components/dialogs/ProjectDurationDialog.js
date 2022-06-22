@@ -35,7 +35,7 @@ class ProjectDurationDialog extends Component {
 
     /** Erzeugt ein Projekt-Laufzeit-Start als EventBO  */
     addProjectDurationStartEvent = () => {
-        let newEventBO = new EventBO(this.state.eventType, this.state.startDate);
+        let newEventBO = new EventBO(this.state.startDate, this.state.eventType);
         HdMWebAppAPI.getAPI().addProjectDurationStartEvent(newEventBO).then(projectStart => {
         this.setState(this.baseState);
         //this.props.onClose(projectStart);
@@ -45,7 +45,7 @@ class ProjectDurationDialog extends Component {
 
     /** Erzeugt ein Projekt-Laufzeit-Ende als EventBO  */
     addProjectDurationEndEvent = () => {
-        let newEventBO = new EventBO(this.state.eventType, this.state.endDate);
+        let newEventBO = new EventBO(this.state.endDate, this.state.eventType);
         HdMWebAppAPI.getAPI().addProjectDurationEndEvent(newEventBO).then(projectStart => {
             //this.props.onClose(projectStart);
     }).catch (e =>
@@ -131,7 +131,7 @@ class ProjectDurationDialog extends Component {
         //console.log(endDate)
         return (
             <div>
-                <Dialog open={false} onClose={this.handleClose} maxWidth={"xl"}>
+                <Dialog open={true} onClose={this.handleClose} maxWidth={"xl"}>
                    <DialogTitle id='form-dialog-title'>
                        {title}
                        <IconButton onClick={this.handleClose}>

@@ -73,7 +73,6 @@ class HdMWebAppAdministration(object):
         person.set_firebase_id(firebase_id)
         person.set_deleted(0)
 
-
         with PersonMapper() as mapper:
             return mapper.insert(person), self.create_work_time_account_for_person(person)
 
@@ -454,8 +453,8 @@ class HdMWebAppAdministration(object):
         event_dict = {}
         event_list = []
         time_stamp = None
-        #start_time = datetime.strptime(start_time, '%d/%m/%Y')
-        #end_time = datetime.strptime(end_time, '%d/%m/%Y')
+        # start_time = datetime.strptime(start_time, '%d/%m/%Y')
+        # end_time = datetime.strptime(end_time, '%d/%m/%Y')
         # Übergebene Time-Stamps von Str in Datetime konvertieren
         work_time_account = self.get_work_time_account_of_owner(person)
         time_interval_transactions = self.get_time_interval_transaction_by_affiliated_work_time_account_id(
@@ -482,7 +481,7 @@ class HdMWebAppAdministration(object):
                 if start_time <= time_stamp.date() <= end_time:
                     # Überprüfen, ob das Event im übergebenen Zeitraum liegt
                     event_dict = {'name': 'Gehen', 'projectworkid': None, 'start_time': time_stamp,
-                                  'starteventid': None,'endtime': time_stamp, 'endeventid': None,
+                                  'starteventid': None, 'endtime': time_stamp, 'endeventid': None,
                                   'period': None, 'timeintervaltransactionid': None}
                     event_list.append(event_dict)
         for tit in time_interval_transactions:
@@ -500,8 +499,9 @@ class HdMWebAppAdministration(object):
                 time_period = br.get_time_period()
                 if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
                     event_dict = {'name': 'break', 'projectworkid': None, 'start_time': time_stamp_start,
-                                  'starteventid': start_event_id,'endtime': time_stamp_end,
-                                  'endeventid': end_event_id, 'period': time_period, 'timeintervaltransactionid': tit.get_id()}
+                                  'starteventid': start_event_id, 'endtime': time_stamp_end,
+                                  'endeventid': end_event_id, 'period': time_period,
+                                  'timeintervaltransactionid': tit.get_id()}
                     event_list.append(event_dict)
             if project_work_id is not None:
                 project_work = self.get_project_work_by_id(project_work_id)
@@ -515,7 +515,7 @@ class HdMWebAppAdministration(object):
                 if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
                     event_dict = {'name': project_work.get_project_work_name(), 'projectworkid': project_work_id,
                                   'start_time': time_stamp_start, 'starteventid': start_event_id,
-                                  'endtime': time_stamp_end,'endeventid': end_event_id,
+                                  'endtime': time_stamp_end, 'endeventid': end_event_id,
                                   'period': time_period, 'timeintervaltransactionid': tit.get_id()}
                     event_list.append(event_dict)
             if work_time_id is not None:
@@ -530,7 +530,8 @@ class HdMWebAppAdministration(object):
                 if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
                     event_dict = {'name': 'Arbeitszeit', 'projectworkid': None, 'start_time': time_stamp_start,
                                   'starteventid': start_event_id, 'endtime': time_stamp_end,
-                                  'endeventid': end_event_id, 'period': time_period, 'timeintervaltransactionid': tit.get_id()}
+                                  'endeventid': end_event_id, 'period': time_period,
+                                  'timeintervaltransactionid': tit.get_id()}
                     event_list.append(event_dict)
         sorted_event_list = sorted(event_list, key=lambda x: x['start_time'])
         return sorted_event_list
@@ -713,7 +714,7 @@ class HdMWebAppAdministration(object):
                 activity = self.get_activity_by_id(project_work.get_affiliated_activity())
                 project = self.get_project_by_id(activity.get_affiliated_project())
 
-            return mapper.update(project_work), self.create_time_interval_transaction(person, None, None, project_work),\
+            return mapper.update(project_work), self.create_time_interval_transaction(person, None, None, project_work), \
                    self.calculate_work_time_of_activity(activity), self.calculate_work_time_of_project(project)
 
     def delete_project_work(self, project_work):
@@ -1049,23 +1050,14 @@ class HdMWebAppAdministration(object):
 
     def create_time_interval_for_project_duration(self):
         """Methode um ein TimeInterval zu erstellen, welches eine Projektlaufzeit für ein Projekt abbildet"""
-        with TimeIntervalMapper() as mapper:
-            last_event = self.get_last_event_for_type_check() # Hier wird der letzte EventType übergeben.
+        last_event = self.get_last_event_for_type_check()  # Hier wird der letzte EventType übergeben.
 
-            if last_event[0] == 8:  # Hier wird abgefragt, ob der EventType = 8 ist.
-                time_int = TimeInterval()
-                startevent = self.get_last_event_by_event_type(7)
-                endevent = self.get_last_event_by_event_type(8)
-                t_period = endevent.get_time_stamp() - startevent.get_time_stamp()
-                time_int.set_id(1)
-                time_int.set_deleted(0)
-                time_int.set_last_edit(datetime.now())
-                time_int.set_start_event(startevent.get_id())
-                time_int.set_end_event(endevent.get_id())
-                time_int.set_time_period(t_period)
-                return mapper.insert(time_int)
-            else:
-                pass
+        if last_event[0] == 8:  # Hier wird abgefragt, ob der EventType = 8, also ein Projektende, ist.
+            startevent = self.get_last_event_by_event_type(7)
+            endevent = self.get_last_event_by_event_type(8)
+            self.create_time_interval(startevent, endevent)
+        else:
+            pass
 
     def get_last_event_for_type_check(self):
         with EventMapper() as mapper:

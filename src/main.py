@@ -357,6 +357,7 @@ class ProjectOperations(Resource):
         hwa.delete_project(pw)
         return '', 200
 
+
 @hdmwebapp.route('/projectduration')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectDurationOperation(Resource):
@@ -380,6 +381,7 @@ class ProjectDurationOperation(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
+
 
 @hdmwebapp.route('/projects/<int:id>/work_time')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -448,6 +450,7 @@ class ProjectWorksByActivityOperations(Resource):
         else:
             return "Activity not found", 500
 
+
 @hdmwebapp.route('/projectworks/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Projektarbeit')
@@ -478,6 +481,7 @@ class ProjectWorkOperations(Resource):
         hwa.delete_project_work(pw)
         return '', 200
 
+
 @hdmwebapp.route('/projectworks/<int:id>/<string:name>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Projektarbeit')
@@ -499,6 +503,7 @@ class ProjectWorkUpdateNameOperations(Resource):
         else:
             return '', 500
 
+
 @hdmwebapp.route('/events/<int:id>/<int:date>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID des Events')
@@ -514,11 +519,12 @@ class ProjectWorkUpdateNameOperations(Resource):
         event = hwa.get_event_by_id(id)
 
         if event is not None:
-            event.set_time_stamp(datetime.fromtimestamp(date/1000.0))
+            event.set_time_stamp(datetime.fromtimestamp(date / 1000.0))
             hwa.save_event(event)
             return '', 200
         else:
             return '', 500
+
 
 @hdmwebapp.route('/eventtransactionsandtimeintervaltransactions/<int:startDate>/<int:endDate>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -532,11 +538,12 @@ class EventsForTimeIntervalTransactions(Resource):
         h = Helper()
         firebase_id = h.get_firebase_id()
         pe = hwa.get_person_by_firebase_id(firebase_id)
-        start_time = datetime.fromtimestamp(startDate/1000.0).date()
-        end_time = datetime.fromtimestamp(endDate/1000.0).date()
+        start_time = datetime.fromtimestamp(startDate / 1000.0).date()
+        end_time = datetime.fromtimestamp(endDate / 1000.0).date()
         events = hwa.get_intervals_of_person_between_time_stamps(pe, start_time, end_time)
         print(events)
         return events
+
 
 @hdmwebapp.route('/timeinterval/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -552,6 +559,7 @@ class DeleteTimeInterval(Resource):
         tit = hwa.get_time_interval_transaction_by_id(id)
         hwa.delete_time_interval_transaction(tit)
         return '', 200
+
 
 @hdmwebapp.route('/projectworks/<int:id>/owner')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -581,12 +589,9 @@ def check():
 
 
 sub_thread = Thread(target=check)
-#es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
+# es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
-
-
-
 
 if __name__ == '__main__':
     app.run(debug=False)
