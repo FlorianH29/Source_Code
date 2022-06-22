@@ -5,7 +5,6 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import {ArriveBO, HdMWebAppAPI} from "../../api";
 import PropTypes from 'prop-types';
-import Departure from "../Departure";
 
 
 class Welcome extends Component {
@@ -17,23 +16,6 @@ class Welcome extends Component {
             customer: null
         };
       }
-/*
-    getPersons = () => {
-        HdMWebAppAPI.getAPI().getPersons(this.props.username).then(username =>
-            this.setState({
-                customer: username
-            }))
-    };
-
-
-    componentDidMount() {
-        this.getPersons();
-    }
-*/
-
-    //addNewArriveEvent = () => {
-        //HdMWebAppAPI.getAPI().addNewArriveEvent()
-    //}
 
 /** Erstellen eines Arrive-Events */
     addNewArriveEvent = () => {
@@ -61,14 +43,14 @@ class Welcome extends Component {
         const {  } = this.props;
         const { person } = this.state;
         return (
-             <Box sx={{m: 2, b: 2, p: 2}}>
+             <Box sx={{m: 15, b: 2, p: 2}}>
                 <Card>
                     <Grid container spacing={2} justifyContent={"center"}  alignItems={"center"}>
                         <Grid item xs={12} align={"center"}>
-                            <h2>Willkommen, {this.props.username}</h2>
+                            <h2>Willkommen in der Arbeitszeiterfassung</h2>
                             <p>Bitte bestätigen Sie Ihren Arbeitsbeginn:</p>
                             <Button variant={"contained"} color="success" onClick={this.addNewArriveEvent}>
-                                    Kommen
+                                    Kommen bestätigen
                             </Button>
                             <p></p>
                         </Grid>
