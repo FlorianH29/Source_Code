@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import {DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import DepartureBO from "../api/DepartureBO";
+import firebase from "firebase/compat/app";
 
 class Departure extends Component {
 
@@ -29,6 +30,9 @@ class Departure extends Component {
             disableDeparture: false,
             updatingError: null
         });
+        // Mitarbeiter ausloggen, wenn Gehen-Event erstellt wurde
+        firebase.auth().signOut();
+
         // Erstellen eines Gehen-Ereignis
         let newDepartureEvent = new DepartureBO()
         HdMWebAppAPI.getAPI().addDeparture().then(departure => {

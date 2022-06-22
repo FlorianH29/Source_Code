@@ -3,7 +3,7 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import {HdMWebAppAPI} from "../../api";
+import {ArriveBO, HdMWebAppAPI} from "../../api";
 import PropTypes from 'prop-types';
 
 
