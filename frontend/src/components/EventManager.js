@@ -24,50 +24,18 @@ class EventManager extends Component {
     }
 
     /**
-     * Wird aufgerufen, wenn ein Knopf zum Erstellen eines Ereignisses geklickt wird.
-     * Ruft die Funktion addEvent auf und übergibt ihr den EventTyp, welcher in der jeweiligen Komponente angegeben ist.
+     * Wird aufgerufen, wenn ein Knopf zum Erstellen eines Ereignisses geklickt wird. Ruft die Funktion addEvent auf und
+     * übergibt ihr 0 als Zeitstempel und den EventTyp, welcher in der jeweiligen Komponente angegeben ist.
      */
-    handleCreateEventButtonClickedf = async () => {
-        let test = new Promise((resolve, reject) => {
-            resolve(this.addEvent(this.state.eventType));
-        })
-        // wenn der Event Typ 1 ist, wird das Ereignis und die Projektarbeit erstellt
-        if (this.state.eventType === 1) {
-            console.log(1)
-            //test.then(this.state.addPW())
-            await this.addEvent(this.state.eventType);
-            this.state.addPW()
-            // this.aMethod();
-            //this.state.addPW();
-        } else {
-            this.addEvent(this.state.eventType)
-            console.log(2);
-        }
-    }
-
     handleCreateEventButtonClicked = () => {
-         this.addEvent(this.state.eventType);
+         this.addEvent(0, this.state.eventType);
     }
-
-    aMethod = () => {
-        setTimeout(this.state.addPW(), 10000);
-    }
-
-    handleCreateEventButtonClickedf = () => {
-        // wenn der Event Typ 1 ist, wird das Ereignis und die Projektarbeit erstellt
-        if (this.state.eventType === 1) {
-            this.addEvent(this.state.eventType).then(() => this.props.functionAddProjectWork());
-        } else {
-            this.addEvent(this.state.eventType);
-        }
-    }
-
 
     /**
      * Erstellen eines Ereignisses.
      */
-    addEvent = async (event) => {
-        let newEvent = new EventBO(event);
+    addEvent = async (timeStamp, eventType) => {
+        let newEvent = new EventBO(timeStamp, eventType);
         // console.log(this.state);
          await HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
             // Backend call successfull

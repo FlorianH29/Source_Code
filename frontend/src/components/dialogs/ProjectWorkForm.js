@@ -45,20 +45,20 @@ class ProjectWorkForm extends Component {
     console.log(this.state);
   }
 
-      /**
-     * Erstellen eines Ereignisses.
-     */
-    addEvent = async (event) => {
-        let newEvent = new EventBO(event);
-        // console.log(this.state);
-         await HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
-            // Backend call successfull
-            // reinit the dialogs state for a new empty customer
-            console.log(event)
-            this.props.onClose(event); // call the parent with the customer object from backend
-        }).catch(e =>
-            console.log(e));
-    }
+  /**
+  * Erstellen eines Ereignisses.
+  */
+  addEvent = async () => {
+    let newEvent = new EventBO(0, 1);
+    // console.log(this.state);
+     await HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
+        // Backend call successfull
+        // reinit the dialogs state for a new empty customer
+        console.log(event)
+        this.props.onClose(event); // call the parent with the customer object from backend
+    }).catch(e =>
+        console.log(e));
+  }
 
   /** Erstellt ein neues ProjectWorkBO */
   addProjectWork = () => {
@@ -76,7 +76,7 @@ class ProjectWorkForm extends Component {
 
   newF = () => {
       let test = new Promise((resolve, reject) => {
-          resolve(this.addEvent(1));})
+          resolve(this.addEvent());})
       test.then(this.addProjectWork)
   }
 
