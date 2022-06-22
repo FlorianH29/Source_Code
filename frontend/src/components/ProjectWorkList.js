@@ -23,11 +23,15 @@ class ProjectWorkList extends Component {
         showProjectWorkForm: false,
         open: false,
         disableEnd: true,
-        disableStart: false
+        disableStart: false,
+        start: new Date(2022, 6, 18,0,0),
+        end: new Date(2022, 6, 23,0,0),
+        worktimeProject: null,
       }
   }
 
   getProjectWorksForActivity = () => {
+    this.setState({projectWorks: []});
     HdMWebAppAPI.getAPI().getProjectWorks(1)  // statt 1 sollte hier die Id der ausgewählten Aktivität rein
       .then(projectWorkBOs =>
         this.setState({
@@ -36,6 +40,18 @@ class ProjectWorkList extends Component {
         this.setState({
             projectWorks: []
         }));
+  }
+
+  getWorkTimeActivity = () => {
+     HdMWebAppAPI.getAPI().getActivityWorkTime(1, this.state.start, this.state.start)
+        .then(workTimeProject => this.setState({
+            workTimeProject: workTimeProject
+      })).catch(e =>
+        this.setState({ // bei Fehler den state zurücksetzen
+          workTimeProject: null,
+        })
+      );
+     console.log('test')
   }
 
   componentDidMount() {
@@ -62,6 +78,11 @@ class ProjectWorkList extends Component {
   handleClose = () => {
     // den state neu setzen, sodass open false ist und der Dialog nicht mehr angezeigt wird
     this.setState({open: false});
+  }
+
+  refreshProjectWorkList = () => {
+      this.getProjectWorksForActivity();
+      this.setState({open: false});
   }
 
   /**
@@ -117,14 +138,19 @@ class ProjectWorkList extends Component {
                     <ProjectWorkListEntry key={pw.getID()} projectWork={pw} onProjectWorkDeleted={this.projectWorkDeleted}/>)
                 }
                 <Grid container direction={'row'} spacing={18}>
-                    <Grid item xs={6} align={'center'}>
+                    <Grid item xs={4} align={'center'}>
                         <Button variant='contained' color='primary' onClick={this.handleStartEventButtonClicked}>
                             Start buchen
                         </Button>
                     </Grid>
-                    <Grid item xs={6} align={'center'}>
+                    <Grid item xs={4} align={'center'}>
                         <Button variant='contained' color='primary' onClick={this.handleEndEventButtonClicked}>
                             Ende buchen
+                        </Button>
+                    </Grid>
+                    <Grid item xs={4} align={'center'}>
+                        <Button variant='contained' color='primary' onClick={this.getWorkTimeActivity}>
+                            Methode testen
                         </Button>
                     </Grid>
                 </Grid>
@@ -145,7 +171,7 @@ class ProjectWorkList extends Component {
                     <Button onClick={this.handleClose} color='secondary'>
                         Abbrechen
                     </Button>
-                    <EventManager eventType={2} onClose={this.handleClose}>
+                    <EventManager eventType={2} onClose={this.refreshProjectWorkList}>
                     </EventManager>
                 </DialogActions>
             </Dialog>

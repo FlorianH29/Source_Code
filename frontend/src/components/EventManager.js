@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import {EventBO, HdMWebAppAPI} from '../api';
 import PropTypes from "prop-types";
-import ProjectWorkForm from "./dialogs/ProjectWorkForm";
 import {Button} from "@mui/material";
-import Navigator from "./layout/Navigator";
 
 
 /**
@@ -15,9 +13,7 @@ class EventManager extends Component {
     constructor(props) {
         super(props);
 
-
         this.state = {
-            addPW: this.props.functionAddProjectWork,
             eventType: this.props.eventType,
             buttonName: '',
         }

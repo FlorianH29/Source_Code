@@ -233,20 +233,23 @@ class ActivitiesList(Resource):
             return "Activity not found", 500
 
 
-@hdmwebapp.route('/activities/<int:id>/work_time')
+@hdmwebapp.route('/activities/<int:id><int:start_date>/<int:end_date>/work_time')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ActivitiyWorkTimeOperations(Resource):
     @hdmwebapp.marshal_list_with(activity)
+    @hdmwebapp.param('id', 'die ID der Aktivität')
+    @hdmwebapp.param('start_date', 'eingegebenes Start-Datum')
+    @hdmwebapp.param('end_date', 'eingegebenes End-Datum')
     @secured
-    def get(self, id, start, end):
+    def get(self, id, start_date, end_date):
         """
         Auslesen der Zeit, die in einem bestimmten Zeitraum für eine Aktivität gearbeitet wurde.
         """
         hwa = HdMWebAppAdministration()
         act = hwa.get_activity_by_id(id)
 
-        start_date = datetime.fromtimestamp(start / 1000.0).date()
-        end_date = datetime.fromtimestamp(end / 1000.0).date()
+        start_date = datetime.fromtimestamp(start_date / 1000.0).date()
+        end_date = datetime.fromtimestamp(end_date / 1000.0).date()
 
         if act is not None:
             return hwa.get_work_time_of_activity_between_two_dates(act, start_date, end_date)

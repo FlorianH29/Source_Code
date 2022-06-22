@@ -84,6 +84,7 @@ class ActivityList extends Component {
 
         return (
             <div>
+                <Box m={18}  pl={8}>
                 <Typography variant={"h4"} algin={"left"} component={"div"}>
                     Projekt: {this.props.projectName}
                 </Typography>
@@ -111,6 +112,7 @@ class ActivityList extends Component {
                     </Grid>
                 </Grid>
                 <ActivityForm onClose={this.activityFormClosed} show={showActivityForm}></ActivityForm>
+                </Box>
             </div>
         )
     }

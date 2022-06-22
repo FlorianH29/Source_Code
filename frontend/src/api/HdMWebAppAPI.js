@@ -12,9 +12,8 @@ import 'firebase/compat/firestore';
 
 export default class HdMWebAppAPI {
 
-    // Singelton instance
-    static #api = null;
-
+  // Singelton instance
+  static #api = null;
 
   // Local Python backend
   #hdmwebappServerBaseURL = '/hdmwebapp';
@@ -51,7 +50,8 @@ export default class HdMWebAppAPI {
   #updateActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
   #deleteActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
   #addActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/project/${id}/activities`;
-  #getActivityWorkTimeURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}/work_time`;
+  #getActivityWorkTimeURL = (id, statDate, endDate) =>
+      `${this.#hdmwebappServerBaseURL}/activities/${id}/${statDate}/${endDate}/work_time`;
 
     // Ereignis bezogen
     #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
@@ -137,6 +137,7 @@ export default class HdMWebAppAPI {
       })
     })
   }
+
   /**
    * Erstellt ein Ereignis und gibt eine Promise zurück, die ein neues EventBO
    * Objekt mit dem Eventtyp des Parameters eventBO als Ergebnis hat.
@@ -240,6 +241,23 @@ export default class HdMWebAppAPI {
         })
     }
 
+   /**
+   * Gibt die Arbeitsleistung für ein Projekt für einen gesetzten Zeitraum zurück
+   *
+   * @param {Number} projectID für welche die Arbeitsleistung zurückgegeben werden soll
+   * @param {Date} start Start des Zeitraums
+   * @param {Date} end Ende des Zeitraums
+   * @public
+   */
+  getProjectWorkTime(projectID, start, end) {
+    return this.#fetchAdvanced(this.#getProjectWorkTimeURL(projectID, start, end))
+      .then(responseJSON => {
+        console.log(responseJSON)
+        return new Promise(function (resolve) {
+          resolve(responseJSON);
+        })
+      })
+  }
 
     addProjectDurationStartEvent(eventBO) {
         return this.#fetchAdvanced(this.#addProjectDurationStartEvent(), {
@@ -341,10 +359,9 @@ export default class HdMWebAppAPI {
     }
 
    /**
-   * Adds a customer and returns a Promise, which resolves to a new CustomerBO object with the
-   * firstName and lastName of the parameter customerBO object.
+   * Erstellt eine Projektarbeit mit Name und Beschreibung, die im Dialog gesetzt wurden.
    *
-   * @param {ProjectWorkBO} projectWorkBO to be added. The ID of the new customer is set by the backend
+   * @param {ProjectWorkBO} projectWorkBO welcehes erstellt werden soll.
    * @public
    */
   addProjectWork(projectWorkBO) {
@@ -423,24 +440,6 @@ export default class HdMWebAppAPI {
     })
   }
 
-    /**
-     * Löscht ein ProjectWorkBO
-     *
-     * @param {Number} projectWorkID des ProjectWorkBO, welches gelöscht werden soll
-     * @public
-     */
-    deleteProjectWork(projectWorkID) {
-        return this.#fetchAdvanced(this.#deleteProjectWorkURL(projectWorkID), {
-            method: 'DELETE'
-        }).then((responseJSON) => {
-            // We always get an array of CustomerBOs.fromJSON
-            let responseProjectWorkBO = ProjectWorkBO.fromJSON(responseJSON)[0];
-            console.log(responseProjectWorkBO)
-            return new Promise(function (resolve) {
-                resolve(responseProjectWorkBO);
-            })
-        })
-    }
 
         deleteTimeInterval(timeIntervalID) {
         return this.#fetchAdvanced(this.#deleteTimeIntervalURL(timeIntervalID), {
@@ -476,7 +475,7 @@ export default class HdMWebAppAPI {
   /**
    * Gibt den Ersteller einer Projektarbeit zurück
    *
-   * @param {Number} projectWorkID for which the balance should be retrieved
+   * @param {Number} projectWorkID für welche der Ersteller zurückgegeben werden soll
    * @public
    */
   getOwnerOfProjectWork(projectWorkID) {
@@ -518,9 +517,16 @@ export default class HdMWebAppAPI {
   }
 
 
-/**
-  getActivityWorkTime(activityBO) {
-    return this.#fetchAdvanced(this.#getActivityWorkTimeURL(activityBO))
+  /**
+   * Gibt die Arbeitsleistung für eine Aktivität für einen gesetzten Zeitraum zurück
+   *
+   * @param {Number} activityID für welche die Arbeitsleistung zurückgegeben werden soll
+   * @param {Number} start Start des Zeitraums
+   * @param {Number} end Ende des Zeitraums
+   * @public
+   */
+  getActivityWorkTime(activityID, start, end) {
+    return this.#fetchAdvanced(this.#getActivityWorkTimeURL(activityID))
       .then(responseJSON => {
         console.log(responseJSON)
         return new Promise(function (resolve) {
@@ -528,7 +534,7 @@ export default class HdMWebAppAPI {
         })
       })
   }
-*/
+
   updateActivity(activityBO) {
     return this.#fetchAdvanced(this.#updateActivityURL(activityBO.getID()), {
       method: 'PUT',
