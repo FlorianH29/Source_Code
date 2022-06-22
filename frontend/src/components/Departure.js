@@ -30,9 +30,6 @@ class Departure extends Component {
             disableDeparture: false,
             updatingError: null
         });
-        // Mitarbeiter ausloggen, wenn Gehen-Event erstellt wurde
-        firebase.auth().signOut();
-
         // Erstellen eines Gehen-Ereignis
         let newDepartureEvent = new DepartureBO()
         HdMWebAppAPI.getAPI().addDeparture().then(departure => {
@@ -46,6 +43,8 @@ class Departure extends Component {
                 updatingError: e              // show error message
             })
         );
+        // Mitarbeiter ausloggen, wenn Gehen-Event erstellt wurde
+        firebase.auth().signOut();
     }
 
     // let newCustomer = new CustomerBO(this.state.firstName, this.state.lastName);
