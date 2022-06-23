@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import {EventBO, HdMWebAppAPI} from '../api';
-import {Button, Grid, Typography, Divider, Dialog, DialogActions, DialogContent, List, Collapse} from '@mui/material';
+import {Button, Grid, Typography, Divider, Dialog, DialogActions, DialogContent, Link} from '@mui/material';
 import Box from "@mui/material/Box";
 import ProjectWorkListEntry from "./ProjectWorkListEntry";
 import EventManager from "./EventManager";
 import ProjectWorkForm from "./dialogs/ProjectWorkForm";
 import PropTypes from "prop-types";
 import {DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
+import ArrowCircleLeftRoundedIcon from '@mui/icons-material/ArrowCircleLeftRounded';
 import CloseIcon from "@material-ui/icons/Close";
-import {withRouter, Redirect} from "react-router-dom";
+import {withRouter, Redirect, Link as RouterLink} from "react-router-dom";
 
 class ProjectWorkList extends Component {
 
@@ -25,7 +26,7 @@ class ProjectWorkList extends Component {
   }
 
   getProjectWorksForActivity = () => {
-    const { activity } = this.props.location.ac;
+    const { activity } = this.props.location.owner;
 
     this.setState({projectWorks: []});
     HdMWebAppAPI.getAPI().getProjectWorks(activity.getID())
@@ -50,7 +51,7 @@ class ProjectWorkList extends Component {
   }
 
   componentDidMount() {
-      if (this.props.location.ac) {
+      if (this.props.location.owner) {
           this.getProjectWorksForActivity();
       }
   }
@@ -113,21 +114,38 @@ class ProjectWorkList extends Component {
     const { classes } = this.props;
     const { projectWorks, showProjectWorkForm, disableEnd, disableStart, open } = this.state;
     // console.log(this.state)
-    let ac = null;
-    if (this.props.location.ac) {
+    let owner = null;
+    if (this.props.location.owner) {
       // AktivityBO existiert
-      ac = this.props.location.ac
+      owner = this.props.location.owner
     } else {
       // AktivityBO existiert nicht, stattdessen wurde die Komponente direkt über die URL aufgerufen oder die Seite
       // wurde neu geladen -> zurück auf die Startseite verweisen
       return (<Redirect to='/' />);
     }
 
+    console.log(owner.project)
+
     return (
         <div>
         <Box m={18}  pl={8}>
-          <Typography variant={"h4"} algin={"left"} component={"div"}>
-             Aktivität: {ac.activity.getActivityName()}
+            <Typography component='div'>
+                <Link component={RouterLink} to={{
+                    pathname: '/activities',
+                    expandedProject: owner.project
+                    }}>
+                    <Grid container spacing={1} justify='flex-start' alignItems='stretch'>
+                        <Grid item>
+                            <ArrowCircleLeftRoundedIcon />
+                        </Grid>
+                        <Grid item> zurück
+                        </Grid>
+                    </Grid>
+                </Link>
+            </Typography>
+
+          <Typography variant={"h4"} algin={"center"} component={"div"}>
+             Aktivität: {owner.activity.getActivityName()}
           </Typography>
           <Grid container mt={1}>
             <Grid item xs={12} align={"center"}>
