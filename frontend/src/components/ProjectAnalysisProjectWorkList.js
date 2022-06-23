@@ -1,0 +1,62 @@
+import React, {Component} from 'react';
+import {HdMWebAppAPI} from '../api';
+import {Grid, Typography, Divider} from '@mui/material';
+import ProjectAnalysisProjectWorkListEntry from "./ProjectAnalysisProjectWorkListEntry";
+
+class ProjectAnalysisProjectWorkList extends Component {
+
+  constructor(props) {
+    super(props);
+
+      this.state = {
+        projectWorks: [],
+      }
+  }
+
+  getProjectWorksForActivity = () => {
+    this.setState({projectWorks: []});
+    HdMWebAppAPI.getAPI().getProjectWorks(this.props.activity.getID())
+      .then(projectWorkBOs =>
+        this.setState({
+          projectWorks: projectWorkBOs
+            })).catch(e =>
+        this.setState({
+            projectWorks: []
+        }));
+  }
+
+  componentDidMount() {
+    this.getProjectWorksForActivity();
+  }
+
+  render() {
+    const { projectWorks } = this.state;
+    // console.log(this.state)
+
+    return (
+        <div style={{width: "100%"}}>
+          <Grid container>
+            <Grid item xs={12} align={"center"}>
+                <Grid container>
+                    <Grid item xs={3} align={"flex-end"}>
+                        <Typography variant={"h5"} component={"div"}> Projektarbeit </Typography>
+                    </Grid>
+                    <Grid item xs={3} align={"flex-end"}>
+                        <Typography variant={"h5"} component={"div"}> Bearbeiter </Typography>
+                    </Grid>
+                    <Grid item xs={3} align={"flex-end"}>
+                        <Typography variant={"h5"} component={"div"}> Dauer </Typography>
+                    </Grid>
+                </Grid>
+                <Divider/>
+                {projectWorks.map(pw =>
+                    <ProjectAnalysisProjectWorkListEntry key={pw.getID()} projectWork={pw}/>)
+                }
+            </Grid>
+          </Grid>
+        </div>
+        );
+    }
+}
+
+export default ProjectAnalysisProjectWorkList;

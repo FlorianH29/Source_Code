@@ -18,6 +18,7 @@ import AddIcon from '@material-ui/icons/Add';
 import ActivityForm from "./dialogs/ActivityForm";
 import PropTypes from "prop-types";
 import ActivityListEntry from "./ActivityListEntry";
+import {Redirect, withRouter} from "react-router-dom";
 
 
 class ActivityList extends Component {
@@ -32,7 +33,9 @@ class ActivityList extends Component {
     };
 
     getActivitiesForProject() {
-        HdMWebAppAPI.getAPI().getActivities(1)
+        const { project } = this.props.location.pro
+
+        HdMWebAppAPI.getAPI().getActivities(project.getID())
             .then(activityBOs =>
                 this.setState({
                     activities: activityBOs
@@ -43,7 +46,9 @@ class ActivityList extends Component {
     }
 
     componentDidMount() {
-        this.getActivitiesForProject();
+        if (this.props.location.pro) {
+            this.getActivitiesForProject();
+        }
     }
 
     handleAddActivityButtonClicked = (event) => {
@@ -82,8 +87,19 @@ class ActivityList extends Component {
         const {classes} = this.props;
         const {activities, showActivityForm} = this.state;
 
+         let pro = null;
+         if (this.props.location.pro) {
+            // owner object exists
+            pro = this.props.location.pro
+         } else {
+           // ProjectBO existiert nicht, stattdessen wurde die Komponente direkt über die URL aufgerufen oder die Seite
+           // wurde neu geladen -> zurück auf die Startseite verweisen
+            return (<Redirect to='/' />);
+         }
+
         return (
             <div>
+                <Box m={18}  pl={8}>
                 <Typography variant={"h4"} algin={"left"} component={"div"}>
                     Projekt: {this.props.projectName}
                 </Typography>
@@ -91,7 +107,7 @@ class ActivityList extends Component {
                         onClick={this.handleAddActivityButtonClicked}>
                     Aktivität anlegen
                 </Button>
-                <Grid container>
+                <Grid container mt={1}>
                     <Grid item xs={12} align={"center"}>
                     <Grid container>
                         <Grid item xs={3} align={"flex-end"}>
@@ -111,6 +127,7 @@ class ActivityList extends Component {
                     </Grid>
                 </Grid>
                 <ActivityForm onClose={this.activityFormClosed} show={showActivityForm}></ActivityForm>
+                </Box>
             </div>
         )
     }
@@ -131,4 +148,4 @@ ActivityForm.propTypes = {
     onClose: PropTypes.func.isRequired,
 }
 
-export default ActivityList;
+export default withRouter(ActivityList);

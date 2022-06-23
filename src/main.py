@@ -230,20 +230,23 @@ class ActivitiesList(Resource):
             return "Activity not found", 500
 
 
-@hdmwebapp.route('/activities/<int:id>/work_time')
+@hdmwebapp.route('/activities/<int:id><int:start_date>/<int:end_date>/work_time')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ActivitiyWorkTimeOperations(Resource):
     @hdmwebapp.marshal_list_with(activity)
+    @hdmwebapp.param('id', 'die ID der Aktivität')
+    @hdmwebapp.param('start_date', 'eingegebenes Start-Datum')
+    @hdmwebapp.param('end_date', 'eingegebenes End-Datum')
     @secured
-    def get(self, id, start, end):
+    def get(self, id, start_date, end_date):
         """
         Auslesen der Zeit, die in einem bestimmten Zeitraum für eine Aktivität gearbeitet wurde.
         """
         hwa = HdMWebAppAdministration()
         act = hwa.get_activity_by_id(id)
 
-        start_date = datetime.fromtimestamp(start / 1000.0).date()
-        end_date = datetime.fromtimestamp(end / 1000.0).date()
+        start_date = datetime.fromtimestamp(start_date / 1000.0).date()
+        end_date = datetime.fromtimestamp(end_date / 1000.0).date()
 
         if act is not None:
             return hwa.get_work_time_of_activity_between_two_dates(act, start_date, end_date)
@@ -322,6 +325,20 @@ class ProjectListOperations(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
+
+
+@hdmwebapp.route('/projectsowner')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectOwnerOperations(Resource):
+    @hdmwebapp.marshal_list_with(project)
+    @secured
+    def get(self):
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        per = hwa.get_person_by_firebase_id(firebase_id)
+        projects = hwa.get_projects_by_owner(per)
+        return projects
 
 
 @hdmwebapp.route('/projects/<int:id>')
@@ -683,6 +700,12 @@ sub_thread = Thread(target=check)
 # es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
+
+h = HdMWebAppAdministration()
+ti = h.get_time_interval_by_id(23)
+pe = h.get_person_by_id(4)
+
+h.create_departure_event(pe)
 
 if __name__ == '__main__':
     app.run(debug=False)

@@ -17,6 +17,7 @@ import Welcome from "./components/pages/Welcome";
 import {Person} from "@mui/icons-material";
 import TimeIntervalTransactionList from "./components/TimeIntervalTransactionList";
 import SignInHeader from "./components/layout/SignInHeader";
+import ProjectAnalysis from "./components/ProjectAnalysis";
 
 
 class App extends React.Component {
@@ -106,6 +107,9 @@ class App extends React.Component {
                                 </Route>
                                 <Route exact path='/eventtransactionsandtimeintervaltransactions'>
                                     <TimeIntervalTransactionList/>
+                                </Route>
+                                <Route exact path='/projectanalysis'>
+                                    <ProjectAnalysis/>
                                 </Route>
                                 <Route path='*'>
                                     <NotFound/>

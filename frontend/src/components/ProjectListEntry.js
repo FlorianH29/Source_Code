@@ -6,6 +6,8 @@ import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
 import EditIcon from '@mui/icons-material/Edit';
 import ProjectDeleteDialog from "./dialogs/ProjectDeleteDialog";
 import DeleteIcon from "@mui/icons-material/Delete";
+import {Link as RouterLink, withRouter} from "react-router-dom";
+import ListItemButton from "@mui/material/ListItemButton";
 import {HdMWebAppAPI} from "../api";
 
 
@@ -118,6 +120,12 @@ class ProjectListEntry extends Component {
         return(
             <div>
                 <ListItem>
+                    <ListItemButton component={RouterLink} to={{
+                        pathname: `/activities`,
+                        pro: {
+                            project: project
+                            }
+                    }}>
                     <Grid container alignItems={"center"}>
                         <Grid item xs={3} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
@@ -138,9 +146,7 @@ class ProjectListEntry extends Component {
                             <Typography variant={"h5"} component={"div"}>
                                Vom {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
                                 dateStyle: "long",})} bis zum {new Date(endEvent.time_stamp).toLocaleString('de-DE', {
-    dateStyle: "long",
-
-})}
+                                dateStyle: "long",})}
                             </Typography>
                         </Grid>
                         <Grid item xs={3} align={"center"}>
@@ -148,6 +154,7 @@ class ProjectListEntry extends Component {
                             <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteProjectButtonClicked}> </Button>
                         </Grid>
                     </Grid>
+                     </ListItemButton>
                 </ListItem>
                 <Divider/>
                 <ProjectCreateDialog show={showProjectCreateDialog} project={project} onClose={this.projectCreateDialogClosed} />
@@ -171,4 +178,4 @@ ProjectListEntry.propTypes = {
   onProjectDeleted: PropTypes.func.isRequired
 }
 
-export default withStyles(styles)(ProjectListEntry);
+export default withRouter(withStyles(styles)(ProjectListEntry));

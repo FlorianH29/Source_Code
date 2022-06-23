@@ -16,6 +16,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import AssessmentRoundedIcon from '@mui/icons-material/AssessmentRounded';
 import {Link as RouterLink} from "react-router-dom";
 import {HdMWebAppAPI, PersonBO} from "../../api";
 import EventManager from "../EventManager";
@@ -193,7 +194,7 @@ class Navigator extends Component {
                                 </ListItem>
 
                                 <ListItem>
-                                    <ListItemButton component={RouterLink} to={`/projectworks`}>
+                                    <ListItemButton component={RouterLink} to={`/projects`}>
                                         <ListItemIcon>
                                             <AccessTimeIcon/>
                                         </ListItemIcon>
@@ -207,6 +208,15 @@ class Navigator extends Component {
                                             <AccountCircleIcon/>
                                         </ListItemIcon>
                                         <ListItemText primary="Arbeitszeiten"/>
+                                    </ListItemButton>
+                                </ListItem>
+
+                                <ListItem>
+                                    <ListItemButton component={RouterLink} to={`/projectanalysis`}>
+                                        <ListItemIcon>
+                                            <AssessmentRoundedIcon/>
+                                        </ListItemIcon>
+                                        <ListItemText primary="Projektanalyse"/>
                                     </ListItemButton>
                                 </ListItem>
 
