@@ -351,7 +351,6 @@ class HdMWebAppAdministration(object):
     def delete_event_transaction(self, event_transaction):
         """Die gegebene EventTransaction löschen."""
         with EventTransactionMapper() as mapper:
-            # nicht ganz löschen, sondern nur deaktivieren
             mapper.delete(event_transaction)
 
     def create_event_transaction(self, event=None, arrive=None, departure=None):

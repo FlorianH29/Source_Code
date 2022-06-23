@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles, Typography, Accordion, AccordionSummary, AccordionDetails, Grid, Divider} from '@material-ui/core';
 import { Button, ButtonGroup } from '@material-ui/core';
 import DeleteIcon from '@mui/icons-material/Delete';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 import ProjectWorkForm from './dialogs/ProjectWorkForm';
 import ProjectWorkDeleteDialog from "./dialogs/ProjectWorkDeleteDialog";
@@ -115,7 +116,7 @@ class ProjectWorkListEntry extends Component {
                 </Grid>
                 <Grid item xs={3} align={"center"}>
                     <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editProjectWorkButtonClicked}> </Button>
-                    <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteProjectWorkButtonClicked}> </Button>
+                    <Button color='secondary' size='small' startIcon={<HighlightOffIcon/>} onClick={this.deleteProjectWorkButtonClicked}> </Button>
                 </Grid>
             </Grid>
                 </AccordionSummary>

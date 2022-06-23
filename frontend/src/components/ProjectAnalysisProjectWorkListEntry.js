@@ -45,7 +45,7 @@ class ProjectAnalysisProjectWorkListEntry extends Component {
 
     // console.log(this.state);
     return (
-        <div style={{width: "100%"}}>
+        <div>
             <Grid container alignItems='center'>
                 <Grid item xs={3} align={"center"}>
                     <Typography variant={"h5"} component={"div"}>

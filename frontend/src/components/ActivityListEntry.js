@@ -10,9 +10,6 @@ import ActivityForm from "./dialogs/ActivityForm";
 import {HdMWebAppAPI} from "../api";
 import {Link as RouterLink, withRouter} from "react-router-dom";
 import ListItemButton from "@mui/material/ListItemButton";
-import ProjectWorkList from "./ProjectWorkList";
-import {Link} from "@mui/material";
-
 
 
 class ActivityListEntry extends Component {
@@ -75,11 +72,11 @@ class ActivityListEntry extends Component {
         <div>
            <ListItem>
            <ListItemButton component={RouterLink} to={{
-                    pathname: `/projectworks`,
-                    ac: {
+                pathname: `/projectworks`,
+                ac: {
                      activity: activity
-                 }}
-                 }>
+                    }
+           }}>
              <Grid container alignItems='center'>
                <Grid item xs={3} align={"center"}>
                  <Typography variant={"h5"} component={"div"}>

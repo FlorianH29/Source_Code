@@ -28,7 +28,7 @@ class ProjectWorkList extends Component {
     const { activity } = this.props.location.ac;
 
     this.setState({projectWorks: []});
-    HdMWebAppAPI.getAPI().getProjectWorks(activity.getID())  // statt 1 sollte hier die Id der ausgewählten Aktivität rein
+    HdMWebAppAPI.getAPI().getProjectWorks(activity.getID())
       .then(projectWorkBOs =>
         this.setState({
           projectWorks: projectWorkBOs
@@ -115,18 +115,21 @@ class ProjectWorkList extends Component {
     // console.log(this.state)
     let ac = null;
     if (this.props.location.ac) {
-      // owner object exists
+      // AktivityBO existiert
       ac = this.props.location.ac
     } else {
-      // owner object does not exist, we are called directly by route URL
-      // or the page has been refreshed -> put the user back to start page
+      // AktivityBO existiert nicht, stattdessen wurde die Komponente direkt über die URL aufgerufen oder die Seite
+      // wurde neu geladen -> zurück auf die Startseite verweisen
       return (<Redirect to='/' />);
     }
 
     return (
         <div>
-        <Box m={18}  pl={5}>
-          <Grid container>
+        <Box m={18}  pl={8}>
+          <Typography variant={"h4"} algin={"left"} component={"div"}>
+             Aktivität: {ac.activity.getActivityName()}
+          </Typography>
+          <Grid container mt={1}>
             <Grid item xs={12} align={"center"}>
                 <Grid container>
                     <Grid item xs={3} align={"flex-end"}>
