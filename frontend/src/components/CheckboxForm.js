@@ -1,7 +1,6 @@
+/**
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText,
-    DialogActions, TextField} from '@material-ui/core';
 import {HdMWebAppAPI, PersonBO} from "../../api";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -9,7 +8,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
 import FormControl from "@mui/material/FormControl";
-import {Divider} from "@mui/material";
 import Select, {SelectChangeEvent} from "@mui/material/Select";
 import ProjectMemberForm from "./dialogs/ProjectMemberForm";
 
@@ -88,11 +86,12 @@ class CheckboxForm extends Component {
 
 CheckboxForm.propTypes = {
     /** @ignore */
-    projectMember: PropTypes.object.isRequired,
+    /**projectMember: PropTypes.object.isRequired,
     person: PropTypes.object.isRequired,
     /** The CustomerBO of this AccountList */
-    project: PropTypes.object.isRequired,
+    /**project: PropTypes.object.isRequired,
 }
 
-
+/**
 export default CheckboxForm;
+*/

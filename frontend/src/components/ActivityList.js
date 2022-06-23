@@ -80,7 +80,7 @@ class ActivityList extends Component {
                         <Grid container spacing={1} justifyContent={"center"}>
                             <Grid item xs={12}>
                                 <Typography variant={"h4"} algin={"left"} component={"div"}>
-                                    Projekt: {this.props.projectName}
+                                    Projekt:
                                 </Typography>
                                 <Button variant='contained' color='primary' startIcon={<AddIcon/>} algin={"center"}
                                         onClick={this.handleAddActivityButtonClicked}>

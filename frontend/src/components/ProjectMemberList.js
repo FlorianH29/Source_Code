@@ -9,6 +9,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import {Box, Button, Divider} from "@mui/material";
 import ProjectMemberListEntry from "./ProjectMemberListEntry";
 import Card from "@mui/material/Card";
+import ProjectMemberForm from "./dialogs/ProjectMemberForm";
 
 
 class ProjectMemberList extends Component {
@@ -19,6 +20,7 @@ class ProjectMemberList extends Component {
         // Den State initiieren
         this.state = {
             projectMembers: [],
+            showProjectMemberForm: false
         };
     }
 
@@ -38,6 +40,14 @@ class ProjectMemberList extends Component {
         //console.log(this.state)
     }
 
+     handleAddProjectMemberButtonClicked = (event) => {
+        // Dialog öffnen, um damit eine Aktivität anlegen zu können
+        event.stopPropagation();
+        this.setState({
+            showProjectMemberForm: true
+        })
+    }
+
     projectMemberDeleted = projectMember => {
         const newProjectMemberList = this.state.projectMembers.filter(projectMemberFromState => projectMemberFromState.getID() !== projectMember.getID());
         this.setState({
@@ -49,15 +59,21 @@ class ProjectMemberList extends Component {
     render() {
         const {classes} = this.props;
         const {projectMembers} = this.state;
-        console.log(projectMembers)
+        //console.log(projectMembers)
 
         return (
             <div>
                 <Box m={25}>
                     <Card>
-                        <Typography variant={"h5"} algin={"left"} component={"div"}>
-                            Projektmitglieder
-                        </Typography>
+                        <Grid item xs={12}>
+                            <Typography variant={"h5"} algin={"left"} component={"div"}>
+                                Projektmitglieder
+                            </Typography>
+                            <Button variant='contained' color='primary' startIcon={<AddIcon/>} algin={"center"}
+                                        onClick={this.handleAddProjectMemberButtonClicked}>
+                                    Mitarbeiter Hinzufühen
+                            </Button>
+                        </Grid>
                         <Grid container>
                             <Grid item xs={12} align={"center"}>
                                 <Grid container>
