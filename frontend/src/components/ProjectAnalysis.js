@@ -73,14 +73,17 @@ class ProjectAnalysis extends Component {
                   <Grid container>
                     <Grid item xs={12} align={"center"}>
                         <Grid container>
-                            <Grid item xs={3} align={"center"}>
-                                <Typography variant={"h5"} component={"div"}> Projekte: </Typography>
+                            <Grid item xs={4} align={"center"}>
+                                <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}>
+                                    Projekte: </Typography>
                             </Grid>
-                            <Grid item xs={3} align={"center"}>
-                                <Typography variant={"h5"} component={"div"}> Klient: </Typography>
+                            <Grid item xs={4} align={"center"}>
+                                <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}>
+                                    Klient: </Typography>
                             </Grid>
-                            <Grid item xs={3} align={"center"}>
-                                <Typography variant={"h5"} component={"div"}> Arbeitsleistung: </Typography>
+                            <Grid item xs={4} align={"center"}>
+                                <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}>
+                                    Arbeitsleistung: </Typography>
                             </Grid>
                         </Grid>
                         <Divider/>

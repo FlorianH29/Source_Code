@@ -45,19 +45,19 @@ class ProjectAnalysisProjectWorkListEntry extends Component {
 
     // console.log(this.state);
     return (
-        <div>
-            <Grid container alignItems='center'>
-                <Grid item xs={3} align={"center"}>
+        <div style={ {width: "100%", p: 0, m:0}}>
+            <Grid container alignItems='center' spacing={2}>
+                <Grid item xs={4} align={"center"}>
                     <Typography variant={"h5"} component={"div"}>
                         {projectWork.getProjectWorkName()}
                     </Typography>
                 </Grid>
-                <Grid item xs={3} align={"center"}>
+                <Grid item xs={4} align={"center"}>
                     <Typography variant={"h5"} component={"div"}>
                         {owner.firstname} {owner.lastname}
                     </Typography>
                 </Grid>
-                <Grid item xs={3} align={"center"}>
+                <Grid item xs={4} align={"center"}>
                     <Typography variant={"h5"} component={"div"}>
                     {projectWork.getTimeIPeriod()}
                     </Typography>

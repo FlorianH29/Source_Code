@@ -203,7 +203,7 @@ class Navigator extends Component {
                                 </ListItem>
 
                                 <ListItem>
-                                    <ListItemButton component={RouterLink} to={`/worktimeaccount`}>
+                                    <ListItemButton component={RouterLink} to={`/eventtransactionsandtimeintervaltransactions`}>
                                         <ListItemIcon>
                                             <AccountCircleIcon/>
                                         </ListItemIcon>

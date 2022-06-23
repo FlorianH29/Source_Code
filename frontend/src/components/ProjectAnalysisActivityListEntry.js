@@ -18,8 +18,8 @@ class ActivityListEntry extends Component {
 
         // console.log(this.state);
         return (
-            <div style={{width: 1000}}>
-                <Accordion sx={{width: 100}}>
+            <div style={ {width: "100%", p: 0, m:0}}>
+                <Accordion sx={{width: "100%", p: 0, m:0}}>
                     <AccordionSummary>
                         <Grid container alignItems='center'>
                             <Grid item xs={4} align={"center"}>

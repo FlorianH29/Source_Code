@@ -34,26 +34,22 @@ class ProjectAnalysisProjectWorkList extends Component {
     // console.log(this.state)
 
     return (
-        <div style={{width: "100%"}}>
-          <Grid container>
-            <Grid item xs={12} align={"center"}>
-                <Grid container>
-                    <Grid item xs={3} align={"flex-end"}>
-                        <Typography variant={"h5"} component={"div"}> Projektarbeit </Typography>
+        <div style={{width: "100%", p: 0, m:0}}>
+                <Grid container spacing={1}>
+                    <Grid item xs={4} align={"center"}>
+                        <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Projektarbeit </Typography>
                     </Grid>
-                    <Grid item xs={3} align={"flex-end"}>
-                        <Typography variant={"h5"} component={"div"}> Bearbeiter </Typography>
+                    <Grid item xs={4} align={"center"}>
+                        <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Bearbeiter </Typography>
                     </Grid>
-                    <Grid item xs={3} align={"flex-end"}>
-                        <Typography variant={"h5"} component={"div"}> Dauer </Typography>
+                    <Grid item xs={4} align={"center"}>
+                        <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Dauer </Typography>
                     </Grid>
                 </Grid>
                 <Divider/>
                 {projectWorks.map(pw =>
                     <ProjectAnalysisProjectWorkListEntry key={pw.getID()} projectWork={pw}/>)
                 }
-            </Grid>
-          </Grid>
         </div>
         );
     }

@@ -37,8 +37,8 @@ class ProjectAnalysisProjectEntry extends Component {
         //console.log (classes)
 
         return(
-            <div>
-                <Accordion>
+            <div style={ {width: "100%", p: 0, m:0}}>
+                <Accordion style={{width: "100%", p: 0, m:0}}>
                     <AccordionSummary>
                         <Grid container alignItems={"center"}>
                             <Grid item xs={4} align={"center"}>
@@ -46,7 +46,7 @@ class ProjectAnalysisProjectEntry extends Component {
                                     {project.getProjectName()}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={4} align={"center"}>
+                            <Grid item xs={4} align={"center"} >
                                 <Typography variant={"h5"} component={"div"}>
                                     {project.getClient()}
                                 </Typography>

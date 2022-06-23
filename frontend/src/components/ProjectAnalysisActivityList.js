@@ -35,22 +35,18 @@ class ProjectAnalysisActivityList extends Component {
         const {activities} = this.state;
 
         return (
-            <div>
-                <Grid container>
-                    <Grid item xs={12} align={"center"}>
+            <div style={ {width: "100%", p: 0, m:0}}>
                     <Grid container>
-                        <Grid item xs={3} align={"flex-end"}>
-                            <Typography variant={"h5"} component={"div"}> Aktivitsname </Typography>
+                        <Grid item xs={4} align={"center"}>
+                            <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Aktivitsname </Typography>
                         </Grid>
-                        <Grid item xs={3} align={"flex-end"}>
-                            <Typography variant={"h5"} component={"div"}> Soll </Typography>
+                        <Grid item xs={4} align={"center"}>
+                            <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Soll </Typography>
                         </Grid>
-                        <Grid item xs={3} align={"flex-end"}>
-                            <Typography variant={"h5"} component={"div"}> Ist </Typography>
+                        <Grid item xs={4} align={"center"}>
+                            <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Ist </Typography>
                         </Grid>
                     </Grid>
-                    </Grid>
-                </Grid>
                     {activities.map(ac =>
                         <ProjectAnalysisActivityListEntry key={ac.getID()} activity={ac} />)
                     }

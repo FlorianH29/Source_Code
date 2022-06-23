@@ -705,7 +705,7 @@ h = HdMWebAppAdministration()
 ti = h.get_time_interval_by_id(23)
 pe = h.get_person_by_id(4)
 
-h.create_departure_event(pe)
+#h.create_departure_event(pe)
 
 if __name__ == '__main__':
     app.run(debug=False)
