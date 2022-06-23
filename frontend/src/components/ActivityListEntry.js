@@ -8,9 +8,10 @@ import ListItem from "@mui/material/ListItem";
 import ActivityDeleteDialog from "./dialogs/ActivityForm";
 import ActivityForm from "./dialogs/ActivityForm";
 import {HdMWebAppAPI} from "../api";
-import {Link as RouterLink, Route} from "react-router-dom";
+import {Link as RouterLink, withRouter} from "react-router-dom";
 import ListItemButton from "@mui/material/ListItemButton";
 import ProjectWorkList from "./ProjectWorkList";
+import {Link} from "@mui/material";
 
 
 
@@ -73,7 +74,12 @@ class ActivityListEntry extends Component {
       return (
         <div>
            <ListItem>
-           <ListItemButton component={RouterLink} to={`/projectworks`}>
+           <ListItemButton component={RouterLink} to={{
+                    pathname: `/projectworks`,
+                    ac: {
+                     activity: activity
+                 }}
+                 }>
              <Grid container alignItems='center'>
                <Grid item xs={3} align={"center"}>
                  <Typography variant={"h5"} component={"div"}>
@@ -95,12 +101,11 @@ class ActivityListEntry extends Component {
                    <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteActivityButtonClicked}> </Button>
                </Grid>
              </Grid>
-           </ListItemButton>
+             </ListItemButton>
            </ListItem>
            <Divider/>
           <ActivityDeleteDialog show={showActivityDeleteDialog} activity={activity} onClose={this.deleteActivityDialogClosed} />
           <ActivityForm show={showActivityForm} activity={activity} onClose={this.activityFormClosed} />
-          <ProjectWorkList activity={this.state.activity}/>
         </div>
       );
     }
@@ -121,4 +126,4 @@ ActivityListEntry.propTypes = {
   show: PropTypes.bool.isRequired
 }
 
-export default withStyles(styles) (ActivityListEntry);
+export default withRouter(ActivityListEntry);

@@ -18,7 +18,7 @@ class ProjectWorkForm extends Component {
   constructor(props) {
     super(props);
 
-    let pwn = '...', de = '',  act = 0;
+    let pwn = '', de = '',  act = 0;
     if (props.projectWork) {
       pwn = props.projectWork.getProjectWorkName();
       de = props.projectWork.getDescription();
@@ -74,10 +74,10 @@ class ProjectWorkForm extends Component {
     console.log(e));
   }
 
-  newF = () => {
-      let test = new Promise((resolve, reject) => {
+  addEventandProjectWork = () => {
+      let event = new Promise((resolve) => {
           resolve(this.addEvent());})
-      test.then(this.addProjectWork)
+      event.then(this.addProjectWork)
   }
 
   /** Behandelt Wertänderungen der Textfelder und validiert diese */
@@ -160,8 +160,8 @@ class ProjectWorkForm extends Component {
                   <Button color='primary' onClick={this.updateProjectWork}>
                     Sichern
                   </Button>
-                  : <Button onClick={this.newF}>
-                      tst
+                  : <Button color='primary' onClick={this.addEventandProjectWork}>
+                      Start buchen
                     </Button>
               }
             </DialogActions>

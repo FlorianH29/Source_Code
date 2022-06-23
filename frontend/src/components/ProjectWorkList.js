@@ -2,16 +2,13 @@ import React, {Component} from 'react';
 import {EventBO, HdMWebAppAPI} from '../api';
 import {Button, Grid, Typography, Divider, Dialog, DialogActions, DialogContent, List, Collapse} from '@mui/material';
 import Box from "@mui/material/Box";
-import ListItem from "@mui/material/ListItem";
 import ProjectWorkListEntry from "./ProjectWorkListEntry";
 import EventManager from "./EventManager";
 import ProjectWorkForm from "./dialogs/ProjectWorkForm";
 import PropTypes from "prop-types";
 import {DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
-import {ExpandLess, ExpandMore} from "@material-ui/icons";
-import ListItemButton from "@mui/material/ListItemButton";
-//import BasicButtons from "./BasicButtons";
+import {withRouter, Redirect} from "react-router-dom";
 
 class ProjectWorkList extends Component {
 
@@ -24,15 +21,14 @@ class ProjectWorkList extends Component {
         open: false,
         disableEnd: true,
         disableStart: false,
-        start: new Date(2022, 6, 18,0,0),
-        end: new Date(2022, 6, 23,0,0),
-        worktimeProject: null,
       }
   }
 
   getProjectWorksForActivity = () => {
+    const { activity } = this.props.location.ac;
+
     this.setState({projectWorks: []});
-    HdMWebAppAPI.getAPI().getProjectWorks(1)  // statt 1 sollte hier die Id der ausgewählten Aktivität rein
+    HdMWebAppAPI.getAPI().getProjectWorks(activity.getID())  // statt 1 sollte hier die Id der ausgewählten Aktivität rein
       .then(projectWorkBOs =>
         this.setState({
           projectWorks: projectWorkBOs
@@ -51,11 +47,12 @@ class ProjectWorkList extends Component {
           workTimeProject: null,
         })
       );
-     console.log('test')
   }
 
   componentDidMount() {
-    this.getProjectWorksForActivity();
+      if (this.props.location.ac) {
+          this.getProjectWorksForActivity();
+      }
   }
 
   handleStartEventButtonClicked = (event) => {
@@ -116,6 +113,15 @@ class ProjectWorkList extends Component {
     const { classes } = this.props;
     const { projectWorks, showProjectWorkForm, disableEnd, disableStart, open } = this.state;
     // console.log(this.state)
+    let ac = null;
+    if (this.props.location.ac) {
+      // owner object exists
+      ac = this.props.location.ac
+    } else {
+      // owner object does not exist, we are called directly by route URL
+      // or the page has been refreshed -> put the user back to start page
+      return (<Redirect to='/' />);
+    }
 
     return (
         <div>
@@ -205,4 +211,4 @@ ProjectWorkForm.propTypes = {
 
 }
 
-export default ProjectWorkList;
+export default withRouter(ProjectWorkList);
