@@ -74,7 +74,7 @@ class ProjectWorkListEntry extends Component {
     this.getProjectWorkOwner();
   }
 
-  /** Gibt den Ersteller einer Projektarbeit zurück */
+  /** Gibt den Owner dieser Projektarbeit zurück */
   getProjectWorkOwner = () => {
     if (this.props.projectWork.getID() > 0) {
       HdMWebAppAPI.getAPI().getOwnerOfProjectWork(this.props.projectWork.getID()).then(owner =>

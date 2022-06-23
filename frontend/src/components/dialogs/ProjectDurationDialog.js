@@ -17,6 +17,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import ProjectCreateDialog from "./ProjectCreateDialog";
 import CloseIcon from "@material-ui/icons/Close";
 import {DialogContentText} from "@material-ui/core";
+import PropTypes from "prop-types";
 
 class ProjectDurationDialog extends Component {
 
@@ -30,7 +31,9 @@ class ProjectDurationDialog extends Component {
             showProjectDurationForm: false,
             disableStartButton: false,
             disableEndButton: true,
+            showProjectCreateDialog: false
         }
+
     }
 
     /** Erzeugt ein Projekt-Laufzeit-Start als EventBO  */
@@ -75,6 +78,18 @@ class ProjectDurationDialog extends Component {
         this.setState(this.baseState);
         this.props.onClose(null);
     }
+    
+
+
+   handleFinishedButtonClicked = () => {
+        this.setState({
+                showProjectCreateDialog: true
+            });
+        this.addProjectDurationEndEvent()
+        this.setState(this.baseState);
+        this.props.onClose(null);
+        this.props.openProjectDurationDialog();
+    }
 
 
 
@@ -112,8 +127,8 @@ class ProjectDurationDialog extends Component {
   }*/
 
     render() {
-        const {startDate, endDate, eventType, disableStartButton, disableEndButton} = this.state;
-        const {showProjectDurationForm, getEventForTimeIntervalTransactions} = this.props
+        const {startDate, endDate, eventType, disableStartButton, disableEndButton, handleMoveOnButtonClicked, handleFinishedButtonClicked} = this.state;
+        const {showProjectDurationForm, getEventForTimeIntervalTransactions, show, showProjectCreateDialog} = this.props
 
         let header = '';
         let title = '';
@@ -130,6 +145,7 @@ class ProjectDurationDialog extends Component {
 
         //console.log(endDate)
         return (
+            show ?
             <div>
                 <Dialog open={true} onClose={this.handleClose} maxWidth={"xl"}>
                    <DialogTitle id='form-dialog-title'>
@@ -181,15 +197,26 @@ class ProjectDurationDialog extends Component {
                                   Weiter
                               </Button>
                     <div/>
-                    <Button color={"primary"} disabled={disableEndButton} onClick={this.addProjectDurationEndEvent}>
+                    <Button color={"primary"} disabled={disableEndButton} onClick={this.handleFinishedButtonClicked}>
                                   Fertig
                               </Button>
                        </DialogActions>
                     </Dialog>
 
                 </div>
+                : null
         );
     }
+}
+
+/** PropTypes*/
+ProjectCreateDialog.propTypes = {
+
+    onClose: PropTypes.func.isRequired,
+
+    show: PropTypes.bool.isRequired,
+
+    showProjectDurationForm: PropTypes.bool.isRequired
 }
 
 export default ProjectDurationDialog;

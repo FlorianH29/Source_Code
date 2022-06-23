@@ -39,6 +39,40 @@ class TimeIntervalMapper(Mapper):
 
         return result
 
+    def find_by_max_id_for_project(self):
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM timeinterval WHERE timeinterval_id = (SELECT MAX(timeinterval_id) FROM timeinterval " \
+                  "WHERE deleted=0 AND arrive_id is null AND departure_id is null)".format()
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (timeinterval_id, last_edit, start_event_id, end_event_id, time_period, arrive_id, departure_id, deleted) \
+                = tuples[0]
+            interval = ti.TimeInterval()
+            interval.set_id(timeinterval_id)
+            interval.set_last_edit(last_edit)
+            interval.set_start_event(start_event_id)
+            interval.set_end_event(end_event_id)
+            interval.set_time_period(time_period)
+            interval.set_arrive(arrive_id)
+            interval.set_departure(departure_id)
+            interval.set_deleted(deleted)
+
+            result = interval
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
     def find_by_arrive_id(self, key):
 
         result = None
