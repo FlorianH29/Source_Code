@@ -1,19 +1,23 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {withStyles, Button, TextField, InputAdornment, IconButton, Grid, Typography, Divider} from '@mui/material';
+import {withStyles, Button, TextField, InputAdornment, IconButton, Grid, Typography, Divider, Box} from '@mui/material';
 import ProjectListEntry from "./ProjectListEntry";
 import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
 import PropTypes from "prop-types";
+import ProjectDurationDialog from "./dialogs/ProjectDurationDialog";
+import ViewsDatePicker from "./dialogs/ProjectDurationDialog";
 
 
 class ProjectList extends Component {
+
 
     constructor(props) {
         super(props);
 
         this.state = {
             projects: [],
-            showProjectCreateDialog: false
+            showProjectCreateDialog: false,
+            showProjectDurationDialog: false
         }
     }
 
@@ -33,12 +37,19 @@ class ProjectList extends Component {
         this.getProjects();
     }
 
-    handleCreateProjectButtonClicked = (event) => {
-        event.stopPropagation();
+    handleShowProjectCreation = () => {
         this.setState({
             showProjectCreateDialog: true
+            })};
+
+    handleCreateProjectButtonClicked = (event) => {
+        console.log("test")
+        event.stopPropagation();
+        this.setState({
+            showProjectDurationDialog: true
         })
     }
+
 
     projectCreateDialogClosed = project => {
         // projectWork ist nicht null und deshalb erstelltI/überarbeitet
@@ -55,6 +66,12 @@ class ProjectList extends Component {
         }
     }
 
+
+    handleDurationClose = () => {
+        this.setState({
+                showProjectDurationDialog: false
+            });
+    }
     /**
      * Behandelt onProjectDeleted Events der ProjectListEntry Komponente
      */
@@ -84,9 +101,10 @@ class ProjectList extends Component {
 
 
     render() {
-        const {projects, showProjectCreateDialog} = this.state
-        console.log(this.state)
+        const {projects, showProjectCreateDialog, showProjectDurationDialog} = this.state
+        //console.log(this.state)
         return (
+            <Box m={18}  pl={5}>
             <div>
                 <Grid container direction={'row'} spacing={18}>
                     <Grid item xs={3} align={"center"}>
@@ -108,6 +126,9 @@ class ProjectList extends Component {
                             <Grid item xs={3} align={"flex-end"}>
                                 <Typography variant={"h5"} component={"div"}> Arbeitsleistung: </Typography>
                             </Grid>
+                            <Grid item xs={3} align={"flex-end"}>
+                                <Typography variant={"h5"} component={"div"}> Projektlaufzeit: </Typography>
+                            </Grid>
                         </Grid>
                         <Divider/>
                         {projects.map(pro =>
@@ -115,13 +136,17 @@ class ProjectList extends Component {
                     </Grid>
                 </Grid>
                 <ProjectCreateDialog onClose={this.projectCreateDialogClosed} show={showProjectCreateDialog}/>
-            </div>);
+                <ProjectDurationDialog openProjectDurationDialog={this.handleShowProjectCreation} onClose={this.handleDurationClose} show={showProjectDurationDialog}/>
+            </div>
+            </Box>
+                );
     }
 }
 
 
 ProjectCreateDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
+    test: PropTypes.func.isRequired
 }
 
 export default ProjectList;

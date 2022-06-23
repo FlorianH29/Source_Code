@@ -9,4 +9,3 @@ export {default as WorktimeAccountBO} from './WorktimeAccountBO';
 export {default as TimeIntervalBO} from './TimeIntervalBO';
 export {default as EventBO} from './EventBO';
 export {default as ActivityBO} from './ActivityBO';
-export {default as TimeIntervalTransactionBO} from './TimeIntervalTransactionBO';

@@ -74,7 +74,7 @@ class ProjectWorkListEntry extends Component {
     this.getProjectWorkOwner();
   }
 
-  /** gets the balance for this account */
+  /** Gibt den Owner dieser Projektarbeit zurück */
   getProjectWorkOwner = () => {
     if (this.props.projectWork.getID() > 0) {
       HdMWebAppAPI.getAPI().getOwnerOfProjectWork(this.props.projectWork.getID()).then(owner =>

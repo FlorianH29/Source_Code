@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Dialog, DialogContent, DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
-import {HdMWebAppAPI, ProjectBO} from '../../api';
+import {HdMWebAppAPI, ProjectBO, EventBO} from '../../api';
 import {Button, DialogActions, TextField} from "@mui/material";
 import PropTypes from "prop-types";
 
@@ -50,7 +50,7 @@ class ProjectCreateDialog extends Component {
         console.log(e, 'Werde ich aufgerufen?'));
     }
 
-    /** Behandelt Werteänderungen der textfelder und validiert diese*/
+    /** Behandelt Werteänderungen der Textfelder und validiert diese. */
     textFieldValueChange = (event) => {
         const value = event.target.value;
 
@@ -66,7 +66,7 @@ class ProjectCreateDialog extends Component {
         });
   }
 
-   /** Im Fall von bearbeiten Überschreibt es das ProjectBO mit neuen Werten */
+   /** Im Fall von Bearbeiten, überschreibt es das ProjectBO mit neuen Werten */
    updateProject = () => {
        // das originale Project klonen, für den Fall, dass der Backend Call fehlschlägt.
        let updatedProject = Object.assign(new ProjectBO(), this.props.project);
@@ -149,6 +149,8 @@ ProjectCreateDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
 
     show: PropTypes.bool.isRequired
+
+
 }
 
 

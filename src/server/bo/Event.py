@@ -8,7 +8,7 @@ class Event(bo.BusinessObject):
         super().__init__()
         self._time_stamp = None  # Der Zeitpunkt des Eintretens des Ereignisses
         self._event_type = 0  # Typ des Ereignisses, entweder Start oder Ende eines Zeitintervalls
-        self._affiliated_person = 0  # die Person, der das Event zugewiesen ist
+        self._affiliated_person = None  # die Person, der das Event zugewiesen ist
 
     def get_time_stamp(self):
         """Auslesen des Zeitpunktes."""

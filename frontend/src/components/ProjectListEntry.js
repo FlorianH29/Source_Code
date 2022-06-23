@@ -6,6 +6,8 @@ import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
 import EditIcon from '@mui/icons-material/Edit';
 import ProjectDeleteDialog from "./dialogs/ProjectDeleteDialog";
 import DeleteIcon from "@mui/icons-material/Delete";
+import {HdMWebAppAPI} from "../api";
+
 
 
 /**
@@ -24,7 +26,9 @@ class ProjectListEntry extends Component {
         this.state = {
             project: props.project,
             showProjectCreateDialog: false,
-            showProjectDeleteDialog: false
+            showProjectDeleteDialog: false,
+            startEvent: "",
+            endEvent: ""
         }
     }
 
@@ -55,26 +59,60 @@ class ProjectListEntry extends Component {
     }
 
     /** Methode für das onClickEvent des BearbeitenButton von Project*/
-      projectCreateDialogClosed = (project) => {
-    // projectWork ist nicht null und wurde dementsprechend geändert
-    if (project) {
-      this.setState({
-        project: project,
-        showProjectCreateDialog: false
-      });
-    } else {
-      this.setState({
-        showProjectCreateDialog: false
-      });
+    projectCreateDialogClosed = (project) => {
+        // projectWork ist nicht null und wurde dementsprechend geändert
+        if (project) {
+            this.setState({
+                project: project,
+                showProjectCreateDialog: false
+            });
+        } else {
+            this.setState({
+                showProjectCreateDialog: false
+            });
+        }
     }
-  }
+
+    componentDidMount() {
+        this.getStartEventOfProject();
+        this.getEndEventOfProject();
+    }
+
+
+    /** Gibt das Start-Event dieses Projekts zurück */
+    getStartEventOfProject = () => {
+        HdMWebAppAPI.getAPI().getStartEvent(this.props.project.getID()).then(startEvent =>
+                this.setState({
+                    startEvent: startEvent
+                })).catch(e =>
+                this.setState({ // Reset state with error from catch
+                    startEvent: null,
+                })
+            );
+    }
+
+
+    /** Gibt das Start-Event dieses Projekts zurück */
+    getEndEventOfProject = () => {
+        HdMWebAppAPI.getAPI().getEndEvent(this.props.project.getID()).then(endEvent =>
+                this.setState({
+                    endEvent: endEvent
+                })).catch(e =>
+                this.setState({ // Reset state with error from catch
+                    endEvent: null,
+                })
+            );
+    }
+
+
+
 
     /** Rendert die Komponente*/
     render() {
         const { classes } = this.props;
-        const { project, showProjectCreateDialog, showProjectDeleteDialog } = this.state;
+        const { project, showProjectCreateDialog, showProjectDeleteDialog, startEvent, endEvent } = this.state;
 
-        console.log(project)
+        console.log(startEvent)
         //console.log (classes)
 
         return(
@@ -94,6 +132,15 @@ class ProjectListEntry extends Component {
                         <Grid item xs={3} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 {project.getWorkTime()} h
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={3} align={"center"}>
+                            <Typography variant={"h5"} component={"div"}>
+                               Vom {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
+                                dateStyle: "long",})} bis zum {new Date(endEvent.time_stamp).toLocaleString('de-DE', {
+    dateStyle: "long",
+
+})}
                             </Typography>
                         </Grid>
                         <Grid item xs={3} align={"center"}>

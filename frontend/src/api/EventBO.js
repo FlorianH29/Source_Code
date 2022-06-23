@@ -7,12 +7,13 @@ export default class EventBO extends BusinessObject {
    * Konstruktor, erstelt ein Eventobjekt mit
    *
    * @param {Number} anEventType - der Typ dieses EventBO.
+   * @param {Date} aTimeStamp - der Zeitsempel des Events.
    */
-  constructor(aTimeStamp,anEventType, anAffiliatedPerson) {
+  constructor(aTimeStamp,anEventType) {
     super();
     this.time_stamp = aTimeStamp;
     this.event_type = anEventType;
-    this.affiliated_person = anAffiliatedPerson;
+    this.affiliated_person = 0;
   }
 
   /**
