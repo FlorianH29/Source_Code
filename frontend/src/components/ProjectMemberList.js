@@ -10,6 +10,7 @@ import {Box, Button, Divider} from "@mui/material";
 import ProjectMemberListEntry from "./ProjectMemberListEntry";
 import Card from "@mui/material/Card";
 import ProjectMemberForm from "./dialogs/ProjectMemberForm";
+import ActivityForm from "./dialogs/ActivityForm";
 
 
 class ProjectMemberList extends Component {
@@ -40,7 +41,7 @@ class ProjectMemberList extends Component {
         //console.log(this.state)
     }
 
-     handleAddProjectMemberButtonClicked = (event) => {
+    handleAddProjectMemberButtonClicked = (event) => {
         // Dialog öffnen, um damit eine Aktivität anlegen zu können
         event.stopPropagation();
         this.setState({
@@ -56,40 +57,59 @@ class ProjectMemberList extends Component {
         });
     }
 
+    projectMemberFormClosed = projectMember => {
+        // projectMember ist nicht null und deshalb erstellt/überarbeitet
+        if (projectMember) {
+            const newProjectMemberList = [...this.state.projectMembers, projectMember];
+            this.setState({
+                projectMembers: newProjectMemberList,
+                showProjectMemberForm: false
+            });
+        } else {
+            this.setState({
+                showProjectMemberForm: false
+            });
+        }
+    }
+
     render() {
         const {classes} = this.props;
-        const {projectMembers} = this.state;
+        const {projectMembers, showProjectMemberForm} = this.state;
         //console.log(projectMembers)
 
         return (
             <div>
                 <Box m={25}>
                     <Card>
-                        <Grid item xs={12}>
-                            <Typography variant={"h5"} algin={"left"} component={"div"}>
-                                Projektmitglieder
-                            </Typography>
-                            <Button variant='contained' color='primary' startIcon={<AddIcon/>} algin={"center"}
+                        <Grid container spacing={1} justifyContent={'center'}>
+                            <Grid item xs={12}>
+                                <Typography variant={"h5"} algin={"left"} component={"div"}>
+                                    Projektmitglieder
+                                </Typography>
+                                <Button variant='contained' color='primary' startIcon={<AddIcon/>} algin={"center"}
                                         onClick={this.handleAddProjectMemberButtonClicked}>
                                     Mitarbeiter Hinzufühen
-                            </Button>
-                        </Grid>
-                        <Grid container>
-                            <Grid item xs={12} align={"center"}>
-                                <Grid container>
-                                    <Grid item xs={2} align={"flex-end"}>
-                                        <Typography variant={"h5"} component={"div"}> Vorname </Typography>
-                                    </Grid>
-                                    <Grid item xs={2} align={"flex-end"}>
-                                        <Typography variant={"h5"} component={"div"}> Nachname </Typography>
-                                    </Grid>
-                                </Grid>
-                                <Divider/>
-                                {projectMembers.map(pm =>
-                                    <ProjectMemberListEntry key={pm.getID()} projectMember={pm}
-                                                            onActivityDeleted={this.projectMemberDeleted}/>)
-                                }
+                                </Button>
                             </Grid>
+                            <Grid container>
+                                <Grid item xs={12} align={"center"}>
+                                    <Grid container>
+                                        <Grid item xs={2} align={"flex-end"}>
+                                            <Typography variant={"h5"} component={"div"}> Vorname </Typography>
+                                        </Grid>
+                                        <Grid item xs={2} align={"flex-end"}>
+                                            <Typography variant={"h5"} component={"div"}> Nachname </Typography>
+                                        </Grid>
+                                    </Grid>
+                                    <Divider/>
+                                    {projectMembers.map(pm =>
+                                        <ProjectMemberListEntry key={pm.getID()} projectMember={pm}
+                                                                onActivityDeleted={this.projectMemberDeleted}/>)
+                                    }
+                                </Grid>
+                            </Grid>
+                            <ProjectMemberForm onClose={this.projectMemberFormClosed} show={showProjectMemberForm}></ProjectMemberForm>
+
                         </Grid>
                     </Card>
                 </Box>

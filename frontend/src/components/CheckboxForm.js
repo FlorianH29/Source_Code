@@ -1,6 +1,6 @@
-/**
+
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, {string} from 'prop-types';
 import {HdMWebAppAPI, PersonBO} from "../../api";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -86,12 +86,11 @@ class CheckboxForm extends Component {
 
 CheckboxForm.propTypes = {
     /** @ignore */
-    /**projectMember: PropTypes.object.isRequired,
+    projectMember: PropTypes.object.isRequired,
     person: PropTypes.object.isRequired,
     /** The CustomerBO of this AccountList */
-    /**project: PropTypes.object.isRequired,
+    project: PropTypes.object.isRequired,
 }
 
-/**
+
 export default CheckboxForm;
-*/

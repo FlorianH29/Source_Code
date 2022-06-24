@@ -33,6 +33,12 @@ class ProjectMemberForm extends Component {
 
     }
 
+    handleClose = () => {
+        // den state neu setzen, sodass man wieder auf dem Stand ist wie vor dem Dialog
+        this.setState(this.baseState);
+        this.props.onClose(null);
+    }
+
 
     addProjectMember = () => {
         let newProjectMember = new PersonBO(this.state.personFirstName, this.state.personLastName,
@@ -53,7 +59,7 @@ class ProjectMemberForm extends Component {
         const {potentialProjectMembers} = this.state;
 
         let title = 'Mitarbeiter zu dem Projekt hinzufügen';
-        let header = 'Mitartbeiter:';
+        let header = 'Mitartbeiter die bis jetzt noch nicht im Projekt sind:';
 
         return (
             show ?
@@ -73,14 +79,9 @@ class ProjectMemberForm extends Component {
                         <Button onClick={this.handleClose} color='secondary'>
                             Abbrechen
                         </Button>
-                    </DialogActions>
-                    <DialogActions>
-                        <Button onClick={this.handleClose} color='secondary'>
-                            Abbrechen
+                        <Button color='primary' onClick={this.addProjectMember}>
+                            Hinzufügen
                         </Button>
-                            <Button color='primary' onClick={this.addProjectMember}>
-                                Hinzufügen
-                            </Button>
 
                     </DialogActions>
                 </Dialog>
