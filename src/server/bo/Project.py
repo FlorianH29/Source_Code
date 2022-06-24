@@ -8,7 +8,7 @@ class Project (bo.BusinessObject):
         self._project_name = ""    # Bezeichnung des Projekts.
         self._client = ""  # Name des Auftraggebers.
         self._time_interval_id = None  # Id welche auf das zugehörige Zeitinterval verweist
-        self._owner = None  # Projektleiter des Projekts
+        self._owner = None  # Id der Person, Projektleiter des Projekts
         self._work_time = 0  # Die für das Projekt gearbeitete Zeit
 
     def set_project_name(self, project_name):

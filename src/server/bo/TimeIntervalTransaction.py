@@ -6,9 +6,9 @@ class TimeIntervalTransaction(ta.Transaction):
     """
     def __init__(self):
         super().__init__()
-        self._affiliated_time_interval = None
-        self._affiliated_break = None
-        self._affiliated_projectwork = None
+        self._affiliated_time_interval = None  # Id des zugehörigen Zeitintervals
+        self._affiliated_break = None  # Id der zugehörigen Pause
+        self._affiliated_projectwork = None  # Id der zugehörigen Projektarbeit
 
     def set_affiliated_time_interval(self, time_interval):
         self._affiliated_time_interval = time_interval

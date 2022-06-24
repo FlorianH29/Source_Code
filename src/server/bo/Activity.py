@@ -26,14 +26,6 @@ class Activity (bo.BusinessObject):
         """Setzen des Namens."""
         self._capacity = capacity
 
-    def get_work_time(self):
-        """Auslesen des Namens."""
-        return self._work_time
-
-    def set_work_time(self, work_time):
-        """Setzen des Namens."""
-        self._work_time = work_time
-
     def get_affiliated_project(self):
         """Auslesen des Namens."""
         return self._affiliated_project

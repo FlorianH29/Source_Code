@@ -30,8 +30,8 @@ class Event(bo.BusinessObject):
         """Auslesen der mit dem Event verknüpften Person."""
         return self._affiliated_person
 
-    def set_affiliated_person(self, value):
-        self._affiliated_person = value
+    def set_affiliated_person(self, person):
+        self._affiliated_person = person
         """Auslesen der Person."""
 
     def __str__(self):
