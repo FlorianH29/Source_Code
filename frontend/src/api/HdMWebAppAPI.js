@@ -597,6 +597,7 @@ export default class HdMWebAppAPI {
         console.log(responseJSON)
         return new Promise(function (resolve) {
           resolve(responseJSON);
+          console.log(responseJSON);
         })
       })
   }

@@ -35,21 +35,23 @@ class ProjectAnalysisActivityList extends Component {
         const {activities} = this.state;
 
         return (
-            <div style={ {width: "100%", p: 0, m:0}}>
-                    <Grid container>
-                        <Grid item xs={4} align={"center"}>
-                            <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Aktivitsname </Typography>
-                        </Grid>
-                        <Grid item xs={4} align={"center"}>
-                            <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Soll </Typography>
-                        </Grid>
-                        <Grid item xs={4} align={"center"}>
-                            <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Ist </Typography>
-                        </Grid>
+            <div style={{width: "100%", p: 0, m: 0}}>
+                <Grid container>
+                    <Grid item xs={4} align={"center"}>
+                        <Typography variant={"h5"} component={"div"}
+                                    style={{fontWeight: 600}}> Aktivitätsname: </Typography>
                     </Grid>
-                    {activities.map(ac =>
-                        <ProjectAnalysisActivityListEntry key={ac.getID()} activity={ac} />)
-                    }
+                    <Grid item xs={4} align={"center"}>
+                        <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Soll: </Typography>
+                    </Grid>
+                    <Grid item xs={4} align={"center"}>
+                        <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Ist: </Typography>
+                    </Grid>
+                </Grid>
+                {activities.map(ac =>
+                    <ProjectAnalysisActivityListEntry key={ac.getID()} activity={ac}  startDate={this.props.startDate}
+                                                     endDate={this.props.endDate}/>)
+                }
             </div>
         )
     }

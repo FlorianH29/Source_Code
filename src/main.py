@@ -249,7 +249,9 @@ class ActivitiyWorkTimeOperations(Resource):
         end_date = datetime.fromtimestamp(end_date / 1000.0).date()
 
         if act is not None:
-            return hwa.get_work_time_of_activity_between_two_dates(act, start_date, end_date)
+            result = hwa.get_work_time_of_activity_between_two_dates(act, start_date, end_date)
+            print(result)
+            return result
         else:
             return "Activity not found", 500
 

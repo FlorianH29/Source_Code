@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {withStyles, Typography, Accordion, AccordionSummary, AccordionDetails, Grid, Divider} from '@material-ui/core';
 import ProjectAnalysisProjectWorkList from "./ProjectAnalysisProjectWorkList";
+import {HdMWebAppAPI} from "../api";
 
 class ActivityListEntry extends Component {
 
@@ -10,16 +11,36 @@ class ActivityListEntry extends Component {
 
         this.state = {
             activity: props.activity,
+            workTimeActivity: '',
         };
     }
 
-    render() {
-        const {activity} = this.state;
 
-        // console.log(this.state);
+    /** Gibt die Arbeitsleistung für eine Aktivität in einen gegebenen Zeitraum zurück */
+    getWorkTimeActivity = () => {
+        console.log(this.props.activity.getID())
+        if (this.props.activity.getID() > 0) {
+            HdMWebAppAPI.getAPI().getActivityWorkTime(this.props.activity.getID, this.props.startDate, this.props.endDate).then(workTimeActivity => this.setState({
+                workTimeActivity: workTimeActivity,
+            })).catch(e =>
+                this.setState({ // bei Fehler den state zurücksetzen
+                    workTimeActivity: '',
+                })
+            );
+        }
+        console.log()
+    }
+    componentDidMount() {
+        this.getWorkTimeActivity()
+    }
+
+    render() {
+        const {activity, workTimeActivity} = this.state;
+
+         console.log(workTimeActivity);
         return (
-            <div style={ {width: "100%", p: 0, m:0}}>
-                <Accordion sx={{width: "100%", p: 0, m:0}}>
+            <div style={{width: "100%", p: 0, m: 0}}>
+                <Accordion sx={{width: "100%", p: 0, m: 0}}>
                     <AccordionSummary>
                         <Grid container alignItems='center'>
                             <Grid item xs={4} align={"center"}>
@@ -34,7 +55,7 @@ class ActivityListEntry extends Component {
                             </Grid>
                             <Grid item xs={4} align={"center"}>
                                 <Typography variant={"h5"} component={"div"}>
-                                    {activity.getActivityWorkTime()}  // hier dynamisch
+                                   {workTimeActivity} // hier dynamisch
                                 </Typography>
                             </Grid>
                         </Grid>
