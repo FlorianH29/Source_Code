@@ -357,7 +357,7 @@ export default class HdMWebAppAPI {
         })
     }
 
-        getEventsForTimeIntervalTransactions(startDate, endDate) {
+    getEventsForTimeIntervalTransactions(startDate, endDate) {
         return this.#fetchAdvanced(this.#getEventTransactionsAndTimeIntervalTransactionsURL(startDate, endDate)).then((responseJSON) => {
             let eventBOs = EventBO.fromJSON(responseJSON);
             //console.log(responseJSON);
@@ -479,7 +479,7 @@ export default class HdMWebAppAPI {
         })
     }
 
-        deleteTimeInterval(timeIntervalID) {
+    deleteTimeInterval(timeIntervalID) {
         return this.#fetchAdvanced(this.#deleteTimeIntervalURL(timeIntervalID), {
             method: 'DELETE'
         }).then((responseJSON) => {

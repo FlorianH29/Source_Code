@@ -11,6 +11,7 @@ class SignIn extends Component {
 	 */
 	handleSignInButtonClicked = () => {
 		this.props.onSignIn();
+
 	}
 /**	handleButton = () => {
          this.props.history.push('/welcome')

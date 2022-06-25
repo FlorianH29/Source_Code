@@ -645,5 +645,11 @@ sub_thread = Thread(target=check)
 sub_thread.setDaemon(True)
 sub_thread.start()
 
+"""hwa = HdMWebAppAdministration()
+
+per = hwa.get_person_by_id(3)
+#hwa.create_arrive_event(per)
+hwa.create_departure_event(per)"""
+
 if __name__ == '__main__':
     app.run(debug=False)
