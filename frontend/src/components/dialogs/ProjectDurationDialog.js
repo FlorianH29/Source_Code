@@ -99,7 +99,6 @@ class ProjectDurationDialog extends Component {
    }
 
 
-
     /** Disabled den "Projektstart anlegen" Button, sobald ein ProjektStart ausgewählt wurde und
      * der Button geclickt wird und ruft die Methode addProjectDurationStart auf
      */
@@ -140,7 +139,6 @@ class ProjectDurationDialog extends Component {
     }
     
 
-
    handleFinishedButtonClicked = () => {
         this.setState({
                 showProjectCreateDialog: true
@@ -151,40 +149,6 @@ class ProjectDurationDialog extends Component {
         this.props.openProjectDurationDialog();
     }
 
-
-
-   /** getEventForTimeIntervalTransactions = (startDate, endDate) => {
-        HdMWebAppAPI.getAPI().getEventsForTimeIntervalTransactions(startDate, endDate)
-            .then(eventAndTransaction =>
-                this.setState({
-                    events: eventAndTransaction
-                })
-            ).catch(eventAndTransaction =>
-            this.setState({
-                events: []
-            }));
-    }*/
-
-    componentDidMount() {
-        //this.addProjectDurationStart(this.state.startDate, this.state.eventType)
-    }
-
-
-  /** Behandelt das onClose Event */
-  /**
-  eventAndTimeIntervalFormClosed = eventAndTimeInterval => {
-    if (eventAndTimeInterval) {
-      const newEventAndTimeIntervalList = [...this.state.events, eventAndTimeInterval];
-      this.setState({
-        events: newEventAndTimeIntervalList,
-        showEventAndTimeIntervalForm: false
-      });
-    } else {
-        this.setState({
-          showEventAndTimeIntervalForm: false
-        });
-      }
-  }*/
 
     render() {
         const {startDate, endDate, eventType, disableStartButton, disableEndButton, handleMoveOnButtonClicked, handleFinishedButtonClicked} = this.state;
