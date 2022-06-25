@@ -374,6 +374,22 @@ class EventMapper(Mapper):
         self._cnx.commit()
         cursor.close()
 
+    def behelfsupdate(self, event):
+        """Wiederholtes Schreiben eines Objekts in die Datenbank.
+
+        :param event das Objekt, das in die DB geschrieben werden soll
+        """
+        cursor = self._cnx.cursor()
+
+        command = "UPDATE event SET last_edit=%s, deleted=%s,  time_stamp=%s, event_type=%s, affiliated_person_id=%s " \
+                  "WHERE event_id=%s"
+        data = (event.get_last_edit(), event.get_deleted(),  event.get_time_stamp(), event.get_event_type(),
+                event.get_affiliated_person(), event.get_id())
+        cursor.execute(command, data)
+
+        self._cnx.commit()
+        cursor.close()
+
     def delete(self, event):
         """Setzen der deleted flag auf 1, sodass der Event Eintrag nicht mehr ausgegeben wird.
 

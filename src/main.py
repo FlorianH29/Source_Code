@@ -401,6 +401,24 @@ class ProjectWorkOwnerOperations(Resource):
         else:
             return 0, 500
 
+    def put(self, id):
+        """
+        Update eines bestimmten Projektobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        st_e = Event.from_dict(api.payload)
+        time_stamp = st_e.get_time_stamp()
+        start_time = datetime.fromtimestamp(time_stamp/ 1000.0).date()
+        st_e.set_time_stamp(start_time)
+
+        if st_e is not None:
+            st_e.set_id(id)
+            hwa.behelfs_save_event(st_e)
+            return '', 200
+        else:
+            return '', 500
+            pass
+
 
 @hdmwebapp.route('/projectduration/<int:id>/endevent')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -424,6 +442,24 @@ class ProjectWorkOwnerOperations(Resource):
             return end_event
         else:
             return 0, 500
+
+    def put(self, id):
+        """
+        Update eines bestimmten Projektobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        st_e = Event.from_dict(api.payload)
+        time_stamp = st_e.get_time_stamp()
+        start_time = datetime.fromtimestamp(time_stamp / 1000.0).date()
+        st_e.set_time_stamp(start_time)
+
+        if st_e is not None:
+            st_e.set_id(id)
+            hwa.behelfs_save_event(st_e)
+            return '', 200
+        else:
+            return '', 500
+            pass
 
 
 
@@ -631,8 +667,6 @@ def check():
     hwa = HdMWebAppAdministration()
     hwa.check_time_for_departure()
 
-hwa = HdMWebAppAdministration()
-print(hwa.get_max_time_interval_for_project())
 
 sub_thread = Thread(target=check)
 # es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet

@@ -1128,6 +1128,12 @@ class HdMWebAppAdministration(object):
         with EventMapper() as mapper:
             mapper.update(event)
 
+    def behelfs_save_event(self, event):
+        """Eine Event-Instanz speichern."""
+        event.set_last_edit(datetime.now())
+        with EventMapper() as mapper:
+            mapper.behelfsupdate(event)
+
     def get_event_by_id(self, number):
         """Die Events mit der gegebenen ID auslesen"""
         with EventMapper() as mapper:

@@ -108,7 +108,7 @@ class ProjectList extends Component {
             <div>
                 <Grid container direction={'row'} spacing={18}>
                     <Grid item xs={3} align={"center"}>
-                        <Button variant='contained' color='primary'
+                        <Button variant='contained' color='warning'
                                 onClick={this.handleCreateProjectButtonClicked}>
                             Projekt erstellen
                         </Button>
@@ -120,14 +120,14 @@ class ProjectList extends Component {
                             <Grid item xs={3} align={"flex-end"}>
                                 <Typography variant={"h5"} component={"div"}> Meine Projekte: </Typography>
                             </Grid>
-                            <Grid item xs={3} align={"flex-end"}>
+                            <Grid item xs={2} align={"flex-end"}>
                                 <Typography variant={"h5"} component={"div"}> Klient: </Typography>
                             </Grid>
                             <Grid item xs={3} align={"flex-end"}>
-                                <Typography variant={"h5"} component={"div"}> Arbeitsleistung: </Typography>
-                            </Grid>
-                            <Grid item xs={3} align={"flex-end"}>
                                 <Typography variant={"h5"} component={"div"}> Projektlaufzeit: </Typography>
+                            </Grid>
+                            <Grid item xs={2} align={"flex-end"}>
+                                <Typography variant={"h5"} component={"div"}> Arbeitsleistung: </Typography>
                             </Grid>
                         </Grid>
                         <Divider/>

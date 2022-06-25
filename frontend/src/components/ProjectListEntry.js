@@ -7,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ProjectDeleteDialog from "./dialogs/ProjectDeleteDialog";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {HdMWebAppAPI} from "../api";
+import ProjectDurationDialog from "./dialogs/ProjectDurationDialog";
 
 
 
@@ -25,10 +26,11 @@ class ProjectListEntry extends Component {
 
         this.state = {
             project: props.project,
+            startEvent: "", //props.startDate,
+            endEvent: "",//props.endDate,
             showProjectCreateDialog: false,
             showProjectDeleteDialog: false,
-            startEvent: "",
-            endEvent: ""
+            showProjectDurationDialog: false
         }
     }
 
@@ -36,7 +38,17 @@ class ProjectListEntry extends Component {
     editProjectButtonClicked = (event) => {
         event.stopPropagation();
         this.setState({
-            showProjectCreateDialog: true
+            showProjectCreateDialog: true,
+
+        });
+    }
+
+    /** Behandelt das onClick Event des Project bearbeiten Buttons */
+    editProjectDurationButtonClicked = (event) => {
+        event.stopPropagation();
+        this.setState({
+            showProjectDurationDialog: true,
+
         });
     }
 
@@ -60,6 +72,7 @@ class ProjectListEntry extends Component {
 
     /** Methode für das onClickEvent des BearbeitenButton von Project*/
     projectCreateDialogClosed = (project) => {
+        console.log("hallo")
         // projectWork ist nicht null und wurde dementsprechend geändert
         if (project) {
             this.setState({
@@ -73,9 +86,16 @@ class ProjectListEntry extends Component {
         }
     }
 
+    /** Methode für das onClickEvent des BearbeitenButton von Project*/
+    projectDurationDialogClosed = () => {
+        this.setState({showProjectDurationDialog: false})
+        this.getStartEventOfProject();
+       this.getEndEventOfProject();
+    }
+
     componentDidMount() {
         this.getStartEventOfProject();
-        this.getEndEventOfProject();
+       this.getEndEventOfProject();
     }
 
 
@@ -83,7 +103,7 @@ class ProjectListEntry extends Component {
     getStartEventOfProject = () => {
         HdMWebAppAPI.getAPI().getStartEvent(this.props.project.getID()).then(startEvent =>
                 this.setState({
-                    startEvent: startEvent
+                    startEvent: startEvent,
                 })).catch(e =>
                 this.setState({ // Reset state with error from catch
                     startEvent: null,
@@ -96,7 +116,8 @@ class ProjectListEntry extends Component {
     getEndEventOfProject = () => {
         HdMWebAppAPI.getAPI().getEndEvent(this.props.project.getID()).then(endEvent =>
                 this.setState({
-                    endEvent: endEvent
+                    endEvent: endEvent,
+
                 })).catch(e =>
                 this.setState({ // Reset state with error from catch
                     endEvent: null,
@@ -105,17 +126,15 @@ class ProjectListEntry extends Component {
     }
 
 
-
-
     /** Rendert die Komponente*/
     render() {
-        const { classes } = this.props;
-        const { project, showProjectCreateDialog, showProjectDeleteDialog, startEvent, endEvent } = this.state;
+        const {classes} = this.props;
+        const {project, showProjectCreateDialog, showProjectDeleteDialog, showProjectDurationDialog, startEvent, endEvent} = this.state;
 
-        console.log(startEvent)
-        //console.log (classes)
+        //console.log(startEvent)
+        console.log (project)
 
-        return(
+        return (
             <div>
                 <ListItem>
                     <Grid container alignItems={"center"}>
@@ -124,34 +143,44 @@ class ProjectListEntry extends Component {
                                 {project.getProjectName()}
                             </Typography>
                         </Grid>
-                        <Grid item xs={3} align={"center"}>
+                        <Grid item xs={2} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 {project.getClient()}
                             </Typography>
                         </Grid>
                         <Grid item xs={3} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
+                                Vom {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
+                                dateStyle: "long",
+                            })} bis zum {new Date(endEvent.time_stamp).toLocaleString(
+                                'de-DE', {
+                                    dateStyle: "long",
+                                })}
+                                <Button color='primary' size='small' startIcon={<EditIcon/>}
+                                    onClick={this.editProjectDurationButtonClicked}> </Button>
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={2} align={"center"}>
+                            <Typography variant={"h5"} component={"div"}>
                                 {project.getWorkTime()} h
                             </Typography>
                         </Grid>
-                        <Grid item xs={3} align={"center"}>
-                            <Typography variant={"h5"} component={"div"}>
-                               Vom {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
-                                dateStyle: "long",})} bis zum {new Date(endEvent.time_stamp).toLocaleString('de-DE', {
-    dateStyle: "long",
-
-})}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={3} align={"center"}>
-                            <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editProjectButtonClicked}> </Button>
-                            <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteProjectButtonClicked}> </Button>
+                        <Grid item xs={2} align={"center"}>
+                            <Button color='primary' size='small' startIcon={<EditIcon/>}
+                                    onClick={this.editProjectButtonClicked}> </Button>
+                            <Button color='secondary' size='small' startIcon={<DeleteIcon/>}
+                                    onClick={this.deleteProjectButtonClicked}> </Button>
                         </Grid>
                     </Grid>
                 </ListItem>
                 <Divider/>
-                <ProjectCreateDialog show={showProjectCreateDialog} project={project} onClose={this.projectCreateDialogClosed} />
-                <ProjectDeleteDialog project={project} show={showProjectDeleteDialog} onClose={this.deleteProjectDialogClosed} />
+                <ProjectCreateDialog show={showProjectCreateDialog} project={project}
+                                     onClose={this.projectCreateDialogClosed}/>
+                <ProjectDeleteDialog project={project} show={showProjectDeleteDialog}
+                                     onClose={this.deleteProjectDialogClosed}/>
+                <ProjectDurationDialog  startPoint={startEvent} endPoint={endEvent}
+                                        show={showProjectDurationDialog} onClose={this.projectDurationDialogClosed}
+                                        />
             </div>
         );
     }
@@ -166,9 +195,12 @@ const styles = theme => ({
 /** PropTypes */
 ProjectListEntry.propTypes = {
   /** Das ProjectBO welches gerendert werden soll */
-  project: PropTypes.object.isRequired,
+
   /** Event Handler Funktion, welche aufgerufen wird, nachdem ein Projekt erfolgreich gelöscht wurde. */
-  onProjectDeleted: PropTypes.func.isRequired
+  onProjectDeleted: PropTypes.func.isRequired,
+
+
+    project: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(ProjectListEntry);

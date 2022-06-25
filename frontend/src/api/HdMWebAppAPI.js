@@ -33,7 +33,10 @@ export default class HdMWebAppAPI {
   #addProjectDurationEndEvent = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
   #getProjectWorkTimeURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}/work_time`;
   #getStartEventURL = (id) => `${this.#hdmwebappServerBaseURL}/projectduration/${id}/startevent`;
-  #getEndEventURL = (id) => `${this.#hdmwebappServerBaseURL}/projectduration/${id}/endevent`
+  #getEndEventURL = (id) => `${this.#hdmwebappServerBaseURL}/projectduration/${id}/endevent`;
+  #updateStartEventURL = (id)  => `${this.#hdmwebappServerBaseURL}/projectduration/${id}/startevent`;
+  #updateEndEventURL = (id)  => `${this.#hdmwebappServerBaseURL}/projectduration/${id}/endevent`;
+
 
   //#addProjectDurationURL = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
   // Projektarbeit bezogen
@@ -277,18 +280,67 @@ export default class HdMWebAppAPI {
     }
 
     /**
+  * Updated ein EventBO
+  *
+  * @param {EventBO} eventBO das geupdated werden soll
+  * @public
+  */
+  updateProjectDurationStart(eventBO) {
+      console.log(eventBO)
+    return this.#fetchAdvanced(this.#updateStartEventURL((eventBO.getID())), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(eventBO)
+    }).then((responseJSON) => {
+      // Wir bekommen immer ein Array aus ProjectBOs.fromJSON
+      let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+      console.log(responseEventBO)
+      return new Promise(function (resolve) {
+        resolve(responseEventBO);
+      })
+    })
+  }
+
+
+   /**
+  * Updated ein ProjectBO
+  *
+  * @param {EventBO} eventBO das geupdated werden soll
+  * @public
+  */
+  updateProjectDurationEnd(eventBO) {
+    return this.#fetchAdvanced(this.#updateEndEventURL(eventBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(eventBO)
+    }).then((responseJSON) => {
+      // Wir bekommen immer ein Array aus ProjectBOs.fromJSON
+      let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+      console.log(responseEventBO)
+      return new Promise(function (resolve) {
+        resolve(responseEventBO);
+      })
+    })
+  }
+
+    /**
      * Gibt das Start-Event eines Time Intervalls, eines Projekts zurück
      *
      * @param {Number} projectID für welche das Start_Event zurückgegeben werden soll
      * @public
      */
     getStartEvent(projectID) {
-        console.log("test")
         return this.#fetchAdvanced(this.#getStartEventURL(projectID))
             .then(responseJSON => {
                 return new Promise(function (resolve) {
                     resolve(responseJSON);
-                    console.log(responseJSON)
+                    //console.log(responseJSON)
                 })
             })
     }
@@ -301,12 +353,11 @@ export default class HdMWebAppAPI {
      * @public
      */
     getEndEvent(projectID) {
-        console.log("test")
         return this.#fetchAdvanced(this.#getEndEventURL(projectID))
             .then(responseJSON => {
                 return new Promise(function (resolve) {
                     resolve(responseJSON);
-                    console.log(responseJSON)
+                    //console.log(responseJSON)
                 })
             })
     }
