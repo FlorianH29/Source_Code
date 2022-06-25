@@ -142,6 +142,7 @@ class HdMWebAppAdministration(object):
                 return None
 
     def get_last_arrive_by_person(self, person):
+        """Das lezte Kommen einer Person zurückgeben."""
         with ArriveMapper() as mapper:
             if person is not None:
                 return mapper.find_last_arrive_by_person(person.get_id())
@@ -190,6 +191,7 @@ class HdMWebAppAdministration(object):
             return mapper.find_by_affiliated_person_id(number)
 
     def get_last_departure_by_person(self, person):
+        """Das lezte Gehen einer Person zurückgeben."""
         with DepartureMapper() as mapper:
             if person is not None:
                 return mapper.find_last_departure_by_person(person.get_id())
@@ -200,6 +202,25 @@ class HdMWebAppAdministration(object):
         """Alle in der Datenbank gespeicherten End-Ereignisse auslesen."""
         with DepartureMapper() as mapper:
             return mapper.find_all()
+
+    def check_arrive_and_departure_for_person(self, person):
+        """Überprüfen, ob Gehen größer als Kommen, also ob eingestelmpelt werden muss."""
+        if person is not None:
+            last_arrive = self.get_last_arrive_by_person(person)
+            last_departure = self.get_last_departure_by_person(person)
+            if last_arrive is None:  # wenn sich die Person zum ersten Mal anmeldet
+                return True
+            elif last_arrive is not None and last_departure is None:
+                # wenn die Person ein Kommen aber noch kein Gehen hat, soll Dialog im Frontend nicht angezeigt werden
+                return False
+            else:
+                last_arrive_time = last_arrive.get_time_stamp()
+                last_departure_time = last_departure.get_time_stamp()
+                if last_departure_time > last_arrive_time:
+                    result = True
+                else:
+                    result = False
+            return result
 
     def get_arrive_and_departure_of_person_between_time_stamps(self, person, start_time, end_time):
         """Alle Kommen und Gehen einer Person in einem bestimmten Zeitraum ausgeben"""
@@ -412,8 +433,20 @@ class HdMWebAppAdministration(object):
     def delete_time_interval_transaction(self, time_interval_transaction):
         """Die gegebene TimeIntervalTransaction löschen."""
         with TimeIntervalTransactionMapper() as mapper:
-            # nicht ganz löschen, sondern nur deaktivieren
-            mapper.delete(time_interval_transaction)
+            if time_interval_transaction is not None:
+
+                project_work_id = time_interval_transaction.get_affiliated_projectwork()
+                break_id = time_interval_transaction.get_affiliated_break()
+
+                if project_work_id is not None:
+                    project_work = self.get_project_work_by_id(project_work_id)
+                    self.delete_project_work(project_work)
+
+                if break_id is not None:
+                    br = self.get_break_by_id(break_id)
+                    self.delete_break(br)
+
+                mapper.delete(time_interval_transaction)
 
     def create_time_interval_transaction(self, person, time_interval=None, affiliated_break=None,
                                          projectwork=None):
@@ -760,6 +793,7 @@ class HdMWebAppAdministration(object):
             return mapper.find_projectmembers_by_project_id(project.get_id())
 
     def get_projectmember_by_person(self, person):
+        """Alle Projekte, in denen eine Person Mitglied ist ausgeben"""
         with ProjectMemberMapper() as mapper:
             result = []
 
@@ -797,7 +831,7 @@ class HdMWebAppAdministration(object):
     """Methoden von TimeInterval"""
 
     def calculate_period(self, timeinterval):
-        """Berechnen des Zeitraumes"""
+        """Berechnen des Zeitraumes eines Zeitintervalls"""
         if timeinterval is not None:
             start = timeinterval.get_start_event()
             end = timeinterval.get_end_event()
@@ -976,6 +1010,18 @@ class HdMWebAppAdministration(object):
         value.set_last_edit(datetime.now())
         with BreakMapper() as mapper:
             return mapper.update(value)
+
+    def check_break(self, person):
+        """Überprüfen, ob eine Pause begonnen wurde."""
+        if person is not None:
+            last_event = self.get_last_event_by_affiliated_person(person)
+            if last_event is None:  # wenn die Person neu im System ist, wird Pause starten angezeigt
+                return True
+            if last_event.get_event_type() == 3:
+                result = True
+            else:
+                result = False
+            return result
 
     """Methoden von Event"""
 

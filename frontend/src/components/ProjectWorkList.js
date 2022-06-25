@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {EventBO, HdMWebAppAPI} from '../api';
+import {HdMWebAppAPI} from '../api';
 import {Button, Grid, Typography, Divider, Dialog, DialogActions, DialogContent, Link} from '@mui/material';
 import Box from "@mui/material/Box";
 import ProjectWorkListEntry from "./ProjectWorkListEntry";

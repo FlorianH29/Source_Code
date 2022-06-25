@@ -11,7 +11,7 @@ class ActivityListEntry extends Component {
 
         this.state = {
             activity: props.activity,
-            workTimeActivity: ''
+            workTimeActivity: '',
         };
     }
 
@@ -29,8 +29,9 @@ class ActivityListEntry extends Component {
             );
         }
     }
+
     componentDidMount() {
-        this.getWorkTimeActivity()
+        this.getWorkTimeActivity();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -48,7 +49,8 @@ class ActivityListEntry extends Component {
     }
 
     render() {
-        const {activity, workTimeActivity, startDate} = this.state;
+        const {activity, workTimeActivity} = this.state;
+
         return (
             <div style={{width: "100%", p: 0, m: 0}}>
                 <Accordion sx={{width: "100%", p: 0, m: 0}}>

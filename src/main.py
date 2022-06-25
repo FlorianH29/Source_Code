@@ -157,37 +157,6 @@ class PersonByIDOperations(Resource):
             return '', 500
 
 
-@hdmwebapp.route('/projectworks/<int:id>')
-@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@hdmwebapp.param('id', 'Die ID der Projektarbeit')
-class ProjectWorkOperations(Resource):
-    @hdmwebapp.marshal_list_with(projectwork)
-    @secured
-    def put(self, id):
-        """
-        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
-        """
-        hwa = HdMWebAppAdministration()
-        pw = ProjectWork.from_dict(api.payload)
-
-        if pw is not None:
-            pw.set_id(id)
-            hwa.save_project_work(pw)
-            return '', 200
-        else:
-            return '', 500
-
-    @secured
-    def delete(self, id):
-        """
-        Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
-        """
-        hwa = HdMWebAppAdministration()
-        pw = hwa.get_project_work_by_id(id)
-        hwa.delete_project_work(pw)
-        return '', 200
-
-
 """
 @hdmwebapp.route('/worktimeaccount/<int:id>')
 @hdmwebapp.param('id', 'Die ID des Arbeitszeitkonto-Objekts')
@@ -296,6 +265,28 @@ class EventOperations(Resource):
             e = hwa.check_if_first_event(proposal.get_event_type(), per)
             print('event')
             return e, 200
+        else:
+            return '', 500
+
+
+@hdmwebapp.route('/breaks')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class BreakOperations(Resource):
+    @secured
+    def get(self):
+        """
+        Zurückgeben eines boolschen Werts bezüglich des Starts einer Pause.
+        """
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+
+        firebase_id = h.get_firebase_id()
+        pe = hwa.get_person_by_firebase_id(firebase_id)
+        result = None
+
+        if pe is not None:
+            result = hwa.check_break(pe)
+            return result, 200
         else:
             return '', 500
 
@@ -430,6 +421,7 @@ class ProjectWorkOwnerOperations(Resource):
         else:
             return 0, 500
 
+    @secured
     def put(self, id):
         """
         Update eines bestimmten Projektobjektes. Objekt wird durch die id in dem URI bestimmt.
@@ -472,6 +464,7 @@ class ProjectWorkOwnerOperations(Resource):
         else:
             return 0, 500
 
+    @secured
     def put(self, id):
         """
         Update eines bestimmten Projektobjektes. Objekt wird durch die id in dem URI bestimmt.
@@ -593,6 +586,28 @@ class ProjectWorkOperations(Resource):
         return '', 200
 
 
+@hdmwebapp.route('/projectworks/<int:id>/owner')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des ProjectWork-Objekts')
+class ProjectWorkOwnerOperations(Resource):
+    @hdmwebapp.marshal_list_with(person)
+    @secured
+    def get(self, id):
+        """Auslesen des Erstellers eines bestimmten Projektarbeit-Objekts.
+        Das Projektarbeit-Objekt dessen Ersteller ausgelesen werden soll, wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = hwa.get_project_work_by_id(id)
+        start_pw_id = pw.get_start_event()
+        start_pw = hwa.get_event_by_id(start_pw_id)
+
+        if start_pw is not None:
+            owner = hwa.get_person_by_id(start_pw.get_affiliated_person())
+            return owner
+        else:
+            return 0, 500
+
+
 @hdmwebapp.route('/projectworks/<int:id>/<string:name>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Projektarbeit')
@@ -659,6 +674,30 @@ class ArriveUpdateDateOperations(Resource):
             return '', 500
 
 
+@hdmwebapp.route('/arrive')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ArriveOperations(Resource):
+    @hdmwebapp.marshal_with(event, code=200)
+    @secured
+    def post(self):
+        """
+        Anlegen eines Kommen-Events. Das neu angelegte Kommen-Event wird als Ergebnis zurückgegeben.
+        """
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        per = hwa.get_person_by_firebase_id(firebase_id)
+
+        if per is not None:
+            """ 
+            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Kommen-Objekt erstellt.
+            """
+            a = hwa.create_arrive_event(per)
+            return a, 200
+        else:
+            return '', 500
+
+
 @hdmwebapp.route('/departure/<int:id>/<int:date>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID des Events')
@@ -677,6 +716,52 @@ class DepartureUpdateDateOperations(Resource):
             departure.set_time_stamp(datetime.fromtimestamp(date / 1000.0))
             hwa.save_departure_event(departure)
             return '', 200
+        else:
+            return '', 500
+
+
+@hdmwebapp.route('/departure')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class DepartureOperations(Resource):
+    @hdmwebapp.marshal_with(departure, code=200)
+    @secured
+    def post(self):
+        """
+        Anlegen eines Gehen-Events. Das neu angelegte Gehen-Event wird als Ergebnis zurückgegeben.
+        """
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        per = hwa.get_person_by_firebase_id(firebase_id)
+
+        if per is not None:
+            """ 
+            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Gehen-Objekt erstellt.
+            """
+            d = hwa.create_departure_event(per)
+            return d, 200
+        else:
+            return '', 500
+
+
+@hdmwebapp.route('/arrivedeparture')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ArrivAndDepartureOperations(Resource):
+    @secured
+    def get(self):
+        """
+        Zurückgeben eines boolschen Werts bezüglich Kommen und Gehen, wenn Gehen größer ist soll true ausgegeben werden.
+        """
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+
+        firebase_id = h.get_firebase_id()
+        pe = hwa.get_person_by_firebase_id(firebase_id)
+        result = None
+
+        if pe is not None:
+            result = hwa.check_arrive_and_departure_for_person(pe)
+            return result, 200
         else:
             return '', 500
 
@@ -716,76 +801,6 @@ class DeleteTimeInterval(Resource):
         return '', 200
 
 
-@hdmwebapp.route('/projectworks/<int:id>/owner')
-@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@hdmwebapp.param('id', 'Die ID des ProjectWork-Objekts')
-class ProjectWorkOwnerOperations(Resource):
-    @hdmwebapp.marshal_list_with(person)
-    @secured
-    def get(self, id):
-        """Auslesen des Erstellers eines bestimmten Projektarbeit-Objekts.
-        Das Projektarbeit-Objekt dessen Ersteller ausgelesen werden soll, wird durch die id in dem URI bestimmt.
-        """
-        hwa = HdMWebAppAdministration()
-        pw = hwa.get_project_work_by_id(id)
-        start_pw_id = pw.get_start_event()
-        start_pw = hwa.get_event_by_id(start_pw_id)
-
-        if start_pw is not None:
-            owner = hwa.get_person_by_id(start_pw.get_affiliated_person())
-            return owner
-        else:
-            return 0, 500
-
-
-@hdmwebapp.route('/arrive')
-@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class ArriveOperations(Resource):
-    @hdmwebapp.marshal_with(event, code=200)
-    @secured
-    def post(self):
-        """
-        Anlegen eines Kommen-Events. Das neu angelegte Kommen-Event wird als Ergebnis zurückgegeben.
-        """
-        hwa = HdMWebAppAdministration()
-        h = Helper()
-        firebase_id = h.get_firebase_id()
-        per = hwa.get_person_by_firebase_id(firebase_id)
-
-        if per is not None:
-            """ 
-            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Kommen-Objekt erstellt.
-            """
-            a = hwa.create_arrive_event(per)
-            return a, 200
-        else:
-            return '', 500
-
-
-@hdmwebapp.route('/departure')
-@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class DepartureOperations(Resource):
-    @hdmwebapp.marshal_with(departure, code=200)
-    @secured
-    def post(self):
-        """
-        Anlegen eines Gehen-Events. Das neu angelegte Gehen-Event wird als Ergebnis zurückgegeben.
-        """
-        hwa = HdMWebAppAdministration()
-        h = Helper()
-        firebase_id = h.get_firebase_id()
-        per = hwa.get_person_by_firebase_id(firebase_id)
-
-        if per is not None:
-            """ 
-            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Gehen-Objekt erstellt.
-            """
-            d = hwa.create_departure_event(per)
-            return d, 200
-        else:
-            return '', 500
-
-
 def check():
     hwa = HdMWebAppAdministration()
     hwa.check_time_for_departure()
@@ -795,6 +810,12 @@ sub_thread = Thread(target=check)
 # es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
+
+
+h = HdMWebAppAdministration()
+pe = h.get_person_by_id(1)
+pr = h.get_project_by_id(1)
+
 
 if __name__ == '__main__':
     app.run(debug=False)

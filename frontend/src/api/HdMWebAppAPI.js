@@ -61,19 +61,28 @@ export default class HdMWebAppAPI {
   #getActivityWorkTimeURL = (id, startDate, endDate) =>
       `${this.#hdmwebappServerBaseURL}/activities/${id}/${startDate}/${endDate}/work_time`;
 
-    // Ereignis bezogen
-    #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
-    #addDepartureURL = () => `${this.#hdmwebappServerBaseURL}/departure`;
-    #addArriveURL = () => `${this.#hdmwebappServerBaseURL}/arrive`;
-    #getEventTransactionsAndTimeIntervalTransactionsURL = (startDate, endDate) =>
+  // Ereignis bezogen
+  #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
+  #getEventTransactionsAndTimeIntervalTransactionsURL = (startDate, endDate) =>
         `${this.#hdmwebappServerBaseURL}/eventtransactionsandtimeintervaltransactions/${startDate}/${endDate}`;
-    #updateEventURL = (id, date) => `${this.#hdmwebappServerBaseURL}/events/${id}/${date}`;
-    #updateArriveURL = (id, date) => `${this.#hdmwebappServerBaseURL}/arrive/${id}/${date}`;
-    #updateDepartureURL = (id, date) => `${this.#hdmwebappServerBaseURL}/departure/${id}/${date}`;
+  #updateEventURL = (id, date) => `${this.#hdmwebappServerBaseURL}/events/${id}/${date}`;
+  #getBreakStartedURL = () => `${this.#hdmwebappServerBaseURL}/breaks`;
 
-    // TimeIntervalTransaction bezogen
-    #getTimeIntervalTransactionsURL = () => `${this.#hdmwebappServerBaseURL}/timeintervaltransactions`;
-    #deleteTimeIntervalURL = (id) => `${this.#hdmwebappServerBaseURL}/timeinterval/${id}`;
+
+  // TimeIntervalTransaction bezogen
+  #getTimeIntervalTransactionsURL = () => `${this.#hdmwebappServerBaseURL}/timeintervaltransactions`;
+  #deleteTimeIntervalURL = (id) => `${this.#hdmwebappServerBaseURL}/timeinterval/${id}`;
+
+  // Kommen bezogen
+  #getDepartureBiggerArriveURL = () => `${this.#hdmwebappServerBaseURL}/arrivedeparture`;
+  #updateArriveURL = (id, date) => `${this.#hdmwebappServerBaseURL}/arrive/${id}/${date}`;
+  #addArriveURL = () => `${this.#hdmwebappServerBaseURL}/arrive`;
+
+  // Gehen bezogen
+  #updateDepartureURL = (id, date) => `${this.#hdmwebappServerBaseURL}/departure/${id}/${date}`;
+  #addDepartureURL = () => `${this.#hdmwebappServerBaseURL}/departure`;
+
+
 
   /**
    * Gibt die Singelton Instanz zurück
@@ -126,6 +135,20 @@ export default class HdMWebAppAPI {
         console.log(responsePersonBO)
       })
     })
+  }
+
+  /**
+   * Gibt zurück, ob das letzte Gehen einer Person größer ist als das letzte Kommen
+   */
+  getDepartureBiggerArrive() {
+    return this.#fetchAdvanced(this.#getDepartureBiggerArriveURL())
+      .then(responseJSON => {
+        //console.log(responseJSON)
+        return new Promise(function (resolve) {
+          resolve(responseJSON);
+         // console.log(responseJSON);
+        })
+      })
   }
 
     getPerson() {
@@ -412,7 +435,6 @@ export default class HdMWebAppAPI {
                 })
             })
     }
-
 
     /**
      * Gibt das End-Event eines Time Intervalls, eines Projekts zurück
@@ -724,5 +746,19 @@ export default class HdMWebAppAPI {
         resolve(responseActivityBO);
       })
     })
+  }
+
+   /**
+   * Gibt zurück, ob ob eine Pause begonnen wurde oder nicht
+   */
+  getBreakStarted() {
+    return this.#fetchAdvanced(this.#getBreakStartedURL())
+      .then(responseJSON => {
+        //console.log(responseJSON)
+        return new Promise(function (resolve) {
+          resolve(responseJSON);
+         // console.log(responseJSON);
+        })
+      })
   }
 }
