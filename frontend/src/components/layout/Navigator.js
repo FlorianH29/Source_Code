@@ -47,9 +47,24 @@ class Navigator extends Component {
         this.state = {
             anchorEl: null,
             person: null,
-            showPersonDelete: false
+            showPersonDelete: false,
+            disableStartButton: '',
+            disableEndButton: true
         };
     };
+
+    /** Gibt zurück, ob eine Pause begonnen wurde */
+    getBreakStarted = () => {
+        HdMWebAppAPI.getAPI().getBreakStarted()
+            .then(value => this.setState({
+                disableStartButton: value,
+                disableEndButton: !value
+            })).catch(e =>
+                this.setState({ // bei Fehler den state zurücksetzen
+                    disableButton: '',
+                })
+            );
+    }
 
     persondeleteClosed = person => {
         // Person ist nicht null und deshalb erstelltI/überarbeitet
@@ -80,6 +95,7 @@ class Navigator extends Component {
 
     componentDidMount() {
         this.getAPerson();
+        this.getBreakStarted();
     }
 
     handleDelete = () => {
@@ -122,11 +138,11 @@ class Navigator extends Component {
     }
 
     render() {
-        const {showPersonDeleteDialog, showPersonEditDialog, person} = this.state;
+        const {showPersonDeleteDialog, showPersonEditDialog, person, disableStartButton, disableEndButton} = this.state;
         const drawerWidth = 200;
         const lel = 0;
         const boxWidth = 200;
-        //console.log(person)
+        console.log(this.state)
 
         return (
             <Box sx={{display: 'flex'}}>
@@ -228,12 +244,12 @@ class Navigator extends Component {
                                 </ListItem>
 
                                 <ListItem>
-                                    <EventManager eventType={3} onClose={this.handleClose}>
+                                    <EventManager disabled={disableStartButton} eventType={3} onClose={this.handleClose}>
                                     </EventManager>
                                 </ListItem>
 
                                 <ListItem>
-                                    <EventManager eventType={4} onClose={this.handleClose}>
+                                    <EventManager disabled={disableEndButton} eventType={4} onClose={this.handleClose}>
                                     </EventManager>
                                 </ListItem>
                                 <Departure></Departure>

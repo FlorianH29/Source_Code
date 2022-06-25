@@ -994,7 +994,7 @@ class HdMWebAppAdministration(object):
         """Überprüfen, ob eine Pause begonnen wurde."""
         if person is not None:
             last_event = self.get_last_event_by_affiliated_person(person)
-            if last_event == 7:
+            if last_event.get_event_type() == 3:
                 result = True
             else:
                 result = False
