@@ -38,7 +38,7 @@ class ProjectDurationDialog extends Component {
         this.state = {
             startDate: stE,//new Date().getTime(),
             endDate: eE,//new Date().getTime(),
-            eventType: 0,
+            eventType: 7,
             showProjectDurationForm: false,
             disableStartButton: false,
             disableEndButton: true,
@@ -104,12 +104,12 @@ class ProjectDurationDialog extends Component {
      */
     disableStartHandler = () => {
         this.setState({
+                eventType: 7,
                 disableStartButton: true,
                 disableEndButton: false
             });
-        this.addProjectDurationStartEvent()
+        this.addProjectDurationStartEvent();
     }
-
 
     disableStartHandlerForUpdate = () => {
         this.setState({

@@ -67,7 +67,7 @@ class ActivityListEntry extends Component {
     const { project } = this.props;
     const { activity, showActivityForm, showActivityDeleteDialog } = this.state;
 
-      // console.log(this.state);
+    console.log(this.props.location.per);
       return (
         <div>
            <ListItem>

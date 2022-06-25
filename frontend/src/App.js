@@ -34,7 +34,7 @@ class App extends React.Component {
         this.state = {
             currentPerson: null,
             authError: null,
-            arrived: true
+            arrived: ''
         };
     }
 
@@ -76,11 +76,23 @@ class App extends React.Component {
         this.props.history.push('/welcome') /*try...*/
     }
 
+    /** Gibt zurück, ob das letzte Gehen einer Person größer ist als das letzte Kommen */
+    getDepartureBiggerArrive = () => {
+        HdMWebAppAPI.getAPI().getDepartureBiggerArrive()
+            .then(value => this.setState({
+                arrived: value,
+            })).catch(e =>
+                this.setState({ // bei Fehler den state zurücksetzen
+                    arrived: '',
+                })
+            );
+    }
 
     componentDidMount() {
         firebase.initializeApp(firebaseConfig);
         firebase.auth().languageCode = 'de';
         firebase.auth().onAuthStateChanged(this.handleAuthStateChange);
+        this.getDepartureBiggerArrive();
     }
 
     handleCloseArriveDialog = () => {
@@ -115,6 +127,7 @@ class App extends React.Component {
     render() {
         const {currentPerson, authError, arrived} = this.state;
 
+        console.log(this.state)
         return (
             <div style={{flex:1}}>
                 <Router>

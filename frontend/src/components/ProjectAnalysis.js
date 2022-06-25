@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {HdMWebAppAPI} from "../api";
 import PropTypes from "prop-types";
 import {Box, Divider, Grid, TextField, Typography} from "@mui/material";
-import ProjectListEntry from "./ProjectListEntry";
 import ProjectAnalysisProjectEntry from "./ProjectAnalysisProjectEntry";
 import {DatePicker, LocalizationProvider} from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -43,6 +42,7 @@ class ProjectAnalysis extends Component {
 
         return (
             <div>
+                { projects.length != 0 ? (
                 <Box m={18} pl={8}>
                     <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -86,9 +86,13 @@ class ProjectAnalysis extends Component {
                     <Divider/>
                     {projects.map(pro =>
                         <ProjectAnalysisProjectEntry key={pro.getID()} project={pro}
-                                                     startDate={startDate} endDate={endDate}/>)}
-
-                </Box>
+                                                     startDate={startDate} endDate={endDate}/>)})
+                </Box>) : (
+                    <Box m={25} pl={15}>
+                    <Typography variant={"h5"} >
+                        Info: Da Sie in kein Projekt leiten, können Sie keine Projekte analysieren.
+                    </Typography>
+                    </Box>)}
             </div>
         );
     }
