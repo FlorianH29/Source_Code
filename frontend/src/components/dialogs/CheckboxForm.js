@@ -17,7 +17,8 @@ class CheckboxForm extends Component {
         super(props);
 
         this.state = {
-            potentialProjectMembers: []
+            potentialProjectMembers: [],
+            name: []
         }
     }
 
@@ -37,15 +38,22 @@ class CheckboxForm extends Component {
     }
 
 
+
+
     handleChange = (event) => {
     const {
       target: { value },
-    } = event
+    } = event;
+
+    setPersonName()
+        {
+         typeof value === 'string' ? value.split(',') : value
+    }
     };
 
 
     render() {
-        const {potentialProjectMembers} = this.state;
+        const {potentialProjectMembers, name} = this.state;
 
         return (
             <div>
@@ -55,13 +63,13 @@ class CheckboxForm extends Component {
                         labelId="multiple-checkbox-person"
                         id="person-checkbox"
                         multiple
-                        value={potentialProjectMembers}
+                        value={name}
                         onChange={this.handleChange}
                         input={<OutlinedInput label="Tag"/>}
                         renderValue={(selected) => selected.join(', ')}
                     >
                         {potentialProjectMembers.map(ppm => (
-                            <CheckboxListEntry>
+                            <CheckboxListEntry potentialProjectMember={ppm}>
                                 <MenuItem key={ppm} value={ppm}/>
                                 <Checkbox checked={potentialProjectMembers.indexOf(ppm) > -1}/>
                                 <ListItemText primary={ppm}/>

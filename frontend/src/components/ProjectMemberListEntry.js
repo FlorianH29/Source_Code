@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Typography, Grid, Divider,} from '@material-ui/core';
 import {Button} from '@material-ui/core';
-import DeleteIcon from '@mui/icons-material/Delete';
+import PersonRemoveRoundedIcon from '@mui/icons-material/PersonRemoveRounded';
 import ListItem from "@mui/material/ListItem";
 import ProjectMemberDeleteDialog from "./dialogs/ProjectMemberDeleteDialog"
 
@@ -52,7 +52,7 @@ class ProjectMemberListEntry extends Component {
                             </Typography>
                         </Grid>
                         <Grid item xs={3} align={"center"}>
-                            <Button color='secondary' size='small' startIcon={<DeleteIcon/>}
+                            <Button color='secondary' size='small' startIcon={<PersonRemoveRoundedIcon/>}
                                     onClick={this.deleteProjectMemberButtonClicked}> </Button>
                         </Grid>
                     </Grid>

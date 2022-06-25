@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import ListItem from "@mui/material/ListItem";
+import {Typography} from "@mui/material";
 
 
 class CheckboxListEntry extends Component {
@@ -10,17 +11,18 @@ class CheckboxListEntry extends Component {
 
         // den State initialisieren
         this.state = {
-            projectMembers: props.projectMembers
+            potentialProjectMember: props.potentialProjectMember
         };
     }
 
     render() {
-        const {projectMembers} = this.state;
+        const {potentialProjectMember} = this.state;
+        console.log(this.state)
 
         return (
             <div>
                 <ListItem>
-                    {projectMembers.getFirstName()} {projectMembers.getLastName()}
+                        {potentialProjectMember.firstname} {potentialProjectMember.lastname}
                 </ListItem>
             </div>
         );
@@ -28,7 +30,7 @@ class CheckboxListEntry extends Component {
 }
 
 CheckboxListEntry.propTypes = {
-    projectMembers: PropTypes.object.isRequired,
+    potentialProjectMember: PropTypes.object.isRequired,
 }
 
 export default CheckboxListEntry;

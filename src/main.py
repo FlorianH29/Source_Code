@@ -569,10 +569,6 @@ for p in pe:
     print(h.get_person_by_id(p.get_id()))
 """
 
-h = HdMWebAppAdministration()
-per = h.get_person_by_id(3)
-print(per)
-
 
 
 if __name__ == '__main__':
