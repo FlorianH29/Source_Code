@@ -351,7 +351,6 @@ class HdMWebAppAdministration(object):
     def delete_event_transaction(self, event_transaction):
         """Die gegebene EventTransaction löschen."""
         with EventTransactionMapper() as mapper:
-            # nicht ganz löschen, sondern nur deaktivieren
             mapper.delete(event_transaction)
 
     def create_event_transaction(self, event=None, arrive=None, departure=None):
@@ -471,8 +470,8 @@ class HdMWebAppAdministration(object):
                 time_stamp = arrive.get_time_stamp()
                 if start_time <= time_stamp.date() <= end_time:
                     # Überprüfen, ob das Event im übergebenen Zeitraum liegt
-                    event_dict = {'name': 'Kommen', 'projectworkid': None, 'start_time': time_stamp,
-                                  'starteventid': None, 'endtime': None, 'endeventid': None,
+                    event_dict = {'name': 'Kommen','arriveid': arrive_id , 'departureid': None,'projectworkid': None,
+                                  'start_time': time_stamp, 'starteventid': None, 'endtime': None, 'endeventid': None,
                                   'period': None, 'timeintervaltransactionid': None}
                     event_list.append(event_dict)
             if departure_id is not None:
@@ -480,9 +479,9 @@ class HdMWebAppAdministration(object):
                 time_stamp = departure.get_time_stamp()
                 if start_time <= time_stamp.date() <= end_time:
                     # Überprüfen, ob das Event im übergebenen Zeitraum liegt
-                    event_dict = {'name': 'Gehen', 'projectworkid': None, 'start_time': time_stamp,
-                                  'starteventid': None, 'endtime': time_stamp, 'endeventid': None,
-                                  'period': None, 'timeintervaltransactionid': None}
+                    event_dict = {'name': 'Gehen', 'arriveid': None, 'departureid': departure_id, 'projectworkid': None,
+                                  'start_time': time_stamp, 'starteventid': None,'endtime': time_stamp,
+                                  'endeventid': None, 'period': None, 'timeintervaltransactionid': None}
                     event_list.append(event_dict)
         for tit in time_interval_transactions:
             break_id = tit.get_affiliated_break()
@@ -498,10 +497,9 @@ class HdMWebAppAdministration(object):
                 time_stamp_end = end_event.get_time_stamp()
                 time_period = br.get_time_period()
                 if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
-                    event_dict = {'name': 'break', 'projectworkid': None, 'start_time': time_stamp_start,
-                                  'starteventid': start_event_id, 'endtime': time_stamp_end,
-                                  'endeventid': end_event_id, 'period': time_period,
-                                  'timeintervaltransactionid': tit.get_id()}
+                    event_dict = {'name': 'break', 'arriveid': None, 'departureid': None,'projectworkid': None,
+                                  'start_time': time_stamp_start, 'starteventid': start_event_id,'endtime': time_stamp_end,
+                                  'endeventid': end_event_id, 'period': time_period, 'timeintervaltransactionid': tit.get_id()}
                     event_list.append(event_dict)
             if project_work_id is not None:
                 project_work = self.get_project_work_by_id(project_work_id)
@@ -513,9 +511,9 @@ class HdMWebAppAdministration(object):
                 time_stamp_end = end_event.get_time_stamp()
                 time_period = project_work.get_time_period()
                 if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
-                    event_dict = {'name': project_work.get_project_work_name(), 'projectworkid': project_work_id,
-                                  'start_time': time_stamp_start, 'starteventid': start_event_id,
-                                  'endtime': time_stamp_end, 'endeventid': end_event_id,
+                    event_dict = {'name': project_work.get_project_work_name(),  'arriveid': None, 'departureid': None,
+                                  'projectworkid': project_work_id, 'start_time': time_stamp_start, 'starteventid': start_event_id,
+                                  'endtime': time_stamp_end,'endeventid': end_event_id,
                                   'period': time_period, 'timeintervaltransactionid': tit.get_id()}
                     event_list.append(event_dict)
             if work_time_id is not None:
@@ -528,10 +526,9 @@ class HdMWebAppAdministration(object):
                 time_stamp_end = end_event.get_time_stamp()
                 time_period = time_interval.get_time_period()
                 if start_time <= time_stamp_start.date() <= end_time and start_time <= time_stamp_end.date() <= end_time:
-                    event_dict = {'name': 'Arbeitszeit', 'projectworkid': None, 'start_time': time_stamp_start,
-                                  'starteventid': start_event_id, 'endtime': time_stamp_end,
-                                  'endeventid': end_event_id, 'period': time_period,
-                                  'timeintervaltransactionid': tit.get_id()}
+                    event_dict = {'name': 'Arbeitszeit',  'arriveid': None, 'departureid': None,'projectworkid': None,
+                                  'start_time': time_stamp_start, 'starteventid': start_event_id, 'endtime': time_stamp_end,
+                                  'endeventid': end_event_id, 'period': time_period, 'timeintervaltransactionid': tit.get_id()}
                     event_list.append(event_dict)
         sorted_event_list = sorted(event_list, key=lambda x: x['start_time'])
         return sorted_event_list
@@ -632,9 +629,16 @@ class HdMWebAppAdministration(object):
     def get_project_by_person_id(self, person_id):
         """ ProjektWorks werden anhand der eindeutigen ID der Aktivität ausgelesen, der sie zugeordnet sind."""
         with ProjectMapper() as mapper:
-            result = []
             if not (person_id is None):
                 return mapper.find_by_person_id(person_id)
+
+    def get_projects_by_owner(self, owner):
+        """Gibt alle Projekte zurück, in denen übergebene Person Projektleiter ist zurück"""
+        with ProjectMapper() as mapper:
+            if owner is not None:
+                return mapper.find_projects_by_owner(owner.get_id())
+            else:
+                return None
 
     def calculate_work_time_of_project(self, project):
         """Die für ein Projekt gearbeitete Zeit berechnen"""

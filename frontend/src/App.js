@@ -17,6 +17,7 @@ import Welcome from "./components/pages/Welcome";
 import {Person} from "@mui/icons-material";
 import TimeIntervalTransactionList from "./components/TimeIntervalTransactionList";
 import SignInHeader from "./components/layout/SignInHeader";
+import ProjectAnalysis from "./components/ProjectAnalysis";
 
 
 class App extends React.Component {
@@ -79,46 +80,45 @@ class App extends React.Component {
         const {currentPerson, authError} = this.state;
 
         return (
-            <Router>
+            <div style={{flex:1}}>
+                <Router>
 
-                {
-                    currentPerson ?
-                        <>
-                            <Navigator person={currentPerson}/>
-                            <Switch>
-                                <Route exact path='/persons'>
-                                    <PersonList/>
-                                </Route>
-                                <Route exact path='/projects'>
-                                    <ProjectList/>
-                                </Route>
-                                <Route exact path='/projectworks'>
-                                    <ProjectWorkList/>
-                                </Route>
-                                <Route exact path='/worktimeaccount'>
-                                    <WorktimeAccount/>
-                                </Route>
-                                 <Route exact path='/welcome'>
-                                    <Welcome/>
-                                </Route>
-                                <Route exact path='/activities'>
-                                    <ActivityList/>
-                                </Route>
-                                <Route exact path='/eventtransactionsandtimeintervaltransactions'>
-                                    <TimeIntervalTransactionList/>
-                                </Route>
-                                <Route path='*'>
-                                    <NotFound/>
-                                </Route>
-                            </Switch>
-                        </>
-                        :
-                        <>
-                            <SignInHeader person={currentPerson}/>
-                            <SignIn onSignIn={this.handleSignIn}/>
-                        </>
-                }
-            </Router>
+                    {
+                        currentPerson ?
+                            <>
+                                <Navigator person={currentPerson}/>
+                                <Switch>
+                                    <Route exact path='/projects'>
+                                        <ProjectList/>
+                                    </Route>
+                                    <Route exact path='/projectworks'>
+                                        <ProjectWorkList/>
+                                    </Route>
+                                    <Route exact path='/welcome'>
+                                        <Welcome/>
+                                    </Route>
+                                    <Route exact path='/activities'>
+                                        <ActivityList/>
+                                    </Route>
+                                    <Route exact path='/eventtransactionsandtimeintervaltransactions'>
+                                        <TimeIntervalTransactionList/>
+                                    </Route>
+                                    <Route exact path='/projectanalysis'>
+                                        <ProjectAnalysis/>
+                                    </Route>
+                                    <Route path='*'>
+                                        <NotFound/>
+                                    </Route>
+                                </Switch>
+                            </>
+                            :
+                            <>
+                                <SignInHeader person={currentPerson}/>
+                                <SignIn onSignIn={this.handleSignIn}/>
+                            </>
+                    }
+                </Router>
+            </div>
         );
     }
 }

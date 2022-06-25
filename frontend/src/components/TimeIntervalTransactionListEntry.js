@@ -45,6 +45,7 @@ class TimeIntervalTransactionListEntry extends Component {
     /** Renders the component */
     render() {
         const {event, showEventandTimeIntervalDeleteDialog, showEventandTimeIntervalForm} = this.state;
+        console.log(event)
         return (
             <div>
                 <ListItem>
@@ -81,16 +82,18 @@ class TimeIntervalTransactionListEntry extends Component {
                                 {event.period}
                             </Typography>
                         </Grid>
-                        <Grid item xs={2} align={"center"}>
+                        <Grid item xs={2} align={"left"}>
+                            <Button color='primary' size='small' startIcon={<EditIcon/>}
+                                    onClick={this.editEventAndTimeIntervalButtonClicked}> </Button>
                             {
                                 event.name != 'Kommen' && event.name != 'Gehen' ? (
-                                    <>  <Button color='primary' size='small' startIcon={<EditIcon/>}
-                                                onClick={this.editEventAndTimeIntervalButtonClicked}> </Button>
-
+                                    <>
                                         <Button color='secondary' size='small' startIcon={<DeleteIcon/>}
                                                 onClick={this.deleteEventAndTimeIntervalButtonClicked}> </Button>
+
                                     </>) : ''
                             }
+
                         </Grid>
                     </Grid>
                 </ListItem>

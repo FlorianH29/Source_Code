@@ -34,6 +34,8 @@ class EventAndTimeIntervalForm extends Component {
         let starteventid = null;
         let enddate = null;
         let endeventid = null;
+        let arriveid = null;
+        let departureid = null;
         if (props.event) {
             name = props.event.name;
             projectworkid = props.event.projectworkid;
@@ -41,6 +43,8 @@ class EventAndTimeIntervalForm extends Component {
             starteventid = props.event.starteventid;
             enddate = props.event.endtime;
             endeventid = props.event.endeventid;
+            arriveid = props.event.arriveid;
+            departureid = props.event.departureid;
         }
         // Den State initiieren
         this.state = {
@@ -48,6 +52,8 @@ class EventAndTimeIntervalForm extends Component {
             projectWorkID: projectworkid,
             startDate: startdate,
             starteventid: starteventid,
+            arriveid: arriveid,
+            departureid: departureid,
             endDate: enddate,
             endeventid: endeventid,
             projectWorkNameValidationFailed: false,
@@ -91,7 +97,7 @@ class EventAndTimeIntervalForm extends Component {
                 this.props.onClose();
             })
         }
-        if (this.state.startDateChanged) {
+        if (this.state.startDateChanged && this.state.starteventid != null) {
             HdMWebAppAPI.getAPI().updateEventByID(this.state.starteventid, this.state.startDate).then(event => {
                 this.baseState.startDate = this.state.startDate;
                 let events = this.props.event;
@@ -99,8 +105,24 @@ class EventAndTimeIntervalForm extends Component {
                 this.props.onClose();
             })
         }
-        if (this.state.endDateChanged) {
+        if (this.state.endDateChanged && this.state.endeventid != null) {
             HdMWebAppAPI.getAPI().updateEventByID(this.state.endeventid, this.state.endDate).then(event => {
+                this.baseState.endDate = this.state.endDate;
+                let events = this.props.event;
+                events.endtime = this.state.endDate;
+                this.props.onClose();
+            })
+        }
+        if (this.state.startDateChanged && this.state.arriveid != null) {
+            HdMWebAppAPI.getAPI().updateArriveByID(this.state.arriveid, this.state.startDate).then(event => {
+                this.baseState.startDate = this.state.startDate;
+                let events = this.props.event;
+                events.starttime = this.state.startDate;
+                this.props.onClose();
+            })
+        }
+        if (this.state.endDateChanged && this.state.departureid != null) {
+            HdMWebAppAPI.getAPI().updateDepartureByID(this.state.departureid, this.state.endDate).then(event => {
                 this.baseState.endDate = this.state.endDate;
                 let events = this.props.event;
                 events.endtime = this.state.endDate;
@@ -112,7 +134,7 @@ class EventAndTimeIntervalForm extends Component {
     /** Renders the component */
     render() {
         const {show} = this.props;
-        const { projectWorkName, projectWorkNameValidationFailed} = this.state;
+        const {projectWorkName, projectWorkNameValidationFailed} = this.state;
 
         let title = 'Projectarbeit bearbeiten';
         let header = '';

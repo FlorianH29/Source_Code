@@ -5,11 +5,11 @@ import ProjectListEntry from "./ProjectListEntry";
 import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
 import PropTypes from "prop-types";
 import ProjectDurationDialog from "./dialogs/ProjectDurationDialog";
+
 import ViewsDatePicker from "./dialogs/ProjectDurationDialog";
 
 
 class ProjectList extends Component {
-
 
     constructor(props) {
         super(props);
@@ -49,7 +49,6 @@ class ProjectList extends Component {
             showProjectDurationDialog: true
         })
     }
-
 
     projectCreateDialogClosed = project => {
         // projectWork ist nicht null und deshalb erstelltI/überarbeitet
@@ -104,8 +103,8 @@ class ProjectList extends Component {
         const {projects, showProjectCreateDialog, showProjectDurationDialog} = this.state
         //console.log(this.state)
         return (
-            <Box m={18}  pl={5}>
             <div>
+                <Box m={18} pl={8}>
                 <Grid container direction={'row'} spacing={18}>
                     <Grid item xs={3} align={"center"}>
                         <Button variant='contained' color='warning'
@@ -137,8 +136,8 @@ class ProjectList extends Component {
                 </Grid>
                 <ProjectCreateDialog onClose={this.projectCreateDialogClosed} show={showProjectCreateDialog}/>
                 <ProjectDurationDialog openProjectDurationDialog={this.handleShowProjectCreation} onClose={this.handleDurationClose} show={showProjectDurationDialog}/>
-            </div>
             </Box>
+            </div>
                 );
     }
 }

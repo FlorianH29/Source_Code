@@ -54,6 +54,8 @@ person = api.inherit('Person', bo, {
 
 event_transaction_and_timeintervaltransaction = api.inherit('EventTransaction', {
     'name': fields.String(description='Name des Inhalts'),
+    'arriveid': fields.Integer(description='ID des Kommens'),
+    'departureid': fields.Integer(description='ID des Gehens'),
     'projectworkid': fields.Integer(description='ID der Projektarbeit'),
     'start_time': fields.DateTime(description='Dauer des Inhalts'),
     'starteventid': fields.Integer(description='ID des Startevents'),
@@ -228,23 +230,27 @@ class ActivitiesList(Resource):
             return "Activity not found", 500
 
 
-@hdmwebapp.route('/activities/<int:id>/work_time')
+@hdmwebapp.route('/activities/<int:id>/<int:start_date>/<int:end_date>/work_time')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ActivitiyWorkTimeOperations(Resource):
-    @hdmwebapp.marshal_list_with(activity)
+    @hdmwebapp.param('id', 'die ID der Aktivität')
+    @hdmwebapp.param('start_date', 'eingegebenes Start-Datum')
+    @hdmwebapp.param('end_date', 'eingegebenes End-Datum')
     @secured
-    def get(self, id, start, end):
+    def get(self, id, start_date, end_date):
         """
         Auslesen der Zeit, die in einem bestimmten Zeitraum für eine Aktivität gearbeitet wurde.
         """
         hwa = HdMWebAppAdministration()
         act = hwa.get_activity_by_id(id)
 
-        start_date = datetime.fromtimestamp(start / 1000.0).date()
-        end_date = datetime.fromtimestamp(end / 1000.0).date()
+        start_date = datetime.fromtimestamp(start_date / 1000.0)
+        end_date = datetime.fromtimestamp(end_date / 1000.0)
 
         if act is not None:
-            return hwa.get_work_time_of_activity_between_two_dates(act, start_date, end_date)
+            result = hwa.get_work_time_of_activity_between_two_dates(act, start_date, end_date).seconds
+            print(result)
+            return result
         else:
             return "Activity not found", 500
 
@@ -320,6 +326,20 @@ class ProjectListOperations(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
+
+
+@hdmwebapp.route('/projectsowner')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectOwnerOperations(Resource):
+    @hdmwebapp.marshal_list_with(project)
+    @secured
+    def get(self):
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        per = hwa.get_person_by_firebase_id(firebase_id)
+        projects = hwa.get_projects_by_owner(per)
+        return projects
 
 
 @hdmwebapp.route('/projects/<int:id>')
@@ -463,10 +483,12 @@ class ProjectWorkOwnerOperations(Resource):
 
 
 
-@hdmwebapp.route('/projects/<int:id>/work_time')
+@hdmwebapp.route('/projects/<int:id>/<int:start>/<int:end>/work_time')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des Project-Objekts')
+@hdmwebapp.param('start', 'Der Start des Zeitraums')
+@hdmwebapp.param('end', 'Das Ende des Zeitraums')
 class ProjectWorkTimeOperations(Resource):
-    @hdmwebapp.marshal_list_with(activity)
     @secured
     def get(self, id, start, end):
         """
@@ -475,11 +497,12 @@ class ProjectWorkTimeOperations(Resource):
         hwa = HdMWebAppAdministration()
         pro = hwa.get_project_by_id(id)
 
-        start_date = datetime.fromtimestamp(start / 1000.0).date()
-        end_date = datetime.fromtimestamp(end / 1000.0).date()
+        start_date = datetime.fromtimestamp(start / 1000.0)
+        end_date = datetime.fromtimestamp(end / 1000.0)
 
         if pro is not None:
-            return hwa.get_work_time_of_project_between_two_dates(pro, start_date, end_date)
+            result = hwa.get_work_time_of_project_between_two_dates(pro, start_date, end_date).seconds
+            return result
         else:
             return "Activity not found", 500
 
@@ -588,7 +611,7 @@ class ProjectWorkUpdateNameOperations(Resource):
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID des Events')
 @hdmwebapp.param('date', 'Der neue Timestamp des Events')
-class ProjectWorkUpdateNameOperations(Resource):
+class EventUpdateDateOperations(Resource):
     @hdmwebapp.marshal_list_with(event)
     @secured
     def put(self, id, date):
@@ -601,6 +624,49 @@ class ProjectWorkUpdateNameOperations(Resource):
         if event is not None:
             event.set_time_stamp(datetime.fromtimestamp(date / 1000.0))
             hwa.save_event(event)
+            return '', 200
+        else:
+            return '', 500
+
+
+@hdmwebapp.route('/arrive/<int:id>/<int:date>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des Events')
+@hdmwebapp.param('date', 'Der neue Timestamp des Events')
+class ArriveUpdateDateOperations(Resource):
+    @hdmwebapp.marshal_list_with(event)
+    @secured
+    def put(self, id, date):
+        """
+        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        arrive = hwa.get_arrive_event_by_id(id)
+
+        if arrive is not None:
+            arrive.set_time_stamp(datetime.fromtimestamp(date/1000.0))
+            hwa.save_arrive_event(arrive)
+            return '', 200
+        else:
+            return '', 500
+
+@hdmwebapp.route('/departure/<int:id>/<int:date>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des Events')
+@hdmwebapp.param('date', 'Der neue Timestamp des Events')
+class DepartureUpdateDateOperations(Resource):
+    @hdmwebapp.marshal_list_with(event)
+    @secured
+    def put(self, id, date):
+        """
+        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        departure = hwa.get_departure_event_by_id(id)
+
+        if departure is not None:
+            departure.set_time_stamp(datetime.fromtimestamp(date / 1000.0))
+            hwa.save_departure_event(departure)
             return '', 200
         else:
             return '', 500
