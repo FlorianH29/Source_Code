@@ -39,17 +39,6 @@ class ProjectWorkList extends Component {
         }));
   }
 
-  getWorkTimeActivity = () => {
-     HdMWebAppAPI.getAPI().getActivityWorkTime(1, this.state.start, this.state.start)
-        .then(workTimeProject => this.setState({
-            workTimeProject: workTimeProject
-      })).catch(e =>
-        this.setState({ // bei Fehler den state zurücksetzen
-          workTimeProject: null,
-        })
-      );
-  }
-
   componentDidMount() {
       if (this.props.location.owner) {
           this.getProjectWorksForActivity();
@@ -173,11 +162,6 @@ class ProjectWorkList extends Component {
                     <Grid item xs={4} align={'center'}>
                         <Button variant='contained' color='primary' onClick={this.handleEndEventButtonClicked}>
                             Ende buchen
-                        </Button>
-                    </Grid>
-                    <Grid item xs={4} align={'center'}>
-                        <Button variant='contained' color='primary' onClick={this.getWorkTimeActivity}>
-                            Methode testen
                         </Button>
                     </Grid>
                 </Grid>
