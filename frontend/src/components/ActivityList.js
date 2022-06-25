@@ -130,6 +130,11 @@ class ActivityList extends Component {
             return (<Redirect to='/' />);
          }
 
+         let per = null
+         if (this.props.location.per){
+             per = this.props.location.per
+         }
+
         return (
             <div>
                 <Box m={18}  pl={8}>
@@ -167,7 +172,8 @@ class ActivityList extends Component {
                             </Grid>
                             <Divider/>
                             {activities.map(ac =>
-                                <ActivityListEntry key={ac.getID()} activity={ac} project={pro.project} onActivityDeleted={this.activityDeleted}/>)
+                                <ActivityListEntry key={ac.getID()} activity={ac} project={pro.project} person={per.person}
+                                                   onActivityDeleted={this.activityDeleted}/>)
                             }
                         </Grid>
                     </Grid>

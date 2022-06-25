@@ -54,7 +54,7 @@ class ProjectWorkForm extends Component {
      await HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
         // Backend call successfull
         // reinit the dialogs state for a new empty customer
-        console.log(event)
+        // console.log(event)
         this.props.onClose(event); // call the parent with the customer object from backend
     }).catch(e =>
         console.log(e));
@@ -64,7 +64,7 @@ class ProjectWorkForm extends Component {
   addProjectWork = () => {
     let newProjectWorkBO = new ProjectWorkBO(this.state.projectWorkName, this.state.description,
         this.state.affiliatedActivity);
-    console.log(this.state)
+    // console.log(this.state)
     HdMWebAppAPI.getAPI().addProjectWork(newProjectWorkBO).then(projectWork => {
       // Backend call sucessfull
       // reinit the dialogs state for a new empty customer

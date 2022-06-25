@@ -421,6 +421,7 @@ class ProjectWorkOwnerOperations(Resource):
         else:
             return 0, 500
 
+    @secured
     def put(self, id):
         """
         Update eines bestimmten Projektobjektes. Objekt wird durch die id in dem URI bestimmt.
@@ -463,6 +464,7 @@ class ProjectWorkOwnerOperations(Resource):
         else:
             return 0, 500
 
+    @secured
     def put(self, id):
         """
         Update eines bestimmten Projektobjektes. Objekt wird durch die id in dem URI bestimmt.
@@ -672,6 +674,30 @@ class ArriveUpdateDateOperations(Resource):
             return '', 500
 
 
+@hdmwebapp.route('/arrive')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ArriveOperations(Resource):
+    @hdmwebapp.marshal_with(event, code=200)
+    @secured
+    def post(self):
+        """
+        Anlegen eines Kommen-Events. Das neu angelegte Kommen-Event wird als Ergebnis zurückgegeben.
+        """
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        per = hwa.get_person_by_firebase_id(firebase_id)
+
+        if per is not None:
+            """ 
+            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Kommen-Objekt erstellt.
+            """
+            a = hwa.create_arrive_event(per)
+            return a, 200
+        else:
+            return '', 500
+
+
 @hdmwebapp.route('/departure/<int:id>/<int:date>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID des Events')
@@ -690,6 +716,30 @@ class DepartureUpdateDateOperations(Resource):
             departure.set_time_stamp(datetime.fromtimestamp(date / 1000.0))
             hwa.save_departure_event(departure)
             return '', 200
+        else:
+            return '', 500
+
+
+@hdmwebapp.route('/departure')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class DepartureOperations(Resource):
+    @hdmwebapp.marshal_with(departure, code=200)
+    @secured
+    def post(self):
+        """
+        Anlegen eines Gehen-Events. Das neu angelegte Gehen-Event wird als Ergebnis zurückgegeben.
+        """
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+        firebase_id = h.get_firebase_id()
+        per = hwa.get_person_by_firebase_id(firebase_id)
+
+        if per is not None:
+            """ 
+            Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Gehen-Objekt erstellt.
+            """
+            d = hwa.create_departure_event(per)
+            return d, 200
         else:
             return '', 500
 
@@ -760,6 +810,12 @@ sub_thread = Thread(target=check)
 # es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
+
+
+h = HdMWebAppAdministration()
+pe = h.get_person_by_id(1)
+pr = h.get_project_by_id(1)
+
 
 if __name__ == '__main__':
     app.run(debug=False)

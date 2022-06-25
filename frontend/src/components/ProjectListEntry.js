@@ -28,6 +28,7 @@ class ProjectListEntry extends Component {
 
         this.state = {
             project: props.project,
+            person: '',
             startEvent: "", //props.startDate,
             endEvent: "",//props.endDate,
             showProjectCreateDialog: false,
@@ -88,6 +89,18 @@ class ProjectListEntry extends Component {
         }
     }
 
+    getAPerson = () => {
+        HdMWebAppAPI.getAPI().getPerson()
+            .then(personBO =>
+                this.setState({
+                    person: personBO,
+                })).catch(e =>
+            this.setState({
+                person: null,
+            })
+        );
+    }
+
     /** Methode für das onClickEvent des BearbeitenButton von Project*/
     projectDurationDialogClosed = () => {
         this.setState({showProjectDurationDialog: false})
@@ -97,7 +110,8 @@ class ProjectListEntry extends Component {
 
     componentDidMount() {
         this.getStartEventOfProject();
-       this.getEndEventOfProject();
+        this.getEndEventOfProject();
+        this.getAPerson();
     }
 
 
@@ -131,10 +145,10 @@ class ProjectListEntry extends Component {
     /** Rendert die Komponente*/
     render() {
         const {classes} = this.props;
-        const {project, showProjectCreateDialog, showProjectDeleteDialog, showProjectDurationDialog, startEvent, endEvent} = this.state;
+        const {project, showProjectCreateDialog, showProjectDeleteDialog, showProjectDurationDialog, startEvent, endEvent, person} = this.state;
 
         //console.log(startEvent)
-        console.log (project)
+        console.log (this.state)
 
         return (
             <div>
@@ -144,7 +158,10 @@ class ProjectListEntry extends Component {
                         pathname: `/activities`,
                         pro: {
                             project: project
-                            }
+                            },
+                        per: {
+                            person: person
+                        }
                         }}>
                         <Grid item xs={3} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
@@ -174,7 +191,7 @@ class ProjectListEntry extends Component {
                                 {project.getWorkTime()} h
                             </Typography>
                         </Grid>
-                        <Grid item xs={2} align={"center"}>
+                            <Grid item xs={2} align={"center"}>
                             <Button color='primary' size='small' startIcon={<EditIcon/>}
                                     onClick={this.editProjectButtonClicked}> </Button>
                             <Button color='secondary' size='small' startIcon={<DeleteIcon/>}
