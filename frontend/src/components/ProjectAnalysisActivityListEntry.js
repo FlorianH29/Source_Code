@@ -12,7 +12,6 @@ class ActivityListEntry extends Component {
         this.state = {
             activity: props.activity,
             workTimeActivity: '',
-            arrived: ''
         };
     }
 
@@ -31,21 +30,8 @@ class ActivityListEntry extends Component {
         }
     }
 
-    /** Gibt zurück, ob das letzte Gehen einer Person größer ist als das letzte Kommen */
-    getDepartureBiggerArrive = () => {
-        HdMWebAppAPI.getAPI().getDepartureBiggerArrive()
-            .then(value => this.setState({
-                arrived: value,
-            })).catch(e =>
-                this.setState({ // bei Fehler den state zurücksetzen
-                    arrived: '',
-                })
-            );
-    }
-
     componentDidMount() {
         this.getWorkTimeActivity();
-        this.getDepartureBiggerArrive();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -65,7 +51,6 @@ class ActivityListEntry extends Component {
     render() {
         const {activity, workTimeActivity} = this.state;
 
-        console.log(this.state)
         return (
             <div style={{width: "100%", p: 0, m: 0}}>
                 <Accordion sx={{width: "100%", p: 0, m: 0}}>
