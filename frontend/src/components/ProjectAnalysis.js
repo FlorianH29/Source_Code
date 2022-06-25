@@ -14,26 +14,11 @@ class ProjectAnalysis extends Component {
 
         // den state initialisieren
         this.state = {
-            workTimeProject: null,
             projects: [],
             startDate: new Date().getTime(),
             endDate: new Date().getTime(),
         };
 
-    }
-
-    /** Gibt die Arbeitsleistung für ein Project in einen gegebenen Zeitraum zurück */
-    getWorkTimeProject = () => {
-        console.log(this.props.project)
-        if (this.props.project.getID() > 0) {
-            HdMWebAppAPI.getAPI().getProjectWorkTime(this.props.project.getID(), this.state.startDate, this.state.endDate).then(workTimeProject => this.setState({
-                workTimeProject: workTimeProject,
-            })).catch(e =>
-                this.setState({ // bei Fehler den state zurücksetzen
-                    workTimeProject: null,
-                })
-            );
-        }
     }
 
     /** Gibt die Projekte einer Person zurück, in denen sie Projektleiter ist.*/
@@ -46,17 +31,15 @@ class ProjectAnalysis extends Component {
             this.setState({
                 projects: []
             }));
-        // console.log(this.state.projects)
     }
 
     componentDidMount() {
         this.getProjects();
-        //this.getWorkTimeActivity();
     }
 
     render() {
         const {startDate, endDate, projects} = this.state
-        console.log(this.state.workTimeProject)
+        console.log(startDate)
 
         return (
             <div>

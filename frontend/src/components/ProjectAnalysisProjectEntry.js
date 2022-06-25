@@ -35,14 +35,38 @@ class ProjectAnalysisProjectEntry extends Component {
         this.state = {
             project: props.project,
             activities: [],
+            workTimeProject: 0,
+        }
+    }
+
+    /** Gibt die Arbeitsleistung für ein Project in einen gegebenen Zeitraum zurück */
+    getWorkTimeProject = () => {
+        if (this.state.project.getID() > 0) {
+            HdMWebAppAPI.getAPI().getProjectWorkTime(this.state.project.getID(), this.props.startDate, this.props.endDate).then(workTimeProject => this.setState({
+                workTimeProject: workTimeProject,
+            })).catch(e =>
+                this.setState({ // bei Fehler den state zurücksetzen
+                    workTimeProject: null,
+                })
+            );
+        }
+    }
+
+    componentDidMount() {
+        this.getWorkTimeProject();
+    }
+
+        componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props != prevProps) {
+            this.getWorkTimeProject();
         }
     }
 
     /** Rendert die Komponente*/
     render() {
-        const {project} = this.state;
+        const {project, workTimeProject} = this.state;
 
-        console.log(project)
+        console.log(workTimeProject)
         //console.log (classes)
 
         return (
@@ -62,14 +86,14 @@ class ProjectAnalysisProjectEntry extends Component {
                             </Grid>
                             <Grid item xs={4} align={"center"}>
                                 <Typography variant={"h5"} component={"div"}>
-                                    {project.getWorkTime()} h // hier dynamische Arbeitsleistung rein
+                                    {(workTimeProject/3600)} h // hier dynamische Arbeitsleistung rein
                                 </Typography>
                             </Grid>
                         </Grid>
                     </AccordionSummary>
                     <AccordionDetails>
                         <ProjectAnalysisActivityList project={project} startDate={this.props.startDate}
-                                                     endDate={this.props.endDate}></ProjectAnalysisActivityList>
+                                                     endDate={this.props.endDate}/>
                     </AccordionDetails>
                 </Accordion>
                 <Divider/>

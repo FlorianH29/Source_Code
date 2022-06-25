@@ -11,16 +11,16 @@ class ActivityListEntry extends Component {
 
         this.state = {
             activity: props.activity,
-            workTimeActivity: '',
+            workTimeActivity: ''
         };
     }
 
 
     /** Gibt die Arbeitsleistung für eine Aktivität in einen gegebenen Zeitraum zurück */
     getWorkTimeActivity = () => {
-        console.log(this.props.activity.getID())
+        console.log(this.props.startDate)
         if (this.props.activity.getID() > 0) {
-            HdMWebAppAPI.getAPI().getActivityWorkTime(this.props.activity.getID, this.props.startDate, this.props.endDate).then(workTimeActivity => this.setState({
+            HdMWebAppAPI.getAPI().getActivityWorkTime(this.props.activity.getID(), this.props.startDate, this.props.endDate).then(workTimeActivity => this.setState({
                 workTimeActivity: workTimeActivity,
             })).catch(e =>
                 this.setState({ // bei Fehler den state zurücksetzen
@@ -28,16 +28,21 @@ class ActivityListEntry extends Component {
                 })
             );
         }
-        console.log()
     }
     componentDidMount() {
         this.getWorkTimeActivity()
     }
 
-    render() {
-        const {activity, workTimeActivity} = this.state;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props != prevProps) {
+            this.getWorkTimeActivity();
+        }
+    }
 
-         console.log(workTimeActivity);
+    render() {
+        const {activity, workTimeActivity, startDate} = this.state;
+
+         console.log(startDate);
         return (
             <div style={{width: "100%", p: 0, m: 0}}>
                 <Accordion sx={{width: "100%", p: 0, m: 0}}>
@@ -55,7 +60,7 @@ class ActivityListEntry extends Component {
                             </Grid>
                             <Grid item xs={4} align={"center"}>
                                 <Typography variant={"h5"} component={"div"}>
-                                   {workTimeActivity} // hier dynamisch
+                                    { (workTimeActivity/3600)} h
                                 </Typography>
                             </Grid>
                         </Grid>

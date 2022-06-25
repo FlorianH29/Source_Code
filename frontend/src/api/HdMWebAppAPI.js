@@ -30,7 +30,8 @@ export default class HdMWebAppAPI {
   #deleteProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
   #addProjectDurationStartEvent = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
   #addProjectDurationEndEvent = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
-  #getProjectWorkTimeURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}/work_time`;
+  #getProjectWorkTimeURL = (id, startDate, endDate) =>
+      `${this.#hdmwebappServerBaseURL}/projects/${id}/${startDate}/${endDate}/work_time`;
   #getProjectByOwnerURL = () => `${this.#hdmwebappServerBaseURL}/projectsowner`;
   #getStartEventURL = (id) => `${this.#hdmwebappServerBaseURL}/projectduration/${id}/startevent`;
   #getEndEventURL = (id) => `${this.#hdmwebappServerBaseURL}/projectduration/${id}/endevent`
@@ -52,8 +53,8 @@ export default class HdMWebAppAPI {
   #updateActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
   #deleteActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
   #addActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/project/${id}/activities`;
-  #getActivityWorkTimeURL = (id, statDate, endDate) =>
-      `${this.#hdmwebappServerBaseURL}/activities/${id}/${statDate}/${endDate}/work_time`;
+  #getActivityWorkTimeURL = (id, startDate, endDate) =>
+      `${this.#hdmwebappServerBaseURL}/activities/${id}/${startDate}/${endDate}/work_time`;
 
     // Ereignis bezogen
     #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
@@ -169,7 +170,7 @@ export default class HdMWebAppAPI {
     getActivities(id) {
         return this.#fetchAdvanced(this.#getActivitiesForProjectURL(id)).then((responseJSON) => {
             let activityBOs = ActivityBO.fromJSON(responseJSON);
-            console.log(activityBOs);
+            //console.log(activityBOs);
             return new Promise(function (resolve) {
                 resolve(activityBOs);
             })
@@ -554,12 +555,6 @@ export default class HdMWebAppAPI {
       })
   }
 
-
-
-
-
-
-
     /**
    * Adds a customer and returns a Promise, which resolves to a new CustomerBO object with the
    * firstName and lastName of the parameter customerBO object.
@@ -582,7 +577,6 @@ export default class HdMWebAppAPI {
     })
   }
 
-
   /**
    * Gibt die Arbeitsleistung für eine Aktivität für einen gesetzten Zeitraum zurück
    *
@@ -592,7 +586,8 @@ export default class HdMWebAppAPI {
    * @public
    */
   getActivityWorkTime(activityID, start, end) {
-    return this.#fetchAdvanced(this.#getActivityWorkTimeURL(activityID))
+      console.log(activityID)
+    return this.#fetchAdvanced(this.#getActivityWorkTimeURL(activityID, start, end))
       .then(responseJSON => {
         console.log(responseJSON)
         return new Promise(function (resolve) {

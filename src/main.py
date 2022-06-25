@@ -230,10 +230,9 @@ class ActivitiesList(Resource):
             return "Activity not found", 500
 
 
-@hdmwebapp.route('/activities/<int:id><int:start_date>/<int:end_date>/work_time')
+@hdmwebapp.route('/activities/<int:id>/<int:start_date>/<int:end_date>/work_time')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ActivitiyWorkTimeOperations(Resource):
-    @hdmwebapp.marshal_list_with(activity)
     @hdmwebapp.param('id', 'die ID der Aktivität')
     @hdmwebapp.param('start_date', 'eingegebenes Start-Datum')
     @hdmwebapp.param('end_date', 'eingegebenes End-Datum')
@@ -245,11 +244,11 @@ class ActivitiyWorkTimeOperations(Resource):
         hwa = HdMWebAppAdministration()
         act = hwa.get_activity_by_id(id)
 
-        start_date = datetime.fromtimestamp(start_date / 1000.0).date()
-        end_date = datetime.fromtimestamp(end_date / 1000.0).date()
+        start_date = datetime.fromtimestamp(start_date / 1000.0)
+        end_date = datetime.fromtimestamp(end_date / 1000.0)
 
         if act is not None:
-            result = hwa.get_work_time_of_activity_between_two_dates(act, start_date, end_date)
+            result = hwa.get_work_time_of_activity_between_two_dates(act, start_date, end_date).seconds
             print(result)
             return result
         else:
@@ -448,10 +447,12 @@ class ProjectWorkOwnerOperations(Resource):
 
 
 
-@hdmwebapp.route('/projects/<int:id>/work_time')
+@hdmwebapp.route('/projects/<int:id>/<int:start>/<int:end>/work_time')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des Project-Objekts')
+@hdmwebapp.param('start', 'Der Start des Zeitraums')
+@hdmwebapp.param('end', 'Das Ende des Zeitraums')
 class ProjectWorkTimeOperations(Resource):
-    @hdmwebapp.marshal_list_with(activity)
     @secured
     def get(self, id, start, end):
         """
@@ -460,11 +461,12 @@ class ProjectWorkTimeOperations(Resource):
         hwa = HdMWebAppAdministration()
         pro = hwa.get_project_by_id(id)
 
-        start_date = datetime.fromtimestamp(start / 1000.0).date()
-        end_date = datetime.fromtimestamp(end / 1000.0).date()
+        start_date = datetime.fromtimestamp(start / 1000.0)
+        end_date = datetime.fromtimestamp(end / 1000.0)
 
         if pro is not None:
-            return hwa.get_work_time_of_project_between_two_dates(pro, start_date, end_date)
+            result = hwa.get_work_time_of_project_between_two_dates(pro, start_date, end_date).seconds
+            return result
         else:
             return "Activity not found", 500
 
@@ -695,8 +697,6 @@ def check():
     hwa = HdMWebAppAdministration()
     hwa.check_time_for_departure()
 
-hwa = HdMWebAppAdministration()
-print(hwa.get_max_time_interval_for_project())
 
 sub_thread = Thread(target=check)
 # es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
@@ -704,8 +704,11 @@ sub_thread.setDaemon(True)
 sub_thread.start()
 
 h = HdMWebAppAdministration()
-ti = h.get_time_interval_by_id(23)
-pe = h.get_person_by_id(4)
+pe = h.get_person_by_id(1)
+ac = h.get_activity_by_id(3)
+#h.create_project_work('Testen', 'Test', ac, pe)
+pw = h.get_project_work_by_id(3)
+#h.add_end_event_to_project_work(pw, pe)
 
 #h.create_departure_event(pe)
 
