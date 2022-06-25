@@ -64,7 +64,7 @@ class ActivityListEntry extends Component {
 
 
     render() {
-    const { classes } = this.props;
+    const { project } = this.props;
     const { activity, showActivityForm, showActivityDeleteDialog } = this.state;
 
       // console.log(this.state);
@@ -73,8 +73,9 @@ class ActivityListEntry extends Component {
            <ListItem>
            <ListItemButton component={RouterLink} to={{
                 pathname: `/projectworks`,
-                ac: {
-                     activity: activity
+                owner: {
+                     activity: activity,
+                     project: project
                     }
            }}>
              <Grid container alignItems='center'>
