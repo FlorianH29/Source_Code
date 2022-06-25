@@ -31,11 +31,9 @@ class ProjectAnalysisProjectWorkList extends Component {
 
   render() {
     const { projectWorks } = this.state;
-    // console.log(this.state)
-
     return (
         <div style={{width: "100%", p: 0, m:0}}>
-                <Grid container spacing={1}>
+                <Grid container spacing={2}>
                     <Grid item xs={4} align={"center"}>
                         <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Projektarbeit </Typography>
                     </Grid>

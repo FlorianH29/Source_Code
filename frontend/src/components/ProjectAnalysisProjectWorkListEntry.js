@@ -38,12 +38,15 @@ class ProjectAnalysisProjectWorkListEntry extends Component {
       );}
   }
 
+  timedeltaToTimeFormat(timedelta){
+      const timeSplits = timedelta.split(":");
+      const zeroPad = (num, places) => String(num).padStart(places, '0')
+      return zeroPad(timeSplits[0],2) + ":" + zeroPad(timeSplits[1],2)
+  }
+
   /** Renders the component */
   render() {
-    const { classes } = this.props;
     const { projectWork, owner } = this.state;
-
-    // console.log(this.state);
     return (
         <div style={ {width: "100%", p: 0, m:0}}>
             <Grid container alignItems='center' spacing={2}>
@@ -59,7 +62,8 @@ class ProjectAnalysisProjectWorkListEntry extends Component {
                 </Grid>
                 <Grid item xs={4} align={"center"}>
                     <Typography variant={"h5"} component={"div"}>
-                    {projectWork.getTimeIPeriod()}
+                        {
+                        this.timedeltaToTimeFormat(projectWork.getTimeIPeriod())} h
                     </Typography>
                 </Grid>
             </Grid>

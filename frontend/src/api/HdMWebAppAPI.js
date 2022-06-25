@@ -255,7 +255,7 @@ export default class HdMWebAppAPI {
   getProjectWorkTime(projectID, start, end) {
     return this.#fetchAdvanced(this.#getProjectWorkTimeURL(projectID, start, end))
       .then(responseJSON => {
-        console.log(responseJSON)
+        //console.log(responseJSON)
         return new Promise(function (resolve) {
           resolve(responseJSON);
         })
@@ -586,13 +586,13 @@ export default class HdMWebAppAPI {
    * @public
    */
   getActivityWorkTime(activityID, start, end) {
-      console.log(activityID)
+      //console.log(activityID)
     return this.#fetchAdvanced(this.#getActivityWorkTimeURL(activityID, start, end))
       .then(responseJSON => {
-        console.log(responseJSON)
+        //console.log(responseJSON)
         return new Promise(function (resolve) {
           resolve(responseJSON);
-          console.log(responseJSON);
+         // console.log(responseJSON);
         })
       })
   }

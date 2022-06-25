@@ -703,14 +703,5 @@ sub_thread = Thread(target=check)
 sub_thread.setDaemon(True)
 sub_thread.start()
 
-h = HdMWebAppAdministration()
-pe = h.get_person_by_id(1)
-ac = h.get_activity_by_id(3)
-#h.create_project_work('Testen', 'Test', ac, pe)
-pw = h.get_project_work_by_id(3)
-#h.add_end_event_to_project_work(pw, pe)
-
-#h.create_departure_event(pe)
-
 if __name__ == '__main__':
     app.run(debug=False)

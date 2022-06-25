@@ -56,24 +56,28 @@ class ProjectAnalysisProjectEntry extends Component {
         this.getWorkTimeProject();
     }
 
-        componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props != prevProps) {
             this.getWorkTimeProject();
         }
     }
 
+    secondsToString(seconds) {
+        const zeroPad = (num, places) => String(num).padStart(places, '0')
+        let totalMinutes = seconds / 60 >> 0;
+        let minutes = totalMinutes % 60;
+        let hours = totalMinutes / 60 >> 0;
+        return zeroPad(hours, 2) + ":" + zeroPad(minutes, 2)
+    }
+
     /** Rendert die Komponente*/
     render() {
         const {project, workTimeProject} = this.state;
-
-        console.log(workTimeProject)
-        //console.log (classes)
-
         return (
             <div style={{width: "100%", p: 0, m: 0}}>
                 <Accordion style={{width: "100%", p: 0, m: 0}}>
                     <AccordionSummary>
-                        <Grid container alignItems={"center"}>
+                        <Grid container alignItems={"center"} spacing={2}>
                             <Grid item xs={4} align={"center"}>
                                 <Typography variant={"h5"} component={"div"}>
                                     {project.getProjectName()}
@@ -86,7 +90,7 @@ class ProjectAnalysisProjectEntry extends Component {
                             </Grid>
                             <Grid item xs={4} align={"center"}>
                                 <Typography variant={"h5"} component={"div"}>
-                                    {(workTimeProject/3600)} h // hier dynamische Arbeitsleistung rein
+                                    {this.secondsToString(workTimeProject)} h
                                 </Typography>
                             </Grid>
                         </Grid>

@@ -88,17 +88,11 @@ class App extends React.Component {
                             <>
                                 <Navigator person={currentPerson}/>
                                 <Switch>
-                                    <Route exact path='/persons'>
-                                        <PersonList/>
-                                    </Route>
                                     <Route exact path='/projects'>
                                         <ProjectList/>
                                     </Route>
                                     <Route exact path='/projectworks'>
                                         <ProjectWorkList/>
-                                    </Route>
-                                    <Route exact path='/worktimeaccount'>
-                                        <WorktimeAccount/>
                                     </Route>
                                     <Route exact path='/welcome'>
                                         <Welcome/>

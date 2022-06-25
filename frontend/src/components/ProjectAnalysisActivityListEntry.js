@@ -39,15 +39,21 @@ class ActivityListEntry extends Component {
         }
     }
 
+    secondsToString(seconds){
+        const zeroPad = (num, places) => String(num).padStart(places, '0')
+        let totalMinutes = seconds/60>>0;
+        let minutes = totalMinutes%60;
+        let hours = totalMinutes/60>>0;
+        return zeroPad(hours,2)+":"+zeroPad(minutes,2)
+    }
+
     render() {
         const {activity, workTimeActivity, startDate} = this.state;
-
-         console.log(startDate);
         return (
             <div style={{width: "100%", p: 0, m: 0}}>
                 <Accordion sx={{width: "100%", p: 0, m: 0}}>
                     <AccordionSummary>
-                        <Grid container alignItems='center'>
+                        <Grid container alignItems='center' spacing={2}>
                             <Grid item xs={4} align={"center"}>
                                 <Typography variant={"h5"} component={"div"}>
                                     {activity.getActivityName()}
@@ -55,12 +61,12 @@ class ActivityListEntry extends Component {
                             </Grid>
                             <Grid item xs={4} align={"center"}>
                                 <Typography variant={"h5"} component={"div"}>
-                                    {activity.getActivityCapacity()}
+                                    {activity.getActivityCapacity()}h
                                 </Typography>
                             </Grid>
                             <Grid item xs={4} align={"center"}>
                                 <Typography variant={"h5"} component={"div"}>
-                                    { (workTimeActivity/3600)} h
+                                    {this.secondsToString(workTimeActivity)} h
                                 </Typography>
                             </Grid>
                         </Grid>

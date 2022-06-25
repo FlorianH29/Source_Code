@@ -36,7 +36,7 @@ class ProjectAnalysisActivityList extends Component {
 
         return (
             <div style={{width: "100%", p: 0, m: 0}}>
-                <Grid container>
+                <Grid container spacing={2}>
                     <Grid item xs={4} align={"center"}>
                         <Typography variant={"h5"} component={"div"}
                                     style={{fontWeight: 600}}> Aktivitätsname: </Typography>
