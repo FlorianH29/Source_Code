@@ -71,19 +71,20 @@ class ActivityListEntry extends Component {
       return (
         <div>
            <ListItem>
-           <ListItemButton component={RouterLink} to={{
+             <Grid container alignItems='center'>
+                 <ListItemButton component={RouterLink} to={{
                 pathname: `/projectworks`,
                 owner: {
                      activity: activity,
                      project: project
                     }
-           }}>
-             <Grid container alignItems='center'>
+                    }}>
                <Grid item xs={3} align={"center"}>
                  <Typography variant={"h5"} component={"div"}>
                      {activity.getActivityName()}
                  </Typography>
                </Grid>
+              </ListItemButton>
                <Grid item xs={3} align={"center"}>
                  <Typography variant={"h5"} component={"div"}>
                    {activity.getActivityCapacity()}
@@ -99,7 +100,6 @@ class ActivityListEntry extends Component {
                    <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteActivityButtonClicked}> </Button>
                </Grid>
              </Grid>
-             </ListItemButton>
            </ListItem>
            <Divider/>
           <ActivityDeleteDialog show={showActivityDeleteDialog} activity={activity} onClose={this.deleteActivityDialogClosed} />

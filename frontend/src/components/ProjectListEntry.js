@@ -120,18 +120,19 @@ class ProjectListEntry extends Component {
         return(
             <div>
                 <ListItem>
-                    <ListItemButton component={RouterLink} to={{
+                    <Grid container alignItems={"center"}>
+                        <ListItemButton component={RouterLink} to={{
                         pathname: `/activities`,
                         pro: {
                             project: project
                             }
-                    }}>
-                    <Grid container alignItems={"center"}>
+                        }}>
                         <Grid item xs={3} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 {project.getProjectName()}
                             </Typography>
                         </Grid>
+                         </ListItemButton>
                         <Grid item xs={3} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 {project.getClient()}
@@ -154,7 +155,6 @@ class ProjectListEntry extends Component {
                             <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteProjectButtonClicked}> </Button>
                         </Grid>
                     </Grid>
-                     </ListItemButton>
                 </ListItem>
                 <Divider/>
                 <ProjectCreateDialog show={showProjectCreateDialog} project={project} onClose={this.projectCreateDialogClosed} />
