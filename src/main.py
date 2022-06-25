@@ -12,6 +12,7 @@ from server.bo.Person import Person
 from server.bo.Project import Project
 from server.bo.ProjectWork import ProjectWork
 from server.bo.WorkTimeAccount import WorkTimeAccount
+from server.bo.Departure import Departure
 from SecurityDecorator import secured
 from Helper import Helper
 
@@ -42,6 +43,14 @@ event = api.inherit('Event', bo, {
     'event_type': fields.Integer(attribute='_event_type',
                                  description='Typ eines Events, Start oder Ende, für B und PW'),
     'affiliated_person': fields.Integer(attribute='_affiliated_person', description='ID der Person, die Event besitzt')
+})
+
+departure = api.inherit('Departure', event, {
+    'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt von Gehen')
+})
+
+arrive = api.inherit('Arrive', event, {
+    'time_stamp': fields.DateTime(attribute='_time_stamp', description='Gespeicherter Zeitpunkt von Kommen')
 })
 
 person = api.inherit('Person', bo, {
@@ -471,7 +480,6 @@ class ProjectWorkOwnerOperations(Resource):
         else:
             return '', 500
             pass
-
 
 
 @hdmwebapp.route('/projects/<int:id>/<int:start>/<int:end>/work_time')

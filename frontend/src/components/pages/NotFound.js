@@ -13,7 +13,7 @@ class NotFound extends Component {
         return (
             <>
                 <Grid container spacing={1} justifyContent={"center"}>
-                    <Grid item xs={12} align={"center"}>
+                    <Grid item xs={9} align={"center"}>
                         <Box component="img" src={logo} sx={{width: "100%"}}/>
                     </Grid>
                     <Grid item xs={12} align={"center"}>

@@ -179,14 +179,14 @@ class ActivityList extends Component {
 }
 
 
-ActivityList.propTypes = {
-    /** @ignore */
+/*ActivityList.propTypes = {
+    /** @ignore *//*
     classes: PropTypes.object.isRequired,
-    /** The CustomerBO of this AccountList */
+    /** The CustomerBO of this AccountList *//*
     project: PropTypes.object.isRequired,
-    /** If true, accounts are (re)loaded */
+    /** If true, accounts are (re)loaded *//*
     show: PropTypes.bool.isRequired,
-}
+}*/
 
 
 ActivityForm.propTypes = {

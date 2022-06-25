@@ -17,6 +17,11 @@ import Welcome from "./components/pages/Welcome";
 import {Person} from "@mui/icons-material";
 import TimeIntervalTransactionList from "./components/TimeIntervalTransactionList";
 import SignInHeader from "./components/layout/SignInHeader";
+import DepartureDialog from "./components/dialogs/DepartureDialog";
+import {Dialog} from "@mui/material";
+import {DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
+import Button from "@mui/material/Button";
+import {ArriveBO, HdMWebAppAPI} from "./api";
 import ProjectAnalysis from "./components/ProjectAnalysis";
 
 
@@ -28,7 +33,8 @@ class App extends React.Component {
         // Init an empty state
         this.state = {
             currentPerson: null,
-            authError: null
+            authError: null,
+            arrived: true
         };
     }
 
@@ -67,7 +73,9 @@ class App extends React.Component {
         });
         const provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithRedirect(provider);
+        this.props.history.push('/welcome') /*try...*/
     }
+
 
     componentDidMount() {
         firebase.initializeApp(firebaseConfig);
@@ -75,27 +83,75 @@ class App extends React.Component {
         firebase.auth().onAuthStateChanged(this.handleAuthStateChange);
     }
 
+    handleCloseArriveDialog = () => {
+      this.setState({
+          arrived: false
+      })
+    }
+
+    /* Erstellen eines Kommen-Events durch den Button im ArriveDialog**/
+    addNewArriveEvent = () => {
+      // Umschalten des Status der Knöpfe
+      this.setState({
+
+      });
+      // Erstellen eines Gehen-Ereignis
+      let newArriveEvent = new ArriveBO(this.state.firebase_id)
+      HdMWebAppAPI.getAPI().addArrive().then(arrive => {
+        // Backend call successful
+        // reinit the dialogs state for a new empty customer
+        //this.setState(this.baseState);
+        //this.onClose(arrive); // call the parent with the departure object from backend
+        console.log("test")
+        this.setState({
+            arrived: false
+        })
+      }).catch(e =>
+        console.log(e)
+      );
+    }
+
 
     render() {
-        const {currentPerson, authError} = this.state;
+        const {currentPerson, authError, arrived} = this.state;
 
         return (
             <div style={{flex:1}}>
                 <Router>
 
-                    {
-                        currentPerson ?
+                {
+
+                    currentPerson ?
+
+                        <>
+                            <Dialog open={arrived} onClose={this.handleCloseArriveDialog}>
+                              <DialogTitle>Willkommen in der Arbeitszeiterfassung</DialogTitle>
+                              <DialogContent>
+                                <DialogContentText>
+                                  Bitte bestätigen Sie Ihren Arbeitsbeginn:
+                                </DialogContentText>
+                              </DialogContent>
+                              <DialogActions>
+                                <Button variant='contained' onClick={() => {this.addNewArriveEvent()}} color='primary'>
+                                  Kommen bestätigen
+                                </Button>
+                              </DialogActions>
+                            </Dialog>
                             <>
                                 <Navigator person={currentPerson}/>
                                 <Switch>
+
+                                    <Route exact path='/persons'>
+                                        <PersonList/>
+                                    </Route>
                                     <Route exact path='/projects'>
                                         <ProjectList/>
                                     </Route>
                                     <Route exact path='/projectworks'>
                                         <ProjectWorkList/>
                                     </Route>
-                                    <Route exact path='/welcome'>
-                                        <Welcome/>
+                                    <Route exact path='/worktimeaccount'>
+                                        <WorktimeAccount/>
                                     </Route>
                                     <Route exact path='/activities'>
                                         <ActivityList/>
@@ -111,14 +167,23 @@ class App extends React.Component {
                                     </Route>
                                 </Switch>
                             </>
+                        }
+
                             :
-                            <>
-                                <SignInHeader person={currentPerson}/>
-                                <SignIn onSignIn={this.handleSignIn}/>
-                            </>
-                    }
-                </Router>
-            </div>
+
+                        </>
+
+
+                    :
+                        <>
+                            <SignInHeader person={currentPerson}/>
+                            <SignIn onSignIn={this.handleSignIn}/>
+                        </>
+
+                }
+
+            </Router>
+          </div>
         );
     }
 }

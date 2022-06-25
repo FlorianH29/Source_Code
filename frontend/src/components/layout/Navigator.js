@@ -2,15 +2,17 @@ import * as React from 'react';
 import {
     AppBar,
     CssBaseline,
-    Popover,
     Typography,
     Toolbar,
     IconButton,
+    Menu,
     Box,
     Drawer,
     Button,
     Link,
-    Divider
+    Divider,
+    MenuItem,
+    Popover
 } from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -32,6 +34,7 @@ import AssessmentRoundedIcon from '@mui/icons-material/AssessmentRounded';
 import {Link as RouterLink} from "react-router-dom";
 import {HdMWebAppAPI, PersonBO} from "../../api";
 import EventManager from "../EventManager";
+import Departure from "../Departure";
 
 
 class Navigator extends Component {
@@ -233,6 +236,7 @@ class Navigator extends Component {
                                     <EventManager eventType={4} onClose={this.handleClose}>
                                     </EventManager>
                                 </ListItem>
+                                <Departure></Departure>
                             </Typography>
                         </Drawer>
                     </>

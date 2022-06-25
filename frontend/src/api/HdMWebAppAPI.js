@@ -7,6 +7,8 @@ import TimeIntervalTransactionBO from "./TimeIntervalTransactionBO";
 import TimeIntervalBO from "./TimeIntervalBO";
 import navigator from "../components/layout/Navigator";
 import EventBO from "./EventBO";
+import DepartureBO from "./DepartureBO";
+import ArriveBO from "./ArriveBO";
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
@@ -74,9 +76,11 @@ export default class HdMWebAppAPI {
   // Kommen bezogen
   #getDepartureBiggerArriveURL = () => `${this.#hdmwebappServerBaseURL}/arrivedeparture`;
   #updateArriveURL = (id, date) => `${this.#hdmwebappServerBaseURL}/arrive/${id}/${date}`;
+  #addArriveURL = () => `${this.#hdmwebappServerBaseURL}/arrive`;
 
   // Gehen bezogen
   #updateDepartureURL = (id, date) => `${this.#hdmwebappServerBaseURL}/departure/${id}/${date}`;
+  #addDepartureURL = () => `${this.#hdmwebappServerBaseURL}/departure`;
 
 
 
@@ -192,6 +196,50 @@ export default class HdMWebAppAPI {
       })
     })
   }
+
+  addDeparture() {
+    return this.#fetchAdvanced(this.#addDepartureURL(), {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/jason, text/plain',
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify("")
+    }).then((responseJSON) => {
+        let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+        console.log(responseEventBO);
+        return new Promise(function (resolve) {
+            resolve(responseEventBO);
+        })
+    })
+  }
+
+  addArrive() {
+    return this.#fetchAdvanced(this.#addArriveURL(), {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/jason, text/plain',
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify("")
+    }).then((responseJSON) => {
+        let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+        console.log(responseEventBO);
+        return new Promise(function (resolve) {
+            resolve(responseEventBO);
+        })
+    })
+  }
+
+    getWorktimeAccount(id) {
+        return this.#fetchAdvanced(this.#getWorktimeAccountURL(id)).then((responseJSON) => {
+            let worktimeaccountBOs = WorktimeAccountBO.fromJSON(responseJSON);
+            console.log(responseJSON);
+            return new Promise(function (resolve) {
+                resolve(worktimeaccountBOs);
+            })
+        })
+    }
 
     getActivities(id) {
         return this.#fetchAdvanced(this.#getActivitiesForProjectURL(id)).then((responseJSON) => {
@@ -444,7 +492,7 @@ export default class HdMWebAppAPI {
         })
     }
 
-        getEventsForTimeIntervalTransactions(startDate, endDate) {
+    getEventsForTimeIntervalTransactions(startDate, endDate) {
         return this.#fetchAdvanced(this.#getEventTransactionsAndTimeIntervalTransactionsURL(startDate, endDate)).then((responseJSON) => {
             let eventBOs = EventBO.fromJSON(responseJSON);
             //console.log(responseJSON);
@@ -581,7 +629,7 @@ export default class HdMWebAppAPI {
   }
 
 
-        deleteTimeInterval(timeIntervalID) {
+    deleteTimeInterval(timeIntervalID) {
         return this.#fetchAdvanced(this.#deleteTimeIntervalURL(timeIntervalID), {
             method: 'DELETE'
         }).then((responseJSON) => {
