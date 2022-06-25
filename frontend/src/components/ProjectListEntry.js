@@ -158,6 +158,7 @@ class ProjectListEntry extends Component {
                             </Typography>
                         </Grid>
                         <Grid item xs={3} align={"center"}>
+                            <ListItemButton onClick={this.editProjectDurationButtonClicked}>
                             <Typography variant={"h5"} component={"div"}>
                                 Vom {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
                                 dateStyle: "long",
@@ -165,9 +166,8 @@ class ProjectListEntry extends Component {
                                 'de-DE', {
                                     dateStyle: "long",
                                 })}
-                                <Button color='primary' size='small' startIcon={<EditIcon/>}
-                                    onClick={this.editProjectDurationButtonClicked}> </Button>
                             </Typography>
+                            </ListItemButton>
                         </Grid>
                         <Grid item xs={2} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
