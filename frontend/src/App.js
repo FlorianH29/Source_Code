@@ -22,6 +22,8 @@ import {Dialog} from "@mui/material";
 import {DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
 import Button from "@mui/material/Button";
 import {ArriveBO, HdMWebAppAPI} from "./api";
+import ProjectAnalysis from "./components/ProjectAnalysis";
+
 
 class App extends React.Component {
 
@@ -114,7 +116,8 @@ class App extends React.Component {
         const {currentPerson, authError, arrived} = this.state;
 
         return (
-            <Router>
+            <div style={{flex:1}}>
+                <Router>
 
                 {
 
@@ -177,6 +180,7 @@ class App extends React.Component {
                 }
 
             </Router>
+          </div>
         );
     }
 }

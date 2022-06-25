@@ -6,7 +6,7 @@ import { withRouter } from "react-router-dom";
 class NotFound extends Component {
 
       handleButton = () => {
-         this.props.history.push('/worktimeaccount')
+         this.props.history.push('/eventtransactionsandtimeintervaltransactions')
   }
 
     render() {

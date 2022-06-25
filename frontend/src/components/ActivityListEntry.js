@@ -8,9 +8,8 @@ import ListItem from "@mui/material/ListItem";
 import ActivityDeleteDialog from "./dialogs/ActivityForm";
 import ActivityForm from "./dialogs/ActivityForm";
 import {HdMWebAppAPI} from "../api";
-import ProjectWorkList from "./ProjectWorkList";
-import {Route} from "react-router-dom";
-
+import {Link as RouterLink, withRouter} from "react-router-dom";
+import ListItemButton from "@mui/material/ListItemButton";
 
 
 class ActivityListEntry extends Component {
@@ -65,7 +64,7 @@ class ActivityListEntry extends Component {
 
 
     render() {
-    const { classes } = this.props;
+    const { project } = this.props;
     const { activity, showActivityForm, showActivityDeleteDialog } = this.state;
 
       // console.log(this.state);
@@ -73,11 +72,19 @@ class ActivityListEntry extends Component {
         <div>
            <ListItem>
              <Grid container alignItems='center'>
+                 <ListItemButton component={RouterLink} to={{
+                pathname: `/projectworks`,
+                owner: {
+                     activity: activity,
+                     project: project
+                    }
+                    }}>
                <Grid item xs={3} align={"center"}>
                  <Typography variant={"h5"} component={"div"}>
                      {activity.getActivityName()}
                  </Typography>
                </Grid>
+              </ListItemButton>
                <Grid item xs={3} align={"center"}>
                  <Typography variant={"h5"} component={"div"}>
                    {activity.getActivityCapacity()}
@@ -117,4 +124,4 @@ ActivityListEntry.propTypes = {
   show: PropTypes.bool.isRequired
 }
 
-export default withStyles(styles) (ActivityListEntry);
+export default withRouter(ActivityListEntry);

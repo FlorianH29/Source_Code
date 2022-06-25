@@ -18,7 +18,7 @@ class ProjectWorkForm extends Component {
   constructor(props) {
     super(props);
 
-    let pwn = '...', de = '',  act = 0;
+    let pwn = '', de = '',  act = 0;
     if (props.projectWork) {
       pwn = props.projectWork.getProjectWorkName();
       de = props.projectWork.getDescription();
@@ -45,20 +45,20 @@ class ProjectWorkForm extends Component {
     console.log(this.state);
   }
 
-      /**
-     * Erstellen eines Ereignisses.
-     */
-    addEvent = async (event) => {
-        let newEvent = new EventBO(event);
-        // console.log(this.state);
-         await HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
-            // Backend call successfull
-            // reinit the dialogs state for a new empty customer
-            console.log(event)
-            this.props.onClose(event); // call the parent with the customer object from backend
-        }).catch(e =>
-            console.log(e));
-    }
+  /**
+  * Erstellen eines Ereignisses.
+  */
+  addEvent = async () => {
+    let newEvent = new EventBO(0, 1);
+    // console.log(this.state);
+     await HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
+        // Backend call successfull
+        // reinit the dialogs state for a new empty customer
+        console.log(event)
+        this.props.onClose(event); // call the parent with the customer object from backend
+    }).catch(e =>
+        console.log(e));
+  }
 
   /** Erstellt ein neues ProjectWorkBO */
   addProjectWork = () => {
@@ -74,10 +74,10 @@ class ProjectWorkForm extends Component {
     console.log(e));
   }
 
-  newF = () => {
-      let test = new Promise((resolve, reject) => {
-          resolve(this.addEvent(1));})
-      test.then(this.addProjectWork)
+  addEventandProjectWork = () => {
+      let event = new Promise((resolve) => {
+          resolve(this.addEvent());})
+      event.then(this.addProjectWork)
   }
 
   /** Behandelt Wertänderungen der Textfelder und validiert diese */
@@ -160,8 +160,8 @@ class ProjectWorkForm extends Component {
                   <Button color='primary' onClick={this.updateProjectWork}>
                     Sichern
                   </Button>
-                  : <Button onClick={this.newF}>
-                      tst
+                  : <Button color='primary' onClick={this.addEventandProjectWork}>
+                      Start buchen
                     </Button>
               }
             </DialogActions>

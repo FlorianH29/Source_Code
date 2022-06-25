@@ -17,27 +17,42 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import ProjectCreateDialog from "./ProjectCreateDialog";
 import CloseIcon from "@material-ui/icons/Close";
 import {DialogContentText} from "@material-ui/core";
+import PropTypes from "prop-types";
 
 class ProjectDurationDialog extends Component {
 
     constructor(props) {
         super(props);
 
+        let stE= '', eE='';
+        if (props.endDate){
+            stE = props.startDate.getTimeStamp();
+            eE = props.endDate.getTimeStamp();
+        }
+        else {
+            stE = new Date().getTime()
+            eE = new Date().getTime()
+
+        }
+
         this.state = {
-            startDate: new Date().getTime(),
-            endDate: new Date().getTime(),
+            startDate: stE,//new Date().getTime(),
+            endDate: eE,//new Date().getTime(),
             eventType: 0,
             showProjectDurationForm: false,
             disableStartButton: false,
             disableEndButton: true,
-        }
+            showProjectCreateDialog: false
+        };
+        this.baseState = this.state;
+
     }
 
     /** Erzeugt ein Projekt-Laufzeit-Start als EventBO  */
     addProjectDurationStartEvent = () => {
         let newEventBO = new EventBO(this.state.startDate, this.state.eventType);
         HdMWebAppAPI.getAPI().addProjectDurationStartEvent(newEventBO).then(projectStart => {
-        this.setState(this.baseState);
+        //this.setState(this.baseState);
         //this.props.onClose(projectStart);
     }).catch (e =>
         console.log(e));
@@ -46,16 +61,42 @@ class ProjectDurationDialog extends Component {
     /** Erzeugt ein Projekt-Laufzeit-Ende als EventBO  */
     addProjectDurationEndEvent = () => {
         let newEventBO = new EventBO(this.state.endDate, this.state.eventType);
-        HdMWebAppAPI.getAPI().addProjectDurationEndEvent(newEventBO).then(projectStart => {
-            //this.props.onClose(projectStart);
+        HdMWebAppAPI.getAPI().addProjectDurationEndEvent(newEventBO).then(projectEnd => {
+            this.setState(this.baseState);
+            //this.props.onClose(projectEnd);
     }).catch (e =>
         console.log(e));
     }
 
-    /** Erzeugt ein TimeInterval mit den Start- und Endevents der Projektlaufzeit
-    addProjectDuration = () => {
-        HdMWebAppAPI.getAPI().addProjectDuration
-    }*/
+
+    /** Im Fall von Bearbeiten, überschreibt es den Projektstart mit neuen Werten */
+   updateProjectDurationStartEvent = () => {
+       // das originale StartEvent klonen, für den Fall, dass der Backend Call fehlschlägt.
+       let updatedStartEvent = Object.assign(new EventBO(), this.props.startPoint);
+       // setzen der neuen Attribute aus dem Dialog
+       updatedStartEvent.setTimeStamp(this.state.startDate);
+       updatedStartEvent.setEventType(7);
+       HdMWebAppAPI.getAPI().updateProjectDurationStart(updatedStartEvent).then(startPoint => {
+           // den neuen state als baseState speichern
+           this.baseState.startDate = this.state.startDate;
+
+           console.log(updatedStartEvent)
+       })
+   }
+
+    /** Im Fall von Bearbeiten, überschreibt es das ProjektEnde mit neuen Werten */
+   updateProjectDurationEndEvent = () => {
+       // das originale EndEvent klonen, für den Fall, dass der Backend Call fehlschlägt.
+       let updatedEndEvent = Object.assign(new EventBO(), this.props.endPoint);
+       // setzen der neuen Attribute aus dem Dialog
+       updatedEndEvent.setTimeStamp(this.state.endDate);
+       updatedEndEvent.setEventType(8);
+       HdMWebAppAPI.getAPI().updateProjectDurationEnd(updatedEndEvent).then(project => {
+           // den neuen state als baseState speichern
+           this.baseState.startDate = this.state.endDate;
+           this.props.onClose(updatedEndEvent);
+       })
+   }
 
 
     /** Disabled den "Projektstart anlegen" Button, sobald ein ProjektStart ausgewählt wurde und
@@ -69,51 +110,49 @@ class ProjectDurationDialog extends Component {
         this.addProjectDurationStartEvent()
     }
 
+
+    disableStartHandlerForUpdate = () => {
+        this.setState({
+                disableStartButton: true,
+                disableEndButton: false
+            });
+        this.updateProjectDurationStartEvent()
+       // console.log(this.state)
+
+    }
+
+    handleFinishedButtonClickedForUpdate = () => {
+        this.setState({
+                showProjectCreateDialog: true
+            });
+        this.updateProjectDurationEndEvent()
+        this.setState(this.baseState);
+        this.props.onClose(null);
+        //this.props.openProjectDurationDialog();
+    }
+
     //behandelt das Click Event, dass bei "Abbrechen" ausgelöst wird
     handleClose = () => {
         // den State neu setzen, sodass man wieder auf dem Stand ist wie vor dem Dialog
         this.setState(this.baseState);
         this.props.onClose(null);
     }
+    
 
-
-
-   /** getEventForTimeIntervalTransactions = (startDate, endDate) => {
-        HdMWebAppAPI.getAPI().getEventsForTimeIntervalTransactions(startDate, endDate)
-            .then(eventAndTransaction =>
-                this.setState({
-                    events: eventAndTransaction
-                })
-            ).catch(eventAndTransaction =>
-            this.setState({
-                events: []
-            }));
-    }*/
-
-    componentDidMount() {
-        //this.addProjectDurationStart(this.state.startDate, this.state.eventType)
+   handleFinishedButtonClicked = () => {
+        this.setState({
+                showProjectCreateDialog: true
+            });
+        this.addProjectDurationEndEvent()
+        this.setState(this.baseState);
+        this.props.onClose(null);
+        this.props.openProjectDurationDialog();
     }
 
 
-  /** Behandelt das onClose Event */
-  /**
-  eventAndTimeIntervalFormClosed = eventAndTimeInterval => {
-    if (eventAndTimeInterval) {
-      const newEventAndTimeIntervalList = [...this.state.events, eventAndTimeInterval];
-      this.setState({
-        events: newEventAndTimeIntervalList,
-        showEventAndTimeIntervalForm: false
-      });
-    } else {
-        this.setState({
-          showEventAndTimeIntervalForm: false
-        });
-      }
-  }*/
-
     render() {
-        const {startDate, endDate, eventType, disableStartButton, disableEndButton} = this.state;
-        const {showProjectDurationForm, getEventForTimeIntervalTransactions} = this.props
+        const {startDate, endDate, eventType, disableStartButton, disableEndButton, handleMoveOnButtonClicked, handleFinishedButtonClicked} = this.state;
+        const {startPoint, endPoint, show, showProjectCreateDialog} = this.props
 
         let header = '';
         let title = '';
@@ -130,6 +169,7 @@ class ProjectDurationDialog extends Component {
 
         //console.log(endDate)
         return (
+            show ?
             <div>
                 <Dialog open={true} onClose={this.handleClose} maxWidth={"xl"}>
                    <DialogTitle id='form-dialog-title'>
@@ -173,23 +213,47 @@ class ProjectDurationDialog extends Component {
 
                         </div>
                        </DialogContent>
-                       <DialogActions>
-                           <Button onClick={this.handleClose} color='secondary'>
-                          Abbrechen
-                      </Button>
-                    <Button color={"primary"} disabled={disableStartButton} onClick={this.disableStartHandler}>
-                                  Weiter
-                              </Button>
-                    <div/>
-                    <Button color={"primary"} disabled={disableEndButton} onClick={this.addProjectDurationEndEvent}>
-                                  Fertig
-                              </Button>
-                       </DialogActions>
-                    </Dialog>
+                    <DialogActions>
+                        <Button onClick={this.handleClose} color='secondary'>
+                            Abbrechen
+                        </Button>
+                        {
+                            startPoint ?
+                                <>
+                                <Button color={"primary"} disabled={disableStartButton}
+                                        onClick={this.disableStartHandlerForUpdate}>
+                                    Weiter
+                                </Button>
 
+
+                                <Button color={"primary"} disabled={disableEndButton}
+                                        onClick={this.handleFinishedButtonClickedForUpdate}>
+                                    Fertig
+                                </Button> </>
+                            : <>  <Button color={"primary"} disabled={disableStartButton} onClick={this.disableStartHandler}>
+                            Weiter
+                            </Button>
+                            <Button color={"primary"} disabled={disableEndButton} onClick={this.handleFinishedButtonClicked}>
+                            Fertig
+                            </Button>
+                            </>
+                        }
+                    </DialogActions>
+                    </Dialog>
                 </div>
+                : null
         );
     }
+}
+
+/** PropTypes*/
+ProjectCreateDialog.propTypes = {
+
+    onClose: PropTypes.func.isRequired,
+
+    show: PropTypes.bool.isRequired,
+
+    showProjectDurationForm: PropTypes.bool.isRequired
 }
 
 export default ProjectDurationDialog;

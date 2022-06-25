@@ -30,6 +30,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import AssessmentRoundedIcon from '@mui/icons-material/AssessmentRounded';
 import {Link as RouterLink} from "react-router-dom";
 import {HdMWebAppAPI, PersonBO} from "../../api";
 import EventManager from "../EventManager";
@@ -141,50 +142,50 @@ class Navigator extends Component {
                         <Typography variant="h3" component="div" sx={{flexGrow: 1}}>
                             HdM Zeiterfassung
                         </Typography>
-                    {person ? (<>
-                        <IconButton
-                            size="large"
-                            onClick={this.handleOpenUserMenu}
-                            color="inherit">
-                            <ManageAccountsIcon/>
-                        </IconButton>
-                        <Popover
-                            anchorEl={this.state.anchorEl}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'left',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={Boolean(this.state.anchorEl)}
-                            onClose={() => {
-                                this.handleCloseUserMenu()
-                            }}>
-                            <PersonDeleteDialog person={person} show={showPersonDeleteDialog}
-                                                onClose={this.persondeleteClosed}>
-                            </PersonDeleteDialog>
-                            <PersonEditDialog person={person} show={showPersonEditDialog}
-                                              onClose={this.personEditClosed}>
-                            </PersonEditDialog>
+                        {person ? (<>
+                            <IconButton
+                                size="large"
+                                onClick={this.handleOpenUserMenu}
+                                color="inherit">
+                                <ManageAccountsIcon/>
+                            </IconButton>
+                            <Popover
+                                anchorEl={this.state.anchorEl}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'left',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={Boolean(this.state.anchorEl)}
+                                onClose={() => {
+                                    this.handleCloseUserMenu()
+                                }}>
+                                <PersonDeleteDialog person={person} show={showPersonDeleteDialog}
+                                                    onClose={this.persondeleteClosed}>
+                                </PersonDeleteDialog>
+                                <PersonEditDialog person={person} show={showPersonEditDialog}
+                                                  onClose={this.personEditClosed}>
+                                </PersonEditDialog>
 
-                            <Typography variant='h6' component='div' align='left'>
-                                <IconButton onClick={this.handleEdit}>
-                                <DriveFileRenameOutlineIcon/>
-                                Profil bearbeiten
-                                </IconButton>
-                                <Divider sx={{p: 0}}/>
-                                <IconButton onClick={this.handleDelete}>
-                                <NoAccountsIcon/>
-                                Profil löschen
-                                </IconButton>
+                                <Typography variant='h6' component='div' align='left'>
+                                    <IconButton onClick={this.handleEdit}>
+                                        <DriveFileRenameOutlineIcon/>
+                                        Profil bearbeiten
+                                    </IconButton>
+                                    <Divider sx={{p: 0}}/>
+                                    <IconButton onClick={this.handleDelete}>
+                                        <NoAccountsIcon/>
+                                        Profil löschen
+                                    </IconButton>
                                 </Typography>
-                        </Popover>
-                         </>) : null
-                    }
-                     </Toolbar>
+                            </Popover>
+                        </>) : null
+                        }
+                    </Toolbar>
                 </AppBar>
 
                 {person ? (
@@ -199,16 +200,17 @@ class Navigator extends Component {
                             <Divider sx={{p: 7.95, bgcolor: "#05353f"}}/>
                             <Typography variant="h3" component="div" sx={{flexGrow: 1, p: 1}}>
                                 <ListItem>
-                                    <ListItemButton component={RouterLink} to={`/persons`}>
+                                    <ListItemButton component={RouterLink}
+                                                    to={`/eventtransactionsandtimeintervaltransactions`}>
                                         <ListItemIcon>
-                                            <PersonSearchIcon/>
+                                            <AccountCircleIcon/>
                                         </ListItemIcon>
-                                        <ListItemText primary="Personen"/>
+                                        <ListItemText primary="Arbeitszeiten"/>
                                     </ListItemButton>
                                 </ListItem>
 
                                 <ListItem>
-                                    <ListItemButton component={RouterLink} to={`/projectworks`}>
+                                    <ListItemButton component={RouterLink} to={`/projects`}>
                                         <ListItemIcon>
                                             <AccessTimeIcon/>
                                         </ListItemIcon>
@@ -217,11 +219,11 @@ class Navigator extends Component {
                                 </ListItem>
 
                                 <ListItem>
-                                    <ListItemButton component={RouterLink} to={`/worktimeaccount`}>
+                                    <ListItemButton component={RouterLink} to={`/projectanalysis`}>
                                         <ListItemIcon>
-                                            <AccountCircleIcon/>
+                                            <AssessmentRoundedIcon/>
                                         </ListItemIcon>
-                                        <ListItemText primary="Arbeitszeiten"/>
+                                        <ListItemText primary="Projektanalyse"/>
                                     </ListItemButton>
                                 </ListItem>
 

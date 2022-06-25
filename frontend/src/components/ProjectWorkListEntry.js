@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Typography, Accordion, AccordionSummary, AccordionDetails, Grid, Divider, ListItemSecondaryAction } from '@material-ui/core';
+import { withStyles, Typography, Accordion, AccordionSummary, AccordionDetails, Grid, Divider} from '@material-ui/core';
 import { Button, ButtonGroup } from '@material-ui/core';
 import DeleteIcon from '@mui/icons-material/Delete';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 import ProjectWorkForm from './dialogs/ProjectWorkForm';
-import ListItem from "@mui/material/ListItem";
 import ProjectWorkDeleteDialog from "./dialogs/ProjectWorkDeleteDialog";
 import {HdMWebAppAPI} from "../api";
 
@@ -74,23 +74,18 @@ class ProjectWorkListEntry extends Component {
     this.getProjectWorkOwner();
   }
 
-  /** gets the balance for this account */
+  /** Gibt den Owner dieser Projektarbeit zurück */
   getProjectWorkOwner = () => {
     if (this.props.projectWork.getID() > 0) {
       HdMWebAppAPI.getAPI().getOwnerOfProjectWork(this.props.projectWork.getID()).then(owner =>
       this.setState({
         owner: owner,
       })).catch(e =>
-        this.setState({ // Reset state with error from catch
+        this.setState({ // bei Fehler den state zurücksetzen
           owner: null,
         })
       );}
   }
-
-  handleClick = () => {
-    this.setState({
-    openExpand: !this.state.openExpand}
-    )}
 
   /** Renders the component */
   render() {
@@ -121,7 +116,7 @@ class ProjectWorkListEntry extends Component {
                 </Grid>
                 <Grid item xs={3} align={"center"}>
                     <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editProjectWorkButtonClicked}> </Button>
-                    <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteProjectWorkButtonClicked}> </Button>
+                    <Button color='secondary' size='small' startIcon={<HighlightOffIcon/>} onClick={this.deleteProjectWorkButtonClicked}> </Button>
                 </Grid>
             </Grid>
                 </AccordionSummary>

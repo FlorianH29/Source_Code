@@ -1,17 +1,15 @@
 import React, {Component} from 'react';
 import {EventBO, HdMWebAppAPI} from '../api';
-import {Button, Grid, Typography, Divider, Dialog, DialogActions, DialogContent, List, Collapse} from '@mui/material';
+import {Button, Grid, Typography, Divider, Dialog, DialogActions, DialogContent, Link} from '@mui/material';
 import Box from "@mui/material/Box";
-import ListItem from "@mui/material/ListItem";
 import ProjectWorkListEntry from "./ProjectWorkListEntry";
 import EventManager from "./EventManager";
 import ProjectWorkForm from "./dialogs/ProjectWorkForm";
 import PropTypes from "prop-types";
 import {DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
+import ArrowCircleLeftRoundedIcon from '@mui/icons-material/ArrowCircleLeftRounded';
 import CloseIcon from "@material-ui/icons/Close";
-import {ExpandLess, ExpandMore} from "@material-ui/icons";
-import ListItemButton from "@mui/material/ListItemButton";
-//import BasicButtons from "./BasicButtons";
+import {withRouter, Redirect, Link as RouterLink} from "react-router-dom";
 
 class ProjectWorkList extends Component {
 
@@ -23,12 +21,15 @@ class ProjectWorkList extends Component {
         showProjectWorkForm: false,
         open: false,
         disableEnd: true,
-        disableStart: false
+        disableStart: false,
       }
   }
 
   getProjectWorksForActivity = () => {
-    HdMWebAppAPI.getAPI().getProjectWorks(1)  // statt 1 sollte hier die Id der ausgewählten Aktivität rein
+    const { activity } = this.props.location.owner;
+
+    this.setState({projectWorks: []});
+    HdMWebAppAPI.getAPI().getProjectWorks(activity.getID())
       .then(projectWorkBOs =>
         this.setState({
           projectWorks: projectWorkBOs
@@ -39,7 +40,9 @@ class ProjectWorkList extends Component {
   }
 
   componentDidMount() {
-    this.getProjectWorksForActivity();
+      if (this.props.location.owner) {
+          this.getProjectWorksForActivity();
+      }
   }
 
   handleStartEventButtonClicked = (event) => {
@@ -62,6 +65,11 @@ class ProjectWorkList extends Component {
   handleClose = () => {
     // den state neu setzen, sodass open false ist und der Dialog nicht mehr angezeigt wird
     this.setState({open: false});
+  }
+
+  refreshProjectWorkList = () => {
+      this.getProjectWorksForActivity();
+      this.setState({open: false});
   }
 
   /**
@@ -95,11 +103,40 @@ class ProjectWorkList extends Component {
     const { classes } = this.props;
     const { projectWorks, showProjectWorkForm, disableEnd, disableStart, open } = this.state;
     // console.log(this.state)
+    let owner = null;
+    if (this.props.location.owner) {
+      // AktivityBO existiert
+      owner = this.props.location.owner
+    } else {
+      // AktivityBO existiert nicht, stattdessen wurde die Komponente direkt über die URL aufgerufen oder die Seite
+      // wurde neu geladen -> zurück auf die Startseite verweisen
+      return (<Redirect to='/' />);
+    }
+
+    console.log(owner.project)
 
     return (
         <div>
-        <Box m={18}  pl={5}>
-          <Grid container>
+        <Box m={18}  pl={8}>
+            <Typography component='div'>
+                <Link component={RouterLink} to={{
+                    pathname: '/activities',
+                    expandedProject: owner.project
+                    }}>
+                    <Grid container spacing={1} justify='flex-start' alignItems='stretch'>
+                        <Grid item>
+                            <ArrowCircleLeftRoundedIcon />
+                        </Grid>
+                        <Grid item> zurück
+                        </Grid>
+                    </Grid>
+                </Link>
+            </Typography>
+
+          <Typography variant={"h4"} algin={"center"} component={"div"}>
+             Aktivität: {owner.activity.getActivityName()}
+          </Typography>
+          <Grid container mt={1}>
             <Grid item xs={12} align={"center"}>
                 <Grid container>
                     <Grid item xs={3} align={"flex-end"}>
@@ -117,12 +154,12 @@ class ProjectWorkList extends Component {
                     <ProjectWorkListEntry key={pw.getID()} projectWork={pw} onProjectWorkDeleted={this.projectWorkDeleted}/>)
                 }
                 <Grid container direction={'row'} spacing={18}>
-                    <Grid item xs={6} align={'center'}>
+                    <Grid item xs={4} align={'center'}>
                         <Button variant='contained' color='primary' onClick={this.handleStartEventButtonClicked}>
                             Start buchen
                         </Button>
                     </Grid>
-                    <Grid item xs={6} align={'center'}>
+                    <Grid item xs={4} align={'center'}>
                         <Button variant='contained' color='primary' onClick={this.handleEndEventButtonClicked}>
                             Ende buchen
                         </Button>
@@ -145,7 +182,7 @@ class ProjectWorkList extends Component {
                     <Button onClick={this.handleClose} color='secondary'>
                         Abbrechen
                     </Button>
-                    <EventManager eventType={2} onClose={this.handleClose}>
+                    <EventManager eventType={2} onClose={this.refreshProjectWorkList}>
                     </EventManager>
                 </DialogActions>
             </Dialog>
@@ -179,4 +216,4 @@ ProjectWorkForm.propTypes = {
 
 }
 
-export default ProjectWorkList;
+export default withRouter(ProjectWorkList);

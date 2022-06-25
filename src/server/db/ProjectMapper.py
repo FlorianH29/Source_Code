@@ -113,6 +113,30 @@ class ProjectMapper(Mapper):
 
         return all_projects
 
+    def find_projects_by_owner(self, key):
+        """Alle Projekte, in denen eine Person Projektleiter ist"""
+        all_projects = []
+        cursor = self._cnx.cursor()
+        cursor.execute("SELECT * FROM project WHERE owner={} AND deleted=0".format(key))
+        tuples = cursor.fetchall()
+
+        for (project_id, last_edit, project_name, client, timeinterval_id, owner, work_time, deleted) in tuples:
+            project = p.Project()
+            project.set_id(project_id)
+            project.set_last_edit(last_edit)
+            project.set_project_name(project_name)
+            project.set_client(client)
+            project.set_time_interval_id(timeinterval_id)
+            project.set_owner(owner)
+            project.set_work_time(work_time)
+            project.set_deleted(deleted)
+            all_projects.append(project)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return all_projects
+
     def insert(self, object):
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(project_id) AS maxid FROM project ")
