@@ -10,7 +10,6 @@ import {HdMWebAppAPI} from "../api";
 import ProjectWorkForm from "./dialogs/ProjectWorkForm";
 import ProjectList from './ProjectList';
 import ProjectWorkListEntry from "./ProjectWorkListEntry";
-import BasicButtons from "./BasicButtons";
 
 class WorktimeAccount extends Component {
 

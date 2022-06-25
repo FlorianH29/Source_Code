@@ -104,20 +104,26 @@ class ProjectList extends Component {
         //console.log(this.state)
         return (
             <div>
-                <Box m={18} pl={8}>
-                <Grid container direction={'row'} spacing={18}>
-                    <Grid item xs={12} align={"right"}>
-                        <Button variant='contained' color='warning'
+                <Box m={22} pl={1}>
+                <Grid container mt={14}  alignItems='stretch' spacing={1}>
+                    <Grid item xs={3}/>
+                    <Grid item xs={5} align={"center"}>
+                        <Typography variant={"h4"} algin={"center"} component={"div"}>
+                            Meine Projekt:
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={4}  align={"right"}>
+                        <Button variant='contained' color='primary'
                                 onClick={this.handleCreateProjectButtonClicked}>
                             Projekt erstellen
                         </Button>
                     </Grid>
                 </Grid>
-                <Grid container>
-                    <Grid item xs={12} align={"center"}>
+                <Grid container mt={3}>
+                    <Grid item xs={12}  align={"center"}>
                         <Grid container>
                             <Grid item xs={3} align={"flex-end"}>
-                                <Typography variant={"h5"} component={"div"}> Meine Projekte: </Typography>
+                                <Typography variant={"h5"} component={"div"}> Projektname: </Typography>
                             </Grid>
                             <Grid item xs={2} align={"flex-end"}>
                                 <Typography variant={"h5"} component={"div"}> Klient: </Typography>

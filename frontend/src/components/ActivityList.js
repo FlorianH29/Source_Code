@@ -145,13 +145,14 @@ class ActivityList extends Component {
                             </Grid>
                         </Link>
                     </Typography>
-                        <Grid container mt={2}  alignItems='stretch'>
-                            <Grid item xs={10} align={"center"}>
+                        <Grid container mt={2}  alignItems='stretch' spacing={1}>
+                            <Grid item xs={3}/>
+                            <Grid item xs={5} align={"center"}>
                                 <Typography variant={"h4"} algin={"center"} component={"div"}>
                                     Projekt: {projectName}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={2} align={"right"}>
+                            <Grid item xs={4} align={"right"}>
                                 <Button variant='contained' align={"center"} color='primary' startIcon={<AddIcon/>}
                                 onClick={this.handleAddActivityButtonClicked}>
                                     Aktivität anlegen

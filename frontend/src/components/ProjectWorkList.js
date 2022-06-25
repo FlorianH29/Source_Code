@@ -125,7 +125,7 @@ class ProjectWorkList extends Component {
                     }}>
                     <Grid container spacing={1} justify='flex-start' alignItems='stretch'>
                         <Grid item>
-                            <ArrowCircleLeftRoundedIcon />
+                            <ArrowCircleLeftRoundedIcon color={'primary'}/>
                         </Grid>
                         <Grid item> zurück
                         </Grid>
@@ -134,8 +134,9 @@ class ProjectWorkList extends Component {
             </Typography>
 
             <Grid container direction={'row'} mt={2} alignItems='stretch' spacing={1}>
-                 <Grid item xs={8} align={'center'}>
-                     <Typography variant={"h4"} algin={"center"} component={"div"}>
+                <Grid xs={3}/>
+                <Grid item xs={5} align={'center'}>
+                    <Typography variant={"h4"} algin={"center"} component={"div"}>
                        Aktivität: {owner.activity.getActivityName()}
                     </Typography>
                  </Grid>
