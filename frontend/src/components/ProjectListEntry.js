@@ -5,7 +5,7 @@ import {Button, ListItem} from "@mui/material";
 import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
 import EditIcon from '@mui/icons-material/Edit';
 import ProjectDeleteDialog from "./dialogs/ProjectDeleteDialog";
-import DeleteIcon from "@mui/icons-material/Delete";
+import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import {Link as RouterLink, withRouter} from "react-router-dom";
 import ListItemButton from "@mui/material/ListItemButton";
 import {HdMWebAppAPI} from "../api";
@@ -177,7 +177,7 @@ class ProjectListEntry extends Component {
                         <Grid item xs={2} align={"center"}>
                             <Button color='primary' size='small' startIcon={<EditIcon/>}
                                     onClick={this.editProjectButtonClicked}> </Button>
-                            <Button color='secondary' size='small' startIcon={<DeleteIcon/>}
+                            <Button color='secondary' size='small' startIcon={<RemoveCircleOutlineRoundedIcon/>}
                                     onClick={this.deleteProjectButtonClicked}> </Button>
                         </Grid>
                     </Grid>
