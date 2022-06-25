@@ -1,15 +1,14 @@
-
 import React, {Component} from 'react';
-import PropTypes, {string} from 'prop-types';
-import {HdMWebAppAPI, PersonBO} from "../../api";
+import PropTypes from 'prop-types';
+import {HdMWebAppAPI} from "../../api";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
 import FormControl from "@mui/material/FormControl";
-import Select, {SelectChangeEvent} from "@mui/material/Select";
-import ProjectMemberForm from "./dialogs/ProjectMemberForm";
+import Select from "@mui/material/Select";
+import CheckboxListEntry from "../CheckboxListEntry";
 
 
 class CheckboxForm extends Component {
@@ -20,7 +19,6 @@ class CheckboxForm extends Component {
         this.state = {
             potentialProjectMembers: []
         }
-
     }
 
     getPotentialMembersForProject = () => {
@@ -38,58 +36,50 @@ class CheckboxForm extends Component {
         this.getPotentialMembersForProject();
     }
 
-    render() {
-        const checkboxList = [potentialProjectMembers.getFirstName(), potentialProjectMembers.getLastName()]
-        const [person, setName] = React.useState < string[] > ([]);
 
-        const handleChange = (event: SelectChangeEvent<typeof person>) => {
-            const {
-                target: {value},
-            } = event;
-            setName(
-                // On autofill we get a stringified value.
-                typeof value === 'string' ? value.split(',') : value,
-            );
-        };
+    handleChange = (event) => {
+    const {
+      target: { value },
+    } = event
+    };
+
+
+    render() {
+        const {potentialProjectMembers} = this.state;
 
         return (
-
             <div>
                 <FormControl sx={{m: 1, width: 300}}>
-                    <InputLabel id="multiple-checkbox-person">Tag</InputLabel>
+                    <InputLabel id="multiple-checkbox-person">Mitarbeiter</InputLabel>
                     <Select
                         labelId="multiple-checkbox-person"
                         id="person-checkbox"
                         multiple
-                        value={person}
-                        onChange={handleChange}
+                        value={potentialProjectMembers}
+                        onChange={this.handleChange}
                         input={<OutlinedInput label="Tag"/>}
                         renderValue={(selected) => selected.join(', ')}
-                        MenuProps={MenuProps}
                     >
-                        {checkboxList.map((persons) => (
-                            <MenuItem key={persons} value={persons}>
-                                <Checkbox checked={person.indexOf(persons) > -1}/>
-                                <ListItemText primary={persons}/>
-                            </MenuItem>
-                        ))}
+                        {potentialProjectMembers.map(ppm => (
+                            <CheckboxListEntry>
+                                <MenuItem key={ppm} value={ppm}/>
+                                <Checkbox checked={potentialProjectMembers.indexOf(ppm) > -1}/>
+                                <ListItemText primary={ppm}/>
+                            </CheckboxListEntry>))
+                        }
                     </Select>
                 </FormControl>
             </div>
-
         )
-
     }
-
-
 }
 
 CheckboxForm.propTypes = {
-    /** @ignore */
-    projectMember: PropTypes.object.isRequired,
-    person: PropTypes.object.isRequired,
-    /** The CustomerBO of this AccountList */
-    project: PropTypes.object.isRequired,
+     /** @ignore */
+     projectMembers: PropTypes.object.isRequired,
+     person: PropTypes.object.isRequired,
+     /** The CustomerBO of this AccountList */
+     project: PropTypes.object.isRequired,
 }
 
 

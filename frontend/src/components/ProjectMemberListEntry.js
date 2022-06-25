@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Typography, Grid, Divider,} from '@material-ui/core';
-import {Button, ButtonGroup} from '@material-ui/core';
+import {Button} from '@material-ui/core';
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import ListItem from "@mui/material/ListItem";
 import ProjectMemberDeleteDialog from "./dialogs/ProjectMemberDeleteDialog"
 
@@ -36,8 +35,7 @@ class ProjectMemberListEntry extends Component {
     }
 
     render() {
-        const {classes} = this.props;
-        const {projectMember, person, showProjectMemberDeleteDialog} = this.state;
+        const {projectMember, showProjectMemberDeleteDialog} = this.state;
 
         return (
             <div>
@@ -70,7 +68,6 @@ class ProjectMemberListEntry extends Component {
 }
 
 ProjectMemberListEntry.propTypes = {
-  classes: PropTypes.object.isRequired,
   /** Das ActivityBO welches gerendert werden soll */
   projectMember: PropTypes.object.isRequired,
   project: PropTypes.object.isRequired,

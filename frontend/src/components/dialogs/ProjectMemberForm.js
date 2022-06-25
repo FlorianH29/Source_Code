@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import {HdMWebAppAPI, PersonBO} from "../../api";
-import CheckboxForm from "../CheckboxForm";
+import CheckboxForm from "./CheckboxForm";
 
 
 class ProjectMemberForm extends Component {
@@ -73,7 +73,7 @@ class ProjectMemberForm extends Component {
                         <DialogContentText>
                             {header}
                         </DialogContentText>
-                        {/**<CheckboxForm show={CheckboxForm}></CheckboxForm>*/}
+                        <CheckboxForm show={CheckboxForm}></CheckboxForm>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleClose} color='secondary'>

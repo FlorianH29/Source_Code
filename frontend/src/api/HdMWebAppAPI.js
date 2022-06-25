@@ -419,7 +419,7 @@ export default class HdMWebAppAPI {
   getPersonsNotProjectMembersOfProject(id) {
       return this.#fetchAdvanced(this.#getNotProjectMembersURL(id)).then((responseJSON) => {
           let notprojectmembers = PersonBO.fromJSON(responseJSON);
-          //console.log(notprojectmembers);
+          console.log(notprojectmembers);
           return new Promise(function (resolve) {
               resolve(notprojectmembers);
           })

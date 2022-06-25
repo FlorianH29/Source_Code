@@ -493,31 +493,28 @@ class ProjectMemberOperations(Resource):
         else:
             return "Project not found", 500
 
-"""
+
 @hdmwebapp.route('/projects/<int:id>/persons')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectMemberOperations(Resource):
     @hdmwebapp.marshal_list_with(person)
     @secured
-
     def get(self, id):
         hwa = HdMWebAppAdministration()
         pro = hwa.get_project_by_id(id)
 
-
         if pro is not None:
-            notprojectmembers = hwa.get_persons_who_are_not_project_member(project)
+            notprojectmembers = hwa.get_persons_who_are_not_project_member(pro)
 
             notprojectmember_list = []
             for i in notprojectmembers:
-                person = hwa.get_person_by_id(i)
+                person = hwa.get_person_by_id(i.get_id())
                 notprojectmember_list.append(person)
-
 
             return notprojectmember_list
         else:
             return "Project not found", 500
-"""
+
 
 @hdmwebapp.route('/projectmembers/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -541,7 +538,7 @@ class ProjectMembersOperations(Resource):
     @hdmwebapp.marshal_with(project, code=201)
     @secured
     def post(self):
-        """Erstellen einer neuen Aktivität."""
+        """Erstellen ."""
 
         hwa = HdMWebAppAdministration()
         pro = hwa.get_project_by_id(id)
@@ -571,6 +568,12 @@ pe = h.get_persons_who_are_not_project_member(pro)
 for p in pe:
     print(h.get_person_by_id(p.get_id()))
 """
+
+h = HdMWebAppAdministration()
+per = h.get_person_by_id(3)
+print(per)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

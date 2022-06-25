@@ -85,13 +85,13 @@ class PersonMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id FROM person " \
-                  "WHERE person_id={}".format(key)
+        command = "SELECT person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id, deleted " \
+                  "FROM person WHERE person_id={} AND deleted = 0".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id) = tuples[0]
+            (person_id, last_edit, firstname, lastname, mailaddress, username, firebase_id, deleted) = tuples[0]
             employee = p.Person()
             employee.set_id(person_id)
             employee.set_last_edit(last_edit)
@@ -100,6 +100,7 @@ class PersonMapper(Mapper):
             employee.set_mailaddress(mailaddress)
             employee.set_username(username)
             employee.set_firebase_id(firebase_id)
+            employee.set_deleted(deleted)
 
             result = employee
         except IndexError:
