@@ -16,6 +16,7 @@ class EventManager extends Component {
         this.state = {
             eventType: this.props.eventType,
             buttonName: '',
+            disableButton: ''
         }
     }
 
@@ -42,6 +43,18 @@ class EventManager extends Component {
             console.log(e));
     }
 
+    /** Gibt zurück, ob eine Pause begonnen wurde */
+    getBreakStarted = () => {
+        HdMWebAppAPI.getAPI().getBreakStarted()
+            .then(value => this.setState({
+                disableButton: value,
+            })).catch(e =>
+                this.setState({ // bei Fehler den state zurücksetzen
+                    disableButton: '',
+                })
+            );
+    }
+
     /**
      * Bestimmt den Namen des Knopfes zum Erstellen eines Ereignisses, je nach übergebenem Typ andere Benennung.
      */
@@ -66,10 +79,14 @@ class EventManager extends Component {
 
     componentDidMount() {
         this.getNameofButton();
+        this.getBreakStarted();
     }
+
 
     render() {
         const {buttonName, eventType} = this.state
+
+           console.log(this.state)
 
         return (
             <div>

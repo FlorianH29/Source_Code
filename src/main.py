@@ -148,37 +148,6 @@ class PersonByIDOperations(Resource):
             return '', 500
 
 
-@hdmwebapp.route('/projectworks/<int:id>')
-@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@hdmwebapp.param('id', 'Die ID der Projektarbeit')
-class ProjectWorkOperations(Resource):
-    @hdmwebapp.marshal_list_with(projectwork)
-    @secured
-    def put(self, id):
-        """
-        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
-        """
-        hwa = HdMWebAppAdministration()
-        pw = ProjectWork.from_dict(api.payload)
-
-        if pw is not None:
-            pw.set_id(id)
-            hwa.save_project_work(pw)
-            return '', 200
-        else:
-            return '', 500
-
-    @secured
-    def delete(self, id):
-        """
-        Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
-        """
-        hwa = HdMWebAppAdministration()
-        pw = hwa.get_project_work_by_id(id)
-        hwa.delete_project_work(pw)
-        return '', 200
-
-
 """
 @hdmwebapp.route('/worktimeaccount/<int:id>')
 @hdmwebapp.param('id', 'Die ID des Arbeitszeitkonto-Objekts')
@@ -287,6 +256,28 @@ class EventOperations(Resource):
             e = hwa.check_if_first_event(proposal.get_event_type(), per)
             print('event')
             return e, 200
+        else:
+            return '', 500
+
+
+@hdmwebapp.route('/breaks')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class BreakOperations(Resource):
+    @secured
+    def get(self):
+        """
+        Zurückgeben eines boolschen Werts bezüglich des Starts einer Pause.
+        """
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+
+        firebase_id = h.get_firebase_id()
+        pe = hwa.get_person_by_firebase_id(firebase_id)
+        result = None
+
+        if pe is not None:
+            result = hwa.check_break(pe)
+            return result, 200
         else:
             return '', 500
 
@@ -585,6 +576,28 @@ class ProjectWorkOperations(Resource):
         return '', 200
 
 
+@hdmwebapp.route('/projectworks/<int:id>/owner')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des ProjectWork-Objekts')
+class ProjectWorkOwnerOperations(Resource):
+    @hdmwebapp.marshal_list_with(person)
+    @secured
+    def get(self, id):
+        """Auslesen des Erstellers eines bestimmten Projektarbeit-Objekts.
+        Das Projektarbeit-Objekt dessen Ersteller ausgelesen werden soll, wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = hwa.get_project_work_by_id(id)
+        start_pw_id = pw.get_start_event()
+        start_pw = hwa.get_event_by_id(start_pw_id)
+
+        if start_pw is not None:
+            owner = hwa.get_person_by_id(start_pw.get_affiliated_person())
+            return owner
+        else:
+            return 0, 500
+
+
 @hdmwebapp.route('/projectworks/<int:id>/<string:name>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Projektarbeit')
@@ -650,6 +663,7 @@ class ArriveUpdateDateOperations(Resource):
         else:
             return '', 500
 
+
 @hdmwebapp.route('/departure/<int:id>/<int:date>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID des Events')
@@ -668,6 +682,28 @@ class DepartureUpdateDateOperations(Resource):
             departure.set_time_stamp(datetime.fromtimestamp(date / 1000.0))
             hwa.save_departure_event(departure)
             return '', 200
+        else:
+            return '', 500
+
+
+@hdmwebapp.route('/arrivedeparture')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ArrivAndDepartureOperations(Resource):
+    @secured
+    def get(self):
+        """
+        Zurückgeben eines boolschen Werts bezüglich Kommen und Gehen, wenn Gehen größer ist soll true ausgegeben werden.
+        """
+        hwa = HdMWebAppAdministration()
+        h = Helper()
+
+        firebase_id = h.get_firebase_id()
+        pe = hwa.get_person_by_firebase_id(firebase_id)
+        result = None
+
+        if pe is not None:
+            result = hwa.check_arrive_and_departure_for_person(pe)
+            return result, 200
         else:
             return '', 500
 
@@ -705,28 +741,6 @@ class DeleteTimeInterval(Resource):
         tit = hwa.get_time_interval_transaction_by_id(id)
         hwa.delete_time_interval_transaction(tit)
         return '', 200
-
-
-@hdmwebapp.route('/projectworks/<int:id>/owner')
-@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@hdmwebapp.param('id', 'Die ID des ProjectWork-Objekts')
-class ProjectWorkOwnerOperations(Resource):
-    @hdmwebapp.marshal_list_with(person)
-    @secured
-    def get(self, id):
-        """Auslesen des Erstellers eines bestimmten Projektarbeit-Objekts.
-        Das Projektarbeit-Objekt dessen Ersteller ausgelesen werden soll, wird durch die id in dem URI bestimmt.
-        """
-        hwa = HdMWebAppAdministration()
-        pw = hwa.get_project_work_by_id(id)
-        start_pw_id = pw.get_start_event()
-        start_pw = hwa.get_event_by_id(start_pw_id)
-
-        if start_pw is not None:
-            owner = hwa.get_person_by_id(start_pw.get_affiliated_person())
-            return owner
-        else:
-            return 0, 500
 
 
 def check():

@@ -142,6 +142,7 @@ class HdMWebAppAdministration(object):
                 return None
 
     def get_last_arrive_by_person(self, person):
+        """Das lezte Kommen einer Person zurückgeben."""
         with ArriveMapper() as mapper:
             if person is not None:
                 return mapper.find_last_arrive_by_person(person.get_id())
@@ -190,6 +191,7 @@ class HdMWebAppAdministration(object):
             return mapper.find_by_affiliated_person_id(number)
 
     def get_last_departure_by_person(self, person):
+        """Das lezte Gehen einer Person zurückgeben."""
         with DepartureMapper() as mapper:
             if person is not None:
                 return mapper.find_last_departure_by_person(person.get_id())
@@ -200,6 +202,17 @@ class HdMWebAppAdministration(object):
         """Alle in der Datenbank gespeicherten End-Ereignisse auslesen."""
         with DepartureMapper() as mapper:
             return mapper.find_all()
+
+    def check_arrive_and_departure_for_person(self, person):
+        """Überprüfen, ob Gehen größer als Kommen, also ob eingestelmpelt werden muss."""
+        if person is not None:
+            last_arrive = self.get_last_arrive_by_person(person).get_time_stamp()
+            last_departure = self.get_last_departure_by_person(person).get_time_stamp()
+            if last_departure > last_arrive:
+                result = True
+            else:
+                result = False
+            return result
 
     def get_arrive_and_departure_of_person_between_time_stamps(self, person, start_time, end_time):
         """Alle Kommen und Gehen einer Person in einem bestimmten Zeitraum ausgeben"""
@@ -976,6 +989,16 @@ class HdMWebAppAdministration(object):
         value.set_last_edit(datetime.now())
         with BreakMapper() as mapper:
             return mapper.update(value)
+
+    def check_break(self, person):
+        """Überprüfen, ob eine Pause begonnen wurde."""
+        if person is not None:
+            last_event = self.get_last_event_by_affiliated_person(person)
+            if last_event == 7:
+                result = True
+            else:
+                result = False
+            return result
 
     """Methoden von Event"""
 
