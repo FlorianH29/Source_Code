@@ -106,7 +106,7 @@ class ProjectList extends Component {
             <div>
                 <Box m={18} pl={8}>
                 <Grid container direction={'row'} spacing={18}>
-                    <Grid item xs={3} align={"center"}>
+                    <Grid item xs={12} align={"right"}>
                         <Button variant='contained' color='warning'
                                 onClick={this.handleCreateProjectButtonClicked}>
                             Projekt erstellen
