@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {Divider, Grid, Typography, TextField, Box} from "@mui/material";
+import {Box, Divider, Grid, TextField, Typography} from "@mui/material";
 import TimeIntervalTransactionListEntry from "./TimeIntervalTransactionListEntry"
 import {DatePicker, LocalizationProvider} from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -88,7 +88,8 @@ class TimeIntervalTransactionList extends Component {
                             </Grid>
                             <Divider/>
                             {events.map(e =>
-                                <TimeIntervalTransactionListEntry key={e} event={e} onClose={this.timeIntervalRefresh}/>)
+                                <TimeIntervalTransactionListEntry key={e} event={e}
+                                                                  onClose={this.timeIntervalRefresh}/>)
                             }
                         </Grid>
                     </Grid>

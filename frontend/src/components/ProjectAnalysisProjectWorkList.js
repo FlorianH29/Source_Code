@@ -1,41 +1,42 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {Grid, Typography, Divider} from '@mui/material';
+import {Divider, Grid, Typography} from '@mui/material';
 import ProjectAnalysisProjectWorkListEntry from "./ProjectAnalysisProjectWorkListEntry";
 
 class ProjectAnalysisProjectWorkList extends Component {
 
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-      this.state = {
-        projectWorks: [],
-      }
-  }
+        this.state = {
+            projectWorks: [],
+        }
+    }
 
-  getProjectWorksForActivity = () => {
-    this.setState({projectWorks: []});
-    HdMWebAppAPI.getAPI().getProjectWorks(this.props.activity.getID())
-      .then(projectWorkBOs =>
-        this.setState({
-          projectWorks: projectWorkBOs
-            })).catch(e =>
-        this.setState({
-            projectWorks: []
-        }));
-  }
+    getProjectWorksForActivity = () => {
+        this.setState({projectWorks: []});
+        HdMWebAppAPI.getAPI().getProjectWorks(this.props.activity.getID())
+            .then(projectWorkBOs =>
+                this.setState({
+                    projectWorks: projectWorkBOs
+                })).catch(e =>
+            this.setState({
+                projectWorks: []
+            }));
+    }
 
-  componentDidMount() {
-    this.getProjectWorksForActivity();
-  }
+    componentDidMount() {
+        this.getProjectWorksForActivity();
+    }
 
-  render() {
-    const { projectWorks } = this.state;
-    return (
-        <div style={{width: "100%", p: 0, m:0}}>
+    render() {
+        const {projectWorks} = this.state;
+        return (
+            <div style={{width: "100%", p: 0, m: 0}}>
                 <Grid container spacing={2}>
                     <Grid item xs={4} align={"center"}>
-                        <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Projektarbeit </Typography>
+                        <Typography variant={"h5"} component={"div"}
+                                    style={{fontWeight: 600}}> Projektarbeit </Typography>
                     </Grid>
                     <Grid item xs={4} align={"center"}>
                         <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Bearbeiter </Typography>
@@ -48,7 +49,7 @@ class ProjectAnalysisProjectWorkList extends Component {
                 {projectWorks.map(pw =>
                     <ProjectAnalysisProjectWorkListEntry key={pw.getID()} projectWork={pw}/>)
                 }
-        </div>
+            </div>
         );
     }
 }

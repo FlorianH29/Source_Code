@@ -25,7 +25,7 @@ class EventManager extends Component {
      * übergibt ihr 0 als Zeitstempel und den EventTyp, welcher in der jeweiligen Komponente angegeben ist.
      */
     handleCreateEventButtonClicked = () => {
-         this.addEvent(0, this.state.eventType);
+        this.addEvent(0, this.state.eventType);
     }
 
     /**
@@ -34,7 +34,7 @@ class EventManager extends Component {
     addEvent = async (timeStamp, eventType) => {
         let newEvent = new EventBO(timeStamp, eventType);
         // console.log(this.state);
-         await HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
+        await HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
             // Backend call successfull
             // reinit the dialogs state for a new empty customer
             console.log(event)
@@ -73,11 +73,12 @@ class EventManager extends Component {
     render() {
         const {buttonName, eventType} = this.state
 
-           console.log(this.state)
+        console.log(this.state)
 
         return (
             <div>
-                <Button disabled={this.props.disabled} eventType onClick={this.handleCreateEventButtonClicked}> {buttonName}</Button>
+                <Button disabled={this.props.disabled} eventType
+                        onClick={this.handleCreateEventButtonClicked}> {buttonName}</Button>
             </div>
         )
     }

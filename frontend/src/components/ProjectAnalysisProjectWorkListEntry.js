@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles, Typography, Accordion, AccordionSummary, AccordionDetails, Grid, Divider} from '@material-ui/core';
+import React, {Component} from 'react';
+import {Grid, Typography, withStyles} from '@material-ui/core';
 import {HdMWebAppAPI} from "../api";
 
 

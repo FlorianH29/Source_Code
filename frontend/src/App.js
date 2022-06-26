@@ -1,7 +1,6 @@
 import React from 'react';
 import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
 import ActivityList from "./components/ActivityList";
-import PersonList from './components/PersonList';
 import Navigator from './components/layout/Navigator';
 import ProjectList from "./components/ProjectList";
 import ProjectWorkList from "./components/ProjectWorkList";
@@ -153,9 +152,7 @@ class App extends React.Component {
                                 <Navigator person={currentPerson}/>
                                 <Switch>
 
-                                    <Route exact path='/persons'>
-                                        <PersonList/>
-                                    </Route>
+
                                     <Route exact path='/projects'>
                                         <ProjectList/>
                                     </Route>
