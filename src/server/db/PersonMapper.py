@@ -225,7 +225,7 @@ class PersonMapper(Mapper):
 
         cursor = self._cnx.cursor()
         command = "SELECT * FROM person WHERE person_id " \
-                  "NOT IN (SELECT person_id FROM projectmembers WHERE project_id={})".format(key)
+                  "NOT IN (SELECT person_id FROM projectmembers WHERE project_id={} AND deleted = 0)".format(key)
 
         cursor.execute(command)
         tuples = cursor.fetchall()

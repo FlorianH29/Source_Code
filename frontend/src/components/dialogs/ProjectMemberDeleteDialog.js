@@ -47,7 +47,7 @@ class ProjectMemberDeleteDialog extends Component {
     }
 
     render() {
-        const { projectMember, show } = this.props;
+        const { projectMember, show, project } = this.props;
         const { deletingInProgress, deletingError } = this.state;
 
         return (

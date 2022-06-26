@@ -113,8 +113,8 @@ class ActivityList extends Component {
     }
 
     render() {
-        const {classes} = this.props;
         const {activities, showActivityForm, expandedProjectID, expandedProjectName } = this.state;
+        console.log(this.props.location.pro)
 
          let pro = null;
          let projectName = null;
@@ -132,6 +132,8 @@ class ActivityList extends Component {
            // wurde neu geladen -> zurück auf die Startseite verweisen
             return (<Redirect to='/' />);
          }
+
+         console.log(pro.project)
 
          let per = null
          if (this.props.location.per){
@@ -184,7 +186,7 @@ class ActivityList extends Component {
                 <ActivityForm onClose={this.activityFormClosed} show={showActivityForm}></ActivityForm>
                         </Card>
                 </Box>
-                <ProjectMemberList> show={ProjectMemberList} project = {this.props.project} </ProjectMemberList>
+                <ProjectMemberList project={pro.project} show={ProjectMemberList}></ProjectMemberList>
             </div>
         )
     }

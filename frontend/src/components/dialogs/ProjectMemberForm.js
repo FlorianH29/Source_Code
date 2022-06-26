@@ -40,22 +40,8 @@ class ProjectMemberForm extends Component {
     }
 
 
-    addProjectMember = () => {
-        let newProjectMember = new PersonBO(this.state.personFirstName, this.state.personLastName,
-            this.state.affiliatedProject);
-        //console.log(newProjectMember);
-        HdMWebAppAPI.getAPI().addProjectMember(newProjectMember).then(projectMember => {
-            // Backend call erfolgreich
-            this.setState(this.baseState);
-            this.props.onClose(projectMember); // call the parent with the customer object from backend
-        }).catch(e =>
-            console.log(e)
-        );
-    }
-
-
     render() {
-        const {projectMember, person, show} = this.props;
+        const {projectMember, person, show, project} = this.props;
         const {potentialProjectMembers} = this.state;
 
         let title = 'Mitarbeiter zu dem Projekt hinzufügen';
@@ -73,13 +59,13 @@ class ProjectMemberForm extends Component {
                         <DialogContentText>
                             {header}
                         </DialogContentText>
-                        <CheckboxForm show={CheckboxForm}></CheckboxForm>
+                        <CheckboxForm show={CheckboxForm} project={project}></CheckboxForm>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleClose} color='secondary'>
                             Abbrechen
                         </Button>
-                        <Button color='primary' onClick={this.addProjectMember}>
+                        <Button color='primary' onClick={this.addSelectedPersonsToProject}>
                             Hinzufügen
                         </Button>
 

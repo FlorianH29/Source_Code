@@ -6,7 +6,7 @@ import {HdMWebAppAPI} from '../api';
 import {Box, Button, Divider} from "@mui/material";
 import ProjectMemberListEntry from "./ProjectMemberListEntry";
 import Card from "@mui/material/Card";
-import ProjectMemberForm from "./dialogs/ProjectMemberForm";
+import CheckboxForm from "./dialogs/CheckboxForm";
 
 
 
@@ -18,12 +18,15 @@ class ProjectMemberList extends Component {
         // Den State initiieren
         this.state = {
             projectMembers: [],
-            showProjectMemberForm: false
+            potentialProjectMembers: [],
+            showCheckboxForm: false
         };
+        console.log(this.props.project)
     }
 
     getProjectMembersOfProject = () => {
-        HdMWebAppAPI.getAPI().getProjectMembers(1)  // statt 1 sollte hier die Id der ausgewählten Person rein
+        this.setState({projectMembers: [] }, () => {
+        HdMWebAppAPI.getAPI().getProjectMembers(this.props.project.getID())
             .then(personBOs =>
                 this.setState({
                     projectMembers: personBOs
@@ -31,6 +34,7 @@ class ProjectMemberList extends Component {
             this.setState({
                 projectMembers: []
             }));
+        });
     }
 
     componentDidMount() {
@@ -38,41 +42,53 @@ class ProjectMemberList extends Component {
         //console.log(this.state)
     }
 
+    getPotentialMembersForProject = () => {
+        this.setState({potentialProjectMembers: [] }, () => {
+            HdMWebAppAPI.getAPI().getPersonsNotProjectMembersOfProject(this.props.project.getID())
+                .then(personBOs => {
+                    console.log(personBOs)
+                    this.setState({
+                        potentialProjectMembers: personBOs
+                    })
+                }).catch(e =>
+                this.setState({
+                    potentialProjectMembers: []
+                }));
+        });
+    }
+
     handleAddProjectMemberButtonClicked = (event) => {
         // Dialog öffnen, um damit eine Aktivität anlegen zu können
         event.stopPropagation();
         this.setState({
-            showProjectMemberForm: true
-        })
+            showCheckboxForm: true
+        });
+        this.getPotentialMembersForProject();
     }
 
     projectMemberDeleted = projectMember => {
         const newProjectMemberList = this.state.projectMembers.filter(projectMemberFromState => projectMemberFromState.getID() !== projectMember.getID());
         this.setState({
             activities: newProjectMemberList,
-            showProjectMemberForm: false //Fom Mitarbeiter hinzuufügen muss Theoretisch von Jannik kommen.
+            showCheckboxForm: false //Fom Mitarbeiter hinzuufügen muss Theoretisch von Jannik kommen.
         });
     }
 
-    projectMemberFormClosed = projectMember => {
+    checkboxFormClosed = () => {
         // projectMember ist nicht null und deshalb erstellt/überarbeitet
-        if (projectMember) {
-            const newProjectMemberList = [...this.state.projectMembers, projectMember];
+
             this.setState({
-                projectMembers: newProjectMemberList,
-                showProjectMemberForm: false
+                showCheckboxForm: false
             });
-        } else {
-            this.setState({
-                showProjectMemberForm: false
-            });
+            this.getProjectMembersOfProject();
         }
-    }
+
 
     render() {
-        const {classes} = this.props;
-        const {projectMembers, showProjectMemberForm} = this.state;
-        //console.log(projectMembers)
+        const { project } = this.props;
+        const {projectMembers, showCheckboxForm, onProjectMemberDeleted} = this.state;
+        console.log(this.state.potentialProjectMembers)
+
 
         return (
             <div>
@@ -85,7 +101,7 @@ class ProjectMemberList extends Component {
                                 </Typography>
                                 <Button variant='contained' color='primary' startIcon={<AddIcon/>} algin={"center"}
                                         onClick={this.handleAddProjectMemberButtonClicked}>
-                                    Mitarbeiter Hinzufühen
+                                    Mitarbeiter Hinzufügen
                                 </Button>
                             </Grid>
                             <Grid container>
@@ -100,12 +116,16 @@ class ProjectMemberList extends Component {
                                     </Grid>
                                     <Divider/>
                                     {projectMembers.map(pm =>
-                                        <ProjectMemberListEntry key={pm.getID()} projectMember={pm} project={this.props.project}
-                                                                onActivityDeleted={this.projectMemberDeleted}/>)
+                                        <ProjectMemberListEntry key={pm.getID()} projectMember={pm} project={project}
+                                                                onProjectMemberDeleted={this.projectMemberDeleted}
+                                                                getProjectMembersOfProject={this.getProjectMembersOfProject}/>)
                                     }
                                 </Grid>
                             </Grid>
-                            <ProjectMemberForm onClose={this.projectMemberFormClosed} show={showProjectMemberForm}></ProjectMemberForm>
+                            <CheckboxForm onClose={this.checkboxFormClosed} show={showCheckboxForm} project={project}
+                                            getProjectMembersOfProject={this.getProjectMembersOfProject}
+                                            getPotentialMembersForProject={this.getPotentialMembersForProject}
+                                            potentialProjectMembers={this.state.potentialProjectMembers}></CheckboxForm>
 
                         </Grid>
                     </Card>

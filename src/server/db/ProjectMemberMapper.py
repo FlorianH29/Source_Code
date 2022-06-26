@@ -165,9 +165,9 @@ class ProjectMemberMapper (Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 projectmember.set_id(1)
 
-        command = "INSERT INTO projectmembers (projectmember_id, last_edit, project_id, person_id, deleted) " \
-                  "VALUES (%s,%s,%s,%s,%s)"
-        data = (projectmember.get_id(), projectmember.get_last_edit(), projectmember.get_project(),
+        command = "INSERT INTO projectmembers (last_edit, project_id, person_id, deleted) " \
+                  "VALUES (%s,%s,%s,%s)"
+        data = (projectmember.get_last_edit(), projectmember.get_project(),
                 projectmember.get_person(), projectmember.get_deleted())
         cursor.execute(command, data)
 

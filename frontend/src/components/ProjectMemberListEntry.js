@@ -27,14 +27,16 @@ class ProjectMemberListEntry extends Component {
 
     deleteProjectMemberDialogClosed = (projectMember) => {
         if (projectMember) {
-            this.props.onActivityDeleted(projectMember);
+            this.props.onProjectMemberDeleted(projectMember);
         }
         this.setState({
             showProjectMemberDeleteDialog: false // Den Dialog nicht mehr anzeigen
         });
+        this.props.getProjectMembersOfProject()
     }
 
     render() {
+        const { project } = this.props;
         const {projectMember, showProjectMemberDeleteDialog} = this.state;
 
         return (
@@ -58,7 +60,7 @@ class ProjectMemberListEntry extends Component {
                     </Grid>
                 </ListItem>
                 <Divider/>
-                <ProjectMemberDeleteDialog show={showProjectMemberDeleteDialog} projectMember={projectMember} project = {this.props.project}
+                <ProjectMemberDeleteDialog show={showProjectMemberDeleteDialog} projectMember={projectMember} project={project}
                                       onClose={this.deleteProjectMemberDialogClosed}/>
             </div>
         );

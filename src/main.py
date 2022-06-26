@@ -914,7 +914,7 @@ class ProjectMemberOperations(Resource):
             return "Project not found", 500
 
 
-@hdmwebapp.route('/projectmembers/<int:id>')
+@hdmwebapp.route('/projectmembers/<int:id>/<int:pid>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID des Projectmitarbeiters')
 @hdmwebapp.param('pid', 'Die ID des Projekts')
@@ -928,6 +928,7 @@ class ProjectWorkOperations(Resource):
         hwa = HdMWebAppAdministration()
         pe = hwa.get_person_by_id(id)
         po = hwa.get_project_by_id(pid)
+        print(pe, po)
 
         hwa.delete_project_member_by_id(pe, po)
         return '', 200
@@ -941,8 +942,8 @@ class ProjectWorkOperations(Resource):
         po = hwa.get_project_by_id(pid)
 
         if pe and po is not None:
-            p = hwa.create_project_member_for_project(po, pe)
-            return p, 500
+            hwa.create_project_member_for_project(po, pe)
+            return 200
         else:
             return "Persons not found", 500
 
@@ -956,6 +957,15 @@ sub_thread = Thread(target=check)
 # es laufen dann 2 Threads und wenn der Haupt-Thread geschlossen wird, wird der Sub-Thread auch beendet
 sub_thread.setDaemon(True)
 sub_thread.start()
+
+
+h = HdMWebAppAdministration()
+pro = h.get_project_by_id(6)
+print(h.get_persons_who_are_not_project_member(pro))
+pe = h.get_persons_who_are_not_project_member(pro)
+for p in pe:
+    print(h.get_person_by_id(p.get_id()))
+
 
 
 

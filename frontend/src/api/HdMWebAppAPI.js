@@ -803,20 +803,20 @@ export default class HdMWebAppAPI {
   }
 
   addPersonAsProjectMember(personBOs, projectID) {
-      personBOs.forEach(element => {
-          return this.#fetchAdvanced(this.#addProjectMemberURL(element.getID(), projectID), {
+      personBOs.map(person=> {
+          return this.#fetchAdvanced(this.#addProjectMemberURL(person.getID(), projectID), {
               method: 'POST',
               headers: {
                   'Accept': 'application/json, text/plain',
                   'Content-type': 'application/json',
               },
-              body: JSON.stringify(element.getID(), projectID)
+              body: JSON.stringify(person.getID(), projectID)
           }).then((responseJSON) => {
               // We always get an array of CustomerBOs.fromJSON, but only need one object
-              let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
-              console.info(responsePersonBO);
+              //let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
+              //console.info(responsePersonBO);
               return new Promise(function (resolve) {
-                  resolve(responsePersonBO);
+                  resolve();
               })
           }).catch(e =>
               console.log(e))

@@ -632,7 +632,7 @@ class HdMWebAppAdministration(object):
                 project.set_time_interval_id(interval.get_id())
                 project.set_owner(person.get_id())
 
-                return mapper.insert(project), self.create_project_member(project, person)
+                return mapper.insert(project), self.create_project_member_for_project(project, person)
                 # Nachdem das Projekt erstellt wurde, wird direkt der Ersteller als Projektmitglied hinzugefügt
             else:
                 return None
@@ -642,7 +642,7 @@ class HdMWebAppAdministration(object):
         with ProjectMapper() as mapper:
             if project is not None:
                 activities = self.get_activities_of_project(project)
-                pro_members = self.get_projectmember_by_project(project)
+                pro_members = self.get_project_members_by_project(project)
                 time_int_id = project.get_time_interval_id()
                 time_int = self.get_time_interval_by_id(time_int_id)
                 start_event_id = time_int.get_start_event()
@@ -1232,7 +1232,7 @@ class HdMWebAppAdministration(object):
     # Business Logik für Frontend
     def get_all_projects_by_person_id(self, person):
         projects = []
-        projectmembers = self.get_projectmember_by_person(person)
+        projectmembers = self.get_project_member_by_person(person)
         for pm in projectmembers:
             project_id = pm.get_project()
             project = self.get_project_by_id(project_id)
