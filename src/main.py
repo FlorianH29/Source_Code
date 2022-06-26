@@ -434,7 +434,7 @@ class ProjectWorkOwnerOperations(Resource):
 
         if st_e is not None:
             st_e.set_id(id)
-            hwa.behelfs_save_event(st_e)
+            hwa.save_event(st_e)
             return '', 200
         else:
             return '', 500
@@ -477,7 +477,7 @@ class ProjectWorkOwnerOperations(Resource):
 
         if st_e is not None:
             st_e.set_id(id)
-            hwa.behelfs_save_event(st_e)
+            hwa.save_event(st_e)
             return '', 200
         else:
             return '', 500
