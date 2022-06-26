@@ -38,9 +38,11 @@ class ProjectAnalysisProjectWorkListEntry extends Component {
   }
 
   timedeltaToTimeFormat(timedelta){
-      const timeSplits = timedelta.split(":");
-      const zeroPad = (num, places) => String(num).padStart(places, '0')
-      return zeroPad(timeSplits[0],2) + ":" + zeroPad(timeSplits[1],2)
+      if (timedelta != null) {
+          const timeSplits = timedelta.split(":");
+          const zeroPad = (num, places) => String(num).padStart(places, '0')
+          return zeroPad(timeSplits[0],2) + ":" + zeroPad(timeSplits[1],2)
+      }
   }
 
   /** Renders the component */
