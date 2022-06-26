@@ -643,12 +643,27 @@ class HdMWebAppAdministration(object):
             if project is not None:
                 activities = self.get_activities_of_project(project)
                 pro_members = self.get_projectmember_by_project(project)
+                time_int_id = project.get_time_interval_id()
+                time_int = self.get_time_interval_by_id(time_int_id)
+                start_event_id = time_int.get_start_event()
+                end_event_id = time_int.get_end_event()
+                start_event = self.get_event_by_id(start_event_id)
+                end_event = self.get_event_by_id(end_event_id)
 
                 for activity in activities:
                     self.delete_activity(activity)
 
                 for projectmember in pro_members:
                     self.delete_project_member(projectmember)
+
+                if time_int is not None:
+                    self.delete_time_interval(time_int)
+
+                if start_event is not None:
+                    self.delete_event(start_event)
+
+                if end_event is not None:
+                    self.delete_event(end_event)
 
                 mapper.delete(project)
             else:
