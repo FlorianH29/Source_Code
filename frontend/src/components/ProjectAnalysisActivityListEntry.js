@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {withStyles, Typography, Accordion, AccordionSummary, AccordionDetails, Grid, Divider} from '@material-ui/core';
+import {Accordion, AccordionDetails, AccordionSummary, Grid, Typography, withStyles} from '@material-ui/core';
 import ProjectAnalysisProjectWorkList from "./ProjectAnalysisProjectWorkList";
 import {HdMWebAppAPI} from "../api";
 
@@ -40,12 +39,12 @@ class ActivityListEntry extends Component {
         }
     }
 
-    secondsToString(seconds){
+    secondsToString(seconds) {
         const zeroPad = (num, places) => String(num).padStart(places, '0')
-        let totalMinutes = seconds/60>>0;
-        let minutes = totalMinutes%60;
-        let hours = totalMinutes/60>>0;
-        return zeroPad(hours,2)+":"+zeroPad(minutes,2)
+        let totalMinutes = seconds / 60 >> 0;
+        let minutes = totalMinutes % 60;
+        let hours = totalMinutes / 60 >> 0;
+        return zeroPad(hours, 2) + ":" + zeroPad(minutes, 2)
     }
 
     render() {

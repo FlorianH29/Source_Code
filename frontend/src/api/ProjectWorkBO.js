@@ -1,10 +1,10 @@
 import TimeIntervalBO from './TimeIntervalBO';
 
-//Stellt eine Projektarbeit im System dar
+/** Stellt eine Projektarbeit im System dar */
 export default class ProjectWorkBO extends TimeIntervalBO {
 
   /**
-   * Konstruktor, erstelt ein Projektarbeitsobjekt mit
+   * Konstruktor, erstellt ein Projektarbeitsobjekt mit
    *
    * @param {Number} aStartEventId - die Id des Startevents des Zeitintervalls.
    * @param {Number} anEndEventId - die Id des Endevents des Zeitintervalls

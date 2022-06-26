@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import {ActivityBO, HdMWebAppAPI} from "../api";
-import {Button, Grid, Typography, Divider, Box,} from '@mui/material';
-import ActivityListEntry from "./ActivityListEntry";
+import {HdMWebAppAPI} from "../api";
+import {Grid, Typography,} from '@mui/material';
 import ProjectAnalysisActivityListEntry from "./ProjectAnalysisActivityListEntry";
 
 
@@ -49,8 +48,8 @@ class ProjectAnalysisActivityList extends Component {
                     </Grid>
                 </Grid>
                 {activities.map(ac =>
-                    <ProjectAnalysisActivityListEntry key={ac.getID()} activity={ac}  startDate={this.props.startDate}
-                                                     endDate={this.props.endDate}/>)
+                    <ProjectAnalysisActivityListEntry key={ac.getID()} activity={ac} startDate={this.props.startDate}
+                                                      endDate={this.props.endDate}/>)
                 }
             </div>
         )

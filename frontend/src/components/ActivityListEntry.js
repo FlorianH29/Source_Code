@@ -1,13 +1,11 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Typography, Accordion, AccordionSummary, AccordionDetails, Grid, Divider, ListItemSecondaryAction } from '@material-ui/core';
-import { Button, ButtonGroup } from '@material-ui/core';
+import {Button, Divider, Grid, Typography} from '@material-ui/core';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import EditIcon from '@mui/icons-material/Edit';
 import ListItem from "@mui/material/ListItem";
 import ActivityDeleteDialog from "./dialogs/ActivityForm";
 import ActivityForm from "./dialogs/ActivityForm";
-import {HdMWebAppAPI} from "../api";
 import {Link as RouterLink, withRouter} from "react-router-dom";
 import ListItemButton from "@mui/material/ListItemButton";
 
@@ -18,48 +16,48 @@ class ActivityListEntry extends Component {
         super(props);
 
         this.state = {
-            activity : props.activity,
+            activity: props.activity,
             showActivityForm: false,
             showActivityDeleteDialog: false,
         };
     }
 
     editActivityButtonClicked = (event) => {
-    event.stopPropagation();
-    this.setState({
-      showActivityForm: true
-    });
+        event.stopPropagation();
+        this.setState({
+            showActivityForm: true
+        });
     }
 
-     activityFormClosed = (activity) => {
-    // activity ist nicht null und wurde dementsprechend geändert
-    if (activity) {
-      const newActivityList = [...this.state.activities, activity];
-      this.setState({
-        activities: newActivityList,
-        showActivityForm: false
-      });
-    } else {
-      this.setState({
-        showActivityForm: false
-      });
-    }
+    activityFormClosed = (activity) => {
+        // activity ist nicht null und wurde dementsprechend geändert
+        if (activity) {
+            const newActivityList = [...this.state.activities, activity];
+            this.setState({
+                activities: newActivityList,
+                showActivityForm: false
+            });
+        } else {
+            this.setState({
+                showActivityForm: false
+            });
+        }
     }
 
     deleteActivityDialogClosed = (activity) => {
-    if (activity) {
-      this.props.onActivityDeleted(activity);
-    }
-    this.setState({
-      showActivityDeleteDialog: false // Den Dialog nicht mehr anzeigen
-    });
+        if (activity) {
+            this.props.onActivityDeleted(activity);
+        }
+        this.setState({
+            showActivityDeleteDialog: false // Den Dialog nicht mehr anzeigen
+        });
     }
 
     deleteActivityButtonClicked = (event) => {
-    event.stopPropagation();
-    this.setState({
-      showActivityDeleteDialog: true
-    });
+        event.stopPropagation();
+        this.setState({
+            showActivityDeleteDialog: true
+        });
     }
 
 
@@ -116,18 +114,18 @@ class ActivityListEntry extends Component {
 }
 
 const styles = theme => ({
-  root: {
-    width: '100%',
-  },
+    root: {
+        width: '100%',
+    },
 });
 
 ActivityListEntry.propTypes = {
-  /** Das ActivityBO welches gerendert werden soll */
-  classes: PropTypes.object.isRequired,
-  activity: PropTypes.object.isRequired,
-  project: PropTypes.object.isRequired,
-  onActivityDeleted: PropTypes.func.isRequired,
-  show: PropTypes.bool.isRequired
+    /** Das ActivityBO welches gerendert werden soll */
+    classes: PropTypes.object.isRequired,
+    activity: PropTypes.object.isRequired,
+    project: PropTypes.object.isRequired,
+    onActivityDeleted: PropTypes.func.isRequired,
+    show: PropTypes.bool.isRequired
 }
 
 export default withRouter(ActivityListEntry);

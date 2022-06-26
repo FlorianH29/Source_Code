@@ -1,8 +1,16 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import { HdMWebAppAPI } from '../../api';
+import {HdMWebAppAPI} from '../../api';
 
 /**
  * Anzeigen eines Löschdialogs, der fragt, ob ein Projektarbeitsobjekt gelöscht werden soll. Das ProjectWorkBO welches
@@ -26,7 +34,7 @@ class ProjectWorkDeleteDialog extends Component {
   /** Die Projektarbeit löschen */
   deleteProjectWork = () => {
     HdMWebAppAPI.getAPI().deleteProjectWork(this.props.projectWork.getID()).then(projectWork => {
-      this.props.onClose(this.props.projectWork);  // call the parent with the deleted customer
+      this.props.onClose(this.props.projectWork);
     }).catch(e =>
         console.log(e))
   }
