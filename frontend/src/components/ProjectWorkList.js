@@ -99,99 +99,108 @@ class ProjectWorkList extends Component {
         }
     }
 
-    render() {
-        const {classes} = this.props;
-        const {projectWorks, showProjectWorkForm, disableEnd, disableStart, open} = this.state;
-        // console.log(this.state)
-        let owner = null;
-        if (this.props.location.owner) {
-            // AktivityBO existiert
-            owner = this.props.location.owner
-        } else {
-            // AktivityBO existiert nicht, stattdessen wurde die Komponente direkt über die URL aufgerufen oder die Seite
-            // wurde neu geladen -> zurück auf die Startseite verweisen
-            return (<Redirect to='/'/>);
-        }
+  render() {
+    const { projectWorks, showProjectWorkForm, disableEnd, disableStart, open } = this.state;
+    // console.log(this.state)
+    let owner = null;
+    if (this.props.location.owner) {
+      // AktivityBO existiert
+      owner = this.props.location.owner
+    } else {
+      // AktivityBO existiert nicht, stattdessen wurde die Komponente direkt über die URL aufgerufen oder die Seite
+      // wurde neu geladen -> zurück auf die Startseite verweisen
+      return (<Redirect to='/' />);
+    }
 
-        console.log(owner.project)
+    let per = null;
+    if (this.props.location.per){
+        per = this.props.location.per
+    }
+    else {
+      return (<Redirect to='/' />);
+    }
 
-        return (
-            <div>
-                <Box m={18} pl={8}>
-                    <Typography component='div'>
-                        <Link component={RouterLink} to={{
-                            pathname: '/activities',
-                            expandedProject: owner.project
-                        }}>
-                            <Grid container spacing={1} justify='flex-start' alignItems='stretch'>
-                                <Grid item>
-                                    <ArrowCircleLeftRoundedIcon/>
-                                </Grid>
-                                <Grid item> zurück
-                                </Grid>
-                            </Grid>
-                        </Link>
-                    </Typography>
 
-                    <Typography variant={"h4"} algin={"center"} component={"div"}>
-                        Aktivität: {owner.activity.getActivityName()}
-                    </Typography>
-                    <Grid container mt={1}>
-                        <Grid item xs={12} align={"center"}>
-                            <Grid container>
-                                <Grid item xs={3} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Projektarbeit </Typography>
-                                </Grid>
-                                <Grid item xs={3} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Bearbeiter </Typography>
-                                </Grid>
-                                <Grid item xs={3} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Dauer </Typography>
-                                </Grid>
-                            </Grid>
-                            <Divider/>
-                            {projectWorks.map(pw =>
-                                <ProjectWorkListEntry key={pw.getID()} projectWork={pw}
-                                                      onProjectWorkDeleted={this.projectWorkDeleted}/>)
-                            }
-                            <Grid container direction={'row'} spacing={18}>
-                                <Grid item xs={4} align={'center'}>
-                                    <Button variant='contained' color='primary'
-                                            onClick={this.handleStartEventButtonClicked}>
-                                        Start buchen
-                                    </Button>
-                                </Grid>
-                                <Grid item xs={4} align={'center'}>
-                                    <Button variant='contained' color='primary'
-                                            onClick={this.handleEndEventButtonClicked}>
-                                        Ende buchen
-                                    </Button>
-                                </Grid>
-                            </Grid>
+    return (
+        <div>
+        <Box m={18}  pl={8}>
+            <Typography component='div'>
+                <Link component={RouterLink} to={{
+                    pathname: '/activities',
+                    expandedProject: owner,
+                    expandedPerson: per}}>
+                    <Grid container spacing={1} justify='flex-start' alignItems='stretch'>
+                        <Grid item>
+                            <ArrowCircleLeftRoundedIcon color={'primary'}/>
+                        </Grid>
+                        <Grid item> zurück
                         </Grid>
                     </Grid>
-                    <Dialog open={open} onClose={this.handleClose}>
-                        <DialogTitle>Ende buchen
-                            <IconButton onClick={this.handleClose}>
-                                <CloseIcon/>
-                            </IconButton>
-                        </DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                Ende buchen und Projektarbeit beenden?
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={this.handleClose} color='secondary'>
-                                Abbrechen
-                            </Button>
-                            <EventManager eventType={2} onClose={this.refreshProjectWorkList}>
-                            </EventManager>
-                        </DialogActions>
-                    </Dialog>
-                </Box>
-                <ProjectWorkForm onClose={this.projectWorkFormClosed} show={showProjectWorkForm}></ProjectWorkForm>
-            </div>
+                </Link>
+            </Typography>
+
+            <Grid container direction={'row'} mt={2} alignItems='stretch' spacing={1}>
+                <Grid xs={3}/>
+                <Grid item xs={5} align={'center'}>
+                    <Typography variant={"h4"} algin={"center"} component={"div"}>
+                       Aktivität: {owner.activity.getActivityName()}
+                    </Typography>
+                 </Grid>
+                <Grid item xs={2} align={'right'}>
+                    <Button variant='contained' color='primary' onClick={this.handleStartEventButtonClicked}>
+                        Start buchen
+                    </Button>
+                </Grid>
+                <Grid item xs={2} align={'right'}>
+                    <Button variant='contained' color='primary' onClick={this.handleEndEventButtonClicked}>
+                        Ende buchen
+                    </Button>
+                </Grid>
+            </Grid>
+
+
+          <Grid container mt={3}>
+            <Grid item xs={12} align={"center"}>
+                <Grid container>
+                    <Grid item xs={3} align={"flex-end"}>
+                        <Typography variant={"h5"} component={"div"}> Projektarbeit </Typography>
+                    </Grid>
+                    <Grid item xs={3} align={"flex-end"}>
+                        <Typography variant={"h5"} component={"div"}> Bearbeiter </Typography>
+                    </Grid>
+                    <Grid item xs={3} align={"flex-end"}>
+                        <Typography variant={"h5"} component={"div"}> Dauer </Typography>
+                    </Grid>
+                </Grid>
+                <Divider/>
+                {projectWorks.map(pw =>
+                    <ProjectWorkListEntry key={pw.getID()} projectWork={pw} onProjectWorkDeleted={this.projectWorkDeleted}/>)
+                }
+
+            </Grid>
+          </Grid>
+            <Dialog open={open} onClose={this.handleClose}>
+                <DialogTitle>Ende buchen
+                    <IconButton onClick={this.handleClose}>
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Ende buchen und Projektarbeit beenden?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleClose} color='secondary'>
+                        Abbrechen
+                    </Button>
+                    <EventManager eventType={2} onClose={this.refreshProjectWorkList}>
+                    </EventManager>
+                </DialogActions>
+            </Dialog>
+            </Box>
+            <ProjectWorkForm activity={owner.activity} onClose={this.projectWorkFormClosed} show={showProjectWorkForm}></ProjectWorkForm>
+        </div>
         );
     }
 }

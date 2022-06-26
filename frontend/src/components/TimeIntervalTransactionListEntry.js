@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ListItem from "@mui/material/ListItem";
 import {Button, Divider, Grid, Typography} from "@material-ui/core";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import EventAndTimeIntervalDeleteDialog from "./dialogs/EventAndTimeIntervalDeleteDialog";
 import EventAndTimeIntervalForm from "./dialogs/EventAndTimeIntervalForm";
 
@@ -88,7 +88,7 @@ class TimeIntervalTransactionListEntry extends Component {
                             {
                                 event.name != 'Kommen' && event.name != 'Gehen' ? (
                                     <>
-                                        <Button color='secondary' size='small' startIcon={<DeleteIcon/>}
+                                        <Button color='secondary' size='small' startIcon={<RemoveCircleOutlineRoundedIcon/>}
                                                 onClick={this.deleteEventAndTimeIntervalButtonClicked}> </Button>
 
                                     </>) : ''

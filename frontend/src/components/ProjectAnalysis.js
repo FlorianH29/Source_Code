@@ -50,6 +50,16 @@ class ProjectAnalysis extends Component {
                                     value={startDate}
                                     onChange={(date) => {
                                         this.setState({startDate: date.getTime()});
+                { projects.length != 0 ?
+                <>
+                <Box m={18} pl={8}>
+                    <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DatePicker
+                                label={"Start Date"}
+                                value={startDate}
+                                onChange={(date) => {
+                                    this.setState({startDate: date.getTime()});
 
                                     }}
                                     renderInput={(params) => <TextField {...params} />}
@@ -69,29 +79,30 @@ class ProjectAnalysis extends Component {
                         </div>
                         <Grid container spacing={2}>
 
-                            <Grid item xs={4} align={"center"}>
-                                <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}>
-                                    Projekte: </Typography>
-                            </Grid>
-                            <Grid item xs={4} align={"center"}>
-                                <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}>
-                                    Klient: </Typography>
-                            </Grid>
-                            <Grid item xs={4} align={"center"}>
-                                <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}>
-                                    Arbeitsleistung: </Typography>
-                            </Grid>
+                        <Grid item xs={4} align={"center"}>
+                            <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}>
+                                Projekte: </Typography>
                         </Grid>
-                        <Divider/>
-                        {projects.map(pro =>
-                            <ProjectAnalysisProjectEntry key={pro.getID()} project={pro}
-                                                         startDate={startDate} endDate={endDate}/>)})
-                    </Box>) : (
-                    <Box m={25} pl={15}>
-                        <Typography variant={"h5"}>
-                            Info: Da Sie in kein Projekt leiten, können Sie keine Projekte analysieren.
-                        </Typography>
-                    </Box>)}
+                        <Grid item xs={4} align={"center"}>
+                            <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}>
+                                Klient: </Typography>
+                        </Grid>
+                        <Grid item xs={4} align={"center"}>
+                            <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}>
+                                Arbeitsleistung: </Typography>
+                        </Grid>
+                    </Grid>
+                    <Divider/>
+                    {projects.map(pro =>
+                        <ProjectAnalysisProjectEntry key={pro.getID()} project={pro}
+                                                     startDate={startDate} endDate={endDate}/>)}
+                </Box>
+                </> :
+                <Box m={25} pl={15}>
+                    <Typography variant={"h5"} >
+                        Info: Da Sie kein Projekt leiten, können Sie keine Projekte analysieren.
+                    </Typography>
+                </Box>}
             </div>
         );
     }

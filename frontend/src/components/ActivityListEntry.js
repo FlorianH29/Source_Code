@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Divider, Grid, Typography} from '@material-ui/core';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { withStyles, Typography, Accordion, AccordionSummary, AccordionDetails, Grid, Divider, ListItemSecondaryAction } from '@material-ui/core';
+import { Button, ButtonGroup } from '@material-ui/core';
+import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import EditIcon from '@mui/icons-material/Edit';
 import ListItem from "@mui/material/ListItem";
 import ActivityDeleteDialog from "./dialogs/ActivityForm";
 import ActivityForm from "./dialogs/ActivityForm";
+import {HdMWebAppAPI} from "../api";
 import {Link as RouterLink, withRouter} from "react-router-dom";
 import ListItemButton from "@mui/material/ListItemButton";
 
@@ -62,51 +64,54 @@ class ActivityListEntry extends Component {
 
 
     render() {
-        const {project} = this.props;
-        const {activity, showActivityForm, showActivityDeleteDialog} = this.state;
+    const { project, person } = this.props;
+    const { activity, showActivityForm, showActivityDeleteDialog } = this.state;
 
-        console.log(this.props.location.per);
-        return (
-            <div>
-                <ListItem>
-                    <Grid container alignItems='center'>
-                        <ListItemButton component={RouterLink} to={{
-                            pathname: `/projectworks`,
-                            owner: {
-                                activity: activity,
-                                project: project
-                            }
-                        }}>
-                            <Grid item xs={3} align={"center"}>
-                                <Typography variant={"h5"} component={"div"}>
-                                    {activity.getActivityName()}
-                                </Typography>
-                            </Grid>
-                        </ListItemButton>
-                        <Grid item xs={3} align={"center"}>
-                            <Typography variant={"h5"} component={"div"}>
-                                {activity.getActivityCapacity()}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={3} align={"center"}>
-                            <Typography variant={"h5"} component={"div"}>
-                                {activity.getActivityWorkTime()}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={3} align={"center"}>
-                            <Button color='primary' size='small' startIcon={<EditIcon/>}
-                                    onClick={this.editActivityButtonClicked}> </Button>
-                            <Button color='secondary' size='small' startIcon={<DeleteIcon/>}
-                                    onClick={this.deleteActivityButtonClicked}> </Button>
-                        </Grid>
-                    </Grid>
-                </ListItem>
-                <Divider/>
-                <ActivityDeleteDialog show={showActivityDeleteDialog} activity={activity}
-                                      onClose={this.deleteActivityDialogClosed}/>
-                <ActivityForm show={showActivityForm} activity={activity} onClose={this.activityFormClosed}/>
-            </div>
-        );
+      return (
+        <div>
+           <ListItem>
+             <Grid container alignItems='center'>
+                 <ListItemButton component={RouterLink} to={{
+                pathname: `/projectworks`,
+                owner: {
+                     activity: activity,
+                     project: project
+                    },
+                 per: {
+                    person: person
+                 }
+                    }}>
+               <Grid item xs={3} align={"center"}>
+                 <Typography variant={"h5"} component={"div"}>
+                     {activity.getActivityName()}
+                 </Typography>
+               </Grid>
+              </ListItemButton>
+               <Grid item xs={3} align={"center"}>
+                 <Typography variant={"h5"} component={"div"}>
+                   {activity.getActivityCapacity()}
+                 </Typography>
+               </Grid>
+               <Grid item xs={3} align={"center"}>
+                 <Typography variant={"h5"} component={"div"}>
+                   {activity.getActivityWorkTime()}
+                 </Typography>
+               </Grid>
+                 { person.getID() === project.owner ? (
+                  <Grid item xs={3} align={"center"}>
+                    <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editActivityButtonClicked}> </Button>
+                    <Button color='secondary' size='small' startIcon={<RemoveCircleOutlineRoundedIcon />} onClick={this.deleteActivityButtonClicked}> </Button>
+                  </Grid>
+                     ):
+                 <Grid item xs={3} align={"center"}>
+                </Grid>}
+             </Grid>
+           </ListItem>
+           <Divider/>
+          <ActivityDeleteDialog show={showActivityDeleteDialog} activity={activity} onClose={this.deleteActivityDialogClosed} />
+          <ActivityForm show={showActivityForm} activity={activity} onClose={this.activityFormClosed} />
+        </div>
+      );
     }
 }
 

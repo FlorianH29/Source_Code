@@ -15,6 +15,8 @@ import {Person} from "@mui/icons-material";
 import TimeIntervalTransactionList from "./components/TimeIntervalTransactionList";
 import SignInHeader from "./components/layout/SignInHeader";
 import {Dialog} from "@mui/material";
+import DepartureDialog from "./components/dialogs/DepartureDialog";
+import {Dialog, Grid} from "@mui/material";
 import {DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
 import Button from "@mui/material/Button";
 import {ArriveBO, HdMWebAppAPI} from "./api";
@@ -93,7 +95,7 @@ class App extends React.Component {
 
     handleCloseArriveDialog = () => {
       this.setState({
-          arrived: false
+          arrived: this.getDepartureBiggerArrive
       })
     }
 
@@ -139,9 +141,11 @@ class App extends React.Component {
                                 </DialogContentText>
                               </DialogContent>
                               <DialogActions>
-                                <Button variant='contained' onClick={() => {this.addNewArriveEvent()}} color='primary'>
-                                  Kommen bestätigen
-                                </Button>
+                                  <Grid container justifyContent={'center'}>
+                                    <Button variant='contained' onClick={() => {this.addNewArriveEvent()}} color='primary'>
+                                        Kommen bestätigen
+                                    </Button>
+                                </Grid>
                               </DialogActions>
                             </Dialog>
                             <>

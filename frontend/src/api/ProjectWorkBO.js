@@ -13,11 +13,11 @@ export default class ProjectWorkBO extends TimeIntervalBO {
    * @param {String} aDescription - die Beschreibung dieses ProjectWorkBO.
    * @param {Number} anAffiliatedActivity - die Aktivität, die diesem ProjectWorkBO zugeordnet ist.
    */
-  constructor(aProjectWorkName, aDescription) {
+  constructor(aProjectWorkName, aDescription, anAffiliatedActivity) {
     super();
     this.project_work_name = aProjectWorkName;
     this.description = aDescription;
-    this.affiliated_activity = 1;
+    this.affiliated_activity = anAffiliatedActivity;
   }
 
   /**

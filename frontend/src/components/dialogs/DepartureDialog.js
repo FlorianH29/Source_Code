@@ -62,33 +62,35 @@ class DepartureDialog extends Component {
         const {person, show} = this.props;
 
 
-        return (
-            show ?
-                <Dialog open={show} onClose={this.handleClose}>
-                    <DialogTitle>Gehen und Abmelden
-                        <IconButton onClick={this.handleClose}>
-                            <CloseIcon/>
-                        </IconButton>
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Wollen Sie wirklich gehen und sich ausloggen?
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleClose} color='secondary'>
-                            Abbrechen
-                        </Button>
-                        <Button variant='contained' onClick={() => {
-                            this.addNewDepartureEvent()
-                        }} color='primary'>
-                            Gehen & Abmelden
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-                : null
-        );
-    }
+    return (
+      show ?
+        <Dialog open={show} onClose={this.handleClose}>
+          <DialogTitle>Gehen und Abmelden
+            <IconButton onClick={this.handleClose} color={'primary'}>
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+                Wollen Sie wirklich gehen und sich ausloggen?
+            </DialogContentText>
+                <DialogContentText>
+                    Wenn Sie sich in einer laufenden Projektarbeit oder Pause befinden, wird diese für Sie beendet.
+                </DialogContentText>
+          </DialogContent>
+
+          <DialogActions>
+            <Button onClick={this.handleClose} color='secondary'>
+              Abbrechen
+            </Button>
+            <Button variant='contained' onClick={() => {this.addNewDepartureEvent()}} color='primary'>
+              Gehen & Abmelden
+            </Button>
+          </DialogActions>
+        </Dialog>
+        : null
+    );
+  }
 }
 
 /** PropTypes */

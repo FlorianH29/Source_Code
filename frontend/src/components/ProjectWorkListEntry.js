@@ -1,16 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Button,
-    Divider,
-    Grid,
-    Typography,
-    withStyles
-} from '@material-ui/core';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { withStyles, Typography, Accordion, AccordionSummary, AccordionDetails, Grid, Divider} from '@material-ui/core';
+import { Button, ButtonGroup } from '@material-ui/core';
+import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import EditIcon from '@mui/icons-material/Edit';
 import ProjectWorkForm from './dialogs/ProjectWorkForm';
 import ProjectWorkDeleteDialog from "./dialogs/ProjectWorkDeleteDialog";
@@ -100,51 +92,47 @@ class ProjectWorkListEntry extends Component {
         const {classes} = this.props;
         const {projectWork, showProjectWorkForm, showProjectWorkDeleteDialog, owner} = this.state;
 
-        // console.log(this.state);
-        return (
-            owner ?
-                <div>
-                    <Accordion>
-                        <AccordionSummary>
-                            <Grid container alignItems='center'>
-                                <Grid item xs={3} align={"center"}>
-                                    <Typography variant={"h5"} component={"div"}>
-                                        {projectWork.getProjectWorkName()}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={3} align={"center"}>
-                                    <Typography variant={"h5"} component={"div"}>
-                                        {owner.firstname} {owner.lastname}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={3} align={"center"}>
-                                    <Typography variant={"h5"} component={"div"}>
-                                        {projectWork.getTimeIPeriod()}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={3} align={"center"}>
-                                    <Button color='primary' size='small' startIcon={<EditIcon/>}
-                                            onClick={this.editProjectWorkButtonClicked}> </Button>
-                                    <Button color='secondary' size='small' startIcon={<HighlightOffIcon/>}
-                                            onClick={this.deleteProjectWorkButtonClicked}> </Button>
-                                </Grid>
-                            </Grid>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <Typography variant={"h5"} component={"div"}>
-                                Beschreibung: {projectWork.getDescription()}
-                            </Typography>
-                        </AccordionDetails>
-                    </Accordion>
-                    <Divider/>
-                    <ProjectWorkDeleteDialog show={showProjectWorkDeleteDialog} projectWork={projectWork}
-                                             onClose={this.deleteProjectWorkDialogClosed}/>
-                    <ProjectWorkForm show={showProjectWorkForm} projectWork={projectWork}
-                                     onClose={this.projectWorkFormClosed}/>
-                </div>
-                : null
-        );
-    }
+    // console.log(this.state);
+    return (
+        owner ?
+        <div>
+            <Accordion>
+                <AccordionSummary>
+            <Grid container alignItems='center'>
+                <Grid item xs={3} align={"center"}>
+                    <Typography variant={"h5"} component={"div"}>
+                        {projectWork.getProjectWorkName()}
+                    </Typography>
+                </Grid>
+                <Grid item xs={3} align={"center"}>
+                    <Typography variant={"h5"} component={"div"}>
+                        {owner.firstname} {owner.lastname}
+                    </Typography>
+                </Grid>
+                <Grid item xs={3} align={"center"}>
+                    <Typography variant={"h5"} component={"div"}>
+                    {projectWork.getTimeIPeriod()}
+                    </Typography>
+                </Grid>
+                <Grid item xs={3} align={"center"}>
+                    <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editProjectWorkButtonClicked}> </Button>
+                    <Button color='secondary' size='small' startIcon={<RemoveCircleOutlineRoundedIcon/>} onClick={this.deleteProjectWorkButtonClicked}> </Button>
+                </Grid>
+            </Grid>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Typography variant={"h5"} component={"div"}>
+                    Beschreibung: {projectWork.getDescription()}
+                    </Typography>
+                </AccordionDetails>
+            </Accordion>
+            <Divider/>
+        <ProjectWorkDeleteDialog show={showProjectWorkDeleteDialog} projectWork={projectWork} onClose={this.deleteProjectWorkDialogClosed} />
+        <ProjectWorkForm show={showProjectWorkForm} projectWork={projectWork} onClose={this.projectWorkFormClosed} />
+      </div>
+        : null
+    );
+  }
 }
 
 /** Component specific styles */

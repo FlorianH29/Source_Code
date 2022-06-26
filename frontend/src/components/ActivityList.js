@@ -18,18 +18,47 @@ class ActivityList extends Component {
         let expandedName = null;
 
         if (this.props.location.expandedProject) {
-            expandedID = this.props.location.expandedProject.getID();
-            expandedName = this.props.location.expandedProject.getProjectName();
+            expandedID = this.props.location.expandedProject.project.getID();
+            expandedName = this.props.location.expandedProject.project.getProjectName();
         }
-        console.log(this.props.location.expandedProject)
 
         this.state = {
             activities: [],
             showActivityForm: false,
+            disableButton: null,
             expandedProjectID: expandedID,
             expandedProjectName: expandedName,
         };
     };
+
+
+    /** Ermittelt, ob der Aktivität erstellen Knopf gedrückt werden darf oder nicht, wenn die das Programm bedienende
+     * Person nicht Leiter des Projekts ist, ist er ausgegraut. */
+    handleDisableButton = () => {
+        if (this.props.location.per) {
+            if (this.props.location.per.person.id === this.props.location.pro.project.owner) {
+                this.setState({
+                    disableButton: false
+                })
+            } else {
+                this.setState({
+                    disableButton: true
+                })
+            }
+        }
+        // wenn auf der Projektarbeitenliste Zurück geklickt wurde, die von dort zurückgegebenen Werte vergleichen
+        else if (this.props.location.expandedPerson) {
+            if (this.props.location.expandedPerson.person.id === this.props.location.expandedProject.project.owner) {
+                this.setState({
+                    disableButton: false
+                })
+            } else {
+                this.setState({
+                    disableButton: true
+            })
+        }
+        }
+    }
 
     getActivitiesForProject() {
         if (this.props.location.pro) {
@@ -57,8 +86,11 @@ class ActivityList extends Component {
     componentDidMount() {
         if (this.props.location.pro) {
             this.getActivitiesForProject();
-        } else if (this.props.location.expandedProject) {
+            this.handleDisableButton();
+        }
+        else if (this.props.location.expandedProject) {
             this.getActivitiesForProject();
+            this.handleDisableButton();
         }
     }
 
@@ -95,7 +127,8 @@ class ActivityList extends Component {
     }
 
     render() {
-        const {activities, showActivityForm, expandedProjectID, expandedProjectName} = this.state;
+        const {classes} = this.props;
+        const {activities, showActivityForm, expandedProjectID, expandedProjectName, disableButton } = this.state;
 
         let pro = null;
         let projectName = null;
@@ -113,9 +146,14 @@ class ActivityList extends Component {
             return (<Redirect to='/'/>);
         }
 
-        let per = null
-        if (this.props.location.per) {
-            per = this.props.location.per
+         let per = null;
+         if (this.props.location.per) {
+            // PersonBO existiert
+            per = this.props.location.per;
+         } else if (this.props.location.expandedPerson){
+             console.log(this.props.location.expandedPerson)
+            // in Projektarbeitsliste wurde Zurück geklickt
+            per = this.props.location.expandedPerson
         }
 
         return (
@@ -134,14 +172,22 @@ class ActivityList extends Component {
                             </Grid>
                         </Link>
                     </Typography>
-                    <Typography variant={"h4"} algin={"left"} component={"div"}>
-                        Projekt: {projectName}
-                    </Typography>
-                    <Button variant='contained' color='primary' startIcon={<AddIcon/>}
-                            onClick={this.handleAddActivityButtonClicked}>
-                        Aktivität anlegen
-                    </Button>
-                    <Grid container mt={1}>
+                        <Grid container mt={2}  alignItems='stretch' spacing={1}>
+                            <Grid item xs={3}/>
+                            <Grid item xs={5} align={"center"}>
+                                <Typography variant={"h4"} algin={"center"} component={"div"}>
+                                    Projekt: {projectName}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={4} align={"right"}>
+                                <Button disabled={disableButton} variant='contained' align={"center"} color='primary' startIcon={<AddIcon/>}
+                                onClick={this.handleAddActivityButtonClicked}>
+                                    Aktivität anlegen
+                                </Button>
+                            </Grid>
+                        </Grid>
+
+                    <Grid container mt={3}>
                         <Grid item xs={12} align={"center"}>
                             <Grid container>
                                 <Grid item xs={3} align={"flex-end"}>
