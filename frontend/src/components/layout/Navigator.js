@@ -1,5 +1,19 @@
 import * as React from 'react';
-import {AppBar, CssBaseline, Typography, Toolbar, IconButton, Menu, Box, Drawer, Button, Link, Divider, MenuItem} from '@mui/material';
+import {
+    AppBar,
+    CssBaseline,
+    Typography,
+    Toolbar,
+    IconButton,
+    Menu,
+    Box,
+    Drawer,
+    Button,
+    Link,
+    Divider,
+    MenuItem,
+    Popover
+} from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -11,12 +25,16 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import PersonIcon from "@mui/icons-material/Person";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import AssessmentRoundedIcon from '@mui/icons-material/AssessmentRounded';
 import {Link as RouterLink} from "react-router-dom";
 import {HdMWebAppAPI, PersonBO} from "../../api";
+import EventManager from "../EventManager";
+import Departure from "../Departure";
 
 
 class Navigator extends Component {
@@ -29,9 +47,24 @@ class Navigator extends Component {
         this.state = {
             anchorEl: null,
             person: null,
-            showPersonDelete: false
+            showPersonDelete: false,
+            disableStartButton: '',
+            disableEndButton: true
         };
     };
+
+    /** Gibt zurück, ob eine Pause begonnen wurde */
+    getBreakStarted = () => {
+        HdMWebAppAPI.getAPI().getBreakStarted()
+            .then(value => this.setState({
+                disableStartButton: value,
+                disableEndButton: !value
+            })).catch(e =>
+                this.setState({ // bei Fehler den state zurücksetzen
+                    disableButton: '',
+                })
+            );
+    }
 
     persondeleteClosed = person => {
         // Person ist nicht null und deshalb erstelltI/überarbeitet
@@ -58,17 +91,11 @@ class Navigator extends Component {
                 person: null,
             })
         );
-
-
-        // set loading to true
-        this.setState({
-            loadingInProgress: true,
-            error: null
-        });
     }
 
     componentDidMount() {
         this.getAPerson();
+        this.getBreakStarted();
     }
 
     handleDelete = () => {
@@ -111,11 +138,11 @@ class Navigator extends Component {
     }
 
     render() {
-        const {showPersonDeleteDialog, showPersonEditDialog, person} = this.state;
+        const {showPersonDeleteDialog, showPersonEditDialog, person, disableStartButton, disableEndButton} = this.state;
         const drawerWidth = 200;
         const lel = 0;
         const boxWidth = 200;
-        //console.log(person)
+        console.log(this.state)
 
         return (
             <Box sx={{display: 'flex'}}>
@@ -131,42 +158,50 @@ class Navigator extends Component {
                         <Typography variant="h3" component="div" sx={{flexGrow: 1}}>
                             HdM Zeiterfassung
                         </Typography>
-                    {person ? (<>
-                        <IconButton
-                            size="large"
-                            onClick={this.handleOpenUserMenu}
-                            color="inherit">
-                            <PersonIcon/>
-                        </IconButton>
-                        <Menu
-                            anchorEl={this.state.anchorEl}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={Boolean(this.state.anchorEl)}
-                            onClose={() => {
-                                this.handleCloseUserMenu()
-                            }}>
-                            <PersonDeleteDialog person={person} show={showPersonDeleteDialog}
-                                                onClose={this.persondeleteClosed}>
-                            </PersonDeleteDialog>
-                            <PersonEditDialog person={person} show={showPersonEditDialog}
-                                              onClose={this.personEditClosed}>
-                            </PersonEditDialog>
-                            <Typography variant='h6' component='div' align='center'>
-                                <Button onClick={this.handleEdit}>Profil bearbeiten</Button>
-                                <Button onClick={this.handleDelete}>Profil löschen</Button>
-                            </Typography>
-                        </Menu>
-                         </>) : null
-                    }
-                     </Toolbar>
+                        {person ? (<>
+                            <IconButton
+                                size="large"
+                                onClick={this.handleOpenUserMenu}
+                                color="inherit">
+                                <ManageAccountsIcon/>
+                            </IconButton>
+                            <Popover
+                                anchorEl={this.state.anchorEl}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'left',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={Boolean(this.state.anchorEl)}
+                                onClose={() => {
+                                    this.handleCloseUserMenu()
+                                }}>
+                                <PersonDeleteDialog person={person} show={showPersonDeleteDialog}
+                                                    onClose={this.persondeleteClosed}>
+                                </PersonDeleteDialog>
+                                <PersonEditDialog person={person} show={showPersonEditDialog}
+                                                  onClose={this.personEditClosed}>
+                                </PersonEditDialog>
+
+                                <Typography variant='h6' component='div' align='left'>
+                                    <IconButton onClick={this.handleEdit}>
+                                        <DriveFileRenameOutlineIcon/>
+                                        Profil bearbeiten
+                                    </IconButton>
+                                    <Divider sx={{p: 0}}/>
+                                    <IconButton onClick={this.handleDelete}>
+                                        <NoAccountsIcon/>
+                                        Profil löschen
+                                    </IconButton>
+                                </Typography>
+                            </Popover>
+                        </>) : null
+                        }
+                    </Toolbar>
                 </AppBar>
 
                 {person ? (
@@ -181,25 +216,8 @@ class Navigator extends Component {
                             <Divider sx={{p: 7.95, bgcolor: "#05353f"}}/>
                             <Typography variant="h3" component="div" sx={{flexGrow: 1, p: 1}}>
                                 <ListItem>
-                                    <ListItemButton component={RouterLink} to={`/persons`}>
-                                        <ListItemIcon>
-                                            <PersonSearchIcon/>
-                                        </ListItemIcon>
-                                        <ListItemText primary="Personen"/>
-                                    </ListItemButton>
-                                </ListItem>
-
-                                <ListItem>
-                                    <ListItemButton component={RouterLink} to={`/projectworks`}>
-                                        <ListItemIcon>
-                                            <AccessTimeIcon/>
-                                        </ListItemIcon>
-                                        <ListItemText primary="Projekte"/>
-                                    </ListItemButton>
-                                </ListItem>
-
-                                <ListItem>
-                                    <ListItemButton component={RouterLink} to={`/worktimeaccount`}>
+                                    <ListItemButton component={RouterLink}
+                                                    to={`/eventtransactionsandtimeintervaltransactions`}>
                                         <ListItemIcon>
                                             <AccountCircleIcon/>
                                         </ListItemIcon>
@@ -208,13 +226,33 @@ class Navigator extends Component {
                                 </ListItem>
 
                                 <ListItem>
-                                    <ListItemButton component={Link} to={`https://www.instagram.com/p/CdnFHnzj8UP/`}>
+                                    <ListItemButton component={RouterLink} to={`/projects`}>
                                         <ListItemIcon>
-                                            <SportsSoccerIcon/>
+                                            <AccessTimeIcon/>
                                         </ListItemIcon>
-                                        <ListItemText primary="Blöder Kerle"/>
+                                        <ListItemText primary="Projekte"/>
                                     </ListItemButton>
                                 </ListItem>
+
+                                <ListItem>
+                                    <ListItemButton component={RouterLink} to={`/projectanalysis`}>
+                                        <ListItemIcon>
+                                            <AssessmentRoundedIcon/>
+                                        </ListItemIcon>
+                                        <ListItemText primary="Projektanalyse"/>
+                                    </ListItemButton>
+                                </ListItem>
+
+                                <ListItem>
+                                    <EventManager disabled={disableStartButton} eventType={3} onClose={this.handleClose}>
+                                    </EventManager>
+                                </ListItem>
+
+                                <ListItem>
+                                    <EventManager disabled={disableEndButton} eventType={4} onClose={this.handleClose}>
+                                    </EventManager>
+                                </ListItem>
+                                <Departure></Departure>
                             </Typography>
                         </Drawer>
                     </>

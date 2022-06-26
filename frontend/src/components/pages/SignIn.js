@@ -11,6 +11,7 @@ class SignIn extends Component {
 	 */
 	handleSignInButtonClicked = () => {
 		this.props.onSignIn();
+
 	}
 /**	handleButton = () => {
          this.props.history.push('/welcome')
@@ -22,7 +23,7 @@ class SignIn extends Component {
 
 		return (
 			<div>
-				<Typography className={classes.root} align='center' variant='h6'>Wilkommen zur Arbeitszeiterfassung</Typography>
+				<Typography className={classes.root} align='center' variant='h6'>Willkommen zur Arbeitszeiterfassung</Typography>
 				<Typography className={classes.root} align='center'>Bitte melden Sie sich an</Typography>
 				<Grid container justifyContent='center'>
 					<Grid item>

@@ -1,8 +1,16 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import { HdMWebAppAPI } from '../../api';
+import {HdMWebAppAPI} from '../../api';
 
 /**
  * Anzeigen eines Löschdialogs, der fragt, ob ein Projekt gelöscht werden soll. Das ProjectBO, welches

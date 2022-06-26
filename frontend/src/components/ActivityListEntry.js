@@ -7,7 +7,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import ListItem from "@mui/material/ListItem";
 import ActivityDeleteDialog from "./dialogs/ActivityDeleteDialog";
 import ActivityForm from "./dialogs/ActivityForm";
-
+import {HdMWebAppAPI} from "../api";
+import {Link as RouterLink, withRouter} from "react-router-dom";
+import ListItemButton from "@mui/material/ListItemButton";
 
 /**
  * Rendert ein ActivityBO innerhalb eines auf- und zuklappbaren ActivityListEntry.
@@ -70,7 +72,7 @@ class ActivityListEntry extends Component {
 
     /** Rendert die Componente*/
     render() {
-    const { classes } = this.props;
+    const { project } = this.props;
     const { activity, showActivityForm, showActivityDeleteDialog } = this.state;
 
       // console.log(this.state);
@@ -78,11 +80,19 @@ class ActivityListEntry extends Component {
         <div>
            <ListItem>
              <Grid container alignItems='center'>
+                 <ListItemButton component={RouterLink} to={{
+                pathname: `/projectworks`,
+                owner: {
+                     activity: activity,
+                     project: project
+                    }
+                    }}>
                <Grid item xs={3} align={"center"}>
                  <Typography variant={"h5"} component={"div"}>
                      {activity.getActivityName()}
                  </Typography>
                </Grid>
+              </ListItemButton>
                <Grid item xs={3} align={"center"}>
                  <Typography variant={"h5"} component={"div"}>
                    {activity.getActivityCapacity()}
@@ -114,6 +124,7 @@ const styles = theme => ({
 });
 
 ActivityListEntry.propTypes = {
+  /** Das ActivityBO welches gerendert werden soll */
   classes: PropTypes.object.isRequired,
   /** Das ActivityBO welches gerendert werden soll */
   activity: PropTypes.object.isRequired,
@@ -123,4 +134,4 @@ ActivityListEntry.propTypes = {
   show: PropTypes.bool.isRequired
 }
 
-export default withStyles(styles) (ActivityListEntry);
+export default withRouter(ActivityListEntry);
