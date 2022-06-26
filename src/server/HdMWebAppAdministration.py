@@ -1108,19 +1108,19 @@ class HdMWebAppAdministration(object):
         event_type_last_event = last_event.get_event_type()
         if event_type == 1:
             if event_type_last_event == 2 or event_type_last_event == 4 or event_type == 6:
-                self.check_time_difference_events(event_type, person)
+                self.create_event(event_type, person)
         if event_type == 2:
             if event_type_last_event == 1:
-                self.check_time_difference_events(event_type, person)
+                self.create_event(event_type, person)
                 start = self.get_last_start_event_project_work(person)
                 pw = self.get_project_work_by_start_event(start)
                 self.add_end_event_to_project_work(pw, person)
         if event_type == 3:
             if event_type_last_event == 2 or event_type_last_event == 4 or event_type_last_event == 6:
-                self.check_time_difference_events(event_type, person)
+                self.create_event(event_type, person)
         if event_type == 4:
             if event_type_last_event == 3:
-                self.check_time_difference_events(event_type, person)
+                self.create_event(event_type, person)
                 self.create_break(person)
 
     def create_event_with_time_stamp(self, event_type, time_stamp, person=None):

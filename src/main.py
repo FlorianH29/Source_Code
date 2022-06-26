@@ -939,13 +939,6 @@ sub_thread.setDaemon(True)
 sub_thread.start()
 
 
-h = HdMWebAppAdministration()
-pro = h.get_project_by_id(6)
-print(h.get_persons_who_are_not_project_member(pro))
-pe = h.get_persons_who_are_not_project_member(pro)
-for p in pe:
-    print(h.get_person_by_id(p.get_id()))
-
 
 
 
