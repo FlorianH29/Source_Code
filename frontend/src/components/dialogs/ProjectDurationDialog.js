@@ -1,17 +1,6 @@
 import React, {Component} from 'react';
-import {EventBO, HdMWebAppAPI, ProjectBO} from "../../api";
-import {
-    Divider,
-    Grid,
-    Typography,
-    TextField,
-    Dialog,
-    Button,
-    DialogTitle,
-    IconButton,
-    DialogContent, DialogActions
-} from "@mui/material";
-import ProjectWorkListEntry from "../ProjectWorkListEntry";
+import {EventBO, HdMWebAppAPI} from "../../api";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField} from "@mui/material";
 import {DatePicker, LocalizationProvider} from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import ProjectCreateDialog from "./ProjectCreateDialog";
@@ -24,12 +13,11 @@ class ProjectDurationDialog extends Component {
     constructor(props) {
         super(props);
 
-        let stE= '', eE='';
-        if (props.endDate){
+        let stE = '', eE = '';
+        if (props.endDate) {
             stE = props.startDate.getTimeStamp();
             eE = props.endDate.getTimeStamp();
-        }
-        else {
+        } else {
             stE = new Date().getTime()
             eE = new Date().getTime()
 
@@ -45,17 +33,16 @@ class ProjectDurationDialog extends Component {
             showProjectCreateDialog: false
         };
         this.baseState = this.state;
-
     }
 
     /** Erzeugt ein Projekt-Laufzeit-Start als EventBO  */
     addProjectDurationStartEvent = () => {
         let newEventBO = new EventBO(this.state.startDate, this.state.eventType);
         HdMWebAppAPI.getAPI().addProjectDurationStartEvent(newEventBO).then(projectStart => {
-        //this.setState(this.baseState);
-        //this.props.onClose(projectStart);
-    }).catch (e =>
-        console.log(e));
+            //this.setState(this.baseState);
+            //this.props.onClose(projectStart);
+        }).catch(e =>
+            console.log(e));
     }
 
     /** Erzeugt ein Projekt-Laufzeit-Ende als EventBO  */
@@ -64,71 +51,67 @@ class ProjectDurationDialog extends Component {
         HdMWebAppAPI.getAPI().addProjectDurationEndEvent(newEventBO).then(projectEnd => {
             this.setState(this.baseState);
             //this.props.onClose(projectEnd);
-    }).catch (e =>
-        console.log(e));
+        }).catch(e =>
+            console.log(e));
     }
 
 
-    /** Im Fall von Bearbeiten, überschreibt es den Projektstart mit neuen Werten */
-   updateProjectDurationStartEvent = () => {
-       // das originale StartEvent klonen, für den Fall, dass der Backend Call fehlschlägt.
-       let updatedStartEvent = Object.assign(new EventBO(), this.props.startPoint);
-       // setzen der neuen Attribute aus dem Dialog
-       updatedStartEvent.setTimeStamp(this.state.startDate);
-       updatedStartEvent.setEventType(7);
-       HdMWebAppAPI.getAPI().updateProjectDurationStart(updatedStartEvent).then(startPoint => {
-           // den neuen state als baseState speichern
-           this.baseState.startDate = this.state.startDate;
+    /** Im Fall von Bearbeiten, überschreibt es den Projekt-Start mit neuen Werten */
+    updateProjectDurationStartEvent = () => {
+        // das originale StartEvent klonen, für den Fall, dass der Backend Call fehlschlägt.
+        let updatedStartEvent = Object.assign(new EventBO(), this.props.startPoint);
+        // setzen der neuen Attribute aus dem Dialog
+        updatedStartEvent.setTimeStamp(this.state.startDate);
+        updatedStartEvent.setEventType(7);
+        HdMWebAppAPI.getAPI().updateProjectDurationStart(updatedStartEvent).then(startPoint => {
+            // den neuen state als baseState speichern
+            this.baseState.startDate = this.state.startDate;
 
-           console.log(updatedStartEvent)
-       })
-   }
+            console.log(updatedStartEvent)
+        })
+    }
 
-    /** Im Fall von Bearbeiten, überschreibt es das ProjektEnde mit neuen Werten */
-   updateProjectDurationEndEvent = () => {
-       // das originale EndEvent klonen, für den Fall, dass der Backend Call fehlschlägt.
-       let updatedEndEvent = Object.assign(new EventBO(), this.props.endPoint);
-       // setzen der neuen Attribute aus dem Dialog
-       updatedEndEvent.setTimeStamp(this.state.endDate);
-       updatedEndEvent.setEventType(8);
-       HdMWebAppAPI.getAPI().updateProjectDurationEnd(updatedEndEvent).then(project => {
-           // den neuen state als baseState speichern
-           this.baseState.startDate = this.state.endDate;
-           this.props.onClose(updatedEndEvent);
-       })
-   }
-
+    /** Im Fall von Bearbeiten, überschreibt es das Projekt-Ende mit neuen Werten */
+    updateProjectDurationEndEvent = () => {
+        // das originale EndEvent klonen, für den Fall, dass der Backend Call fehlschlägt.
+        let updatedEndEvent = Object.assign(new EventBO(), this.props.endPoint);
+        // setzen der neuen Attribute aus dem Dialog
+        updatedEndEvent.setTimeStamp(this.state.endDate);
+        updatedEndEvent.setEventType(8);
+        HdMWebAppAPI.getAPI().updateProjectDurationEnd(updatedEndEvent).then(project => {
+            // den neuen state als baseState speichern
+            this.baseState.startDate = this.state.endDate;
+            this.props.onClose(updatedEndEvent);
+        })
+    }
 
     /** Disabled den "Projektstart anlegen" Button, sobald ein ProjektStart ausgewählt wurde und
      * der Button geclickt wird und ruft die Methode addProjectDurationStart auf
      */
     disableStartHandler = () => {
         this.setState({
-                eventType: 7,
-                disableStartButton: true,
-                disableEndButton: false
-            });
+            eventType: 7,
+            disableStartButton: true,
+            disableEndButton: false
+        });
         this.addProjectDurationStartEvent();
     }
 
     disableStartHandlerForUpdate = () => {
         this.setState({
-                disableStartButton: true,
-                disableEndButton: false
-            });
+            disableStartButton: true,
+            disableEndButton: false
+        });
         this.updateProjectDurationStartEvent()
-       // console.log(this.state)
-
     }
 
     handleFinishedButtonClickedForUpdate = () => {
         this.setState({
-                showProjectCreateDialog: true
-            });
+            showProjectCreateDialog: true
+        });
         this.updateProjectDurationEndEvent()
         this.setState(this.baseState);
         this.props.onClose(null);
-        //this.props.openProjectDurationDialog();
     }
 
     //behandelt das Click Event, dass bei "Abbrechen" ausgelöst wird
@@ -137,27 +120,33 @@ class ProjectDurationDialog extends Component {
         this.setState(this.baseState);
         this.props.onClose(null);
     }
-    
 
-   handleFinishedButtonClicked = () => {
+    handleFinishedButtonClicked = () => {
         this.setState({
-                showProjectCreateDialog: true
-            });
+            showProjectCreateDialog: true
+        });
         this.addProjectDurationEndEvent()
         this.setState(this.baseState);
         this.props.onClose(null);
         this.props.openProjectDurationDialog();
     }
 
-
     render() {
-        const {startDate, endDate, eventType, disableStartButton, disableEndButton, handleMoveOnButtonClicked, handleFinishedButtonClicked} = this.state;
+        const {
+            startDate,
+            endDate,
+            eventType,
+            disableStartButton,
+            disableEndButton,
+            handleMoveOnButtonClicked,
+            handleFinishedButtonClicked
+        } = this.state;
         const {startPoint, endPoint, show, showProjectCreateDialog} = this.props
 
         let header = '';
         let title = '';
 
-        if (disableStartButton === false ) {
+        if (disableStartButton === false) {
             /** Beim öffnen des Dialogs, weist der Titel auf den Projektstart hin */
             title = 'Wann soll das Projekt beginnen?'
             header = 'Wähle  ein Start-Datum aus und klicke auf "Weiter"...'
@@ -167,78 +156,71 @@ class ProjectDurationDialog extends Component {
             header = 'Wähle ein End-Datum aus und klicke auf "Fertig"... '
         }
 
-        //console.log(endDate)
         return (
             show ?
-            <div>
-                <Dialog open={true} onClose={this.handleClose} maxWidth={"xl"}>
-                   <DialogTitle id='form-dialog-title'>
-                       {title}
-                       <IconButton onClick={this.handleClose}>
-                           <CloseIcon/>
-                       </IconButton>
-                   </DialogTitle>
-                   <DialogContent>
-                       <DialogContentText>
-                          {header}
-                      </DialogContentText>
-                <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
-                    <LocalizationProvider  dateAdapter={AdapterDateFns}>
-                        <DatePicker
-                            disabled={disableStartButton}
-                            label={"Start Date"}
-                            value={startDate}
-                            onChange={(date) => {
-                                this.setState({ eventType: 7, startDate: date.getTime()});
-                                //this.addProjectDurationStartEvent()
-                            }}
-                            renderInput={(params) => <TextField {...params} />}
-                        />
-                    </LocalizationProvider>
-
-
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
-                            disabled={disableEndButton}
-                            label={"End Date"}
-                            value={endDate}
-                            onChange={(date) => {
-                                this.setState({ eventType: 8, endDate: date.getTime()});
-                                //console.log(date.getTime())
-                                //this.addProjectDurationEndEvent()
-                            }}
-                            renderInput={(params) => <TextField {...params} />}
-                        />
-                        </LocalizationProvider>
-
-                        </div>
-                       </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleClose} color='secondary'>
-                            Abbrechen
-                        </Button>
-                        {
-                            startPoint ?
-                                <>
-                                <Button color={"primary"} disabled={disableStartButton}
-                                        onClick={this.disableStartHandlerForUpdate}>
-                                    Weiter
-                                </Button>
-
-
-                                <Button color={"primary"} disabled={disableEndButton}
-                                        onClick={this.handleFinishedButtonClickedForUpdate}>
-                                    Fertig
-                                </Button> </>
-                            : <>  <Button color={"primary"} disabled={disableStartButton} onClick={this.disableStartHandler}>
-                            Weiter
+                <div>
+                    <Dialog open={true} onClose={this.handleClose} maxWidth={"xl"}>
+                        <DialogTitle id='form-dialog-title'>
+                            {title}
+                            <IconButton onClick={this.handleClose}>
+                                <CloseIcon/>
+                            </IconButton>
+                        </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                {header}
+                            </DialogContentText>
+                            <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
+                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                    <DatePicker
+                                        disabled={disableStartButton}
+                                        label={"Start Date"}
+                                        value={startDate}
+                                        onChange={(date) => {
+                                            this.setState({eventType: 7, startDate: date.getTime()});
+                                        }}
+                                        renderInput={(params) => <TextField {...params} />}
+                                    />
+                                </LocalizationProvider>
+                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                    <DatePicker
+                                        disabled={disableEndButton}
+                                        label={"End Date"}
+                                        value={endDate}
+                                        onChange={(date) => {
+                                            this.setState({eventType: 8, endDate: date.getTime()});
+                                        }}
+                                        renderInput={(params) => <TextField {...params} />}
+                                    />
+                                </LocalizationProvider>
+                            </div>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.handleClose} color='secondary'>
+                                Abbrechen
                             </Button>
-                            <Button color={"primary"} disabled={disableEndButton} onClick={this.handleFinishedButtonClicked}>
-                            Fertig
-                            </Button>
-                            </>
-                        }
-                    </DialogActions>
+                            {
+                                startPoint ?
+                                    <>
+                                        <Button color={"primary"} disabled={disableStartButton}
+                                                onClick={this.disableStartHandlerForUpdate}>
+                                            Weiter
+                                        </Button>
+                                        <Button color={"primary"} disabled={disableEndButton}
+                                                onClick={this.handleFinishedButtonClickedForUpdate}>
+                                            Fertig
+                                        </Button> </>
+                                    : <><Button color={"primary"} disabled={disableStartButton}
+                                                  onClick={this.disableStartHandler}>
+                                            Weiter
+                                         </Button>
+                                        <Button color={"primary"} disabled={disableEndButton}
+                                                onClick={this.handleFinishedButtonClicked}>
+                                            Fertig
+                                        </Button>
+                                    </>
+                            }
+                        </DialogActions>
                     </Dialog>
                 </div>
                 : null
