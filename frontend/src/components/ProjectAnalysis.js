@@ -85,7 +85,7 @@ class ProjectAnalysis extends Component {
                     <Divider/>
                     {projects.map(pro =>
                         <ProjectAnalysisProjectEntry key={pro.getID()} project={pro}
-                                                     startDate={startDate} endDate={endDate}/>)})
+                                                     startDate={startDate} endDate={endDate}/>)}
                 </Box>) : (
                     <Box m={25} pl={15}>
                     <Typography variant={"h5"} >

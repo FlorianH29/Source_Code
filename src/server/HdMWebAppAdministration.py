@@ -167,7 +167,7 @@ class HdMWebAppAdministration(object):
 
         with DepartureMapper() as mapper:
             return mapper.insert(departure), self.create_event_transaction(None, None, departure), \
-                   self.create_time_interval_for_arrive_and_departure(person), self.calculate_work_time(person)
+                   self.create_time_interval_for_arrive_and_departure(person)  # self.calculate_work_time(person)
 
     def delete_departure_event(self, departure):
         """Das gegebene End-Ereignis aus unserem System löschen."""
@@ -223,6 +223,7 @@ class HdMWebAppAdministration(object):
             return result
 
     def get_arrive_and_departure_of_person_between_time_stamps(self, person, start_time, end_time):
+        # kann eventuell noch raus, war ursprünglich für worktimeaccount vorgesehen
         """Alle Kommen und Gehen einer Person in einem bestimmten Zeitraum ausgeben"""
         event_list = []
         time_stamp = None
@@ -782,6 +783,7 @@ class HdMWebAppAdministration(object):
             return mapper.update(project_work)
 
     def calculate_sum_of_project_work_by_person(self, person):
+        # kann eventuell noch raus, wird nicht verwendet
         time_periods = []
         projects = self.get_project_by_person_id(person.get_id())
         for p in projects:
@@ -1098,7 +1100,7 @@ class HdMWebAppAdministration(object):
             else:
                 return None
         else:
-            return self.create_event_and_check_type(event_type, person)  # wenn es letztes Event gibt, dieses checken
+            return self.check_time_difference_events(event_type, person)  # wenn es letztes Event gibt, dieses checken
 
     def create_event_and_check_type(self, event_type, person):
         """Überprüfen, ob das Event angelegt werden darf."""
@@ -1106,19 +1108,19 @@ class HdMWebAppAdministration(object):
         event_type_last_event = last_event.get_event_type()
         if event_type == 1:
             if event_type_last_event == 2 or event_type_last_event == 4 or event_type == 6:
-                self.create_event(event_type, person)
+                self.check_time_difference_events(event_type, person)
         if event_type == 2:
             if event_type_last_event == 1:
-                self.create_event(event_type, person)
+                self.check_time_difference_events(event_type, person)
                 start = self.get_last_start_event_project_work(person)
                 pw = self.get_project_work_by_start_event(start)
                 self.add_end_event_to_project_work(pw, person)
         if event_type == 3:
             if event_type_last_event == 2 or event_type_last_event == 4 or event_type_last_event == 6:
-                self.create_event(event_type, person)
+                self.check_time_difference_events(event_type, person)
         if event_type == 4:
             if event_type_last_event == 3:
-                self.create_event(event_type, person)
+                self.check_time_difference_events(event_type, person)
                 self.create_break(person)
 
     def create_event_with_time_stamp(self, event_type, time_stamp, person=None):
