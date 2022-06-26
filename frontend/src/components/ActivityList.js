@@ -1,26 +1,11 @@
 import React, {Component} from 'react';
 import {ActivityBO, HdMWebAppAPI} from "../api";
-import {
-    withStyles,
-    Button,
-    TextField,
-    InputAdornment,
-    IconButton,
-    Grid,
-    Typography,
-    Divider,
-    Box,
-    DialogContent,
-    DialogActions,
-    Dialog, Link, Card
-} from '@mui/material';
+import {withStyles, Button, TextField, InputAdornment, IconButton, Grid, Typography, Divider, Box, DialogContent,
+    DialogActions, Dialog, Link, Card} from '@mui/material';
 import AddIcon from '@material-ui/icons/Add';
 import ActivityForm from "./dialogs/ActivityForm";
-import PropTypes from "prop-types";
 import ActivityListEntry from "./ActivityListEntry";
 import ProjectMemberList from "./ProjectMemberList";
-import {spacing} from '@mui/system'
-import ProjectMemberListEntry from "./ProjectMemberListEntry";
 import {Link as RouterLink, Redirect, withRouter} from "react-router-dom";
 import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRounded";
 
@@ -183,7 +168,7 @@ class ActivityList extends Component {
                             }
                         </Grid>
                     </Grid>
-                <ActivityForm onClose={this.activityFormClosed} show={showActivityForm}></ActivityForm>
+                <ActivityForm onClose={this.activityFormClosed} show={showActivityForm} project={pro.project}></ActivityForm>
                         </Card>
                 </Box>
                 <ProjectMemberList project={pro.project} show={ProjectMemberList}></ProjectMemberList>
@@ -192,19 +177,5 @@ class ActivityList extends Component {
     }
 }
 
-
-/*ActivityList.propTypes = {
-    /** @ignore *//*
-    classes: PropTypes.object.isRequired,
-    /** The CustomerBO of this AccountList *//*
-    project: PropTypes.object.isRequired,
-    /** If true, accounts are (re)loaded *//*
-    show: PropTypes.bool.isRequired,
-}*/
-
-
-ActivityForm.propTypes = {
-    onClose: PropTypes.func.isRequired,
-}
 
 export default withRouter(ActivityList);

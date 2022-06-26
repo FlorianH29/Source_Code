@@ -6,7 +6,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import {HdMWebAppAPI, ActivityBO } from "../../api";
 
 /**
- * Zeigt einen Dialog, der wenn es eine Aktivität gibt  das editieren dieser Aktivität ermöglicht
+ * Zeigt einen Dialog, der wenn es eine Aktivität gibt, das editieren dieser Aktivität ermöglicht
  * und wenn eien Aktivität angelegt werden soll dies ermöglicht, dann sind die Textfelder leer.
  * Es werden im Backend die Methoden update und add aufgerufen.
  * Danach wird die OnClose prop Funktion mit dem neuen oder editiertem ActivityBO als
@@ -18,18 +18,21 @@ class ActivityForm extends Component {
     constructor(props) {
         super(props);
 
-        let an = '', cap = '', pro = 1;
+        let an = '', cap = '';
         if (props.activity) {
             an = props.activity.getActivityName();
             cap = props.activity.getActivityCapacity();
-            pro = 1
         }
 
+        let pro = 0;
+        if (props.project) {
+            pro = props.project.getID();
+        }
 
         this.state = {
             activityName: an,
             capacity: cap,
-            affiliatedProject: 1,
+            affiliatedProject: pro,
             activityNameValidationFailed: false,
             capacityValidationFailed: false
         };

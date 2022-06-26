@@ -38,7 +38,7 @@ class ActivityListEntry extends Component {
     }
 
       /** Behandelt das onClose Event von ActivityForm */
-     activityFormClosed = (activity) => {
+    activityFormClosed = (activity) => {
     // activity ist nicht null und wurde dementsprechend geändert
     if (activity) {
       this.setState({

@@ -63,7 +63,7 @@ export default class HdMWebAppAPI {
   #getActivitiesForProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}/activities`;
   #updateActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
   #deleteActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
-  #addActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/project/${id}/activities`;
+  #addActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities`;
   #getActivityWorkTimeURL = (id, startDate, endDate) =>
       `${this.#hdmwebappServerBaseURL}/activities/${id}/${startDate}/${endDate}/work_time`;
 
