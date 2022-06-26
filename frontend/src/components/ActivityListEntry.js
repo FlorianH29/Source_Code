@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Typography, Accordion, AccordionSummary, AccordionDetails, Grid, Divider, ListItemSecondaryAction } from '@material-ui/core';
-import { Button, ButtonGroup } from '@material-ui/core';
+import {Button, Divider, Grid, Typography} from '@material-ui/core';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import EditIcon from '@mui/icons-material/Edit';
 import ListItem from "@mui/material/ListItem";
 import ActivityDeleteDialog from "./dialogs/ActivityForm";
 import ActivityForm from "./dialogs/ActivityForm";
-import {HdMWebAppAPI} from "../api";
 import {Link as RouterLink, withRouter} from "react-router-dom";
 import ListItemButton from "@mui/material/ListItemButton";
 

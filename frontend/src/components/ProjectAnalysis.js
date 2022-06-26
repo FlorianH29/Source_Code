@@ -41,17 +41,7 @@ class ProjectAnalysis extends Component {
 
         return (
             <div>
-                {projects.length != 0 ? (
-                    <Box m={18} pl={8}>
-                        <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
-                            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                <DatePicker
-                                    label={"Start Date"}
-                                    value={startDate}
-                                    onChange={(date) => {
-                                        this.setState({startDate: date.getTime()});
-                { projects.length != 0 ?
-                <>
+                { projects.length != 0 ? (
                 <Box m={18} pl={8}>
                     <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -61,23 +51,23 @@ class ProjectAnalysis extends Component {
                                 onChange={(date) => {
                                     this.setState({startDate: date.getTime()});
 
-                                    }}
-                                    renderInput={(params) => <TextField {...params} />}
-                                />
-                            </LocalizationProvider>
-                            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                <DatePicker
-                                    label={"End Date"}
-                                    value={endDate}
-                                    onChange={(date) => {
-                                        this.setState({endDate: date.getTime()});
+                                }}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </LocalizationProvider>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DatePicker
+                                label={"End Date"}
+                                value={endDate}
+                                onChange={(date) => {
+                                    this.setState({endDate: date.getTime()});
 
-                                    }}
-                                    renderInput={(params) => <TextField {...params} />}
-                                />
-                            </LocalizationProvider>
-                        </div>
-                        <Grid container spacing={2}>
+                                }}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </LocalizationProvider>
+                    </div>
+                    <Grid container spacing={2}>
 
                         <Grid item xs={4} align={"center"}>
                             <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}>
@@ -95,14 +85,13 @@ class ProjectAnalysis extends Component {
                     <Divider/>
                     {projects.map(pro =>
                         <ProjectAnalysisProjectEntry key={pro.getID()} project={pro}
-                                                     startDate={startDate} endDate={endDate}/>)}
-                </Box>
-                </> :
-                <Box m={25} pl={15}>
+                                                     startDate={startDate} endDate={endDate}/>)})
+                </Box>) : (
+                    <Box m={25} pl={15}>
                     <Typography variant={"h5"} >
-                        Info: Da Sie kein Projekt leiten, können Sie keine Projekte analysieren.
+                        Info: Da Sie in kein Projekt leiten, können Sie keine Projekte analysieren.
                     </Typography>
-                </Box>}
+                    </Box>)}
             </div>
         );
     }
