@@ -1,10 +1,10 @@
 import Event from './EventBO';
 
-//Stellt ein Event im System dar
+/**Stellt ein Event im System dar*/
 export default class ArriveBO extends Event {
 
   /**
-   * Konstruktor, erstelt ein Arrive-objekt mit
+   * Konstruktor, erstellt ein Arrive-objekt mit
    *
    * @param {Number} anEventType - der Typ dieses EventBO.
    */

@@ -5,7 +5,6 @@ import PersonList from './components/PersonList';
 import Navigator from './components/layout/Navigator';
 import ProjectList from "./components/ProjectList";
 import ProjectWorkList from "./components/ProjectWorkList";
-import WorktimeAccount from "./components/WorktimeAccount";
 import NotFound from "./components/pages/NotFound";
 import SignIn from './components/pages/SignIn';
 import firebase from 'firebase/compat/app';
@@ -162,9 +161,6 @@ class App extends React.Component {
                                     </Route>
                                     <Route exact path='/projectworks'>
                                         <ProjectWorkList/>
-                                    </Route>
-                                    <Route exact path='/worktimeaccount'>
-                                        <WorktimeAccount/>
                                     </Route>
                                     <Route exact path='/activities'>
                                         <ActivityList/>

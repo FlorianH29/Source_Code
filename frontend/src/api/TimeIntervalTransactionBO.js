@@ -1,6 +1,6 @@
 import BusinessObject from './BusinessObject';
 
-//Stellt eine TimeIntervalTransaction im System dar
+/** Stellt eine TimeIntervalTransaction im System dar */
 export default class TimeIntervalTransactionBO extends BusinessObject {
 
     /**
