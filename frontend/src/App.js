@@ -97,7 +97,7 @@ class App extends React.Component {
 
     handleCloseArriveDialog = () => {
       this.setState({
-          arrived: false
+          arrived: this.getDepartureBiggerArrive
       })
     }
 
