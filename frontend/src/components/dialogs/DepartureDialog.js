@@ -38,9 +38,11 @@ class DepartureDialog extends Component {
         this.setState({
             openDepartureDialog: true,
         });
-        // Erstellen eines Gehen-Ereignisses
+        // Erstellen eines Gehen-Ereignis
         let newDepartureEvent = new DepartureBO()
         HdMWebAppAPI.getAPI().addDeparture().then(departure => {
+            // Backend call successful
+            // reinit the dialogs state for a new empty customer
             this.setState(this.baseState);
             this.props.onClose(departure); // call the parent with the departure object from backend
         }).catch(e =>
@@ -57,40 +59,43 @@ class DepartureDialog extends Component {
     }
 
 
-    /** Rendert die Komponente */
+    /** Renders the component */
     render() {
-        const {person, show} = this.props;
+        const {show} = this.props;
 
 
-    return (
-      show ?
-        <Dialog open={show} onClose={this.handleClose}>
-          <DialogTitle>Gehen und Abmelden
-            <IconButton onClick={this.handleClose} color={'primary'}>
-              <CloseIcon />
-            </IconButton>
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-                Wollen Sie wirklich gehen und sich ausloggen?
-            </DialogContentText>
-                <DialogContentText>
-                    Wenn Sie sich in einer laufenden Projektarbeit oder Pause befinden, wird diese für Sie beendet.
-                </DialogContentText>
-          </DialogContent>
+        return (
+            show ?
+                <Dialog open={show} onClose={this.handleClose}>
+                    <DialogTitle>Gehen und Abmelden
+                        <IconButton onClick={this.handleClose} color={'primary'}>
+                            <CloseIcon/>
+                        </IconButton>
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Wollen Sie wirklich gehen und sich ausloggen?
+                        </DialogContentText>
+                        <DialogContentText>
+                            Wenn Sie sich in einer laufenden Projektarbeit oder Pause befinden, wird diese für Sie
+                            beendet.
+                        </DialogContentText>
+                    </DialogContent>
 
-          <DialogActions>
-            <Button onClick={this.handleClose} color='secondary'>
-              Abbrechen
-            </Button>
-            <Button variant='contained' onClick={() => {this.addNewDepartureEvent()}} color='primary'>
-              Gehen & Abmelden
-            </Button>
-          </DialogActions>
-        </Dialog>
-        : null
-    );
-  }
+                    <DialogActions>
+                        <Button onClick={this.handleClose} color='secondary'>
+                            Abbrechen
+                        </Button>
+                        <Button variant='contained' onClick={() => {
+                            this.addNewDepartureEvent()
+                        }} color='primary'>
+                            Gehen & Abmelden
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                : null
+        );
+    }
 }
 
 /** PropTypes */

@@ -14,7 +14,6 @@ import firebaseConfig from './firebaseconfig';
 import {Person} from "@mui/icons-material";
 import TimeIntervalTransactionList from "./components/TimeIntervalTransactionList";
 import SignInHeader from "./components/layout/SignInHeader";
-import {Dialog} from "@mui/material";
 import DepartureDialog from "./components/dialogs/DepartureDialog";
 import {Dialog, Grid} from "@mui/material";
 import {DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
