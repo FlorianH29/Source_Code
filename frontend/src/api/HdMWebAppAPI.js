@@ -35,7 +35,7 @@ export default class HdMWebAppAPI {
     #updateEndEventURL = (id) => `${this.#hdmwebappServerBaseURL}/projectduration/${id}/endevent`;
 
     /** Projektarbeit bezogen */
-    #getProjectWorksforActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
+    #getProjectWorksForActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
     #updateProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
     #deleteProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
     #updateProjectWorkByNameURL = (id, name) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}/${name}`;
@@ -52,7 +52,7 @@ export default class HdMWebAppAPI {
     #getActivitiesForProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}/activities`;
     #updateActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
     #deleteActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
-    #addActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/project/${id}/activities`;
+    #addActivityURL = () => `${this.#hdmwebappServerBaseURL}/activities`;
     #getActivityWorkTimeURL = (id, startDate, endDate) =>
         `${this.#hdmwebappServerBaseURL}/activities/${id}/${startDate}/${endDate}/work_time`;
 

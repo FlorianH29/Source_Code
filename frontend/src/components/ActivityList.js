@@ -127,7 +127,7 @@ class ActivityList extends Component {
     }
 
     render() {
-        const {activities, showActivityForm, expandedProjectID, expandedProjectName } = this.state;
+        const {activities, showActivityForm, expandedProjectID, expandedProjectName, disableButton} = this.state;
         //console.log(this.props.location.pro)
 
         let pro = null;
