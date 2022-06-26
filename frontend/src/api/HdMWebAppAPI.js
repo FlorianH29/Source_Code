@@ -38,8 +38,8 @@ export default class HdMWebAppAPI {
   #addProjectWorkURL = () => `${this.#hdmwebappServerBaseURL}/projectworks`;
   //Projectbeteiligte bezogen
   #getProjectMembersURL = (id) =>  `${this.#hdmwebappServerBaseURL}/projects/${id}/projectmembers`;
-  #deleteProjectMemberURL = (id) => `${this.#hdmwebappServerBaseURL}/projectmembers/${id}`;
-  #addProjectMemberURL = () => `${this.#hdmwebappServerBaseURL}/projectmembers`;
+  #deleteProjectMemberURL = (id, pid) => `${this.#hdmwebappServerBaseURL}/projectmembers/${id}/${pid}`;
+  #addProjectMemberURL = (id, pid) => `${this.#hdmwebappServerBaseURL}/projectmembers/${id}/${pid}`;
   #getNotProjectMembersURL = (id) =>  `${this.#hdmwebappServerBaseURL}/projects/${id}/persons`;
 
   //Worktimeaccount bezogen
@@ -427,8 +427,8 @@ export default class HdMWebAppAPI {
   }
 
 
-  deleteProjectMember(projectmemberID) {
-    return this.#fetchAdvanced(this.#deleteProjectMemberURL(projectmemberID), {
+  deleteProjectMember(projectmemberID, projectID) {
+    return this.#fetchAdvanced(this.#deleteProjectMemberURL(projectmemberID, projectID), {
       method: 'DELETE'
     }).then((responseJSON) => {
       // We always get an array of CustomerBOs.fromJSON
@@ -439,23 +439,25 @@ export default class HdMWebAppAPI {
     })
   }
 
-  addProjectMember(personBO) {
-    return this.#fetchAdvanced(this.#addProjectMemberURL(), {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json, text/plain',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(personBO)
-    }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON, but only need one object
-      let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
-      console.info(responsePersonBO);
-      return new Promise(function (resolve) {
-        resolve(responsePersonBO);
+  addPersonAsProjectMember(personBOs, projectID) {
+      personBOs.forEach(element => {
+          return this.#fetchAdvanced(this.#addProjectMemberURL(element.getID(), projectID), {
+              method: 'POST',
+              headers: {
+                  'Accept': 'application/json, text/plain',
+                  'Content-type': 'application/json',
+              },
+              body: JSON.stringify(element.getID(), projectID)
+          }).then((responseJSON) => {
+              // We always get an array of CustomerBOs.fromJSON, but only need one object
+              let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
+              console.info(responsePersonBO);
+              return new Promise(function (resolve) {
+                  resolve(responsePersonBO);
+              })
+          }).catch(e =>
+              console.log(e))
       })
-    }).catch(e =>
-      console.log(e))
   }
 
 }

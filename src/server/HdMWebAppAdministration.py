@@ -720,6 +720,10 @@ class HdMWebAppAdministration(object):
         with ProjectMemberMapper() as mapper:
             return mapper.delete(project_member)
 
+    def delete_project_member_by_id(self, person, project):
+        with ProjectMemberMapper() as mapper:
+            return mapper.delete_by_ids(person, project)
+
     def save_project_member(self, project_member):
         # Vor dem Speichern wird der last_edit zu aktuellen Zeitpunkt gesetzt
         project_member.set_last_edit(datetime.now())

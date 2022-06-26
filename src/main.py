@@ -519,33 +519,32 @@ class ProjectMemberOperations(Resource):
 @hdmwebapp.route('/projectmembers/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID des Projectmitarbeiters')
+@hdmwebapp.param('pid', 'Die ID des Projekts')
 class ProjectWorkOperations(Resource):
     @hdmwebapp.marshal_list_with(projectmember)
     @secured
-    def delete(self, id):
+    def delete(self, id, pid):
         """
         Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
         """
         hwa = HdMWebAppAdministration()
-        pm = hwa.get_project_member_by_person_id(id)
-        hwa.delete_project_member(pm)
+        pe = hwa.get_person_by_id(id)
+        po = hwa.get_project_by_id(pid)
+
+        hwa.delete_project_member_by_id(pe, po)
         return '', 200
 
-
-@hdmwebapp.route('/projectmembers')
-@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class ProjectMembersOperations(Resource):
-    @hdmwebapp.marshal_with(project, code=201)
     @secured
-    def post(self):
+    def post(self, id, pid):
         """Erstellen ."""
 
         hwa = HdMWebAppAdministration()
-        pro = hwa.get_project_by_id(id)
+        pe = hwa.get_person_by_id(id)
+        po = hwa.get_project_by_id(pid)
 
-        if pro is not None:
-            noprojectmembers_list = hwa.get_persons_who_are_not_project_member(pro)
-            return noprojectmembers_list
+        if pe and po is not None:
+            p = hwa.create_project_member_for_project(po, pe)
+            return p, 500
         else:
             return "Persons not found", 500
 

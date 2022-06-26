@@ -22,7 +22,7 @@ class ProjectMemberDeleteDialog extends Component {
     }
 
     deleteProjectMember = () => {
-    HdMWebAppAPI.getAPI().deleteProjectMember(this.props.projectMember.getID()).then(projectMember => {
+    HdMWebAppAPI.getAPI().deleteProjectMember(this.props.projectMember.getID(), this.props.project.getID()).then(projectMember => {
       this.setState({
         deletingInProgress: false,              // disable loading indicator
         deletingError: null                     // no error message

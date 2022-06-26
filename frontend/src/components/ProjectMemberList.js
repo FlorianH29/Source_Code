@@ -2,15 +2,12 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Grid, Typography,} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import ClearIcon from '@material-ui/icons/Clear'
-import {withRouter} from 'react-router-dom';
-import {PersonBO, HdMWebAppAPI} from '../api';
-import CloseIcon from "@material-ui/icons/Close";
+import {HdMWebAppAPI} from '../api';
 import {Box, Button, Divider} from "@mui/material";
 import ProjectMemberListEntry from "./ProjectMemberListEntry";
 import Card from "@mui/material/Card";
 import ProjectMemberForm from "./dialogs/ProjectMemberForm";
-import ActivityForm from "./dialogs/ActivityForm";
+
 
 
 class ProjectMemberList extends Component {
@@ -103,7 +100,7 @@ class ProjectMemberList extends Component {
                                     </Grid>
                                     <Divider/>
                                     {projectMembers.map(pm =>
-                                        <ProjectMemberListEntry key={pm.getID()} projectMember={pm}
+                                        <ProjectMemberListEntry key={pm.getID()} projectMember={pm} project={this.props.project}
                                                                 onActivityDeleted={this.projectMemberDeleted}/>)
                                     }
                                 </Grid>

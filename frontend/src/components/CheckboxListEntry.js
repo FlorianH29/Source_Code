@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import ListItem from "@mui/material/ListItem";
-import {Typography} from "@mui/material";
+import Checkbox from '@mui/material/Checkbox';
 
 
 class CheckboxListEntry extends Component {
@@ -11,18 +11,35 @@ class CheckboxListEntry extends Component {
 
         // den State initialisieren
         this.state = {
-            potentialProjectMember: props.potentialProjectMember
+            potentialProjectMember: props.potentialProjectMember,
+            checked: false
         };
     }
 
+    handleCheckboxChanged = (value) => {
+        this.setState({checked: value.target.checked})
+        console.log(value.target.checked)
+            if (value.target.checked) {
+                this.props.addPerson (this.state.potentialProjectMember)
+            }
+                else {
+                    this.props.removePerson (this.state.potentialProjectMember)
+            }
+    }
+
     render() {
-        const {potentialProjectMember} = this.state;
+        const {potentialProjectMember, checked} = this.state;
         console.log(this.state)
 
         return (
             <div>
                 <ListItem>
-                        {potentialProjectMember.firstname} {potentialProjectMember.lastname}
+                    <Checkbox
+                        edge="start"
+                        hecked={checked}
+                        onChange={this.handleCheckboxChanged}
+                    />
+                        {potentialProjectMember.getFirstName()} {potentialProjectMember.getLastName()}
                 </ListItem>
             </div>
         );

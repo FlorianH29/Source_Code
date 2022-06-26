@@ -58,7 +58,7 @@ class ProjectMemberListEntry extends Component {
                     </Grid>
                 </ListItem>
                 <Divider/>
-                <ProjectMemberDeleteDialog show={showProjectMemberDeleteDialog} projectMember={projectMember}
+                <ProjectMemberDeleteDialog show={showProjectMemberDeleteDialog} projectMember={projectMember} project = {this.props.project}
                                       onClose={this.deleteProjectMemberDialogClosed}/>
             </div>
         );

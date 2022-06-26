@@ -202,3 +202,16 @@ class ProjectMemberMapper (Mapper):
 
         self._cnx.commit()
         cursor.close()
+
+    def delete_by_ids(self, person, project):
+        """Setzen der deleted flag auf 1, sodass der Project Member Eintrag nicht mehr ausgegeben wird.
+
+                :param projectmember das aus der DB zu löschende "Objekt"
+                """
+        cursor = self._cnx.cursor()
+
+        command = "UPDATE projectmembers SET deleted=1 WHERE person_id={} AND project_id={}".format(person.get_id(), project.get_id())
+        cursor.execute(command)
+
+        self._cnx.commit()
+        cursor.close()

@@ -111,7 +111,7 @@ class ActivityList extends Component {
                         </Grid>
                     </Card>
                 </Box>
-                    <ProjectMemberList> show={ProjectMemberList} </ProjectMemberList>
+                    <ProjectMemberList> show={ProjectMemberList} project = {this.props.project} </ProjectMemberList>
             </div>
         )
     }

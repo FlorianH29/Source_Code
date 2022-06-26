@@ -1,14 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {HdMWebAppAPI} from "../../api";
-import InputLabel from "@mui/material/InputLabel";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import MenuItem from "@mui/material/MenuItem";
-import Checkbox from "@mui/material/Checkbox";
-import ListItemText from "@mui/material/ListItemText";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import {ActivityBO, HdMWebAppAPI} from "../../api";
 import CheckboxListEntry from "../CheckboxListEntry";
+import {List} from "@mui/material";
+
 
 
 class CheckboxForm extends Component {
@@ -18,65 +13,62 @@ class CheckboxForm extends Component {
 
         this.state = {
             potentialProjectMembers: [],
-            name: []
+            selectedPerson: [],
         }
     }
 
     getPotentialMembersForProject = () => {
-        HdMWebAppAPI.getAPI().getPersonsNotProjectMembersOfProject(1)  // statt 1 sollte hier die Id des ausgewählten Ptojekts rein
-            .then(personBOs =>
+        HdMWebAppAPI.getAPI().getPersonsNotProjectMembersOfProject(1)  // statt 1 sollte hier die Id des ausgewählten Projekts rein
+            .then(personBOs => {
+                console.log(personBOs)
                 this.setState({
                     potentialProjectMembers: personBOs
-                })).catch(e =>
+                })}).catch(e =>
             this.setState({
                 potentialProjectMembers: []
             }));
+    }
+
+    addSelectedPersonsToProject = () => {
+    let newProjectMembers = new PersonBO(this.state.selectedPerson);
+    console.log(newProjectMembers);
+    HdMWebAppAPI.getAPI().addPersonAsProjectMember(newProjectMembers).then(person => {
+      // Backend call erfolgreich
+      this.setState(this.baseState);
+      this.props.onClose(person); // call the parent with the customer object from backend
+    }).catch(e =>
+      console.log(e)
+    );
     }
 
     componentDidMount() {
         this.getPotentialMembersForProject();
     }
 
-
-
-
-    handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-
-    setPersonName()
-        {
-         typeof value === 'string' ? value.split(',') : value
+    setSelectedPersons = (ppm) => {
+        this.state.selectedPerson.push(ppm)
+        console.log(this.state.selectedPerson)
     }
-    };
+
+    removeSelectedPersons = (ppm) => {
+        this.state.selectedPerson.splice(this.state.selectedPerson.indexOf(ppm), 1)
+        console.log(this.state.selectedPerson)
+    }
 
 
     render() {
-        const {potentialProjectMembers, name} = this.state;
+        const {potentialProjectMembers, selectedPerson} = this.state;
+        console.log(potentialProjectMembers)
 
         return (
             <div>
-                <FormControl sx={{m: 1, width: 300}}>
-                    <InputLabel id="multiple-checkbox-person">Mitarbeiter</InputLabel>
-                    <Select
-                        labelId="multiple-checkbox-person"
-                        id="person-checkbox"
-                        multiple
-                        value={name}
-                        onChange={this.handleChange}
-                        input={<OutlinedInput label="Tag"/>}
-                        renderValue={(selected) => selected.join(', ')}
-                    >
-                        {potentialProjectMembers.map(ppm => (
-                            <CheckboxListEntry potentialProjectMember={ppm}>
-                                <MenuItem key={ppm} value={ppm}/>
-                                <Checkbox checked={potentialProjectMembers.indexOf(ppm) > -1}/>
-                                <ListItemText primary={ppm}/>
-                            </CheckboxListEntry>))
-                        }
-                    </Select>
-                </FormControl>
+                 <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                     {potentialProjectMembers.map((value) =>
+                        <CheckboxListEntry potentialProjectMember = {value} key = {value}
+                            addPerson = {this.setSelectedPersons}
+                            removePerson = {this.removeSelectedPersons}/>)}
+                 </List>
+
             </div>
         )
     }
