@@ -434,7 +434,7 @@ class ProjectWorkOwnerOperations(Resource):
 
         if st_e is not None:
             st_e.set_id(id)
-            hwa.behelfs_save_event(st_e)
+            hwa.save_event(st_e)
             return '', 200
         else:
             return '', 500
@@ -477,7 +477,7 @@ class ProjectWorkOwnerOperations(Resource):
 
         if st_e is not None:
             st_e.set_id(id)
-            hwa.behelfs_save_event(st_e)
+            hwa.save_event(st_e)
             return '', 200
         else:
             return '', 500
@@ -812,9 +812,7 @@ sub_thread.setDaemon(True)
 sub_thread.start()
 
 
-h = HdMWebAppAdministration()
-pe = h.get_person_by_id(1)
-pr = h.get_project_by_id(1)
+
 
 
 if __name__ == '__main__':
