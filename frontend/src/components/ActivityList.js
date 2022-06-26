@@ -31,18 +31,48 @@ class ActivityList extends Component {
          let expandedName = null;
 
         if (this.props.location.expandedProject) {
-            expandedID = this.props.location.expandedProject.getID();
-            expandedName = this.props.location.expandedProject.getProjectName();
+            expandedID = this.props.location.expandedProject.project.getID();
+            expandedName = this.props.location.expandedProject.project.getProjectName();
         }
-        console.log(this.props.location.expandedProject)
 
         this.state = {
             activities: [],
             showActivityForm: false,
+            disableButton: null,
             expandedProjectID: expandedID,
             expandedProjectName: expandedName,
         };
+
     };
+
+
+    /** Ermittelt, ob der Aktivität erstellen Knopf gedrückt werden darf oder nicht, wenn die das Programm bedienende
+     * Person nicht Leiter des Projekts ist, ist er ausgegraut. */
+    handleDisableButton = () => {
+        if (this.props.location.per) {
+            if (this.props.location.per.person.id === this.props.location.pro.project.owner) {
+                this.setState({
+                    disableButton: false
+                })
+            } else {
+                this.setState({
+                    disableButton: true
+                })
+            }
+        }
+        // wenn auf der Projektarbeitenliste Zurück geklickt wurde, die von dort zurückgegebenen Werte vergleichen
+        else if (this.props.location.expandedPerson) {
+            if (this.props.location.expandedPerson.person.id === this.props.location.expandedProject.project.owner) {
+                this.setState({
+                    disableButton: false
+                })
+            } else {
+                this.setState({
+                    disableButton: true
+            })
+        }
+        }
+    }
 
     getActivitiesForProject() {
         if (this.props.location.pro) {
@@ -71,9 +101,11 @@ class ActivityList extends Component {
     componentDidMount() {
         if (this.props.location.pro) {
             this.getActivitiesForProject();
+            this.handleDisableButton();
         }
         else if (this.props.location.expandedProject) {
             this.getActivitiesForProject();
+            this.handleDisableButton();
         }
     }
 
@@ -111,7 +143,7 @@ class ActivityList extends Component {
 
     render() {
         const {classes} = this.props;
-        const {activities, showActivityForm, expandedProjectID, expandedProjectName } = this.state;
+        const {activities, showActivityForm, expandedProjectID, expandedProjectName, disableButton } = this.state;
 
          let pro = null;
          let projectName = null;
@@ -130,10 +162,15 @@ class ActivityList extends Component {
             return (<Redirect to='/' />);
          }
 
-         let per = null
-         if (this.props.location.per){
-             per = this.props.location.per
-         }
+         let per = null;
+         if (this.props.location.per) {
+            // PersonBO existiert
+            per = this.props.location.per;
+         } else if (this.props.location.expandedPerson){
+             console.log(this.props.location.expandedPerson)
+            // in Projektarbeitsliste wurde Zurück geklickt
+            per = this.props.location.expandedPerson
+        }
 
         return (
             <div>
@@ -153,7 +190,7 @@ class ActivityList extends Component {
                     <Typography variant={"h4"} algin={"left"} component={"div"}>
                         Projekt: {projectName}
                     </Typography>
-                    <Button variant='contained' color='primary' startIcon={<AddIcon/>}
+                    <Button disabled={disableButton} variant='contained' color='primary' startIcon={<AddIcon/>}
                         onClick={this.handleAddActivityButtonClicked}>
                         Aktivität anlegen
                     </Button>

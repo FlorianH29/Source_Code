@@ -64,10 +64,10 @@ class ActivityListEntry extends Component {
 
 
     render() {
-    const { project } = this.props;
+    const { project, person } = this.props;
     const { activity, showActivityForm, showActivityDeleteDialog } = this.state;
 
-    console.log(this.props.location.per);
+    console.log(person)
       return (
         <div>
            <ListItem>
@@ -77,7 +77,10 @@ class ActivityListEntry extends Component {
                 owner: {
                      activity: activity,
                      project: project
-                    }
+                    },
+                 per: {
+                    person: person
+                 }
                     }}>
                <Grid item xs={3} align={"center"}>
                  <Typography variant={"h5"} component={"div"}>
@@ -95,10 +98,14 @@ class ActivityListEntry extends Component {
                    {activity.getActivityWorkTime()}
                  </Typography>
                </Grid>
-               <Grid item xs={3} align={"center"}>
-                   <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editActivityButtonClicked}> </Button>
-                   <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteActivityButtonClicked}> </Button>
-               </Grid>
+                 { person.getID() === project.owner ? (
+                  <Grid item xs={3} align={"center"}>
+                    <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editActivityButtonClicked}> </Button>
+                    <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteActivityButtonClicked}> </Button>
+                  </Grid>
+                     ):
+                 <Grid item xs={2} align={"center"}>
+                </Grid>}
              </Grid>
            </ListItem>
            <Divider/>

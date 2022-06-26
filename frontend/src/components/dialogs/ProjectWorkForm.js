@@ -18,11 +18,15 @@ class ProjectWorkForm extends Component {
   constructor(props) {
     super(props);
 
-    let pwn = '', de = '',  act = 0;
+    let pwn = '', de = '';
     if (props.projectWork) {
       pwn = props.projectWork.getProjectWorkName();
       de = props.projectWork.getDescription();
-      act = 1;
+    }
+
+    let act = 0;
+    if (props.activity){
+      act = props.activity.getID();
     }
 
     // Den State initiieren
@@ -128,6 +132,8 @@ class ProjectWorkForm extends Component {
       title = 'Start buchen und neue Projektarbeit erstellen';
       header = 'Geben Sie bitte Name und Beschreibung an';
     }
+
+    console.log(this.state)
 
     return (
         show ?

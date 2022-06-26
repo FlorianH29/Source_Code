@@ -145,7 +145,7 @@ class ProjectListEntry extends Component {
     /** Rendert die Komponente*/
     render() {
         const {classes} = this.props;
-        const {project, showProjectCreateDialog, showProjectDeleteDialog, showProjectDurationDialog, startEvent, endEvent, person} = this.state;
+        const {project, showProjectCreateDialog, showProjectDeleteDialog, showProjectDurationDialog, startEvent, endEvent, person } = this.state;
 
         //console.log(startEvent)
         console.log (this.state)
@@ -174,9 +174,10 @@ class ProjectListEntry extends Component {
                                 {project.getClient()}
                             </Typography>
                         </Grid>
+                        { person.id === project.owner ? (
                         <Grid item xs={3} align={"center"}>
                             <ListItemButton onClick={this.editProjectDurationButtonClicked}>
-                            <Typography variant={"h5"} component={"div"}>
+                            <Typography align={"center"} variant={"h5"} component={"div"}>
                                 Vom {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
                                 dateStyle: "long",
                             })} bis zum {new Date(endEvent.time_stamp).toLocaleString(
@@ -185,19 +186,34 @@ class ProjectListEntry extends Component {
                                 })}
                             </Typography>
                             </ListItemButton>
-                        </Grid>
+                        </Grid>)
+                            :
+                        <Grid item xs={3} align={"center"}>
+                            <Typography variant={"h5"} component={"div"}>
+                                Vom {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
+                                dateStyle: "long",
+                            })} bis zum {new Date(endEvent.time_stamp).toLocaleString(
+                                'de-DE', {
+                                    dateStyle: "long",
+                                })}
+                            </Typography>
+                        </Grid>}
                         <Grid item xs={2} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 {project.getWorkTime()} h
                             </Typography>
                         </Grid>
+                        { person.id === project.owner ? (
                             <Grid item xs={2} align={"center"}>
-                            <Button color='primary' size='small' startIcon={<EditIcon/>}
-                                    onClick={this.editProjectButtonClicked}> </Button>
-                            <Button color='secondary' size='small' startIcon={<DeleteIcon/>}
-                                    onClick={this.deleteProjectButtonClicked}> </Button>
+                                <Button color='primary' size='small' startIcon={<EditIcon/>}
+                                        onClick={this.editProjectButtonClicked}> </Button>
+                                <Button color='secondary' size='small' startIcon={<DeleteIcon/>}
+                                        onClick={this.deleteProjectButtonClicked}> </Button>
+                            </Grid>)
+                            :
+                            <Grid item xs={2} align={"center"}>
+                            </Grid>}
                         </Grid>
-                    </Grid>
                 </ListItem>
                 <Divider/>
                 <ProjectCreateDialog show={showProjectCreateDialog} project={project}

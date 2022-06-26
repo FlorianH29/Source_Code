@@ -100,7 +100,6 @@ class ProjectWorkList extends Component {
   }
 
   render() {
-    const { classes } = this.props;
     const { projectWorks, showProjectWorkForm, disableEnd, disableStart, open } = this.state;
     // console.log(this.state)
     let owner = null;
@@ -113,7 +112,14 @@ class ProjectWorkList extends Component {
       return (<Redirect to='/' />);
     }
 
-    console.log(owner.project)
+    let per = null;
+    if (this.props.location.per){
+        per = this.props.location.per
+    }
+    else {
+      return (<Redirect to='/' />);
+    }
+
 
     return (
         <div>
@@ -121,8 +127,8 @@ class ProjectWorkList extends Component {
             <Typography component='div'>
                 <Link component={RouterLink} to={{
                     pathname: '/activities',
-                    expandedProject: owner.project
-                    }}>
+                    expandedProject: owner,
+                    expandedPerson: per}}>
                     <Grid container spacing={1} justify='flex-start' alignItems='stretch'>
                         <Grid item>
                             <ArrowCircleLeftRoundedIcon />
@@ -187,7 +193,7 @@ class ProjectWorkList extends Component {
                 </DialogActions>
             </Dialog>
             </Box>
-            <ProjectWorkForm onClose={this.projectWorkFormClosed} show={showProjectWorkForm}></ProjectWorkForm>
+            <ProjectWorkForm activity={owner.activity} onClose={this.projectWorkFormClosed} show={showProjectWorkForm}></ProjectWorkForm>
         </div>
         );
     }

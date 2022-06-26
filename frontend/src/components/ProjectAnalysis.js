@@ -42,7 +42,8 @@ class ProjectAnalysis extends Component {
 
         return (
             <div>
-                { projects.length != 0 ? (
+                { projects.length != 0 ?
+                <>
                 <Box m={18} pl={8}>
                     <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -87,12 +88,13 @@ class ProjectAnalysis extends Component {
                     {projects.map(pro =>
                         <ProjectAnalysisProjectEntry key={pro.getID()} project={pro}
                                                      startDate={startDate} endDate={endDate}/>)})
-                </Box>) : (
-                    <Box m={25} pl={15}>
+                </Box>
+                </> :
+                <Box m={25} pl={15}>
                     <Typography variant={"h5"} >
-                        Info: Da Sie in kein Projekt leiten, können Sie keine Projekte analysieren.
+                        Info: Da Sie kein Projekt leiten, können Sie keine Projekte analysieren.
                     </Typography>
-                    </Box>)}
+                </Box>}
             </div>
         );
     }
