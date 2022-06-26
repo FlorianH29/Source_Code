@@ -133,7 +133,7 @@ class ProjectWorkList extends Component {
                         <Grid item>
                             <ArrowCircleLeftRoundedIcon color={'primary'}/>
                         </Grid>
-                        <Grid item> zurück
+                        <Grid item> zurück zu {owner.project.getProjectName()}
                         </Grid>
                     </Grid>
                 </Link>
@@ -143,7 +143,7 @@ class ProjectWorkList extends Component {
                 <Grid xs={3}/>
                 <Grid item xs={5} align={'center'}>
                     <Typography variant={"h4"} algin={"center"} component={"div"}>
-                       Aktivität: {owner.activity.getActivityName()} Projekt: {owner.project.getProjectName()}
+                       Aktivität: {owner.activity.getActivityName()}
                     </Typography>
                  </Grid>
                 <Grid item xs={2} align={'right'}>
