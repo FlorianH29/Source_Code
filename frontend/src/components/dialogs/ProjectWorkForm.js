@@ -1,9 +1,17 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from '@material-ui/core';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  TextField
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import {EventBO, HdMWebAppAPI, ProjectWorkBO} from '../../api';
-import EventManager from "../EventManager";
 
 /**
  * Zeigt einen Dialog für eine Projekarbeit. Wenn die Projektarbeit gesetzt ist, stellt der Dialog eine Möglichkeit zum
@@ -52,10 +60,7 @@ class ProjectWorkForm extends Component {
     let newEvent = new EventBO(0, 1);
     // console.log(this.state);
      await HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
-        // Backend call successfull
-        // reinit the dialogs state for a new empty customer
-        // console.log(event)
-        this.props.onClose(event); // call the parent with the customer object from backend
+        this.props.onClose(event);
     }).catch(e =>
         console.log(e));
   }
@@ -66,10 +71,8 @@ class ProjectWorkForm extends Component {
         this.state.affiliatedActivity);
     // console.log(this.state)
     HdMWebAppAPI.getAPI().addProjectWork(newProjectWorkBO).then(projectWork => {
-      // Backend call sucessfull
-      // reinit the dialogs state for a new empty customer
       this.setState(this.baseState);
-      this.props.onClose(projectWork); // call the parent with the customer object from backend
+      this.props.onClose(projectWork);
     }).catch(e =>
     console.log(e));
   }

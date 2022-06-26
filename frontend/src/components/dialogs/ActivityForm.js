@@ -1,8 +1,17 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from '@material-ui/core';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    IconButton,
+    TextField
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import {HdMWebAppAPI, ActivityBO } from "../../api";
+import {ActivityBO, HdMWebAppAPI} from "../../api";
 
 
 class ActivityForm extends Component {
@@ -48,7 +57,7 @@ class ActivityForm extends Component {
         });
     }
 
-/**    addActivity = () => {
+    /**    addActivity = () => {
     HdMWebAppAPI.getAPI().addActivityForProject(this.props.project.getID()).then(activitiesBO => {
 
       this.setState({  // Set new state when AccountBOs have been fetched
@@ -70,31 +79,29 @@ class ActivityForm extends Component {
       addingActivityError: null
     });
     }
-*/
+     */
 
 
     addActivity = () => {
-    let newActivity = new ActivityBO(this.state.name, this.state.capacity);
-    HdMWebAppAPI.getAPI().addActivity(newActivity).then(activity => {
-      // Backend call sucessfull
-      // reinit the dialogs state for a new empty customer
-      this.setState(this.baseState);
-      this.props.onClose(activity); // call the parent with the customer object from backend
-    }).catch(e =>
-      this.setState({
-        updatingInProgress: false,    // disable loading indicator
-        updatingError: e              // show error message
-      })
-    );
+        let newActivity = new ActivityBO(this.state.name, this.state.capacity);
+        HdMWebAppAPI.getAPI().addActivity(newActivity).then(activity => {
+            this.setState(this.baseState);
+            this.props.onClose(activity);
+        }).catch(e =>
+            this.setState({
+                updatingInProgress: false,    // disable loading indicator
+                updatingError: e              // show error message
+            })
+        );
 
-    // set loading to true
-    this.setState({
-      updatingInProgress: true,       // show loading indicator
-      updatingError: null             // disable error message
-    });
-  }
+        // set loading to true
+        this.setState({
+            updatingInProgress: true,       // show loading indicator
+            updatingError: null             // disable error message
+        });
+    }
 
-/**    updateActivity = () => {
+    /**    updateActivity = () => {
         // das originale Activity klonen, für den Fall, dass Backend Call fehlschlägt
         let updatedActivity = Object.assign(new ActivityBO, this.props.activity);
         // setzen der neuen Attribute aus dem Dialog
@@ -107,38 +114,39 @@ class ActivityForm extends Component {
             this.props.onClose(updatedActivity);
         })
     }
-*/
+     */
 
 
     updateActivity = () => {
-    // clone the original activity, in case the backend call fails
-    let updatedActivity = Object.assign(new ActivityBO(), this.props.activity);
-    // set the new attributes from our dialog
-    updatedActivity.setActivityName(this.state.name);
-    updatedActivity.setActivityCapacity(this.state.capacity);
-    HdMWebAppAPI.getAPI().updateActivity(updatedActivity).then(activity => {
-      this.setState({
-        updatingInProgress: false,              // disable loading indicator
-        updatingError: null                     // no error message
-      });
-      // keep the new state as base state
-      this.baseState.name = this.state.name;
-      this.baseState.capacity = this.state.capacity;
-      this.props.onClose(updatedActivity);      // call the parent with the new customer
-    }).catch(e =>
-      this.setState({
-        updatingInProgress: false,              // disable loading indicator
-        updatingError: e                        // show error message
-      })
-    );
+        // clone the original activity, in case the backend call fails
+        let updatedActivity = Object.assign(new ActivityBO(), this.props.activity);
+        // set the new attributes from our dialog
+        updatedActivity.setActivityName(this.state.name);
+        updatedActivity.setActivityCapacity(this.state.capacity);
+        HdMWebAppAPI.getAPI().updateActivity(updatedActivity).then(activity => {
+            this.setState({
+                updatingInProgress: false,              // disable loading indicator
+                updatingError: null                     // no error message
+            });
+            // keep the new state as base state
+            this.baseState.name = this.state.name;
+            this.baseState.capacity = this.state.capacity;
+            this.props.onClose(updatedActivity);      // call the parent with the new customer
+        }).catch(e =>
+            this.setState({
+                updatingInProgress: false,              // disable loading indicator
+                updatingError: e                        // show error message
+            })
+        );
 
-    // set loading to true
-    this.setState({
-      updatingInProgress: true,                 // show loading indicator
-      updatingError: null                       // disable error message
-    });
-  }
+        // set loading to true
+        this.setState({
+            updatingInProgress: true,                 // show loading indicator
+            updatingError: null                       // disable error message
+        });
+    }
 
+    /** Rendert die Komponente */
     render() {
         const {activity, show} = this.props;
         const {activityName, capacity, activityNameValidationFailed, capacityValidationFailed} = this.state;
@@ -157,43 +165,45 @@ class ActivityForm extends Component {
         }
 
         return (
-        show ?
-          <Dialog open={true} onClose={this.handleClose} maxWidth='xl'>
-            <DialogTitle id='form-dialog-title'>{title}
-              <IconButton algin={'right'} onClick={this.handleClose}>
-                <CloseIcon />
-              </IconButton>
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                {header}
-              </DialogContentText>
-                <form noValidate autoComplete='off'>
-                <TextField autoFocus type='text' required fullWidth margin='normal' id='activityName' label='Name:' value={activityName}
-                  onChange={this.textFieldValueChange} error={activityNameValidationFailed}
-                  helperText={activityNameValidationFailed ? 'Bitte geben Sie einen Namen an' : ' '} />
-                <TextField type='text' required fullWidth margin='normal' id='capacity' label='Kapazität:' value={capacity}
-                  onChange={this.textFieldValueChange} error={capacityValidationFailed}
-                  helperText={capacityValidationFailed ? 'Bitte geben Sie eine Kapazität in Stunden an' : ' '} />
-              </form>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={this.handleClose} color='secondary'>
-                Abbrechen
-              </Button>
-              {// Falls eine Aktivität gegeben ist, sichern Knopf anzeigen, sonst einen Erstellen Knopf
-                activity ?
-                  <Button color='primary' onClick={this.updateActivity}>
-                    Sichern
-                  </Button>
-                  : <Button color='primary' onClick={this.addActivity}>
-                    Erstellen
-                  </Button>
-              }
-            </DialogActions>
-          </Dialog>
-            : null
-    );
+            show ?
+                <Dialog open={true} onClose={this.handleClose} maxWidth='xl'>
+                    <DialogTitle id='form-dialog-title'>{title}
+                        <IconButton algin={'right'} onClick={this.handleClose}>
+                            <CloseIcon/>
+                        </IconButton>
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            {header}
+                        </DialogContentText>
+                        <form noValidate autoComplete='off'>
+                            <TextField autoFocus type='text' required fullWidth margin='normal' id='activityName'
+                                       label='Name:' value={activityName}
+                                       onChange={this.textFieldValueChange} error={activityNameValidationFailed}
+                                       helperText={activityNameValidationFailed ? 'Bitte geben Sie einen Namen an' : ' '}/>
+                            <TextField type='text' required fullWidth margin='normal' id='capacity' label='Kapazität:'
+                                       value={capacity}
+                                       onChange={this.textFieldValueChange} error={capacityValidationFailed}
+                                       helperText={capacityValidationFailed ? 'Bitte geben Sie eine Kapazität in Stunden an' : ' '}/>
+                        </form>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleClose} color='secondary'>
+                            Abbrechen
+                        </Button>
+                        {// Falls eine Aktivität gegeben ist, sichern Knopf anzeigen, sonst einen Erstellen Knopf
+                            activity ?
+                                <Button color='primary' onClick={this.updateActivity}>
+                                    Sichern
+                                </Button>
+                                : <Button color='primary' onClick={this.addActivity}>
+                                    Erstellen
+                                </Button>
+                        }
+                    </DialogActions>
+                </Dialog>
+                : null
+        );
 
     }
 }
@@ -201,8 +211,8 @@ class ActivityForm extends Component {
 /** PropTypes */
 ActivityForm.propTypes = {
 
-  onClose: PropTypes.func.isRequired,
-  show: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    show: PropTypes.bool.isRequired,
 }
 
 export default ActivityForm;
