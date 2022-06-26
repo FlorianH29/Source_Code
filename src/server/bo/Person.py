@@ -76,5 +76,3 @@ class Person(bo.BusinessObject):
         obj.set_firebase_id(dictionary["firebase_id"])
         obj.set_deleted(dictionary['deleted'])
         return obj
-
-

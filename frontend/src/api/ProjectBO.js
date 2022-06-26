@@ -1,6 +1,6 @@
 import BusinessObject from './BusinessObject';
 
-//Stellt ein Projekt im System dar
+/** Stellt ein Projekt im System dar */
 export default class ProjectBO extends BusinessObject {
 
   /**

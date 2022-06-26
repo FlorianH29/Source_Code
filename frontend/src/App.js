@@ -1,24 +1,21 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import ActivityList from "./components/ActivityList";
-import PersonList from './components/PersonList';
 import Navigator from './components/layout/Navigator';
 import ProjectList from "./components/ProjectList";
 import ProjectWorkList from "./components/ProjectWorkList";
-import WorktimeAccount from "./components/WorktimeAccount";
 import NotFound from "./components/pages/NotFound";
 import SignIn from './components/pages/SignIn';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import firebaseConfig from './firebaseconfig';
-import Welcome from "./components/pages/Welcome";
 
 import {Person} from "@mui/icons-material";
 import TimeIntervalTransactionList from "./components/TimeIntervalTransactionList";
 import SignInHeader from "./components/layout/SignInHeader";
 import DepartureDialog from "./components/dialogs/DepartureDialog";
-import {Dialog} from "@mui/material";
+import {Dialog, Grid} from "@mui/material";
 import {DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
 import Button from "@mui/material/Button";
 import {ArriveBO, HdMWebAppAPI} from "./api";
@@ -30,7 +27,7 @@ class App extends React.Component {
     constructor(props) {
         super(props);
 
-        // Init an empty state
+        // Initiiere einen leeren State
         this.state = {
             currentPerson: null,
             authError: null,
@@ -97,7 +94,7 @@ class App extends React.Component {
 
     handleCloseArriveDialog = () => {
       this.setState({
-          arrived: false
+          arrived: this.getDepartureBiggerArrive
       })
     }
 
@@ -110,8 +107,6 @@ class App extends React.Component {
       // Erstellen eines Gehen-Ereignis
       let newArriveEvent = new ArriveBO(this.state.firebase_id)
       HdMWebAppAPI.getAPI().addArrive().then(arrive => {
-        // Backend call successful
-        // reinit the dialogs state for a new empty customer
         //this.setState(this.baseState);
         //this.onClose(arrive); // call the parent with the departure object from backend
         console.log("test")
@@ -145,26 +140,23 @@ class App extends React.Component {
                                 </DialogContentText>
                               </DialogContent>
                               <DialogActions>
-                                <Button variant='contained' onClick={() => {this.addNewArriveEvent()}} color='primary'>
-                                  Kommen bestätigen
-                                </Button>
+                                  <Grid container justifyContent={'center'}>
+                                    <Button variant='contained' onClick={() => {this.addNewArriveEvent()}} color='primary'>
+                                        Kommen bestätigen
+                                    </Button>
+                                </Grid>
                               </DialogActions>
                             </Dialog>
                             <>
                                 <Navigator person={currentPerson}/>
                                 <Switch>
 
-                                    <Route exact path='/persons'>
-                                        <PersonList/>
-                                    </Route>
+
                                     <Route exact path='/projects'>
                                         <ProjectList/>
                                     </Route>
                                     <Route exact path='/projectworks'>
                                         <ProjectWorkList/>
-                                    </Route>
-                                    <Route exact path='/worktimeaccount'>
-                                        <WorktimeAccount/>
                                     </Route>
                                     <Route exact path='/activities'>
                                         <ActivityList/>

@@ -1,9 +1,17 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText,
-    DialogActions, TextField } from '@material-ui/core';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    IconButton,
+    TextField
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import {HdMWebAppAPI, ActivityBO } from "../../api";
+import {ActivityBO, HdMWebAppAPI} from "../../api";
 
 /**
  * Zeigt einen Dialog, der wenn es eine Aktivität gibt  das editieren dieser Aktivität ermöglicht
@@ -18,11 +26,10 @@ class ActivityForm extends Component {
     constructor(props) {
         super(props);
 
-        let an = '', cap = '', pro = 1;
+        let an = '', cap = '';
         if (props.activity) {
             an = props.activity.getActivityName();
             cap = props.activity.getActivityCapacity();
-            pro = 1
         }
 
 
@@ -71,12 +78,6 @@ class ActivityForm extends Component {
     }).catch(e =>
       console.log(e)
     );
-
-    // laden auf true setzen
-    this.setState({
-      updatingInProgress: true,       // show loading indicator
-      updatingError: null             // disable error message
-    });
     }
 
     /** Überschreibt das ActivityBO mit neuen Werten */
@@ -94,6 +95,7 @@ class ActivityForm extends Component {
         })
     }
 
+    /** Rendert die Komponente */
     render() {
         const {activity, show} = this.props;
         const {activityName, capacity, activityNameValidationFailed, capacityValidationFailed} = this.state;
@@ -112,43 +114,45 @@ class ActivityForm extends Component {
         }
 
         return (
-        show ?
-          <Dialog open={true} onClose={this.handleClose} maxWidth='xl'>
-            <DialogTitle id='form-dialog-title'>{title}
-              <IconButton algin={'right'} onClick={this.handleClose}>
-                <CloseIcon />
-              </IconButton>
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                {header}
-              </DialogContentText>
-                <form noValidate autoComplete='off'>
-                <TextField autoFocus type='text' required fullWidth margin='normal' id='activityName' label='Name:' value={activityName}
-                  onChange={this.textFieldValueChange} error={activityNameValidationFailed}
-                  helperText={activityNameValidationFailed ? 'Bitte geben Sie einen Namen an' : ' '} />
-                <TextField type='text' required fullWidth margin='normal' id='capacity' label='Kapazität:' value={capacity}
-                  onChange={this.textFieldValueChange} error={capacityValidationFailed}
-                  helperText={capacityValidationFailed ? 'Bitte geben Sie eine Kapazität in Stunden an' : ' '} />
-              </form>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={this.handleClose} color='secondary'>
-                Abbrechen
-              </Button>
-              {// Falls eine Aktivität gegeben ist, sichern Knopf anzeigen, sonst einen Erstellen Knopf
-                activity ?
-                  <Button color='primary' onClick={this.updateActivity}>
-                    Sichern
-                  </Button>
-                  : <Button color='primary' onClick={this.addActivity}>
-                    Erstellen
-                  </Button>
-              }
-            </DialogActions>
-          </Dialog>
-            : null
-    );
+            show ?
+                <Dialog open={true} onClose={this.handleClose} maxWidth='xl'>
+                    <DialogTitle id='form-dialog-title'>{title}
+                        <IconButton algin={'right'} onClick={this.handleClose}>
+                            <CloseIcon/>
+                        </IconButton>
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            {header}
+                        </DialogContentText>
+                        <form noValidate autoComplete='off'>
+                            <TextField autoFocus type='text' required fullWidth margin='normal' id='activityName'
+                                       label='Name:' value={activityName}
+                                       onChange={this.textFieldValueChange} error={activityNameValidationFailed}
+                                       helperText={activityNameValidationFailed ? 'Bitte geben Sie einen Namen an' : ' '}/>
+                            <TextField type='text' required fullWidth margin='normal' id='capacity' label='Kapazität:'
+                                       value={capacity}
+                                       onChange={this.textFieldValueChange} error={capacityValidationFailed}
+                                       helperText={capacityValidationFailed ? 'Bitte geben Sie eine Kapazität in Stunden an' : ' '}/>
+                        </form>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleClose} color='secondary'>
+                            Abbrechen
+                        </Button>
+                        {// Falls eine Aktivität gegeben ist, sichern Knopf anzeigen, sonst einen Erstellen Knopf
+                            activity ?
+                                <Button color='primary' onClick={this.updateActivity}>
+                                    Sichern
+                                </Button>
+                                : <Button color='primary' onClick={this.addActivity}>
+                                    Erstellen
+                                </Button>
+                        }
+                    </DialogActions>
+                </Dialog>
+                : null
+        );
 
     }
 }
@@ -156,8 +160,8 @@ class ActivityForm extends Component {
 /** PropTypes */
 ActivityForm.propTypes = {
 
-  onClose: PropTypes.func.isRequired,
-  show: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    show: PropTypes.bool.isRequired,
 }
 
 export default ActivityForm;

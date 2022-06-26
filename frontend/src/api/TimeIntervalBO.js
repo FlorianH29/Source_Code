@@ -1,6 +1,6 @@
 import BusinessObject from './BusinessObject';
 
-//Stellt ein Zeitintervall im System dar
+/** Stellt ein Zeitintervall im System dar */
 export default class TimeIntervalBO extends BusinessObject {
 
   /**

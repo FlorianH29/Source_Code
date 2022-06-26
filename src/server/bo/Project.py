@@ -51,10 +51,10 @@ class Project (bo.BusinessObject):
     def from_dict(dictionary=dict()):
         """Umwandeln eines Python dict() in ein Project()."""
         project = Project()
-        project.set_id(dictionary["id"])  # Usually part of the business object.
-        project.set_project_name(dictionary["project_name"])  # Sets the name from the dict as the name of the object.
-        project.set_last_edit("last_edit")  # Set the last edit of the project work.
-        project.set_client(dictionary["client"])  # Sets the client from the dict as the client of the object.
-        project.set_time_interval_id(dictionary["timeinterval_id"])  # Sets the client from the dict as the client of the object.
+        project.set_id(dictionary["id"])
+        project.set_project_name(dictionary["project_name"])
+        project.set_last_edit("last_edit")
+        project.set_client(dictionary["client"])
+        project.set_time_interval_id(dictionary["timeinterval_id"])
         project.set_work_time(dictionary["work_time"])
         return project

@@ -1,19 +1,6 @@
 import React, {Component} from 'react';
-import {ActivityBO, HdMWebAppAPI} from "../api";
-import {
-    withStyles,
-    Button,
-    TextField,
-    InputAdornment,
-    IconButton,
-    Grid,
-    Typography,
-    Divider,
-    Box,
-    DialogContent,
-    DialogActions,
-    Dialog, Link
-} from '@mui/material';
+import {HdMWebAppAPI} from "../api";
+import {Box, Button, Divider, Grid, Link, Typography} from '@mui/material';
 import AddIcon from '@material-ui/icons/Add';
 import ActivityForm from "./dialogs/ActivityForm";
 import PropTypes from "prop-types";
@@ -28,52 +15,82 @@ class ActivityList extends Component {
         super(props);
 
         let expandedID = null;
-         let expandedName = null;
+        let expandedName = null;
 
         if (this.props.location.expandedProject) {
-            expandedID = this.props.location.expandedProject.getID();
-            expandedName = this.props.location.expandedProject.getProjectName();
+            expandedID = this.props.location.expandedProject.project.getID();
+            expandedName = this.props.location.expandedProject.project.getProjectName();
         }
-        console.log(this.props.location.expandedProject)
 
         this.state = {
             activities: [],
             showActivityForm: false,
+            disableButton: null,
             expandedProjectID: expandedID,
             expandedProjectName: expandedName,
         };
     };
 
+
+    /** Ermittelt, ob der Aktivität erstellen Knopf gedrückt werden darf oder nicht, wenn die das Programm bedienende
+     * Person nicht Leiter des Projekts ist, ist er ausgegraut. */
+    handleDisableButton = () => {
+        if (this.props.location.per) {
+            if (this.props.location.per.person.id === this.props.location.pro.project.owner) {
+                this.setState({
+                    disableButton: false
+                })
+            } else {
+                this.setState({
+                    disableButton: true
+                })
+            }
+        }
+        // wenn auf der Projektarbeitenliste Zurück geklickt wurde, die von dort zurückgegebenen Werte vergleichen
+        else if (this.props.location.expandedPerson) {
+            if (this.props.location.expandedPerson.person.id === this.props.location.expandedProject.project.owner) {
+                this.setState({
+                    disableButton: false
+                })
+            } else {
+                this.setState({
+                    disableButton: true
+            })
+        }
+        }
+    }
+
     getActivitiesForProject() {
         if (this.props.location.pro) {
-            const { project } = this.props.location.pro
+            const {project} = this.props.location.pro
             HdMWebAppAPI.getAPI().getActivities(project.getID())
-            .then(activityBOs =>
+                .then(activityBOs =>
+                    this.setState({
+                        activities: activityBOs
+                    })).catch(e =>
                 this.setState({
-                    activities: activityBOs
-                })).catch(e =>
-            this.setState({
-                activities: []
-            }));
-        }
-        else if (this.props.location.expandedProject) {
+                    activities: []
+                }));
+        } else if (this.props.location.expandedProject) {
             HdMWebAppAPI.getAPI().getActivities(this.state.expandedProjectID)
-            .then(activityBOs =>
+                .then(activityBOs =>
+                    this.setState({
+                        activities: activityBOs
+                    })).catch(e =>
                 this.setState({
-                    activities: activityBOs
-                })).catch(e =>
-            this.setState({
-                activities: []
-            }));
+                    activities: []
+                }));
         }
     }
 
     componentDidMount() {
         if (this.props.location.pro) {
             this.getActivitiesForProject();
+            this.handleDisableButton();
         }
         else if (this.props.location.expandedProject) {
             this.getActivitiesForProject();
+            this.handleDisableButton();
         }
     }
 
@@ -93,7 +110,7 @@ class ActivityList extends Component {
         });
     }
 
-    /** Behandelt das onClose Event von CustomerForm */
+    /** Behandelt das onClose Event von ActivityForm */
     activityFormClosed = activity => {
         // projectWork ist nicht null und deshalb erstelltI/überarbeitet
         if (activity) {
@@ -111,36 +128,41 @@ class ActivityList extends Component {
 
     render() {
         const {classes} = this.props;
-        const {activities, showActivityForm, expandedProjectID, expandedProjectName } = this.state;
+        const {activities, showActivityForm, expandedProjectID, expandedProjectName, disableButton } = this.state;
 
-         let pro = null;
-         let projectName = null;
-         if (this.props.location.pro) {
+        let pro = null;
+        let projectName = null;
+        if (this.props.location.pro) {
             // ProjectBo existiert
             pro = this.props.location.pro;
             projectName = pro.project.getProjectName()
-         } else if (expandedProjectID){
+        } else if (expandedProjectID) {
             // in Projektarbeitsliste wurde Zurück geklickt
             pro = this.props.location.expandedProject
             projectName = expandedProjectName
+        } else {
+            // ProjectBO existiert nicht, stattdessen wurde die Komponente direkt über die URL aufgerufen oder die Seite
+            // wurde neu geladen -> zurück auf die Startseite verweisen
+            return (<Redirect to='/'/>);
         }
-         else {
-           // ProjectBO existiert nicht, stattdessen wurde die Komponente direkt über die URL aufgerufen oder die Seite
-           // wurde neu geladen -> zurück auf die Startseite verweisen
-            return (<Redirect to='/' />);
-         }
 
-         let per = null
-         if (this.props.location.per){
-             per = this.props.location.per
-         }
+         let per = null;
+         if (this.props.location.per) {
+            // PersonBO existiert
+            per = this.props.location.per;
+         } else if (this.props.location.expandedPerson){
+             console.log(this.props.location.expandedPerson)
+            // in Projektarbeitsliste wurde Zurück geklickt
+            per = this.props.location.expandedPerson
+        }
 
         return (
             <div>
-                <Box m={18}  pl={8}>
+                <Box m={18} pl={8}>
                     <Typography component='div' color={"primary"}>
                         <Link component={RouterLink} to={{
-                            pathname: '/projects'}}>
+                            pathname: '/projects'
+                        }}>
                             <Grid container spacing={1} justify='flex-start' alignItems='stretch'>
                                 <Grid item>
                                     <ArrowCircleLeftRoundedIcon color={"primary"}/>
@@ -150,14 +172,22 @@ class ActivityList extends Component {
                             </Grid>
                         </Link>
                     </Typography>
-                    <Typography variant={"h4"} algin={"left"} component={"div"}>
-                        Projekt: {projectName}
-                    </Typography>
-                    <Button variant='contained' color='primary' startIcon={<AddIcon/>}
-                        onClick={this.handleAddActivityButtonClicked}>
-                        Aktivität anlegen
-                    </Button>
-                    <Grid container mt={1}>
+                        <Grid container mt={2}  alignItems='stretch' spacing={1}>
+                            <Grid item xs={3}/>
+                            <Grid item xs={5} align={"center"}>
+                                <Typography variant={"h4"} algin={"center"} component={"div"}>
+                                    Projekt: {projectName}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={4} align={"right"}>
+                                <Button disabled={disableButton} variant='contained' align={"center"} color='primary' startIcon={<AddIcon/>}
+                                onClick={this.handleAddActivityButtonClicked}>
+                                    Aktivität anlegen
+                                </Button>
+                            </Grid>
+                        </Grid>
+
+                    <Grid container mt={3}>
                         <Grid item xs={12} align={"center"}>
                             <Grid container>
                                 <Grid item xs={3} align={"flex-end"}>
@@ -172,12 +202,13 @@ class ActivityList extends Component {
                             </Grid>
                             <Divider/>
                             {activities.map(ac =>
-                                <ActivityListEntry key={ac.getID()} activity={ac} project={pro.project} person={per.person}
+                                <ActivityListEntry key={ac.getID()} activity={ac} project={pro.project}
+                                                   person={per.person}
                                                    onActivityDeleted={this.activityDeleted}/>)
                             }
                         </Grid>
                     </Grid>
-                <ActivityForm onClose={this.activityFormClosed} show={showActivityForm}></ActivityForm>
+                    <ActivityForm onClose={this.activityFormClosed} show={showActivityForm}></ActivityForm>
                 </Box>
             </div>
         )
@@ -188,9 +219,9 @@ class ActivityList extends Component {
 /*ActivityList.propTypes = {
     /** @ignore *//*
     classes: PropTypes.object.isRequired,
-    /** The CustomerBO of this AccountList *//*
+
     project: PropTypes.object.isRequired,
-    /** If true, accounts are (re)loaded *//*
+
     show: PropTypes.bool.isRequired,
 }*/
 

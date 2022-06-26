@@ -1,6 +1,6 @@
 import BusinessObject from './BusinessObject';
 
-//Stellt eine Person im System dar
+/** Stellt eine Person im System dar */
 export default class PersonBO extends BusinessObject {
 
   /**

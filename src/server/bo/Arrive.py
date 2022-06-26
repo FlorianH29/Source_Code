@@ -2,7 +2,7 @@ from server.bo import Event as ev
 import datetime
 
 
-class Arrive (ev.Event):
+class Arrive(ev.Event):
 
     def __init__(self):
         super().__init__()
