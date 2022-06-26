@@ -3,39 +3,53 @@ import ProjectBO from './ProjectBO';
 import WorktimeAccountBO from "./WorktimeAccountBO";
 import ActivityBO from "./ActivityBO";
 import ProjectWorkBO from "./ProjectWorkBO";
+import TimeIntervalTransactionBO from "./TimeIntervalTransactionBO";
 import TimeIntervalBO from "./TimeIntervalBO";
 import navigator from "../components/layout/Navigator";
-import personForm from "../components/dialogs/PersonForm";
 import EventBO from "./EventBO";
+import DepartureBO from "./DepartureBO";
+import ArriveBO from "./ArriveBO";
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
 export default class HdMWebAppAPI {
 
-    // Singelton instance
-    static #api = null;
-
+  // Singelton instance
+  static #api = null;
 
   // Local Python backend
   #hdmwebappServerBaseURL = '/hdmwebapp';
 
   // Person bezogen
-  #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
-  #editPersonURL = () => `${this.#hdmwebappServerBaseURL}/persons`;
-  #deletePersonURL = () =>`${this.#hdmwebappServerBaseURL}/persons`;
-
+  #getPersonsURL = () => `${this.#hdmwebappServerBaseURL}/person`;
+  #editPersonURL = () => `${this.#hdmwebappServerBaseURL}/person`;
+  #deletePersonURL = () =>`${this.#hdmwebappServerBaseURL}/person`;
 
   //Projekt bezogen
-  #getProjectsURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
+  #getProjectsURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
   #updateProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
   #addProjectURL = () => `${this.#hdmwebappServerBaseURL}/projects`;
   #deleteProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}`;
+  #addProjectDurationStartEvent = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
+  #addProjectDurationEndEvent = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
+  #getProjectWorkTimeURL = (id, startDate, endDate) =>
+      `${this.#hdmwebappServerBaseURL}/projects/${id}/${startDate}/${endDate}/work_time`;
+  #getProjectByOwnerURL = () => `${this.#hdmwebappServerBaseURL}/projectsowner`;
+  #getStartEventURL = (id) => `${this.#hdmwebappServerBaseURL}/projectduration/${id}/startevent`;
+  #getEndEventURL = (id) => `${this.#hdmwebappServerBaseURL}/projectduration/${id}/endevent`;
+  #updateStartEventURL = (id)  => `${this.#hdmwebappServerBaseURL}/projectduration/${id}/startevent`;
+  #updateEndEventURL = (id)  => `${this.#hdmwebappServerBaseURL}/projectduration/${id}/endevent`;
 
+
+  //#addProjectDurationURL = () => `${this.#hdmwebappServerBaseURL}/projectduration`;
   // Projektarbeit bezogen
   #getProjectWorksForActivityURL = (id)  => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
   #updateProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
   #deleteProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
+  #updateProjectWorkByNameURL = (id, name) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}/${name}`;
   #addProjectWorkURL = () => `${this.#hdmwebappServerBaseURL}/projectworks`;
+  #getOwnerOfProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}/owner`;
+
   //Projectbeteiligte bezogen
   #getProjectMembersURL = (id) =>  `${this.#hdmwebappServerBaseURL}/projects/${id}/projectmembers`;
   #deleteProjectMemberURL = (id, pid) => `${this.#hdmwebappServerBaseURL}/projectmembers/${id}/${pid}`;
@@ -49,10 +63,32 @@ export default class HdMWebAppAPI {
   #getActivitiesForProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}/activities`;
   #updateActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
   #deleteActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
-  #addActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities`;
+  #addActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/project/${id}/activities`;
+  #getActivityWorkTimeURL = (id, startDate, endDate) =>
+      `${this.#hdmwebappServerBaseURL}/activities/${id}/${startDate}/${endDate}/work_time`;
 
   // Ereignis bezogen
   #addEventURL = () => `${this.#hdmwebappServerBaseURL}/events`;
+  #getEventTransactionsAndTimeIntervalTransactionsURL = (startDate, endDate) =>
+        `${this.#hdmwebappServerBaseURL}/eventtransactionsandtimeintervaltransactions/${startDate}/${endDate}`;
+  #updateEventURL = (id, date) => `${this.#hdmwebappServerBaseURL}/events/${id}/${date}`;
+  #getBreakStartedURL = () => `${this.#hdmwebappServerBaseURL}/breaks`;
+
+
+  // TimeIntervalTransaction bezogen
+  #getTimeIntervalTransactionsURL = () => `${this.#hdmwebappServerBaseURL}/timeintervaltransactions`;
+  #deleteTimeIntervalURL = (id) => `${this.#hdmwebappServerBaseURL}/timeinterval/${id}`;
+
+  // Kommen bezogen
+  #getDepartureBiggerArriveURL = () => `${this.#hdmwebappServerBaseURL}/arrivedeparture`;
+  #updateArriveURL = (id, date) => `${this.#hdmwebappServerBaseURL}/arrive/${id}/${date}`;
+  #addArriveURL = () => `${this.#hdmwebappServerBaseURL}/arrive`;
+
+  // Gehen bezogen
+  #updateDepartureURL = (id, date) => `${this.#hdmwebappServerBaseURL}/departure/${id}/${date}`;
+  #addDepartureURL = () => `${this.#hdmwebappServerBaseURL}/departure`;
+
+
 
   /**
    * Gibt die Singelton Instanz zurück
@@ -107,6 +143,20 @@ export default class HdMWebAppAPI {
     })
   }
 
+  /**
+   * Gibt zurück, ob das letzte Gehen einer Person größer ist als das letzte Kommen
+   */
+  getDepartureBiggerArrive() {
+    return this.#fetchAdvanced(this.#getDepartureBiggerArriveURL())
+      .then(responseJSON => {
+        //console.log(responseJSON)
+        return new Promise(function (resolve) {
+          resolve(responseJSON);
+         // console.log(responseJSON);
+        })
+      })
+  }
+
     getPerson() {
         return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
             let personBOs = PersonBO.fromJSON(responseJSON)[0];
@@ -128,6 +178,7 @@ export default class HdMWebAppAPI {
       })
     })
   }
+
   /**
    * Erstellt ein Ereignis und gibt eine Promise zurück, die ein neues EventBO
    * Objekt mit dem Eventtyp des Parameters eventBO als Ergebnis hat.
@@ -135,8 +186,8 @@ export default class HdMWebAppAPI {
    * @param {EventBO} eventBO welches erstellt werden soll.
    * @public
    */
-  addEvent(eventBO) {
-    return this.#fetchAdvanced(this.#addEventURL(), {
+  async addEvent(eventBO) {
+    return await this.#fetchAdvanced(this.#addEventURL(), {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -152,6 +203,39 @@ export default class HdMWebAppAPI {
     })
   }
 
+  addDeparture() {
+    return this.#fetchAdvanced(this.#addDepartureURL(), {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/jason, text/plain',
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify("")
+    }).then((responseJSON) => {
+        let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+        console.log(responseEventBO);
+        return new Promise(function (resolve) {
+            resolve(responseEventBO);
+        })
+    })
+  }
+
+  addArrive() {
+    return this.#fetchAdvanced(this.#addArriveURL(), {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/jason, text/plain',
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify("")
+    }).then((responseJSON) => {
+        let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+        console.log(responseEventBO);
+        return new Promise(function (resolve) {
+            resolve(responseEventBO);
+        })
+    })
+  }
 
     getWorktimeAccount(id) {
         return this.#fetchAdvanced(this.#getWorktimeAccountURL(id)).then((responseJSON) => {
@@ -175,6 +259,16 @@ export default class HdMWebAppAPI {
 
     getProject(id) {
         return this.#fetchAdvanced(this.#getProjectsURL(id)).then((responseJSON) => {
+            let projectBOs = ProjectBO.fromJSON(responseJSON);
+            //console.log(responseJSON);
+            return new Promise(function (resolve) {
+                resolve(projectBOs);
+            })
+        })
+    }
+
+    getProjectsByOwner() {
+        return this.#fetchAdvanced(this.#getProjectByOwnerURL()).then((responseJSON) => {
             let projectBOs = ProjectBO.fromJSON(responseJSON);
             //console.log(responseJSON);
             return new Promise(function (resolve) {
@@ -230,6 +324,140 @@ export default class HdMWebAppAPI {
         })
     }
 
+   /**
+   * Gibt die Arbeitsleistung für ein Projekt für einen gesetzten Zeitraum zurück
+   *
+   * @param {Number} projectID für welche die Arbeitsleistung zurückgegeben werden soll
+   * @param {Date} start Start des Zeitraums
+   * @param {Date} end Ende des Zeitraums
+   * @public
+   */
+  getProjectWorkTime(projectID, start, end) {
+    return this.#fetchAdvanced(this.#getProjectWorkTimeURL(projectID, start, end))
+      .then(responseJSON => {
+        //console.log(responseJSON)
+        return new Promise(function (resolve) {
+          resolve(responseJSON);
+        })
+      })
+  }
+
+    addProjectDurationStartEvent(eventBO) {
+        return this.#fetchAdvanced(this.#addProjectDurationStartEvent(), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain',
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify(eventBO)
+        }).then((responseJSON) => {
+            let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+            console.log(responseEventBO);
+            return new Promise(function (resolve) {
+                resolve(responseEventBO);
+            })
+        })
+    }
+
+    addProjectDurationEndEvent(eventBO) {
+        return this.#fetchAdvanced(this.#addProjectDurationEndEvent(), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain',
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify(eventBO)
+        }).then((responseJSON) => {
+            let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+            console.log(responseEventBO);
+            return new Promise(function (resolve) {
+                resolve(responseEventBO);
+            })
+        })
+    }
+
+    /**
+  * Updated ein EventBO
+  *
+  * @param {EventBO} eventBO das geupdated werden soll
+  * @public
+  */
+  updateProjectDurationStart(eventBO) {
+      console.log(eventBO)
+    return this.#fetchAdvanced(this.#updateStartEventURL((eventBO.getID())), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(eventBO)
+    }).then((responseJSON) => {
+      // Wir bekommen immer ein Array aus ProjectBOs.fromJSON
+      let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+      console.log(responseEventBO)
+      return new Promise(function (resolve) {
+        resolve(responseEventBO);
+      })
+    })
+  }
+
+
+   /**
+  * Updated ein ProjectBO
+  *
+  * @param {EventBO} eventBO das geupdated werden soll
+  * @public
+  */
+  updateProjectDurationEnd(eventBO) {
+    return this.#fetchAdvanced(this.#updateEndEventURL(eventBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(eventBO)
+    }).then((responseJSON) => {
+      // Wir bekommen immer ein Array aus ProjectBOs.fromJSON
+      let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+      console.log(responseEventBO)
+      return new Promise(function (resolve) {
+        resolve(responseEventBO);
+      })
+    })
+  }
+
+    /**
+     * Gibt das Start-Event eines Time Intervalls, eines Projekts zurück
+     *
+     * @param {Number} projectID für welche das Start_Event zurückgegeben werden soll
+     * @public
+     */
+    getStartEvent(projectID) {
+        return this.#fetchAdvanced(this.#getStartEventURL(projectID))
+            .then(responseJSON => {
+                return new Promise(function (resolve) {
+                    resolve(responseJSON);
+                    //console.log(responseJSON)
+                })
+            })
+    }
+
+    /**
+     * Gibt das End-Event eines Time Intervalls, eines Projekts zurück
+     *
+     * @param {Number} projectID für welche das End-Event zurückgegeben werden soll
+     * @public
+     */
+    getEndEvent(projectID) {
+        return this.#fetchAdvanced(this.#getEndEventURL(projectID))
+            .then(responseJSON => {
+                return new Promise(function (resolve) {
+                    resolve(responseJSON);
+                    //console.log(responseJSON)
+                })
+            })
+    }
+
 
     /**
      * Löscht ein ProjectBO
@@ -250,13 +478,32 @@ export default class HdMWebAppAPI {
         })
     }
 
-
     getWorktimeAccount(id) {
         return this.#fetchAdvanced(this.#getWorktimeAccountURL(id)).then((responseJSON) => {
             let worktimeaccountBOs = WorktimeAccountBO.fromJSON(responseJSON);
             console.log(responseJSON);
             return new Promise(function (resolve) {
                 resolve(worktimeaccountBOs);
+            })
+        })
+    }
+
+    getTimeIntervalTransactions() {
+        return this.#fetchAdvanced(this.#getTimeIntervalTransactionsURL()).then((responseJSON) => {
+            let timeIntervalTransactionsBOs = TimeIntervalTransactionBO.fromJSON(responseJSON);
+            //console.log(responseJSON);
+            return new Promise(function (resolve) {
+                resolve(timeIntervalTransactionsBOs);
+            })
+        })
+    }
+
+    getEventsForTimeIntervalTransactions(startDate, endDate) {
+        return this.#fetchAdvanced(this.#getEventTransactionsAndTimeIntervalTransactionsURL(startDate, endDate)).then((responseJSON) => {
+            let eventBOs = EventBO.fromJSON(responseJSON);
+            //console.log(responseJSON);
+            return new Promise(function (resolve) {
+                resolve(eventBOs);
             })
         })
     }
@@ -272,10 +519,9 @@ export default class HdMWebAppAPI {
     }
 
    /**
-   * Adds a customer and returns a Promise, which resolves to a new CustomerBO object with the
-   * firstName and lastName of the parameter customerBO object.
+   * Erstellt eine Projektarbeit mit Name und Beschreibung, die im Dialog gesetzt wurden.
    *
-   * @param {ProjectWorkBO} projectWorkBO to be added. The ID of the new customer is set by the backend
+   * @param {ProjectWorkBO} projectWorkBO welcehes erstellt werden soll.
    * @public
    */
   addProjectWork(projectWorkBO) {
@@ -319,6 +565,88 @@ export default class HdMWebAppAPI {
     })
   }
 
+  updateProjectWorkNameByID(id, name){
+          return this.#fetchAdvanced(this.#updateProjectWorkByNameURL(id, name), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({id: id, name: name})
+    }).then((responseJSON) => {
+        //Wir bekommen immer ein Array aus ProkectWorkBos.fromJSON
+      let responseProjectWorkBO = ProjectWorkBO.fromJSON(responseJSON)[0];
+      console.log(responseProjectWorkBO)
+      return new Promise(function (resolve) {
+        resolve(responseProjectWorkBO);
+      })
+    })
+  }
+
+    updateEventByID(id, date){
+          return this.#fetchAdvanced(this.#updateEventURL(id, date), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({id: id, date: date})
+    }).then((responseJSON) => {
+      let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+      console.log(responseEventBO)
+      return new Promise(function (resolve) {
+        resolve(responseEventBO);
+      })
+    })
+  }
+
+      updateDepartureByID(id, date){
+          return this.#fetchAdvanced(this.#updateDepartureURL(id, date), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({id: id, date: date})
+    }).then((responseJSON) => {
+      let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+      console.log(responseEventBO)
+      return new Promise(function (resolve) {
+        resolve(responseEventBO);
+      })
+    })
+  }
+
+      updateArriveByID(id, date){
+          return this.#fetchAdvanced(this.#updateArriveURL(id, date), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({id: id, date: date})
+    }).then((responseJSON) => {
+      let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+      console.log(responseEventBO)
+      return new Promise(function (resolve) {
+        resolve(responseEventBO);
+      })
+    })
+  }
+
+
+    deleteTimeInterval(timeIntervalID) {
+        return this.#fetchAdvanced(this.#deleteTimeIntervalURL(timeIntervalID), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            // We always get an array of CustomerBOs.fromJSON
+            let responseEventBO = EventBO.fromJSON(responseJSON)[0];
+            console.log(responseEventBO)
+            return new Promise(function (resolve) {
+                resolve(responseEventBO);
+            })
+        })
+}
   /**
   * Löscht ein ProjectWorkBO
   *
@@ -338,6 +666,21 @@ export default class HdMWebAppAPI {
     })
   }
 
+  /**
+   * Gibt den Ersteller einer Projektarbeit zurück
+   *
+   * @param {Number} projectWorkID für welche der Ersteller zurückgegeben werden soll
+   * @public
+   */
+  getOwnerOfProjectWork(projectWorkID) {
+    return this.#fetchAdvanced(this.#getOwnerOfProjectWorkURL(projectWorkID))
+      .then(responseJSON => {
+        return new Promise(function (resolve) {
+          resolve(responseJSON);
+          // console.log(responseJSON)
+        })
+      })
+  }
 
     /**
    * Fügt eine Aktivität hinzu und gibt ein Promise zurück, das sich in ein neues ActivityBO Objekt mit dem
@@ -363,6 +706,26 @@ export default class HdMWebAppAPI {
       })
     }).catch(e =>
       console.log(e))
+  }
+
+  /**
+   * Gibt die Arbeitsleistung für eine Aktivität für einen gesetzten Zeitraum zurück
+   *
+   * @param {Number} activityID für welche die Arbeitsleistung zurückgegeben werden soll
+   * @param {Number} start Start des Zeitraums
+   * @param {Number} end Ende des Zeitraums
+   * @public
+   */
+  getActivityWorkTime(activityID, start, end) {
+      //console.log(activityID)
+    return this.#fetchAdvanced(this.#getActivityWorkTimeURL(activityID, start, end))
+      .then(responseJSON => {
+        //console.log(responseJSON)
+        return new Promise(function (resolve) {
+          resolve(responseJSON);
+         // console.log(responseJSON);
+        })
+      })
   }
 
     /**
@@ -460,4 +823,18 @@ export default class HdMWebAppAPI {
       })
   }
 
+
+   /**
+   * Gibt zurück, ob ob eine Pause begonnen wurde oder nicht
+   */
+  getBreakStarted() {
+    return this.#fetchAdvanced(this.#getBreakStartedURL())
+      .then(responseJSON => {
+        //console.log(responseJSON)
+        return new Promise(function (resolve) {
+          resolve(responseJSON);
+         // console.log(responseJSON);
+        })
+      })
+  }
 }

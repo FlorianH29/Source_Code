@@ -3,8 +3,11 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import {HdMWebAppAPI} from "../../api";
+import {ArriveBO, HdMWebAppAPI} from "../../api";
 import PropTypes from 'prop-types';
+import { withRouter } from "react-router-dom";
+import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
+import CloseIcon from "@material-ui/icons/Close";
 
 
 class Welcome extends Component {
@@ -17,19 +20,26 @@ class Welcome extends Component {
         };
       }
 
-    getPersons = () => {
-        HdMWebAppAPI.getAPI().getPersons(this.props.username).then(username =>
-            this.setState({
-                customer: username
-            }))
-    };
+/** Erstellen eines Arrive-Events */
+    addNewArriveEvent = () => {
+      // Umschalten des Status der Knöpfe
+      this.setState({
 
-
-    componentDidMount() {
-        this.getPersons();
+      });
+      // Erstellen eines Gehen-Ereignis
+      let newArriveEvent = new ArriveBO(this.state.firebase_id)
+      HdMWebAppAPI.getAPI().addArrive().then(arrive => {
+        // Backend call successful
+        // reinit the dialogs state for a new empty customer
+        this.setState(this.baseState);
+        this.props.onClose(arrive); // call the parent with the departure object from backend
+      }).catch(e =>
+        console.log(e)
+      );
+         this.props.history.push('/eventtransactionsandtimeintervaltransactions')
     }
 
-
+    /** Finde heraus, ob die letzte Eventtransaction ein Kommen- oder Gehen-Event war...*/
 
 
     /**handleButton = () => {
@@ -38,28 +48,33 @@ class Welcome extends Component {
 
     render() {
         const {  } = this.props;
-        const { person } = this.state;
+        const { person, show } = this.state;
         return (
-             <Box sx={{m: 2, b: 2, p: 2}}>
-                <Card>
-                    <Grid container spacing={2} justifyContent={"center"}  alignItems={"center"}>
-                        <Grid item xs={12} align={"center"}>
-                            <h2>Wilkommen, {this.props.username}</h2>
-                            <p>Bitte bestätige deinen Arbeitsbeginn:</p>
-                            <Button variant={"contained"} color="success" /*onClick={this.handleButton()}*/>
-                                    Kommen
-                            </Button>
-                            <p></p>
-                        </Grid>
-                    </Grid>
-                </Card>
-             </Box>
+            show ?
+               <Dialog open={show} onClose={this.handleClose}>
+
+                  <DialogTitle>Willkommen in der Arbeitszeiterfassung</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      Bitte bestätigen Sie Ihren Arbeitsbeginn:
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button variant='contained' onClick={() => {this.addNewArriveEvent()}} color='primary'>
+                      Kommen bestätigen
+                    </Button>
+                  </DialogActions>
+
+                </Dialog>
+
+                :null
         );
     }
 }
 
 Welcome.propTypes = {
-  username: PropTypes.string.isRequired,
+    /** Wenn show true ist, wird der Dialog gerendert */
+    show: PropTypes.bool.isRequired
 }
 
-export default Welcome;
+export default withRouter(Welcome);

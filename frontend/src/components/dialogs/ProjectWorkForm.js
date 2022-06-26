@@ -6,12 +6,12 @@ import {EventBO, HdMWebAppAPI, ProjectWorkBO} from '../../api';
 import EventManager from "../EventManager";
 
 /**
- * Shows a modal form dialog for a CustomerBO in prop customer. If the customer is set, the dialog is configured
- * as an edit dialog and the text fields of the form are filled from the given CustomerBO object.
- * If the customer is null, the dialog is configured as a new customer dialog and the textfields are empty.
- * In dependency of the edit/new state, the respective backend calls are made to update or create a customer.
- * After that, the function of the onClose prop is called with the created/update CustomerBO object as parameter.
- * When the dialog is canceled, onClose is called with null.
+ * Zeigt einen Dialog für eine Projekarbeit. Wenn die Projektarbeit gesetzt ist, stellt der Dialog eine Möglichkeit zum
+ * Bearbeiten dar und die Textfelder sind mit den Werten des gegebenen ProjectWorkBO gefüllt.
+ * Wenn die Projektarbeit null ist, stellt der Dialog eine Möglichkeit zum Erstellen eines neuen ProjectWorkBO dar und
+ * die Textfelder sind leer. Abhängig vom Status des Dialogs werden die entsprechenden Backendcalls ausgeführt.
+ * Danach wird die Funktion des onClose prop mit den erstellten/bearbeiteten ProjectWorkBO als Parameter aufgerufen.
+ * Wenn der Dialog abgebrochen wird, wird onClose mit null aufgerufen.
  */
 class ProjectWorkForm extends Component {
 
@@ -42,12 +42,29 @@ class ProjectWorkForm extends Component {
     // den state neu setzen, sodass man wieder auf dem Stand ist wie vor dem Dialog
     this.setState(this.baseState);
     this.props.onClose(null);
+    console.log(this.state);
+  }
+
+  /**
+  * Erstellen eines Ereignisses.
+  */
+  addEvent = async () => {
+    let newEvent = new EventBO(0, 1);
+    // console.log(this.state);
+     await HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
+        // Backend call successfull
+        // reinit the dialogs state for a new empty customer
+        // console.log(event)
+        this.props.onClose(event); // call the parent with the customer object from backend
+    }).catch(e =>
+        console.log(e));
   }
 
   /** Erstellt ein neues ProjectWorkBO */
   addProjectWork = () => {
     let newProjectWorkBO = new ProjectWorkBO(this.state.projectWorkName, this.state.description,
         this.state.affiliatedActivity);
+    // console.log(this.state)
     HdMWebAppAPI.getAPI().addProjectWork(newProjectWorkBO).then(projectWork => {
       // Backend call sucessfull
       // reinit the dialogs state for a new empty customer
@@ -55,6 +72,12 @@ class ProjectWorkForm extends Component {
       this.props.onClose(projectWork); // call the parent with the customer object from backend
     }).catch(e =>
     console.log(e));
+  }
+
+  addEventandProjectWork = () => {
+      let event = new Promise((resolve) => {
+          resolve(this.addEvent());})
+      event.then(this.addProjectWork)
   }
 
   /** Behandelt Wertänderungen der Textfelder und validiert diese */
@@ -69,7 +92,7 @@ class ProjectWorkForm extends Component {
     this.setState({
       [event.target.id]: event.target.value,
       [event.target.id + 'ValidationFailed']: error,
-      [event.target.id + 'Edited']: true
+      [event.target.id + 'Edited']: true,
     });
   }
 
@@ -102,7 +125,7 @@ class ProjectWorkForm extends Component {
       header = `Projektarbeit ID: ${projectWork.getID()}`;
     } else {
       // ProjectWork ist nicht definiert, Erstellungsdialog wird angezeigt
-      title = 'Ende buchen und neue Projektarbeit erstellen';
+      title = 'Start buchen und neue Projektarbeit erstellen';
       header = 'Geben Sie bitte Name und Beschreibung an';
     }
 
@@ -137,8 +160,9 @@ class ProjectWorkForm extends Component {
                   <Button color='primary' onClick={this.updateProjectWork}>
                     Sichern
                   </Button>
-                  : <EventManager eventType={2} onClose={this.handleClose} functionAddProjectWork={this.addProjectWork}>
-                    </EventManager>
+                  : <Button color='primary' onClick={this.addEventandProjectWork}>
+                      Start buchen
+                    </Button>
               }
             </DialogActions>
           </Dialog>
@@ -150,7 +174,7 @@ class ProjectWorkForm extends Component {
 /** PropTypes */
 ProjectWorkForm.propTypes = {
 
-  onClose: PropTypes.func.isRequired,
+  //onClose: PropTypes.func.isRequired,
 
   show: PropTypes.bool.isRequired,
 }

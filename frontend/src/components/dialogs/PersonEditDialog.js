@@ -37,12 +37,12 @@ class PersonEditDialog extends Component {
   /** Die Person bearbeiten */
   editPerson = () => {
     let editedPerson = Object.assign(new PersonBO(), this.props.person);
-    console.log(this.state);
     editedPerson.setFirstName(this.state.firstname);
     editedPerson.setLastName(this.state.lastname);
     HdMWebAppAPI.getAPI().editPerson(editedPerson).then(person => {
       this.baseState.firstname = this.state.firstname;
       this.baseState.lastname = this.state.lastname;
+      console.log(this.state);
       this.props.onClose(editedPerson);
       });
   }
@@ -86,10 +86,10 @@ class PersonEditDialog extends Component {
             <form noValidate autoComplete='off'>
               <TextField autoFocus type='text' required fullWidth margin='normal' id='firstname' label='Vorname:' value={firstname}
                   onChange={this.textFieldValueChange} error={firstnameValidationFailed}
-                  helperText={firstnameValidationFailed ? 'Bitte geben Sie ihren Vornamen an' : ' '} />
+                  helperText={firstnameValidationFailed ? 'Bitte geben Sie Ihren Vornamen an' : ' '} />
                 <TextField type='text' required fullWidth margin='normal' id='lastname' label='Nachname:' value={lastname}
                   onChange={this.textFieldValueChange} error={lastnameValidationFailed}
-                  helperText={lastnameValidationFailed ? 'Bitte geben Sie ihren Nachnamen an' : ' '} />
+                  helperText={lastnameValidationFailed ? 'Bitte geben Sie Ihren Nachnamen an' : ' '} />
               </form>
            <DialogActions>
               <Button align="left" onClick={this.handleClose} color='secondary'>

@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {withStyles, Button, TextField, InputAdornment, IconButton, Grid, Typography, Divider} from '@mui/material';
+import {Box, Button, Divider, Grid, Typography} from '@mui/material';
 import ProjectListEntry from "./ProjectListEntry";
 import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
 import PropTypes from "prop-types";
-
+import ProjectDurationDialog from "./dialogs/ProjectDurationDialog";
 
 class ProjectList extends Component {
 
@@ -13,7 +13,8 @@ class ProjectList extends Component {
 
         this.state = {
             projects: [],
-            showProjectCreateDialog: false
+            showProjectCreateDialog: false,
+            showProjectDurationDialog: false
         }
     }
 
@@ -33,10 +34,17 @@ class ProjectList extends Component {
         this.getProjects();
     }
 
-    handleCreateProjectButtonClicked = (event) => {
-        event.stopPropagation();
+    handleShowProjectCreation = () => {
         this.setState({
             showProjectCreateDialog: true
+        })
+    };
+
+    handleCreateProjectButtonClicked = (event) => {
+        console.log("test")
+        event.stopPropagation();
+        this.setState({
+            showProjectDurationDialog: true
         })
     }
 
@@ -55,6 +63,12 @@ class ProjectList extends Component {
         }
     }
 
+
+    handleDurationClose = () => {
+        this.setState({
+            showProjectDurationDialog: false
+        });
+    }
     /**
      * Behandelt onProjectDeleted Events der ProjectListEntry Komponente
      */
@@ -66,62 +80,55 @@ class ProjectList extends Component {
         });
     }
 
-    /** Behandelt das onClose Event von ProjectForm
-    projectWorkClosed = projectWork => {
-        // project ist nicht null und deshalb erstelltI/überarbeitet
-        if (project) {
-            const newProjectList = [...this.state.projects, project];
-            this.setState({
-                projects: newProjectList,
-                showProjectForm: false
-            });
-        } else {
-            this.setState({
-                showProjectForm: false
-            });
-        }
-    }*/
-
-
     render() {
-        const {projects, showProjectCreateDialog} = this.state
-        console.log(this.state)
+        const {projects, showProjectCreateDialog, showProjectDurationDialog} = this.state
+        //console.log(this.state)
         return (
             <div>
-                <Grid container direction={'row'} spacing={18}>
-                    <Grid item xs={3} align={"center"}>
-                        <Button variant='contained' color='primary'
-                                onClick={this.handleCreateProjectButtonClicked}>
-                            Projekt erstellen
-                        </Button>
-                    </Grid>
-                </Grid>
-                <Grid container>
-                    <Grid item xs={12} align={"center"}>
-                        <Grid container>
-                            <Grid item xs={3} align={"flex-end"}>
-                                <Typography variant={"h5"} component={"div"}> Meine Projekte: </Typography>
-                            </Grid>
-                            <Grid item xs={3} align={"flex-end"}>
-                                <Typography variant={"h5"} component={"div"}> Klient: </Typography>
-                            </Grid>
-                            <Grid item xs={3} align={"flex-end"}>
-                                <Typography variant={"h5"} component={"div"}> Arbeitsleistung: </Typography>
-                            </Grid>
+                <Box m={18} pl={8}>
+                    <Grid container direction={'row'} spacing={18}>
+                        <Grid item xs={3} align={"center"}>
+                            <Button variant='contained' color='warning'
+                                    onClick={this.handleCreateProjectButtonClicked}>
+                                Projekt erstellen
+                            </Button>
                         </Grid>
-                        <Divider/>
-                        {projects.map(pro =>
-                            <ProjectListEntry key={pro.getID()} project={pro} onProjectDeleted={this.projectDeleted}/>)}
                     </Grid>
-                </Grid>
-                <ProjectCreateDialog onClose={this.projectCreateDialogClosed} show={showProjectCreateDialog}/>
-            </div>);
+                    <Grid container>
+                        <Grid item xs={12} align={"center"}>
+                            <Grid container>
+                                <Grid item xs={3} align={"flex-end"}>
+                                    <Typography variant={"h5"} component={"div"}> Meine Projekte: </Typography>
+                                </Grid>
+                                <Grid item xs={2} align={"flex-end"}>
+                                    <Typography variant={"h5"} component={"div"}> Klient: </Typography>
+                                </Grid>
+                                <Grid item xs={3} align={"flex-end"}>
+                                    <Typography variant={"h5"} component={"div"}> Projektlaufzeit: </Typography>
+                                </Grid>
+                                <Grid item xs={2} align={"flex-end"}>
+                                    <Typography variant={"h5"} component={"div"}> Arbeitsleistung: </Typography>
+                                </Grid>
+                            </Grid>
+                            <Divider/>
+                            {projects.map(pro =>
+                                <ProjectListEntry key={pro.getID()} project={pro}
+                                                  onProjectDeleted={this.projectDeleted}/>)}
+                        </Grid>
+                    </Grid>
+                    <ProjectCreateDialog onClose={this.projectCreateDialogClosed} show={showProjectCreateDialog}/>
+                    <ProjectDurationDialog openProjectDurationDialog={this.handleShowProjectCreation}
+                                           onClose={this.handleDurationClose} show={showProjectDurationDialog}/>
+                </Box>
+            </div>
+        );
     }
 }
 
 
 ProjectCreateDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
+    test: PropTypes.func.isRequired
 }
 
 export default ProjectList;

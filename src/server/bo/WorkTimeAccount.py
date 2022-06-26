@@ -13,7 +13,7 @@ class WorkTimeAccount(bo.BusinessObject):
 
     def __init__(self):
         super().__init__()
-        self._owner = None
+        self._owner = None  # id des Besitzers
 
     """Getter (= auslesen) und Setter (= setzen) für die Fremdschlüsselbeziehung."""
 

@@ -6,27 +6,27 @@ class EventTransaction (TA.Transaction):
     """
     def __init__(self):
         super().__init__()
-        self._event = None
-        self._arrive = None
-        self._departure = None
+        self._event = None  # Event Id von zugehörigem Event-Objekt
+        self._arrive = None  # Arrive Id von zugehörigem Arrive-Objekt
+        self._departure = None  # Departure Id von zugehörigem Departure-Objekt
 
     def get_event(self):
         return self._event
 
-    def set_event(self, event):
-        self._event = event
-
-    def set_arrive(self, arrive):
-        self._arrive = arrive
+    def set_event(self, event_id):
+        self._event = event_id
 
     def get_arrive(self):
         return self._arrive
 
-    def set_departure(self, departure):
-        self._departure = departure
+    def set_arrive(self, arrive_id):
+        self._arrive = arrive_id
 
     def get_departure(self):
         return self._departure
+
+    def set_departure(self, departure_id):
+        self._departure = departure_id
 
     def __str__(self):
         return "Transaction ({}, {}, {}, {}, {})" \

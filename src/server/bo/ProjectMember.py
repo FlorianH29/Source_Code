@@ -5,25 +5,25 @@ class ProjectMember(bo.BusinessObject):
 
     def __init__(self):
         super().__init__()
-        self.__project = ""
-        self.__person = ""
+        self._project = None  # die id des zugehörigen Projekts
+        self._person = None  # die id der zugehörigen Person
 
     def get_project(self):
-        return self.__project
+        return self._project
 
-    def set_project(self, value):
-        self.__project = value
+    def set_project(self, project):
+        self._project = project
 
     def get_person(self):
-        return self.__person
+        return self._person
 
-    def set_person(self, value):
-        self.__person = value
+    def set_person(self, person):
+        self._person = person
 
     def __str__(self):
         """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
-        return "ProjectMember: {}, {}, {}, {}".format(self.get_id(), self.__project,
-                                                      self.__person, self.get_last_edit())
+        return "ProjectMember: {}, {}, {}, {}".format(self.get_id(), self._project,
+                                                      self._person, self.get_last_edit())
 
     @staticmethod
     def from_dict(dictionary=dict()):

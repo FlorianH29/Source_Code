@@ -8,7 +8,7 @@ class Event(bo.BusinessObject):
         super().__init__()
         self._time_stamp = None  # Der Zeitpunkt des Eintretens des Ereignisses
         self._event_type = 0  # Typ des Ereignisses, entweder Start oder Ende eines Zeitintervalls
-        self._affiliated_person = 0  # die Person, der das Event zugewiesen ist
+        self._affiliated_person = None  # die Person, der das Event zugewiesen ist
 
     def get_time_stamp(self):
         """Auslesen des Zeitpunktes."""
@@ -30,8 +30,8 @@ class Event(bo.BusinessObject):
         """Auslesen der mit dem Event verknüpften Person."""
         return self._affiliated_person
 
-    def set_affiliated_person(self, value):
-        self._affiliated_person = value
+    def set_affiliated_person(self, person):
+        self._affiliated_person = person
         """Auslesen der Person."""
 
     def __str__(self):
@@ -45,7 +45,7 @@ class Event(bo.BusinessObject):
         obj = Event()
         obj.set_id(dictionary["id"])
         obj.set_last_edit(dictionary["last_edit"])
-        obj.set_event_type(dictionary["event_type"])
         obj.set_time_stamp(dictionary["time_stamp"])
-        obj.set_time_stamp(dictionary["affiliated_person"])
+        obj.set_event_type(dictionary["event_type"])
+        obj.set_affiliated_person(dictionary["affiliated_person"])
         return obj

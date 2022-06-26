@@ -29,33 +29,33 @@ class Person(bo.BusinessObject):
         """Auslesen des Benutzernamens."""
         return self._username
 
-    def set_firstname(self, value):
+    def set_firstname(self, firstname):
         """Setzen des Vornamens."""
-        self._firstname = value
+        self._firstname = firstname
 
-    def set_lastname(self, value):
+    def set_lastname(self, lastname):
         """Setzen des Nachnamens."""
-        self._lastname = value
+        self._lastname = lastname
 
-    def set_username(self, value):
+    def set_username(self, username):
         """Setzen des Benutzernamens."""
-        self._username = value
+        self._username = username
 
     def get_mailaddress(self):
         """Auslesen der E-Mail-Adresse."""
         return self._mailaddress
 
-    def set_mailaddress(self, value):
+    def set_mailaddress(self, mailaddress):
         """Setzen der E-Mail-Adresse."""
-        self._mailaddress = value
+        self._mailaddress = mailaddress
 
     def get_firebase_id(self):
         """Auslesen der externen User ID (z.B. Google ID)."""
         return self._firebase_id
 
-    def set_firebase_id(self, value):
+    def set_firebase_id(self, firebase_id):
         """Setzen der externen User ID (z.B. Google ID per Firebase)."""
-        self._firebase_id = value
+        self._firebase_id = firebase_id
 
     def __str__(self):
         """Erzeugen einer textuellen Darstellung der jeweiligen Instanz."""
@@ -74,6 +74,7 @@ class Person(bo.BusinessObject):
         obj.set_username(dictionary["username"])
         obj.set_mailaddress(dictionary["mailaddress"])
         obj.set_firebase_id(dictionary["firebase_id"])
+        obj.set_deleted(dictionary['deleted'])
         return obj
 
 
