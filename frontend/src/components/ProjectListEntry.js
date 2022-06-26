@@ -32,7 +32,7 @@ class ProjectListEntry extends Component {
             endEvent: "",//props.endDate,
             showProjectCreateDialog: false,
             showProjectDeleteDialog: false,
-            showProjectDurationDialog: false
+            showProjectDurationDialog: false,
         }
     }
 
@@ -50,7 +50,6 @@ class ProjectListEntry extends Component {
         event.stopPropagation();
         this.setState({
             showProjectDurationDialog: true,
-
         });
     }
 

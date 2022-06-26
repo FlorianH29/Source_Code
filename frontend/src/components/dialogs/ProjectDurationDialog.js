@@ -14,7 +14,7 @@ class ProjectDurationDialog extends Component {
         super(props);
 
         let stE = '', eE = '';
-        if (props.endDate) {
+        if (props.startDate) {
             stE = props.startDate.getTimeStamp();
             eE = props.endDate.getTimeStamp();
         } else {
