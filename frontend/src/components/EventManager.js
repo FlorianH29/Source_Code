@@ -16,7 +16,7 @@ class EventManager extends Component {
         this.state = {
             eventType: this.props.eventType,
             buttonName: '',
-            disableButton: ''
+            disabled: this.props.disabled
         }
     }
 
@@ -69,16 +69,22 @@ class EventManager extends Component {
         this.getNameofButton();
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps != this.props) {
+            console.log(this.props.disabled)
+            this.setState({disabled: this.props.disabled})
+        }
+    }
+
 
     render() {
-        const {buttonName, eventType} = this.state
+        const {buttonName, eventType, disabled} = this.state
 
         console.log(this.state)
 
         return (
             <div>
-                <Button disabled={this.props.disabled} eventType
-                        onClick={this.handleCreateEventButtonClicked}> {buttonName}</Button>
+                <Button disabled={disabled} eventType onClick={this.handleCreateEventButtonClicked}> {buttonName}</Button>
             </div>
         )
     }

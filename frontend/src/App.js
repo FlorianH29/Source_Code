@@ -31,7 +31,7 @@ class App extends React.Component {
         this.state = {
             currentPerson: null,
             authError: null,
-            arrived: ''
+            arrived: true
         };
     }
 
@@ -80,7 +80,7 @@ class App extends React.Component {
                 arrived: value,
             })).catch(e =>
                 this.setState({ // bei Fehler den state zurücksetzen
-                    arrived: '',
+                    arrived: true,
                 })
             );
     }

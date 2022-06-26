@@ -32,22 +32,20 @@ class Navigator extends Component {
             anchorEl: null,
             person: null,
             showPersonDelete: false,
-            disableStartButton: '',
+            disableStartButton: false,
             disableEndButton: true
         };
     };
 
     /** Gibt zurück, ob eine Pause begonnen wurde */
     getBreakStarted = () => {
-        HdMWebAppAPI.getAPI().getBreakStarted()
-            .then(value => this.setState({
-                disableStartButton: value,
-                disableEndButton: !value
-            })).catch(e =>
-                this.setState({ // bei Fehler den state zurücksetzen
-                    disableButton: '',
-                })
-            );
+        this.setState({disableStartButton: false}, () => {
+            HdMWebAppAPI.getAPI().getBreakStarted()
+                .then(value => this.setState({
+                    disableStartButton: value,
+                    disableEndButton: !value
+                }));
+        });
     }
 
     persondeleteClosed = person => {
@@ -73,8 +71,7 @@ class Navigator extends Component {
                 })).catch(e =>
             this.setState({
                 person: null,
-            })
-        );
+            }));
     }
 
     componentDidMount() {
@@ -119,6 +116,7 @@ class Navigator extends Component {
     handleClose = () => {
         // den state neu setzen, sodass open false ist und der Dialog nicht mehr angezeigt wird
         this.setState({open: false});
+        this.getBreakStarted();
     }
 
     render() {

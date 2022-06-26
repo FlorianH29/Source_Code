@@ -1,15 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Button,
-    Divider,
-    Grid,
-    Typography,
-    withStyles
-} from '@material-ui/core';
+import { withStyles, Typography, Accordion, AccordionSummary, AccordionDetails, Grid, Divider} from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import EditIcon from '@mui/icons-material/Edit';
 import ProjectWorkForm from './dialogs/ProjectWorkForm';
@@ -97,7 +89,7 @@ class ProjectWorkListEntry extends Component {
 
     /** Renders the component */
     render() {
-        const {classes} = this.props;
+        const {classes, person, project} = this.props;
         const {projectWork, showProjectWorkForm, showProjectWorkDeleteDialog, owner} = this.state;
 
     // console.log(this.state);
@@ -122,10 +114,17 @@ class ProjectWorkListEntry extends Component {
                     {projectWork.getTimeIPeriod()}
                     </Typography>
                 </Grid>
-                <Grid item xs={3} align={"center"}>
-                    <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editProjectWorkButtonClicked}> </Button>
-                    <Button color='secondary' size='small' startIcon={<RemoveCircleOutlineRoundedIcon/>} onClick={this.deleteProjectWorkButtonClicked}> </Button>
-                </Grid>
+                {person.getID() === project.owner || person.getID() === owner.id ? (
+                        <Grid item xs={3} align={"center"}>
+                            <Button color='primary' size='small' startIcon={<EditIcon/>}
+                                    onClick={this.editProjectWorkButtonClicked}> </Button>
+                            <Button color='secondary' size='small' startIcon={<RemoveCircleOutlineRoundedIcon/>}
+                                    onClick={this.deleteProjectWorkButtonClicked}> </Button>
+                        </Grid>)
+                    : <Grid item xs={3} align={"center"}>
+                      </Grid>
+                }
+
             </Grid>
                 </AccordionSummary>
                 <AccordionDetails>
