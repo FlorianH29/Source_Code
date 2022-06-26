@@ -117,6 +117,7 @@ class ProjectWorkListEntry extends Component {
                     <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editProjectWorkButtonClicked}> </Button>
                     <Button color='secondary' size='small' startIcon={<RemoveCircleOutlineRoundedIcon/>} onClick={this.deleteProjectWorkButtonClicked}> </Button>
                 </Grid>
+
             </Grid>
                 </AccordionSummary>
                 <AccordionDetails>
