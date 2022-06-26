@@ -143,7 +143,7 @@ class ProjectWorkList extends Component {
                 <Grid xs={3}/>
                 <Grid item xs={5} align={'center'}>
                     <Typography variant={"h4"} algin={"center"} component={"div"}>
-                       Aktivität: {owner.activity.getActivityName()}
+                       Aktivität: {owner.activity.getActivityName()} Projekt: {owner.project.getProjectName()}
                     </Typography>
                  </Grid>
                 <Grid item xs={2} align={'right'}>
@@ -174,7 +174,8 @@ class ProjectWorkList extends Component {
                 </Grid>
                 <Divider/>
                 {projectWorks.map(pw =>
-                    <ProjectWorkListEntry key={pw.getID()} projectWork={pw} onProjectWorkDeleted={this.projectWorkDeleted}/>)
+                    <ProjectWorkListEntry key={pw.getID()} project={owner.project} person={per.person} projectWork={pw}
+                                          onProjectWorkDeleted={this.projectWorkDeleted}/>)
                 }
 
             </Grid>
