@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, Typography, Accordion, AccordionSummary, AccordionDetails, Grid, Divider, ListItemSecondaryAction } from '@material-ui/core';
 import { Button, ButtonGroup } from '@material-ui/core';
-import DeleteIcon from '@mui/icons-material/Delete';
+import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import EditIcon from '@mui/icons-material/Edit';
 import ListItem from "@mui/material/ListItem";
 import ActivityDeleteDialog from "./dialogs/ActivityForm";
@@ -67,7 +67,6 @@ class ActivityListEntry extends Component {
     const { project, person } = this.props;
     const { activity, showActivityForm, showActivityDeleteDialog } = this.state;
 
-    console.log(person)
       return (
         <div>
            <ListItem>
@@ -101,10 +100,10 @@ class ActivityListEntry extends Component {
                  { person.getID() === project.owner ? (
                   <Grid item xs={3} align={"center"}>
                     <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editActivityButtonClicked}> </Button>
-                    <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteActivityButtonClicked}> </Button>
+                    <Button color='secondary' size='small' startIcon={<RemoveCircleOutlineRoundedIcon />} onClick={this.deleteActivityButtonClicked}> </Button>
                   </Grid>
                      ):
-                 <Grid item xs={2} align={"center"}>
+                 <Grid item xs={3} align={"center"}>
                 </Grid>}
              </Grid>
            </ListItem>

@@ -1,16 +1,15 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Typography, Accordion, AccordionSummary, AccordionDetails, Grid, Divider, ListItemSecondaryAction } from '@material-ui/core';
+import {Divider, Grid, Typography, withStyles} from '@material-ui/core';
 import {Button, ListItem} from "@mui/material";
 import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
 import EditIcon from '@mui/icons-material/Edit';
 import ProjectDeleteDialog from "./dialogs/ProjectDeleteDialog";
-import DeleteIcon from "@mui/icons-material/Delete";
+import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import {Link as RouterLink, withRouter} from "react-router-dom";
 import ListItemButton from "@mui/material/ListItemButton";
 import {HdMWebAppAPI} from "../api";
 import ProjectDurationDialog from "./dialogs/ProjectDurationDialog";
-
 
 
 /**
@@ -33,7 +32,7 @@ class ProjectListEntry extends Component {
             endEvent: "",//props.endDate,
             showProjectCreateDialog: false,
             showProjectDeleteDialog: false,
-            showProjectDurationDialog: false
+            showProjectDurationDialog: false,
         }
     }
 
@@ -51,7 +50,6 @@ class ProjectListEntry extends Component {
         event.stopPropagation();
         this.setState({
             showProjectDurationDialog: true,
-
         });
     }
 
@@ -105,7 +103,7 @@ class ProjectListEntry extends Component {
     projectDurationDialogClosed = () => {
         this.setState({showProjectDurationDialog: false})
         this.getStartEventOfProject();
-       this.getEndEventOfProject();
+        this.getEndEventOfProject();
     }
 
     componentDidMount() {
@@ -118,27 +116,27 @@ class ProjectListEntry extends Component {
     /** Gibt das Start-Event dieses Projekts zurück */
     getStartEventOfProject = () => {
         HdMWebAppAPI.getAPI().getStartEvent(this.props.project.getID()).then(startEvent =>
-                this.setState({
-                    startEvent: startEvent,
-                })).catch(e =>
-                this.setState({ // Reset state with error from catch
-                    startEvent: null,
-                })
-            );
+            this.setState({
+                startEvent: startEvent,
+            })).catch(e =>
+            this.setState({ // Reset state with error from catch
+                startEvent: null,
+            })
+        );
     }
 
 
     /** Gibt das Start-Event dieses Projekts zurück */
     getEndEventOfProject = () => {
         HdMWebAppAPI.getAPI().getEndEvent(this.props.project.getID()).then(endEvent =>
-                this.setState({
-                    endEvent: endEvent,
+            this.setState({
+                endEvent: endEvent,
 
-                })).catch(e =>
-                this.setState({ // Reset state with error from catch
-                    endEvent: null,
-                })
-            );
+            })).catch(e =>
+            this.setState({ // Reset state with error from catch
+                endEvent: null,
+            })
+        );
     }
 
 
@@ -155,20 +153,20 @@ class ProjectListEntry extends Component {
                 <ListItem>
                     <Grid container alignItems={"center"}>
                         <ListItemButton component={RouterLink} to={{
-                        pathname: `/activities`,
-                        pro: {
-                            project: project
+                            pathname: `/activities`,
+                            pro: {
+                                project: project
                             },
-                        per: {
-                            person: person
-                        }
+                            per: {
+                                person: person
+                            }
                         }}>
-                        <Grid item xs={3} align={"center"}>
-                            <Typography variant={"h5"} component={"div"}>
-                                {project.getProjectName()}
-                            </Typography>
-                        </Grid>
-                         </ListItemButton>
+                            <Grid item xs={3} align={"center"}>
+                                <Typography variant={"h5"} component={"div"}>
+                                    {project.getProjectName()}
+                                </Typography>
+                            </Grid>
+                        </ListItemButton>
                         <Grid item xs={2} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 {project.getClient()}
@@ -177,14 +175,14 @@ class ProjectListEntry extends Component {
                         { person.id === project.owner ? (
                         <Grid item xs={3} align={"center"}>
                             <ListItemButton onClick={this.editProjectDurationButtonClicked}>
-                            <Typography align={"center"} variant={"h5"} component={"div"}>
-                                Vom {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
-                                dateStyle: "long",
-                            })} bis zum {new Date(endEvent.time_stamp).toLocaleString(
-                                'de-DE', {
+                                <Typography align={"center"} variant={"h5"} component={"div"}>
+                                    Vom {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
                                     dateStyle: "long",
-                                })}
-                            </Typography>
+                                })} bis zum {new Date(endEvent.time_stamp).toLocaleString(
+                                    'de-DE', {
+                                        dateStyle: "long",
+                                    })}
+                                </Typography>
                             </ListItemButton>
                         </Grid>)
                             :
@@ -207,7 +205,7 @@ class ProjectListEntry extends Component {
                             <Grid item xs={2} align={"center"}>
                                 <Button color='primary' size='small' startIcon={<EditIcon/>}
                                         onClick={this.editProjectButtonClicked}> </Button>
-                                <Button color='secondary' size='small' startIcon={<DeleteIcon/>}
+                                <Button color='secondary' size='small' startIcon={<RemoveCircleOutlineRoundedIcon/>}
                                         onClick={this.deleteProjectButtonClicked}> </Button>
                             </Grid>)
                             :
@@ -220,26 +218,27 @@ class ProjectListEntry extends Component {
                                      onClose={this.projectCreateDialogClosed}/>
                 <ProjectDeleteDialog project={project} show={showProjectDeleteDialog}
                                      onClose={this.deleteProjectDialogClosed}/>
-                <ProjectDurationDialog  startPoint={startEvent} endPoint={endEvent}
-                                        show={showProjectDurationDialog} onClose={this.projectDurationDialogClosed}
-                                        />
+                <ProjectDurationDialog startPoint={startEvent} endPoint={endEvent}
+                                       show={showProjectDurationDialog} onClose={this.projectDurationDialogClosed}
+                />
             </div>
         );
     }
 }
+
 /** Kompontenen spezifische Styles*/
 const styles = theme => ({
-  root: {
-    width: '100%',
-  },
+    root: {
+        width: '100%',
+    },
 });
 
 /** PropTypes */
 ProjectListEntry.propTypes = {
-  /** Das ProjectBO welches gerendert werden soll */
-  project: PropTypes.object.isRequired,
-  /** Event Handler Funktion, welche aufgerufen wird, nachdem ein Projekt erfolgreich gelöscht wurde. */
-  onProjectDeleted: PropTypes.func.isRequired
+    /** Das ProjectBO welches gerendert werden soll */
+    project: PropTypes.object.isRequired,
+    /** Event Handler Funktion, welche aufgerufen wird, nachdem ein Projekt erfolgreich gelöscht wurde. */
+    onProjectDeleted: PropTypes.func.isRequired
 }
 
 export default withRouter(withStyles(styles)(ProjectListEntry));

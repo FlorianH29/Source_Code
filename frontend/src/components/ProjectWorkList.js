@@ -131,7 +131,7 @@ class ProjectWorkList extends Component {
                     expandedPerson: per}}>
                     <Grid container spacing={1} justify='flex-start' alignItems='stretch'>
                         <Grid item>
-                            <ArrowCircleLeftRoundedIcon />
+                            <ArrowCircleLeftRoundedIcon color={'primary'}/>
                         </Grid>
                         <Grid item> zurück
                         </Grid>
@@ -139,10 +139,27 @@ class ProjectWorkList extends Component {
                 </Link>
             </Typography>
 
-          <Typography variant={"h4"} algin={"center"} component={"div"}>
-             Aktivität: {owner.activity.getActivityName()}
-          </Typography>
-          <Grid container mt={1}>
+            <Grid container direction={'row'} mt={2} alignItems='stretch' spacing={1}>
+                <Grid xs={3}/>
+                <Grid item xs={5} align={'center'}>
+                    <Typography variant={"h4"} algin={"center"} component={"div"}>
+                       Aktivität: {owner.activity.getActivityName()}
+                    </Typography>
+                 </Grid>
+                <Grid item xs={2} align={'right'}>
+                    <Button variant='contained' color='primary' onClick={this.handleStartEventButtonClicked}>
+                        Start buchen
+                    </Button>
+                </Grid>
+                <Grid item xs={2} align={'right'}>
+                    <Button variant='contained' color='primary' onClick={this.handleEndEventButtonClicked}>
+                        Ende buchen
+                    </Button>
+                </Grid>
+            </Grid>
+
+
+          <Grid container mt={3}>
             <Grid item xs={12} align={"center"}>
                 <Grid container>
                     <Grid item xs={3} align={"flex-end"}>
@@ -159,18 +176,7 @@ class ProjectWorkList extends Component {
                 {projectWorks.map(pw =>
                     <ProjectWorkListEntry key={pw.getID()} projectWork={pw} onProjectWorkDeleted={this.projectWorkDeleted}/>)
                 }
-                <Grid container direction={'row'} spacing={18}>
-                    <Grid item xs={4} align={'center'}>
-                        <Button variant='contained' color='primary' onClick={this.handleStartEventButtonClicked}>
-                            Start buchen
-                        </Button>
-                    </Grid>
-                    <Grid item xs={4} align={'center'}>
-                        <Button variant='contained' color='primary' onClick={this.handleEndEventButtonClicked}>
-                            Ende buchen
-                        </Button>
-                    </Grid>
-                </Grid>
+
             </Grid>
           </Grid>
             <Dialog open={open} onClose={this.handleClose}>

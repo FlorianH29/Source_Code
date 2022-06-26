@@ -60,15 +60,19 @@ class DepartureDialog extends Component {
       show ?
         <Dialog open={show} onClose={this.handleClose}>
           <DialogTitle>Gehen und Abmelden
-            <IconButton onClick={this.handleClose}>
+            <IconButton onClick={this.handleClose} color={'primary'}>
               <CloseIcon />
             </IconButton>
           </DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Wollen Sie wirklich gehen und sich ausloggen?
+                Wollen Sie wirklich gehen und sich ausloggen?
             </DialogContentText>
+                <DialogContentText>
+                    Wenn Sie sich in einer laufenden Projektarbeiten oder Pause befinden, werden diese für Sie beendet.
+                </DialogContentText>
           </DialogContent>
+
           <DialogActions>
             <Button onClick={this.handleClose} color='secondary'>
               Abbrechen

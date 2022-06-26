@@ -42,7 +42,6 @@ class ActivityList extends Component {
             expandedProjectID: expandedID,
             expandedProjectName: expandedName,
         };
-
     };
 
 
@@ -187,14 +186,22 @@ class ActivityList extends Component {
                             </Grid>
                         </Link>
                     </Typography>
-                    <Typography variant={"h4"} algin={"left"} component={"div"}>
-                        Projekt: {projectName}
-                    </Typography>
-                    <Button disabled={disableButton} variant='contained' color='primary' startIcon={<AddIcon/>}
-                        onClick={this.handleAddActivityButtonClicked}>
-                        Aktivität anlegen
-                    </Button>
-                    <Grid container mt={1}>
+                        <Grid container mt={2}  alignItems='stretch' spacing={1}>
+                            <Grid item xs={3}/>
+                            <Grid item xs={5} align={"center"}>
+                                <Typography variant={"h4"} algin={"center"} component={"div"}>
+                                    Projekt: {projectName}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={4} align={"right"}>
+                                <Button disabled={disableButton} variant='contained' align={"center"} color='primary' startIcon={<AddIcon/>}
+                                onClick={this.handleAddActivityButtonClicked}>
+                                    Aktivität anlegen
+                                </Button>
+                            </Grid>
+                        </Grid>
+
+                    <Grid container mt={3}>
                         <Grid item xs={12} align={"center"}>
                             <Grid container>
                                 <Grid item xs={3} align={"flex-end"}>
