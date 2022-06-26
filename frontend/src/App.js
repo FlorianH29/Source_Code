@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import ActivityList from "./components/ActivityList";
 import Navigator from './components/layout/Navigator';
 import ProjectList from "./components/ProjectList";
@@ -10,12 +10,10 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import firebaseConfig from './firebaseconfig';
-import Welcome from "./components/pages/Welcome";
 
 import {Person} from "@mui/icons-material";
 import TimeIntervalTransactionList from "./components/TimeIntervalTransactionList";
 import SignInHeader from "./components/layout/SignInHeader";
-import DepartureDialog from "./components/dialogs/DepartureDialog";
 import {Dialog} from "@mui/material";
 import {DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
 import Button from "@mui/material/Button";
@@ -28,7 +26,7 @@ class App extends React.Component {
     constructor(props) {
         super(props);
 
-        // Init an empty state
+        // Initiiere einen leeren State
         this.state = {
             currentPerson: null,
             authError: null,
@@ -108,8 +106,6 @@ class App extends React.Component {
       // Erstellen eines Gehen-Ereignis
       let newArriveEvent = new ArriveBO(this.state.firebase_id)
       HdMWebAppAPI.getAPI().addArrive().then(arrive => {
-        // Backend call successful
-        // reinit the dialogs state for a new empty customer
         //this.setState(this.baseState);
         //this.onClose(arrive); // call the parent with the departure object from backend
         console.log("test")
