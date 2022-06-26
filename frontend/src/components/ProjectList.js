@@ -90,7 +90,7 @@ class ProjectList extends Component {
                     <Grid item xs={3}/>
                     <Grid item xs={5} align={"center"}>
                         <Typography variant={"h4"} algin={"center"} component={"div"}>
-                            Meine Projekt:
+                            Meine Projekte:
                         </Typography>
                     </Grid>
                     <Grid item xs={4}  align={"right"}>

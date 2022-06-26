@@ -69,7 +69,7 @@ class DepartureDialog extends Component {
                 Wollen Sie wirklich gehen und sich ausloggen?
             </DialogContentText>
                 <DialogContentText>
-                    Wenn Sie sich in einer laufenden Projektarbeiten oder Pause befinden, werden diese für Sie beendet.
+                    Wenn Sie sich in einer laufenden Projektarbeit oder Pause befinden, wird diese für Sie beendet.
                 </DialogContentText>
           </DialogContent>
 
