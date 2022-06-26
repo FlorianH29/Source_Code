@@ -26,8 +26,7 @@ class ProjectDeleteDialog extends Component {
 
     /** den State initialisieren */
     this.state = {
-      deletingInProgress: false,
-      deletingError: null
+
     };
   }
 

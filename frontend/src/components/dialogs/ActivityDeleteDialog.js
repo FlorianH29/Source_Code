@@ -1,8 +1,16 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    IconButton
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import { HdMWebAppAPI } from '../../api';
+import {HdMWebAppAPI} from '../../api';
 
 /**
  * Der DeleteDialog wird angezeigt, wenn eine vorher angelegte Aktivität gelöscht werden soll.
@@ -14,48 +22,28 @@ class ActivityDeleteDialog extends Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            deletingInProgress: false,
-            deletingError: null
-        };
     }
 
     deleteActivity = () => {
-    HdMWebAppAPI.getAPI().deleteActivity(this.props.activity.getID()).then(activity => {
-      this.setState({
-        deletingInProgress: false,              // disable loading indicator
-        deletingError: null                     // no error message
-      });
-      this.props.onClose(this.props.activity);  // call the parent with the deleted customer
-    }).catch(e =>
-      this.setState({
-        deletingInProgress: false,              // disable loading indicator
-        deletingError: e                        // show error message
-      })
-    );
-
-    // set loading to true
-    this.setState({
-      deletingInProgress: true,                 // show loading indicator
-      deletingError: null                       // disable error message
-    });
+        HdMWebAppAPI.getAPI().deleteActivity(this.props.activity.getID()).then(activity => {
+            this.props.onClose(this.props.activity);  // rufe den Elternteil mit der gelöschten Activity auf
+        }).catch(e =>
+            console.log(e))
     }
 
     handleClose = () => {
-    this.props.onClose(null);
+        this.props.onClose(null);
     }
 
     render() {
-        const { activity, show } = this.props;
-        const { deletingInProgress, deletingError } = this.state;
+        const {activity, show} = this.props;
 
         return (
         show ?
             <Dialog open={show} onClose={this.handleClose}>
                 <DialogTitle id='delete-dialog-title'>Aktivität löschen
                     <IconButton onClick={this.handleClose}>
-                        <CloseIcon />
+                        <CloseIcon/>
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>

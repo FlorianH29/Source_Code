@@ -1,20 +1,5 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {
-    withStyles,
-    Typography,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
-    Grid,
-    Divider,
-    ListItemSecondaryAction
-} from '@material-ui/core';
-import {Button, ListItem, TextField} from "@mui/material";
-import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
-import EditIcon from '@mui/icons-material/Edit';
-import ProjectDeleteDialog from "./dialogs/ProjectDeleteDialog";
-import DeleteIcon from "@mui/icons-material/Delete";
+import {Accordion, AccordionDetails, AccordionSummary, Divider, Grid, Typography, withStyles} from '@material-ui/core';
 import {HdMWebAppAPI} from "../api";
 import ProjectAnalysisActivityList from "./ProjectAnalysisActivityList";
 

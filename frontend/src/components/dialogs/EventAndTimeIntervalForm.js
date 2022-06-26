@@ -1,29 +1,19 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {
-    withStyles,
     Button,
-    IconButton,
     Dialog,
-    DialogTitle,
+    DialogActions,
     DialogContent,
     DialogContentText,
-    DialogActions,
+    DialogTitle,
+    IconButton,
     TextField
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import {HdMWebAppAPI} from '../../api';
-import {DatePicker, DateTimePicker, LocalizationProvider} from '@mui/lab';
+import {DateTimePicker, LocalizationProvider} from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 
-/**
- * Shows a modal form dialog for a CustomerBO in prop customer. If the customer is set, the dialog is configured
- * as an edit dialog and the text fields of the form are filled from the given CustomerBO object.
- * If the customer is null, the dialog is configured as a new customer dialog and the textfields are empty.
- * In dependency of the edit/new state, the respective backend calls are made to update or create a customer.
- * After that, the function of the onClose prop is called with the created/update CustomerBO object as parameter.
- * When the dialog is canceled, onClose is called with null.
- */
 class EventAndTimeIntervalForm extends Component {
 
     constructor(props) {
@@ -131,12 +121,12 @@ class EventAndTimeIntervalForm extends Component {
         }
     }
 
-    /** Renders the component */
+    /** Rendert die Komponente */
     render() {
         const {show} = this.props;
         const {projectWorkName, projectWorkNameValidationFailed} = this.state;
 
-        let title = 'Projectarbeit bearbeiten';
+        let title = 'Projektarbeit bearbeiten';
         let header = '';
 
         return (

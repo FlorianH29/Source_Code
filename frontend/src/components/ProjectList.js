@@ -85,41 +85,47 @@ class ProjectList extends Component {
         //console.log(this.state)
         return (
             <div>
-                <Box m={18} pl={8}>
-                    <Grid container direction={'row'} spacing={18}>
-                        <Grid item xs={3} align={"center"}>
-                            <Button variant='contained' color='warning'
-                                    onClick={this.handleCreateProjectButtonClicked}>
-                                Projekt erstellen
-                            </Button>
-                        </Grid>
+                <Box m={22} pl={1}>
+                <Grid container mt={14}  alignItems='stretch' spacing={1}>
+                    <Grid item xs={3}/>
+                    <Grid item xs={5} align={"center"}>
+                        <Typography variant={"h4"} algin={"center"} component={"div"}>
+                            Meine Projekte:
+                        </Typography>
                     </Grid>
-                    <Grid container>
-                        <Grid item xs={12} align={"center"}>
-                            <Grid container>
-                                <Grid item xs={3} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Meine Projekte: </Typography>
-                                </Grid>
-                                <Grid item xs={2} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Klient: </Typography>
-                                </Grid>
-                                <Grid item xs={3} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Projektlaufzeit: </Typography>
-                                </Grid>
-                                <Grid item xs={2} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Arbeitsleistung: </Typography>
-                                </Grid>
+                    <Grid item xs={4}  align={"right"}>
+                        <Button variant='contained' color='primary'
+                                onClick={this.handleCreateProjectButtonClicked}>
+                            Projekt erstellen
+                        </Button>
+                    </Grid>
+                </Grid>
+                <Grid container mt={3}>
+                    <Grid item xs={12}  align={"center"}>
+                        <Grid container>
+                            <Grid item xs={3} align={"flex-end"}>
+                                <Typography variant={"h5"} component={"div"}> Projektname: </Typography>
                             </Grid>
-                            <Divider/>
-                            {projects.map(pro =>
-                                <ProjectListEntry key={pro.getID()} project={pro}
-                                                  onProjectDeleted={this.projectDeleted}/>)}
+                            <Grid item xs={2} align={"flex-end"}>
+                                <Typography variant={"h5"} component={"div"}> Klient: </Typography>
+                            </Grid>
+                            <Grid item xs={3} align={"flex-end"}>
+                                <Typography variant={"h5"} component={"div"}> Projektlaufzeit: </Typography>
+                            </Grid>
+                            <Grid item xs={2} align={"flex-end"}>
+                                <Typography variant={"h5"} component={"div"}> Arbeitsleistung: </Typography>
+                            </Grid>
                         </Grid>
+                        <Divider/>
+                        {projects.map(pro =>
+                            <ProjectListEntry key={pro.getID()} project={pro}
+                                              onProjectDeleted={this.projectDeleted}/>)}
                     </Grid>
-                    <ProjectCreateDialog onClose={this.projectCreateDialogClosed} show={showProjectCreateDialog}/>
-                    <ProjectDurationDialog openProjectDurationDialog={this.handleShowProjectCreation}
-                                           onClose={this.handleDurationClose} show={showProjectDurationDialog}/>
-                </Box>
+                </Grid>
+                <ProjectCreateDialog onClose={this.projectCreateDialogClosed} show={showProjectCreateDialog}/>
+                <ProjectDurationDialog openProjectDurationDialog={this.handleShowProjectCreation}
+                                       onClose={this.handleDurationClose} show={showProjectDurationDialog}/>
+            </Box>
             </div>
         );
     }

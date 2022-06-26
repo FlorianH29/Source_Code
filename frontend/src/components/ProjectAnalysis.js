@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from "../api";
-import PropTypes from "prop-types";
 import {Box, Divider, Grid, TextField, Typography} from "@mui/material";
 import ProjectAnalysisProjectEntry from "./ProjectAnalysisProjectEntry";
 import {DatePicker, LocalizationProvider} from "@mui/lab";

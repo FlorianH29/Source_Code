@@ -1,13 +1,8 @@
 import React, {Component} from 'react';
-import {EventBO, HdMWebAppAPI} from '../api';
-import {Button, Grid, Typography, Divider, Dialog, DialogActions, DialogContent} from '@mui/material';
+import {Button, Divider, Grid} from '@mui/material';
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
 import PropTypes from "prop-types";
-import {DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
-import DepartureBO from "../api/DepartureBO";
-import firebase from "firebase/compat/app";
 import DepartureDialog from "./dialogs/DepartureDialog";
 
 class Departure extends Component {

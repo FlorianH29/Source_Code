@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {Grid, Typography,} from '@material-ui/core';
+import {Button, Grid, Typography} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import {HdMWebAppAPI} from '../api';
-import {Box, Button, Divider} from "@mui/material";
+import {Box, Divider} from "@mui/material";
 import ProjectMemberListEntry from "./ProjectMemberListEntry";
 import Card from "@mui/material/Card";
 import CheckboxForm from "./dialogs/CheckboxForm";
@@ -21,7 +20,7 @@ class ProjectMemberList extends Component {
             potentialProjectMembers: [],
             showCheckboxForm: false
         };
-        console.log(this.props.project)
+        //console.log(this.props.project)
     }
 
     getProjectMembersOfProject = () => {

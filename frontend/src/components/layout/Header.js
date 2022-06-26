@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import {AppBar, Typography, Toolbar, IconButton, Menu, MenuList, Box} from '@mui/material';
+import {AppBar, Box, IconButton, Menu, MenuList, Toolbar, Typography} from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
-import MenuItem from "@mui/material/MenuItem";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
@@ -11,14 +10,12 @@ class Header extends Component {
     constructor(props) {
         super(props);
 
-        // Init an empty state
+        // Initiiere einen leeren state
         this.state = {
             anchorEl: null,
             person: null
         };
     };
-
-
 
     handleOpenUserMenu = (event) => {
         this.setState({anchorEl: event.currentTarget});
@@ -83,7 +80,7 @@ class Header extends Component {
     }
 }
 
-/** Component specific styles */
+/** Komponentenspezifische Styles */
 const styles = theme => ({
   root: {
     width: '100%',

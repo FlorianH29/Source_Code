@@ -36,7 +36,6 @@ class ProjectCreateDialog extends Component {
 
     addProject = () => {
         let newProjectBO = new ProjectBO(this.state.projectName, this.state.client);
-        /**Hier muss noch die ID des ausgewählten Zeitintervalles rein.*/
         HdMWebAppAPI.getAPI().addProject(newProjectBO).then(project => {
             this.setState(this.baseState);
             this.props.onClose(project);

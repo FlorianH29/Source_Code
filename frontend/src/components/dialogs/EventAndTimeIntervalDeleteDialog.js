@@ -1,6 +1,13 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions} from '@material-ui/core';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    IconButton
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import {HdMWebAppAPI} from '../../api';
 
@@ -19,20 +26,20 @@ class EventAndTimeIntervalDeleteDialog extends Component {
         };
     }
 
-      /** Das Zeitintervall löschen */
-  deleteTimeInterval = () => {
-    HdMWebAppAPI.getAPI().deleteTimeInterval(this.props.event.timeintervaltransactionid).then(timeInterval => {
-      this.props.onClose();  // call the parent with the deleted customer
-    }).catch(e =>
-        console.log(e))
-  }
+    /** Das Zeitintervall löschen */
+    deleteTimeInterval = () => {
+        HdMWebAppAPI.getAPI().deleteTimeInterval(this.props.event.timeintervaltransactionid).then(timeInterval => {
+            this.props.onClose();
+        }).catch(e =>
+            console.log(e))
+    }
 
     /** Behandelt das Click Event des Buttons Abbrechen */
     handleClose = () => {
         this.props.onClose();
     }
 
-    /** Renders the component */
+    /** Rendert die Komponente */
     render() {
         const {event, show} = this.props;
         return (

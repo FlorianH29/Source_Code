@@ -1,7 +1,7 @@
 from server.bo import BusinessObject as bo
 
 
-class Activity (bo.BusinessObject):
+class Activity(bo.BusinessObject):
 
     def __init__(self):
         super().__init__()
@@ -44,7 +44,8 @@ class Activity (bo.BusinessObject):
 
     def __str__(self):
         """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
-        return "Activity: {}, {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self._name, self._capacity,
+        return "Activity: {}, {}, {}, {}, {}, {}".format(self.get_id(), self.get_last_edit(), self._name,
+                                                         self._capacity,
                                                          self._affiliated_project, self._work_time)
 
     @staticmethod

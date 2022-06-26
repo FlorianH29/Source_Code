@@ -1,13 +1,11 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Typography, Accordion, AccordionSummary, AccordionDetails, Grid, Divider, ListItemSecondaryAction } from '@material-ui/core';
-import { Button, ButtonGroup } from '@material-ui/core';
-import DeleteIcon from '@mui/icons-material/Delete';
+import {Button, Divider, Grid, Typography} from '@material-ui/core';
+import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import EditIcon from '@mui/icons-material/Edit';
 import ListItem from "@mui/material/ListItem";
 import ActivityDeleteDialog from "./dialogs/ActivityDeleteDialog";
 import ActivityForm from "./dialogs/ActivityForm";
-import {HdMWebAppAPI} from "../api";
 import {Link as RouterLink, withRouter} from "react-router-dom";
 import ListItemButton from "@mui/material/ListItemButton";
 
@@ -23,7 +21,7 @@ class ActivityListEntry extends Component {
 
         // den State initialisieren
         this.state = {
-            activity : props.activity,
+            activity: props.activity,
             showActivityForm: false,
             showActivityDeleteDialog: false,
         };
@@ -31,10 +29,10 @@ class ActivityListEntry extends Component {
 
     /** Behandelt das onClick Event des Activity bearbeiten Buttons */
     editActivityButtonClicked = (event) => {
-    event.stopPropagation();
-    this.setState({
-      showActivityForm: true
-    });
+        event.stopPropagation();
+        this.setState({
+            showActivityForm: true
+        });
     }
 
       /** Behandelt das onClose Event von ActivityForm */
@@ -54,25 +52,25 @@ class ActivityListEntry extends Component {
 
     /** Behandelt das onClose Event von ActivityDeleteDialog*/
     deleteActivityDialogClosed = (activity) => {
-    if (activity) {
-      this.props.onActivityDeleted(activity);
-    }
-    this.setState({
-      showActivityDeleteDialog: false // Den Dialog nicht mehr anzeigen
-    });
+        if (activity) {
+            this.props.onActivityDeleted(activity);
+        }
+        this.setState({
+            showActivityDeleteDialog: false // Den Dialog nicht mehr anzeigen
+        });
     }
 
     /** Behandelt das onClick Event des Activity löschen Buttons */
     deleteActivityButtonClicked = (event) => {
-    event.stopPropagation();
-    this.setState({
-      showActivityDeleteDialog: true
-    });
+        event.stopPropagation();
+        this.setState({
+            showActivityDeleteDialog: true
+        });
     }
 
     /** Rendert die Componente*/
     render() {
-    const { project } = this.props;
+    const { project, person } = this.props;
     const { activity, showActivityForm, showActivityDeleteDialog } = this.state;
 
       // console.log(this.state);
@@ -85,7 +83,10 @@ class ActivityListEntry extends Component {
                 owner: {
                      activity: activity,
                      project: project
-                    }
+                    },
+                 per: {
+                    person: person
+                 }
                     }}>
                <Grid item xs={3} align={"center"}>
                  <Typography variant={"h5"} component={"div"}>
@@ -103,10 +104,14 @@ class ActivityListEntry extends Component {
                    {activity.getActivityWorkTime()}
                  </Typography>
                </Grid>
-               <Grid item xs={3} align={"center"}>
-                   <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editActivityButtonClicked}> </Button>
-                   <Button color='secondary' size='small' startIcon={<DeleteIcon />} onClick={this.deleteActivityButtonClicked}> </Button>
-               </Grid>
+                 { person.getID() === project.owner ? (
+                  <Grid item xs={3} align={"center"}>
+                    <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editActivityButtonClicked}> </Button>
+                    <Button color='secondary' size='small' startIcon={<RemoveCircleOutlineRoundedIcon />} onClick={this.deleteActivityButtonClicked}> </Button>
+                  </Grid>
+                     ):
+                 <Grid item xs={3} align={"center"}>
+                </Grid>}
              </Grid>
            </ListItem>
            <Divider/>
@@ -118,9 +123,9 @@ class ActivityListEntry extends Component {
 }
 
 const styles = theme => ({
-  root: {
-    width: '100%',
-  },
+    root: {
+        width: '100%',
+    },
 });
 
 ActivityListEntry.propTypes = {

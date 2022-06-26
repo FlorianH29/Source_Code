@@ -26,7 +26,7 @@ api = Api(app, version='1.0', title='HdMWebAppAPI',
 
 hdmwebapp = api.namespace('hdmwebapp', description='Funktionen der HdMWebApp zur Zeitbuchung.')
 
-# BusinessObject dient als Basisklasse, auf der die weiteren Strukturen aufsetzen.
+"""BusinessObject dient als Basisklasse, auf der die weiteren Strukturen aufsetzen."""
 bo = api.model('BusinessObject', {
     'id': fields.Integer(attribute='_id', description='Der Unique Identifier eines Business Object'),
     'last_edit': fields.DateTime(attribute='_last_edit', description='Der Zeitpunkt der letzten Änderung')
@@ -163,25 +163,6 @@ class PersonByIDOperations(Resource):
             return '', 500
 
 
-"""
-@hdmwebapp.route('/worktimeaccount/<int:id>')
-@hdmwebapp.param('id', 'Die ID des Arbeitszeitkonto-Objekts')
-@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class WorkTimeAccountContentList(Resource):
-    @hdmwebapp.marshal_list_with(work_time_account)
-    @secured
-    def get(self, id):
-        hwa = HdMWebAppAdministration()
-        result = []
-        person = hwa.get_person_by_id(id)
-        projects = hwa.get_project_by_person_id(id)
-        result.append({"name": "Arbeitszeit", "time": hwa.calculate_sum_of_time_intervals_by_person(person)})
-        for p in projects:
-            result.append({"name": p.get_project_name(), "time": hwa.calculate_sum_of_project_work_by_person(person)})
-        return result
-        """
-
-
 @hdmwebapp.route('/workperformance/<int:id>')
 @hdmwebapp.param('id', 'Die ID des Arbeitszeitkonto-Objekts')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -190,7 +171,6 @@ class WorkTimeAccountContentList(Resource):
     @secured
     def get(self, id, start_time, end_time):
         hwa = HdMWebAppAdministration()
-        result = []
         person = hwa.get_person_by_id(id)
         result = hwa.get_intervals_of_person_between_time_stamps(person, start_time, end_time)
         return result
@@ -227,11 +207,11 @@ class ActivitiesOperations(Resource):
     def get(self, id):
         hwa = HdMWebAppAdministration()
         pro = hwa.get_project_by_id(id)
-        # Das durch die id gegebene Projekt als Objekt speichern.
+        """Das durch die id gegebene Projekt als Objekt speichern."""
 
         if pro is not None:
             activity_list = hwa.get_activities_of_project(pro)
-            # Auslesen der Aktivitäten, die dem Projekt untergliedert sind.
+            """Auslesen der Aktivitäten, die dem Projekt untergliedert sind."""
             return activity_list
         else:
             return "Project not found", 500
@@ -386,7 +366,7 @@ class ProjectListOperations(Resource):
             result = hwa.create_project(project_name, client, inter, per)
             return result, 200
         else:
-            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            """Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler."""
             return '', 500
 
 
@@ -442,7 +422,7 @@ class ProjectDurationOperation(Resource):
     @hdmwebapp.expect(event)
     @secured
     def post(self):
-        """Erstellen eines neuen Events."""
+        """Erstellen eines neuen Events, dass den Startpunkt eines Projekts abbildet."""
 
         hwa = HdMWebAppAdministration()
         proposal = Event.from_dict(api.payload)
@@ -703,7 +683,7 @@ class EventUpdateDateOperations(Resource):
     @secured
     def put(self, id, date):
         """
-        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        Update eines bestimmten Events. Objekt wird durch die id in dem URI bestimmt.
         """
         hwa = HdMWebAppAdministration()
         event = hwa.get_event_by_id(id)
@@ -725,7 +705,7 @@ class ArriveUpdateDateOperations(Resource):
     @secured
     def put(self, id, date):
         """
-        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        Update eines bestimmten Arrive-Objektes. Objekt wird durch die id in dem URI bestimmt.
         """
         hwa = HdMWebAppAdministration()
         arrive = hwa.get_arrive_event_by_id(id)
@@ -771,7 +751,7 @@ class DepartureUpdateDateOperations(Resource):
     @secured
     def put(self, id, date):
         """
-        Update eines bestimmten Projektarbeitsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        Update eines bestimmten DepartureObjekts. Objekt wird durch die id in dem URI bestimmt.
         """
         hwa = HdMWebAppAdministration()
         departure = hwa.get_departure_event_by_id(id)
@@ -857,7 +837,7 @@ class DeleteTimeInterval(Resource):
     @secured
     def delete(self, id):
         """
-        Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
+        Löschen eines bestimmten Zeitintervalls. Objekt wird durch die id in dem URI bestimmt.
         """
         hwa = HdMWebAppAdministration()
         tit = hwa.get_time_interval_transaction_by_id(id)
@@ -971,4 +951,7 @@ for p in pe:
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
+
+hwa = HdMWebAppAdministration()
+

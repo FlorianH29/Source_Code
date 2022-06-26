@@ -1,30 +1,14 @@
 import * as React from 'react';
-import {
-    AppBar,
-    CssBaseline,
-    Typography,
-    Toolbar,
-    IconButton,
-    Menu,
-    Box,
-    Drawer,
-    Button,
-    Link,
-    Divider,
-    MenuItem,
-    Popover
-} from '@mui/material';
+import {Component} from 'react';
+import {AppBar, Box, CssBaseline, Divider, Drawer, IconButton, Popover, Toolbar, Typography} from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import {Component} from "react";
 import PersonDeleteDialog from "../dialogs/PersonDeleteDialog";
 import PersonEditDialog from "../dialogs/PersonEditDialog";
-import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
-import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
@@ -32,7 +16,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import AssessmentRoundedIcon from '@mui/icons-material/AssessmentRounded';
 import {Link as RouterLink} from "react-router-dom";
-import {HdMWebAppAPI, PersonBO} from "../../api";
+import {HdMWebAppAPI} from "../../api";
 import EventManager from "../EventManager";
 import Departure from "../Departure";
 
