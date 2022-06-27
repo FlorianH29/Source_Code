@@ -132,7 +132,7 @@ class Navigator extends Component {
                 <CssBaseline/>
                 <AppBar position="fixed" sx={{
                     width: `calc(100% - ${lel}px)`,
-                    bgcolor: "#05353f",
+                    bgcolor: "primary",
                     ml: `${boxWidth}px`,
                     p: 4,
                     zIndex: (theme) => theme.zIndex.drawer + 1

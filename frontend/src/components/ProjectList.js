@@ -107,7 +107,7 @@ class ProjectList extends Component {
                                 <Typography variant={"h5"} component={"div"}> Projektname: </Typography>
                             </Grid>
                             <Grid item xs={2} align={"flex-end"}>
-                                <Typography variant={"h5"} component={"div"}> Klient: </Typography>
+                                <Typography variant={"h5"} component={"div"}> Auftraggeber: </Typography>
                             </Grid>
                             <Grid item xs={3} align={"flex-end"}>
                                 <Typography variant={"h5"} component={"div"}> Projektlaufzeit: </Typography>

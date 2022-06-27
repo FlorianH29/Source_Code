@@ -91,18 +91,23 @@ class ProjectMemberList extends Component {
 
         return (
             <div>
-                <Box m={25}>
+                <Box m={25} pl={1}>
                     <Card>
-                        <Grid container spacing={1} justifyContent={'center'}>
-                            <Grid item xs={12}>
-                                <Typography variant={"h5"} algin={"left"} component={"div"}>
+                        <Grid container mt={14}  alignItems='stretch' spacing={1}>
+                            <Grid item xs={3}/>
+                            <Grid item xs={5} align={"center"}>
+                                <Typography variant={"h4"} algin={"center"} component={"div"}>
                                     Projektmitglieder
                                 </Typography>
-                                <Button variant='contained' color='primary' startIcon={<AddIcon/>} algin={"center"}
-                                        onClick={this.handleAddProjectMemberButtonClicked}>
+                            </Grid>
+                            <Grid item xs={4}  align={"right"}>
+                                <Button variant='contained' color='primary' startIcon={<AddIcon/>}
+                                onClick={this.handleAddProjectMemberButtonClicked}>
                                     Mitarbeiter Hinzufügen
                                 </Button>
                             </Grid>
+                        </Grid>
+
                             <Grid container>
                                 <Grid item xs={12} align={"center"}>
                                     <Grid container>
@@ -126,7 +131,6 @@ class ProjectMemberList extends Component {
                                             getPotentialMembersForProject={this.getPotentialMembersForProject}
                                             potentialProjectMembers={this.state.potentialProjectMembers}></CheckboxForm>
 
-                        </Grid>
                     </Card>
                 </Box>
             </div>
