@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button, Grid, Typography} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import {HdMWebAppAPI} from '../api';
-import {Box, Divider} from "@mui/material";
+import {Box, Divider} from '@material-ui/core';
 import ProjectMemberListEntry from "./ProjectMemberListEntry";
 import Card from "@mui/material/Card";
 import CheckboxForm from "./dialogs/CheckboxForm";

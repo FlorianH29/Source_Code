@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Divider, Grid, Typography, withStyles} from '@material-ui/core';
-import {Button, ListItem} from "@mui/material";
+import {Button, ListItem} from '@material-ui/core';
 import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
 import EditIcon from '@mui/icons-material/Edit';
 import ProjectDeleteDialog from "./dialogs/ProjectDeleteDialog";
@@ -161,7 +161,7 @@ class ProjectListEntry extends Component {
                                 person: person
                             }
                         }}>
-                            <Grid item xs={3} align={"center"}>
+                            <Grid item xs={2} align={"center"}>
                                 <Typography variant={"h5"} component={"div"}>
                                     {project.getProjectName()}
                                 </Typography>

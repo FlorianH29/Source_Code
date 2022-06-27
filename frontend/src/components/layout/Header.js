@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {AppBar, Box, IconButton, Menu, MenuList, Toolbar, Typography} from '@mui/material';
+import {AppBar, Box, IconButton, Menu, MenuList, Toolbar, Typography} from '@material-ui/core';
 import PersonIcon from '@mui/icons-material/Person';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';

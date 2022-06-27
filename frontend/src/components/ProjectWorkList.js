@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {Button, Dialog, DialogActions, DialogContent, Divider, Grid, Link, Typography} from '@mui/material';
+import {Button, Dialog, DialogActions, DialogContent, Divider, Grid, Link, Typography} from '@material-ui/core';
 import Box from "@mui/material/Box";
 import ProjectWorkListEntry from "./ProjectWorkListEntry";
 import EventManager from "./EventManager";

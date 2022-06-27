@@ -1,6 +1,15 @@
 import React, {Component} from 'react';
 import {EventBO, HdMWebAppAPI} from "../../api";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField} from "@mui/material";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    IconButton,
+    TextField
+} from '@material-ui/core';
 import {DatePicker, LocalizationProvider} from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import ProjectCreateDialog from "./ProjectCreateDialog";
@@ -183,6 +192,8 @@ class ProjectDurationDialog extends Component {
                                         renderInput={(params) => <TextField {...params} />}
                                     />
                                 </LocalizationProvider>
+                                {" "}
+                                {" "}
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
                                         disabled={disableEndButton}

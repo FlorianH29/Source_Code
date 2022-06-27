@@ -14,11 +14,13 @@ import {Person} from "@mui/icons-material";
 import TimeIntervalTransactionList from "./components/TimeIntervalTransactionList";
 import SignInHeader from "./components/layout/SignInHeader";
 import DepartureDialog from "./components/dialogs/DepartureDialog";
-import {Dialog, Grid} from "@mui/material";
+import { Dialog, Grid} from "@mui/material";
 import {DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
 import Button from "@mui/material/Button";
 import {ArriveBO, HdMWebAppAPI} from "./api";
 import ProjectAnalysis from "./components/ProjectAnalysis";
+import {ThemeProvider, CssBaseline} from '@material-ui/core';
+import theme from "./components/Theme";
 
 
 class App extends React.Component {
@@ -117,6 +119,8 @@ class App extends React.Component {
 
         console.log(this.state)
         return (
+            <ThemeProvider theme={theme}>
+                <CssBaseline/>
             <div style={{flex:1}}>
                 <Router>
 
@@ -182,6 +186,7 @@ class App extends React.Component {
 
             </Router>
           </div>
+                </ThemeProvider>
         );
     }
 }

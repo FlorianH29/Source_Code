@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from "../api";
-import {Button, Grid, Typography, Divider, Box, Link, Card} from '@mui/material';
+import {Button, Grid, Typography, Divider, Box, Link, Card} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ActivityForm from "./dialogs/ActivityForm";
 import ActivityListEntry from "./ActivityListEntry";
@@ -160,7 +160,7 @@ class ActivityList extends Component {
 
         return (
             <div>
-                <Box mt={18} ml={18} mr={5} mb={10} pl={8}>
+                <Box mt={18} ml={22} mr={5} mb={10} pl={8}>
                     <Card>
                     <Typography component='div' color={"primary"}>
                         <Link component={RouterLink} to={{

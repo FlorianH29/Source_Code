@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {AppBar, Box, Toolbar, Typography} from '@mui/material';
+import {AppBar, Box, Toolbar, Typography} from '@material-ui/core';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 

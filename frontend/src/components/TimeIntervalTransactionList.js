@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {Box, Divider, Grid, TextField, Typography} from "@mui/material";
+import {Box, Divider, Grid, TextField, Typography} from '@material-ui/core';
 import TimeIntervalTransactionListEntry from "./TimeIntervalTransactionListEntry"
 import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -44,8 +44,10 @@ class TimeIntervalTransactionList extends Component {
         const {events, startDate, endDate} = this.state;
         return (
             <div>
-                <Box m={20}>
+                <Box m={24}>
                     <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
+
+
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
                                 label={"Start Datum"}

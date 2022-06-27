@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {Divider, Grid, Typography} from '@mui/material';
+import {Divider, Grid, Typography} from '@material-ui/core';
 import ProjectAnalysisProjectWorkListEntry from "./ProjectAnalysisProjectWorkListEntry";
 
 class ProjectAnalysisProjectWorkList extends Component {

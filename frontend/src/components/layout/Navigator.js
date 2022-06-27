@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {Component} from 'react';
-import {AppBar, Box, CssBaseline, Divider, Drawer, IconButton, Popover, Toolbar, Typography} from '@mui/material';
+import {Box, CssBaseline, Divider,  IconButton, Popover, Typography, AppBar, Drawer, Toolbar} from '@mui/material';
+
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -122,7 +123,7 @@ class Navigator extends Component {
 
     render() {
         const {showPersonDeleteDialog, showPersonEditDialog, person, disableStartButton, disableEndButton, eventT} = this.state;
-        const drawerWidth = 200;
+        const drawerWidth = 220;
         const lel = 0;
         const boxWidth = 200;
         console.log(this.state)

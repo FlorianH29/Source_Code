@@ -1,10 +1,19 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {Box, Button, Divider, Grid, Typography} from '@mui/material';
+import {Button, CssBaseline, Divider, Grid, Typography} from '@material-ui/core';
 import ProjectListEntry from "./ProjectListEntry";
 import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
 import PropTypes from "prop-types";
 import ProjectDurationDialog from "./dialogs/ProjectDurationDialog";
+import theme from "./Theme";
+import {withStyles} from "@mui/styles";
+import { createTheme, ThemeProvider } from '@material-ui/core'
+import {Box} from '@material-ui/core'
+
+
+
+
+
 
 class ProjectList extends Component {
 
@@ -84,8 +93,9 @@ class ProjectList extends Component {
         const {projects, showProjectCreateDialog, showProjectDurationDialog} = this.state
         //console.log(this.state)
         return (
+
             <div>
-                <Box m={22} pl={1}>
+                <Box m={24} pl={1}>
                 <Grid container mt={14}  alignItems='stretch' spacing={1}>
                     <Grid item xs={3}/>
                     <Grid item xs={5} align={"center"}>
@@ -94,10 +104,12 @@ class ProjectList extends Component {
                         </Typography>
                     </Grid>
                     <Grid item xs={4}  align={"right"}>
+
                         <Button variant='contained' color='primary'
                                 onClick={this.handleCreateProjectButtonClicked}>
                             Projekt erstellen
                         </Button>
+
                     </Grid>
                 </Grid>
                 <Grid container mt={3}>
@@ -127,13 +139,22 @@ class ProjectList extends Component {
                                        onClose={this.handleDurationClose} show={showProjectDurationDialog}/>
             </Box>
             </div>
+
+
         );
     }
 }
 
+/** Kompontenen spezifische Styles*/
+const styles = theme => ({
+    root: {
+        width: '100%',
+    },
+
+});
 
 ProjectCreateDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
 }
 
-export default ProjectList;
+export default withStyles(styles)(ProjectList);
