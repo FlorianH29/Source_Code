@@ -172,6 +172,19 @@ class HdMWebAppAdministration(object):
             return mapper.insert(departure), self.create_event_transaction(None, None, departure), \
                    self.create_time_interval_for_arrive_and_departure(person)  # self.calculate_work_time(person)
 
+    def create_departure_with_timestamp(self, person, time_stamp):
+        """End-Ereignis mit vorgegebeen Zeitpunkt anlegen"""
+        departure = Departure()
+        departure.set_id(1)
+        departure.set_deleted(0)
+        departure.set_last_edit(datetime.now())
+        departure.set_time_stamp(time_stamp)
+        departure.set_affiliated_person(person.get_id())
+
+        with DepartureMapper() as mapper:
+            return mapper.insert(departure), self.create_event_transaction(None, None, departure), \
+                    self.create_time_interval_for_arrive_and_departure(person)
+
     def delete_departure_event(self, departure):
         """Das gegebene End-Ereignis aus unserem System löschen."""
         with DepartureMapper() as mapper:
@@ -1058,9 +1071,37 @@ class HdMWebAppAdministration(object):
             with BreakMapper() as mapper:
                 return mapper.find_by_start_event_id(start_event.get_id())
 
+    def calculate_break_time(self, person):
+        """Überprüfen, ob eine Person genug Pause gemacht hat."""
+        last_arrive = self.get_last_arrive_by_person(person)
+        difference = datetime.now() - last_arrive.get_time_stamp()
+        break_time = timedelta(minutes=0)
+        if difference > timedelta(hours=6):
+            events = self.get_all_events()
+            for event in events:
+                if event.get_event_type() == 3 and event.get_time_stamp() > last_arrive.get_time_stamp():
+                    br = self.get_break_by_start_event(event)
+                    break_time += br.get_time_period()
+            return break_time
+        else:
+            return None
+
     def check_break(self, person):
         """Überprüfen, ob eine Person genug Pause gemacht hat."""
-
+        break_time = self.calculate_break_time(person)
+        if break_time is not None:
+            if break_time < timedelta(minutes=30):
+                difference = timedelta(minutes=30) - break_time
+                end_time_break = datetime.now() + difference
+                self.create_event(3, person)
+                end_event_break = self.create_event_with_time_stamp(4, end_time_break, person)
+                self.create_event_transaction(end_event_break)
+                self.create_break(person)
+                self.create_departure_with_timestamp(person, end_time_break)
+            else:
+                self.create_departure_event(person)
+        else:
+            self.create_departure_event(person)
 
     def save_break(self, value):
         value.set_last_edit(datetime.now())

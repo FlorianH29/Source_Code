@@ -783,7 +783,8 @@ class DepartureOperations(Resource):
             """ 
             Wenn vom Client ein proposal zurückgegeben wurde, wird ein serverseitiges Gehen-Objekt erstellt.
             """
-            d = hwa.create_departure_event(per)
+            d = hwa.check_break(per)
+            # überprüfen, ob die Person genug Pause gemacht hat, dann Gehen buchen
             return d, 200
         else:
             return '', 500
@@ -942,7 +943,6 @@ sub_thread.start()
 
 h = HdMWebAppAdministration()
 pe = h.get_person_by_id(1)
-
 
 
 
