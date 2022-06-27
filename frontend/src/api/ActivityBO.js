@@ -8,7 +8,7 @@ export default class ActivityBO extends BusinessObject {
    *
    * @param {String} aName - der Name dieses ActivityBO.
    * @param {Number} aCapacity - die Kapazität dieses ActivityBO.
-   * @param {String} anAffiliatedProject - das Projekt, das diesem ActivityBO zugeordnet ist.
+   * @param {Number} anAffiliatedProject - das Projekt, das diesem ActivityBO zugeordnet ist.
    * @param {Number} aWorkTime - die Zeit, die für dieses ActivityBO gearbeitet wurde.
    */
   constructor(aName, aCapacity, anAffiliatedProject) {
@@ -54,7 +54,7 @@ export default class ActivityBO extends BusinessObject {
   /**
    * Setzt einen neues zugeordnetes Projekt.
    *
-   * @param {String} anAffiliatedProject - das neue zugeordnete Projekt dieses AktivityBO.
+   * @param {Number} anAffiliatedProject - das neue zugeordnete Projekt dieses AktivityBO.
    */
   setAffiliatedProject(anAffiliatedProject) {
     this.affiliated_project = anAffiliatedProject;

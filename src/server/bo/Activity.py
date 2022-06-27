@@ -6,7 +6,7 @@ class Activity(bo.BusinessObject):
     def __init__(self):
         super().__init__()
         self._name = ''  # Der Name der Aktivität
-        self._capacity = 0  # Kapazität in Personentagen
+        self._capacity = 0  # Kapazität in Stunden
         self._affiliated_project = None  # Der Aktivität zugeordnetes Projekt
         self._work_time = 0  # Die für die Aktivität gearbeitete Zeit
 
@@ -19,19 +19,19 @@ class Activity(bo.BusinessObject):
         self._name = name
 
     def get_capacity(self):
-        """Auslesen des Namens."""
+        """Auslesen desr kapazität."""
         return self._capacity
 
     def set_capacity(self, capacity):
-        """Setzen des Namens."""
+        """Setzen der Kapazität."""
         self._capacity = capacity
 
     def get_affiliated_project(self):
-        """Auslesen des Namens."""
+        """Auslesen des zugehörigen Projekts."""
         return self._affiliated_project
 
     def set_affiliated_project(self, affiliated_project):
-        """Setzen des Namens."""
+        """Setzen des zugehörigen Projekts."""
         self._affiliated_project = affiliated_project
 
     def get_work_time(self):

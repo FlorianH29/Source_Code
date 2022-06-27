@@ -15,6 +15,7 @@ from server.bo.WorkTimeAccount import WorkTimeAccount
 from server.bo.Departure import Departure
 from SecurityDecorator import secured
 from Helper import Helper
+from server.bo.ProjectMember import ProjectMember
 
 app = Flask(__name__)
 
@@ -114,6 +115,11 @@ timeintervaltransaction = api.inherit('TimeIntervalTransaction', bo, {
 })
 
 
+projectmember = api.inherit('ProjectMember', person, {
+    'affiliated_project': fields.Integer(attribute='_affiliated_project', description='ID des Projekts'),
+    'affiliated_person': fields.Integer(attribute='_affiliated_person', description='ID der Person, die Mitglied ist')
+})
+
 @hdmwebapp.route('/person')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class PersonByIDOperations(Resource):
@@ -170,9 +176,32 @@ class WorkTimeAccountContentList(Resource):
         return result
 
 
+@hdmwebapp.route('/activities')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ActivitiesOperations(Resource):
+    @hdmwebapp.marshal_with(activity, code=201)
+    @secured
+    def post(self):
+        """Erstellen einer neuen Aktivität."""
+
+        hwa = HdMWebAppAdministration()
+        proposal = Activity.from_dict(api.payload)
+
+        if proposal is not None:
+
+            activity_name = proposal.get_name()
+            capacity = proposal.get_capacity()
+            pro = hwa.get_project_by_id(proposal.get_affiliated_project())
+            result = hwa.create_activity_for_project(activity_name, capacity, pro)
+            return result, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+
+
 @hdmwebapp.route('/projects/<int:id>/activities')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class ActivitiesList(Resource):
+class ActivitiesOperations(Resource):
     @hdmwebapp.marshal_list_with(activity)
     @secured
     def get(self, id):
@@ -185,7 +214,39 @@ class ActivitiesList(Resource):
             """Auslesen der Aktivitäten, die dem Projekt untergliedert sind."""
             return activity_list
         else:
-            return "Activity not found", 500
+            return "Project not found", 500
+
+
+@hdmwebapp.route('/activities/<int:id>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID der Aktivität')
+class ActivityOperations(Resource):
+    @hdmwebapp.marshal_list_with(activity)
+    @secured
+    def put(self, id):
+        """
+        Update eines bestimmten Aktivitätsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        ac = Activity.from_dict(api.payload)
+
+        if ac is not None:
+            ac.set_id(id)
+            hwa.save_activity(ac)
+            return '', 200
+        else:
+            return '', 500
+
+    @secured
+    def delete(self, id):
+        """
+        Löschen eines bestimmten Aktivitätsobjektes. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        ac = hwa.get_activity_by_id(id)
+        hwa.delete_activity(ac)
+        return '', 200
+
 
 
 @hdmwebapp.route('/activities/<int:id>/<int:start_date>/<int:end_date>/work_time')
@@ -247,6 +308,7 @@ class EventOperations(Resource):
             return e, 200
         else:
             return '', 500
+
 
 
 @hdmwebapp.route('/breaks')
@@ -377,6 +439,8 @@ class ProjectDurationOperation(Resource):
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
+
+@hdmwebapp.route('/projects/<int:id>')
 
 @hdmwebapp.route('/projectduration/<int:id>/startevent')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -781,6 +845,89 @@ class DeleteTimeInterval(Resource):
         return '', 200
 
 
+@hdmwebapp.route('/projects/<int:id>/projectmembers')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectMemberOperations(Resource):
+    @hdmwebapp.marshal_list_with(person)
+    @secured
+    def get(self, id):
+        hwa = HdMWebAppAdministration()
+        pro = hwa.get_project_by_id(id)
+
+        if pro is not None:
+            projectmembers = hwa.get_project_members_by_project(pro)
+
+            projectmember_list = []
+            for i in projectmembers:
+                person_id = i.get_person()
+                projectmember_list.append(person_id)
+
+            persons = []
+            for i in projectmember_list:
+                person = hwa.get_person_by_id(i)
+                persons.append(person)
+
+            return persons
+        else:
+            return "Project not found", 500
+
+
+@hdmwebapp.route('/projects/<int:id>/persons')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectMemberOperations(Resource):
+    @hdmwebapp.marshal_list_with(person)
+    @secured
+    def get(self, id):
+        hwa = HdMWebAppAdministration()
+        pro = hwa.get_project_by_id(id)
+
+        if pro is not None:
+            notprojectmembers = hwa.get_persons_who_are_not_project_member(pro)
+
+            notprojectmember_list = []
+            for i in notprojectmembers:
+                person = hwa.get_person_by_id(i.get_id())
+                notprojectmember_list.append(person)
+
+            return notprojectmember_list
+        else:
+            return "Project not found", 500
+
+
+@hdmwebapp.route('/projectmembers/<int:id>/<int:pid>')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID des Projectmitarbeiters')
+@hdmwebapp.param('pid', 'Die ID des Projekts')
+class ProjectWorkOperations(Resource):
+    @hdmwebapp.marshal_list_with(projectmember)
+    @secured
+    def delete(self, id, pid):
+        """
+        Löschen eines bestimmten Projektarbeitsobjekts. Objekt wird durch die id in dem URI bestimmt.
+        """
+        hwa = HdMWebAppAdministration()
+        pe = hwa.get_person_by_id(id)
+        po = hwa.get_project_by_id(pid)
+        print(pe, po)
+
+        hwa.delete_project_member_by_id(pe, po)
+        return '', 200
+
+    @secured
+    def post(self, id, pid):
+        """Erstellen ."""
+
+        hwa = HdMWebAppAdministration()
+        pe = hwa.get_person_by_id(id)
+        po = hwa.get_project_by_id(pid)
+
+        if pe and po is not None:
+            hwa.create_project_member_for_project(po, pe)
+            return 200
+        else:
+            return "Persons not found", 500
+
+
 def check():
     hwa = HdMWebAppAdministration()
     hwa.check_time_for_departure()
@@ -791,6 +938,9 @@ sub_thread = Thread(target=check)
 sub_thread.setDaemon(True)
 sub_thread.start()
 
+
+h = HdMWebAppAdministration()
+pe = h.get_person_by_id(1)
 
 
 

@@ -13,6 +13,13 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import {ActivityBO, HdMWebAppAPI} from "../../api";
 
+/**
+ * Zeigt einen Dialog, der wenn es eine Aktivität gibt, das editieren dieser Aktivität ermöglicht
+ * und wenn eien Aktivität angelegt werden soll dies ermöglicht, dann sind die Textfelder leer.
+ * Es werden im Backend die Methoden update und add aufgerufen.
+ * Danach wird die OnClose prop Funktion mit dem neuen oder editiertem ActivityBO als
+ * Parameter aufgerufen. Wenn der Dialog ohne Eingabe beendet wird, wird die OnClose mit null aufgerufen.
+ */
 
 class ActivityForm extends Component {
 
@@ -25,23 +32,29 @@ class ActivityForm extends Component {
             cap = props.activity.getActivityCapacity();
         }
 
+        let pro = 0;
+        if (props.project) {
+            pro = props.project.getID();
+        }
 
         this.state = {
             activityName: an,
             capacity: cap,
+            affiliatedProject: pro,
             activityNameValidationFailed: false,
             capacityValidationFailed: false
         };
         this.baseState = this.state;
     }
 
+    /** Behandelt das click event für den Button Abbrechen*/
     handleClose = () => {
         // den state neu setzen, sodass man wieder auf dem Stand ist wie vor dem Dialog
         this.setState(this.baseState);
         this.props.onClose(null);
     }
 
-
+    /** Behandelt Wertänderungen der Textfelder und validiert diese */
     textFieldValueChange = (event) => {
         const value = event.target.value;
 
@@ -57,53 +70,24 @@ class ActivityForm extends Component {
         });
     }
 
-    /**    addActivity = () => {
-    HdMWebAppAPI.getAPI().addActivityForProject(this.props.project.getID()).then(activitiesBO => {
-
-      this.setState({  // Set new state when AccountBOs have been fetched
-        activities: [...this.state.activities, activitiesBO],
-        loadingInProgress: false, // loading indicator
-        addingActivityError: null,
-      })
-    }).catch(e =>
-      this.setState({ // Reset state with error from catch
-        activities: [],
-        loadingInProgress: false,
-        addingActivityError: e
-      })
-    );
-
-    // set loading to true
-    this.setState({
-      loadingInProgress: true,
-      addingActivityError: null
-    });
-    }
-     */
-
 
     addActivity = () => {
-        let newActivity = new ActivityBO(this.state.name, this.state.capacity);
-        HdMWebAppAPI.getAPI().addActivity(newActivity).then(activity => {
-            this.setState(this.baseState);
-            this.props.onClose(activity);
-        }).catch(e =>
-            this.setState({
-                updatingInProgress: false,    // disable loading indicator
-                updatingError: e              // show error message
-            })
-        );
-
-        // set loading to true
-        this.setState({
-            updatingInProgress: true,       // show loading indicator
-            updatingError: null             // disable error message
-        });
+    let newActivity = new ActivityBO(this.state.activityName, this.state.capacity,
+            this.state.affiliatedProject);
+    console.log(newActivity);
+    HdMWebAppAPI.getAPI().addActivity(newActivity).then(activity => {
+      // Backend call erfolgreich
+      this.setState(this.baseState);
+      this.props.onClose(activity); // call the parent with the customer object from backend
+    }).catch(e =>
+      console.log(e)
+    );
     }
 
-    /**    updateActivity = () => {
-        // das originale Activity klonen, für den Fall, dass Backend Call fehlschlägt
-        let updatedActivity = Object.assign(new ActivityBO, this.props.activity);
+    /** Überschreibt das ActivityBO mit neuen Werten */
+    updateActivity = () => {
+        // die originale Activity klonen, für den Fall, dass der Backend Call fehlschlägt
+        let updatedActivity = Object.assign(new ActivityBO(), this.props.activity);
         // setzen der neuen Attribute aus dem Dialog
         updatedActivity.setActivityName(this.state.activityName);
         updatedActivity.setActivityCapacity(this.state.capacity);
@@ -111,39 +95,8 @@ class ActivityForm extends Component {
             // den neuen state als baseState speichern
             this.baseState.activityName = this.state.activityName;
             this.baseState.capacity = this.state.capacity;
-            this.props.onClose(updatedActivity);
-        })
-    }
-     */
-
-
-    updateActivity = () => {
-        // clone the original activity, in case the backend call fails
-        let updatedActivity = Object.assign(new ActivityBO(), this.props.activity);
-        // set the new attributes from our dialog
-        updatedActivity.setActivityName(this.state.name);
-        updatedActivity.setActivityCapacity(this.state.capacity);
-        HdMWebAppAPI.getAPI().updateActivity(updatedActivity).then(activity => {
-            this.setState({
-                updatingInProgress: false,              // disable loading indicator
-                updatingError: null                     // no error message
-            });
-            // keep the new state as base state
-            this.baseState.name = this.state.name;
-            this.baseState.capacity = this.state.capacity;
             this.props.onClose(updatedActivity);      // call the parent with the new customer
-        }).catch(e =>
-            this.setState({
-                updatingInProgress: false,              // disable loading indicator
-                updatingError: e                        // show error message
-            })
-        );
-
-        // set loading to true
-        this.setState({
-            updatingInProgress: true,                 // show loading indicator
-            updatingError: null                       // disable error message
-        });
+        })
     }
 
     /** Rendert die Komponente */
@@ -155,11 +108,11 @@ class ActivityForm extends Component {
         let header = '';
 
         if (activity) {
-            // ProjectWork definiert, Bearbeitungsdialog wird angezeigt
+            // Activity definiert -> Bearbeitungsdialog wird angezeigt
             title = 'Aktivität bearbeiten';
-            header = `Aktivität ID: ${activity.getID()}`;
+            header = `Aktivität ID: \x22${activity.getID()}\x22`;
         } else {
-            // ProjectWork ist nicht definiert, Erstellungsdialog wird angezeigt
+            // Activity ist nicht definiert -> Erstellungsdialog wird angezeigt
             title = 'Neue Aktivität erstellen';
             header = 'Geben Sie der Akivität einen Namen und eine Kapazität in Stunden';
         }

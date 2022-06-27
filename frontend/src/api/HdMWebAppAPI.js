@@ -35,18 +35,24 @@ export default class HdMWebAppAPI {
     #updateEndEventURL = (id) => `${this.#hdmwebappServerBaseURL}/projectduration/${id}/endevent`;
 
     /** Projektarbeit bezogen */
-    #getProjectWorksforActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
+    #getProjectWorksForActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}/projectworks`;
     #updateProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
     #deleteProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}`;
     #updateProjectWorkByNameURL = (id, name) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}/${name}`;
     #addProjectWorkURL = () => `${this.#hdmwebappServerBaseURL}/projectworks`;
     #getOwnerOfProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}/owner`;
 
+    //Projectbeteiligte bezogen
+    #getProjectMembersURL = (id) =>  `${this.#hdmwebappServerBaseURL}/projects/${id}/projectmembers`;
+    #deleteProjectMemberURL = (id, pid) => `${this.#hdmwebappServerBaseURL}/projectmembers/${id}/${pid}`;
+    #addProjectMemberURL = (id, pid) => `${this.#hdmwebappServerBaseURL}/projectmembers/${id}/${pid}`;
+    #getNotProjectMembersURL = (id) =>  `${this.#hdmwebappServerBaseURL}/projects/${id}/persons`;
+
     /** Activity bezogen */
     #getActivitiesForProjectURL = (id) => `${this.#hdmwebappServerBaseURL}/projects/${id}/activities`;
     #updateActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
     #deleteActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/activities/${id}`;
-    #addActivityURL = (id) => `${this.#hdmwebappServerBaseURL}/project/${id}/activities`;
+    #addActivityURL = () => `${this.#hdmwebappServerBaseURL}/activities`;
     #getActivityWorkTimeURL = (id, startDate, endDate) =>
         `${this.#hdmwebappServerBaseURL}/activities/${id}/${startDate}/${endDate}/work_time`;
 
@@ -495,7 +501,7 @@ export default class HdMWebAppAPI {
      * Gibt Projektarbeiten zurück.
      */
     getProjectWorks(id) {
-        return this.#fetchAdvanced(this.#getProjectWorksforActivityURL(id)).then((responseJSON) => {
+        return this.#fetchAdvanced(this.#getProjectWorksForActivityURL(id)).then((responseJSON) => {
             let projectworkBOs = ProjectWorkBO.fromJSON(responseJSON);
             // console.log(projectworkBOs);
             return new Promise(function (resolve) {
@@ -683,24 +689,30 @@ export default class HdMWebAppAPI {
     }
 
     /**
-     * Fügt eine Aktivität hinzu und gibt ein Promise zurück
-     *
-     * @param {ProjectBO} projectBO to be added. The ID of the new project is set by the backend
-     * @public
-     */
-    addActivity(projectBO) {
-        return this.#fetchAdvanced(this.#addActivityURL(), {
-            method: 'POST',
-
-            body: JSON.stringify(projectBO)
-        }).then((responseJSON) => {
-            //Wir bekommen immer ein Array aus ProjektBos.fromJSON, brauchen aber nur ein Objekt
-            let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
-            return new Promise(function (resolve) {
-                resolve(responseProjectBO);
-            })
-        })
-    }
+   * Fügt eine Aktivität hinzu und gibt ein Promise zurück, das sich in ein neues ActivityBO Objekt mit dem
+   * Namen und der Kapazität des Parameters auflöst.
+   *
+   * @param {ActivityBO} activityBO to be added. Die ID der neuen Aktivität wird vom Backend gesetzt.
+   * @public
+   */
+  addActivity(activityBO) {
+    return this.#fetchAdvanced(this.#addActivityURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(activityBO)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON, but only need one object
+      let responseActivityBO = ActivityBO.fromJSON(responseJSON)[0];
+      console.info(responseActivityBO);
+      return new Promise(function (resolve) {
+        resolve(responseActivityBO);
+      })
+    }).catch(e =>
+      console.log(e))
+  }
 
     /**
      * Gibt die Arbeitsleistung für eine Aktivität für einen gesetzten Zeitraum zurück
@@ -723,40 +735,45 @@ export default class HdMWebAppAPI {
     }
 
     /**
-     * Updated eine Aktivität
+     * Updatet ein AktivityBO
+     * @param {ActivityBO} activityBO das geupdated werden soll
+     * @public
      */
-    updateActivity(activityBO) {
+      updateActivity(activityBO) {
         return this.#fetchAdvanced(this.#updateActivityURL(activityBO.getID()), {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json, text/plain',
-                'Content-type': 'application/json',
-            },
-            body: JSON.stringify(activityBO)
+          method: 'PUT',
+          headers: {
+            'Accept': 'application/json, text/plain',
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify(activityBO)
         }).then((responseJSON) => {
-            // Wir bekommen immer ein Array aus ActivityBos.fromJSON
-            let responseActivityBO = ActivityBO.fromJSON(responseJSON)[0];
-            console.log(responseActivityBO)
-            return new Promise(function (resolve) {
-                resolve(responseActivityBO);
-            })
+          // Wir bekommen immer ein Array aus ActivityBos.fromJSON
+          let responseActivityBO = ActivityBO.fromJSON(responseJSON)[0];
+          console.log(responseActivityBO)
+          return new Promise(function (resolve) {
+            resolve(responseActivityBO);
+          })
         })
-    }
+      }
 
-    /**
-     * Löschen einer Aktivität
-     */
-    deleteActivity(activityID) {
+      /**
+      * Löscht ein ActivityBO
+      *
+      * @param {Number} activityID des ActivityBO, welches gelöscht werden soll
+      * @public
+      */
+      deleteActivity(activityID) {
         return this.#fetchAdvanced(this.#deleteActivityURL(activityID), {
-            method: 'DELETE'
+          method: 'DELETE'
         }).then((responseJSON) => {
-            //Wir bekommen immer ein Array aus ActivityBos.fromJSON
-            let responseActivityBO = ActivityBO.fromJSON(responseJSON)[0];
-            return new Promise(function (resolve) {
-                resolve(responseActivityBO);
-            })
+          //Wir bekommen immer ein Array aus ActivityBos.fromJSON
+          let responseActivityBO = ActivityBO.fromJSON(responseJSON)[0];
+          return new Promise(function (resolve) {
+            resolve(responseActivityBO);
+          })
         })
-    }
+      }
 
     /**
      * Gibt zurück, ob eine Pause begonnen wurde oder nicht
@@ -771,4 +788,57 @@ export default class HdMWebAppAPI {
                 })
             })
     }
+  getProjectMembers(id) {
+      return this.#fetchAdvanced(this.#getProjectMembersURL(id)).then((responseJSON) => {
+          let projectmembers = PersonBO.fromJSON(responseJSON);
+          //console.log(projectmembers);
+          return new Promise(function (resolve) {
+              resolve(projectmembers);
+          })
+      })
+  }
+
+  getPersonsNotProjectMembersOfProject(id) {
+      return this.#fetchAdvanced(this.#getNotProjectMembersURL(id)).then((responseJSON) => {
+          let notprojectmembers = PersonBO.fromJSON(responseJSON);
+          console.log(notprojectmembers);
+          return new Promise(function (resolve) {
+              resolve(notprojectmembers);
+          })
+      })
+  }
+
+
+  deleteProjectMember(projectmemberID, projectID) {
+    return this.#fetchAdvanced(this.#deleteProjectMemberURL(projectmemberID, projectID), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
+      return new Promise(function (resolve) {
+        resolve(responsePersonBO);
+      })
+    })
+  }
+
+  addPersonAsProjectMember(personBOs, projectID) {
+      personBOs.map(person=> {
+          return this.#fetchAdvanced(this.#addProjectMemberURL(person.getID(), projectID), {
+              method: 'POST',
+              headers: {
+                  'Accept': 'application/json, text/plain',
+                  'Content-type': 'application/json',
+              },
+              body: JSON.stringify(person.getID(), projectID)
+          }).then((responseJSON) => {
+              // We always get an array of CustomerBOs.fromJSON, but only need one object
+              //let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
+              //console.info(responsePersonBO);
+              return new Promise(function (resolve) {
+                  resolve();
+              })
+          }).catch(e =>
+              console.log(e))
+      })
+  }
 }

@@ -4,17 +4,22 @@ import {Button, Divider, Grid, Typography} from '@material-ui/core';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import EditIcon from '@mui/icons-material/Edit';
 import ListItem from "@mui/material/ListItem";
-import ActivityDeleteDialog from "./dialogs/ActivityForm";
+import ActivityDeleteDialog from "./dialogs/ActivityDeleteDialog";
 import ActivityForm from "./dialogs/ActivityForm";
 import {Link as RouterLink, withRouter} from "react-router-dom";
 import ListItemButton from "@mui/material/ListItemButton";
 
+/**
+ * Rendert ein ActivityBO innerhalb eines auf- und zuklappbaren ActivityListEntry.
+ * Beinhaltet Funktionen, mit denen ein einzelnes ActivityBO manipuliert werden kann.
+ */
 
 class ActivityListEntry extends Component {
 
     constructor(props) {
         super(props);
 
+        // den State initialisieren
         this.state = {
             activity: props.activity,
             showActivityForm: false,
@@ -22,6 +27,7 @@ class ActivityListEntry extends Component {
         };
     }
 
+    /** Behandelt das onClick Event des Activity bearbeiten Buttons */
     editActivityButtonClicked = (event) => {
         event.stopPropagation();
         this.setState({
@@ -29,21 +35,22 @@ class ActivityListEntry extends Component {
         });
     }
 
+      /** Behandelt das onClose Event von ActivityForm */
     activityFormClosed = (activity) => {
-        // activity ist nicht null und wurde dementsprechend geändert
-        if (activity) {
-            const newActivityList = [...this.state.activities, activity];
-            this.setState({
-                activities: newActivityList,
-                showActivityForm: false
-            });
-        } else {
-            this.setState({
-                showActivityForm: false
-            });
-        }
+    // activity ist nicht null und wurde dementsprechend geändert
+    if (activity) {
+      this.setState({
+        activity: activity,
+        showActivityForm: false
+      });
+    } else {
+      this.setState({
+        showActivityForm: false
+      });
+    }
     }
 
+    /** Behandelt das onClose Event von ActivityDeleteDialog*/
     deleteActivityDialogClosed = (activity) => {
         if (activity) {
             this.props.onActivityDeleted(activity);
@@ -53,6 +60,7 @@ class ActivityListEntry extends Component {
         });
     }
 
+    /** Behandelt das onClick Event des Activity löschen Buttons */
     deleteActivityButtonClicked = (event) => {
         event.stopPropagation();
         this.setState({
@@ -60,11 +68,12 @@ class ActivityListEntry extends Component {
         });
     }
 
-
+    /** Rendert die Componente*/
     render() {
     const { project, person } = this.props;
     const { activity, showActivityForm, showActivityDeleteDialog } = this.state;
 
+      // console.log(this.state);
       return (
         <div>
            <ListItem>
@@ -120,12 +129,14 @@ const styles = theme => ({
 });
 
 ActivityListEntry.propTypes = {
-    /** Das ActivityBO welches gerendert werden soll */
-    classes: PropTypes.object.isRequired,
-    activity: PropTypes.object.isRequired,
-    project: PropTypes.object.isRequired,
-    onActivityDeleted: PropTypes.func.isRequired,
-    show: PropTypes.bool.isRequired
+  /** Das ActivityBO welches gerendert werden soll */
+  classes: PropTypes.object.isRequired,
+  /** Das ActivityBO welches gerendert werden soll */
+  activity: PropTypes.object.isRequired,
+  project: PropTypes.object.isRequired,
+  /** Event Handler Funktion, welche aufgerufen wird, nachdem eine Projektarbeit erfolgreich gelöscht wurde. */
+  onActivityDeleted: PropTypes.func.isRequired,
+  show: PropTypes.bool.isRequired
 }
 
 export default withRouter(ActivityListEntry);

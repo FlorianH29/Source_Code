@@ -41,7 +41,6 @@ class ProjectWork (ti.TimeInterval):
         projectwork = ProjectWork()
         projectwork.set_id(dictionary["id"])  # Eigentlicher Teil von business object.
         projectwork.set_last_edit("last_edit")  # Setzten des last_edit von projectwork
-        projectwork.set_deleted("deleted")
         projectwork.set_project_work_name(dictionary["project_work_name"])  # Setzt Namen aus dict() für ProjectWork
         projectwork.set_description(dictionary["description"])  # Setzt description aus dict() für ProjectWork
         projectwork.set_affiliated_activity(dictionary["affiliated_activity"])  # Setzt affiliated_activity aus

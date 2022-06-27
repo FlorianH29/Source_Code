@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from "../api";
-import {Box, Button, Divider, Grid, Link, Typography} from '@mui/material';
+import {Button, Grid, Typography, Divider, Box, Link, Card} from '@mui/material';
 import AddIcon from '@material-ui/icons/Add';
 import ActivityForm from "./dialogs/ActivityForm";
-import PropTypes from "prop-types";
 import ActivityListEntry from "./ActivityListEntry";
+import ProjectMemberList from "./ProjectMemberList";
 import {Link as RouterLink, Redirect, withRouter} from "react-router-dom";
 import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRounded";
 
@@ -127,8 +127,8 @@ class ActivityList extends Component {
     }
 
     render() {
-        const {classes} = this.props;
-        const {activities, showActivityForm, expandedProjectID, expandedProjectName, disableButton } = this.state;
+        const {activities, showActivityForm, expandedProjectID, expandedProjectName, disableButton} = this.state;
+        //console.log(this.props.location.pro)
 
         let pro = null;
         let projectName = null;
@@ -146,6 +146,8 @@ class ActivityList extends Component {
             return (<Redirect to='/'/>);
         }
 
+         //console.log(pro.project)
+
          let per = null;
          if (this.props.location.per) {
             // PersonBO existiert
@@ -158,7 +160,8 @@ class ActivityList extends Component {
 
         return (
             <div>
-                <Box m={18} pl={8}>
+                <Box mt={18} ml={18} mr={5} mb={10} pl={8}>
+                    <Card>
                     <Typography component='div' color={"primary"}>
                         <Link component={RouterLink} to={{
                             pathname: '/projects'
@@ -167,19 +170,19 @@ class ActivityList extends Component {
                                 <Grid item>
                                     <ArrowCircleLeftRoundedIcon color={"primary"}/>
                                 </Grid>
-                                <Grid item> zurück
+                                <Grid item> zurück zur Projektübersicht
                                 </Grid>
                             </Grid>
                         </Link>
                     </Typography>
                         <Grid container mt={2}  alignItems='stretch' spacing={1}>
-                            <Grid item xs={3}/>
-                            <Grid item xs={5} align={"center"}>
+                            <Grid item md={3}/>
+                            <Grid item md={5} align={"center"}>
                                 <Typography variant={"h4"} algin={"center"} component={"div"}>
                                     Projekt: {projectName}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={4} align={"right"}>
+                            <Grid item md={4} align={"right"}>
                                 <Button disabled={disableButton} variant='contained' align={"center"} color='primary' startIcon={<AddIcon/>}
                                 onClick={this.handleAddActivityButtonClicked}>
                                     Aktivität anlegen
@@ -187,18 +190,19 @@ class ActivityList extends Component {
                             </Grid>
                         </Grid>
 
-                    <Grid container mt={3}>
-                        <Grid item xs={12} align={"center"}>
+                    <Grid container mt={4}>
+                        <Grid item md={12} align={"center"}>
                             <Grid container>
-                                <Grid item xs={3} align={"flex-end"}>
+                                <Grid item md={4} align={"flex-end"}>
                                     <Typography variant={"h5"} component={"div"}> Aktivitäten </Typography>
                                 </Grid>
-                                <Grid item xs={3} align={"flex-end"}>
+                                <Grid item md={4} align={"flex-end"}>
                                     <Typography variant={"h5"} component={"div"}> Kapazität </Typography>
                                 </Grid>
-                                <Grid item xs={3} align={"flex-end"}>
+                                <Grid item md={4} align={"flex-end"}>
                                     <Typography variant={"h5"} component={"div"}> Dauer </Typography>
                                 </Grid>
+
                             </Grid>
                             <Divider/>
                             {activities.map(ac =>
@@ -208,26 +212,14 @@ class ActivityList extends Component {
                             }
                         </Grid>
                     </Grid>
-                    <ActivityForm onClose={this.activityFormClosed} show={showActivityForm}></ActivityForm>
+                <ActivityForm onClose={this.activityFormClosed} show={showActivityForm} project={pro.project}></ActivityForm>
+                        </Card>
                 </Box>
+                <ProjectMemberList project={pro.project} show={ProjectMemberList}></ProjectMemberList>
             </div>
         )
     }
 }
 
-
-/*ActivityList.propTypes = {
-    /** @ignore *//*
-    classes: PropTypes.object.isRequired,
-
-    project: PropTypes.object.isRequired,
-
-    show: PropTypes.bool.isRequired,
-}*/
-
-
-ActivityForm.propTypes = {
-    onClose: PropTypes.func.isRequired,
-}
 
 export default withRouter(ActivityList);
