@@ -134,7 +134,6 @@ class ProjectList extends Component {
 
 ProjectCreateDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
-    test: PropTypes.func.isRequired
 }
 
 export default ProjectList;

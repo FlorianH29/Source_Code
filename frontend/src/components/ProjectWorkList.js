@@ -100,7 +100,7 @@ class ProjectWorkList extends Component {
     }
 
   render() {
-    const { projectWorks, showProjectWorkForm, disableEnd, disableStart, open } = this.state;
+    const { projectWorks, showProjectWorkForm, open } = this.state;
     // console.log(this.state)
     let owner = null;
     if (this.props.location.owner) {
@@ -140,7 +140,7 @@ class ProjectWorkList extends Component {
             </Typography>
 
             <Grid container direction={'row'} mt={2} alignItems='stretch' spacing={1}>
-                <Grid xs={3}/>
+                <Grid item xs={3}/>
                 <Grid item xs={5} align={'center'}>
                     <Typography variant={"h4"} algin={"center"} component={"div"}>
                        Aktivität: {owner.activity.getActivityName()}
@@ -195,7 +195,7 @@ class ProjectWorkList extends Component {
                     <Button onClick={this.handleClose} color='secondary'>
                         Abbrechen
                     </Button>
-                    <EventManager eventType={2} onClose={this.refreshProjectWorkList}>
+                    <EventManager eventT={2} onClose={this.refreshProjectWorkList}>
                     </EventManager>
                 </DialogActions>
             </Dialog>
@@ -222,11 +222,5 @@ const styles = theme => ({
     }
 });
 
-/** PropTypes */
-ProjectWorkForm.propTypes = {
-
-    onClose: PropTypes.func.isRequired,
-
-}
 
 export default withRouter(ProjectWorkList);

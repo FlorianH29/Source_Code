@@ -105,13 +105,5 @@ class CheckboxForm extends Component {
     }
 }
 
-CheckboxForm.propTypes = {
-    /** @ignore */
-    projectMembers: PropTypes.object.isRequired,
-    person: PropTypes.object.isRequired,
-    /** The CustomerBO of this AccountList */
-    project: PropTypes.object.isRequired,
-}
-
 
 export default CheckboxForm;

@@ -149,12 +149,4 @@ const styles = theme => ({
     },
 });
 
-/** PropTypes */
-ProjectWorkListEntry.propTypes = {
-    /** Das ProjectWorkBO welches gerendert werden soll */
-    projectWork: PropTypes.object.isRequired,
-    /** Event Handler Funktion, welche aufgerufen wird, nachdem eine Projektarbeit erfolgreich gelöscht wurde. */
-    onProjectWorkDeleted: PropTypes.func.isRequired
-}
-
 export default withStyles(styles)(ProjectWorkListEntry);

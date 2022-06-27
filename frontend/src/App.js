@@ -10,7 +10,6 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import firebaseConfig from './firebaseconfig';
-
 import {Person} from "@mui/icons-material";
 import TimeIntervalTransactionList from "./components/TimeIntervalTransactionList";
 import SignInHeader from "./components/layout/SignInHeader";
@@ -45,21 +44,15 @@ class App extends React.Component {
                 document.cookie = `token=${token};path=/`;
                 this.setState({
                     currentPerson: person,
-                    authError: null,
-                    authLoading: false
                 });
             }).catch(e => {
-                this.setState({
-                    authError: e,
-                    authLoading: false
-                });
+                console.log(e)
             });
         } else {
             document.cookie = 'token=;path=/';
 
             this.setState({
                 currentPerson: null,
-                authLoading: false
             });
         }
     }

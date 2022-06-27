@@ -130,13 +130,10 @@ const styles = theme => ({
 
 ActivityListEntry.propTypes = {
   /** Das ActivityBO welches gerendert werden soll */
-  classes: PropTypes.object.isRequired,
-  /** Das ActivityBO welches gerendert werden soll */
   activity: PropTypes.object.isRequired,
   project: PropTypes.object.isRequired,
   /** Event Handler Funktion, welche aufgerufen wird, nachdem eine Projektarbeit erfolgreich gelöscht wurde. */
   onActivityDeleted: PropTypes.func.isRequired,
-  show: PropTypes.bool.isRequired
 }
 
 export default withRouter(ActivityListEntry);

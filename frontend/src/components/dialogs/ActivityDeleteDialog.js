@@ -66,16 +66,5 @@ class ActivityDeleteDialog extends Component {
 
 }
 
-ActivityDeleteDialog.propTypes = {
-  /** Das ActivityBO, das gelöscht werden soll */
-  activity: PropTypes.object.isRequired,
-  /** Wenn show true ist, wird der Dialog gerendert */
-  show: PropTypes.bool.isRequired,
-  /**
-   * Handler Funktion, die aufgerufen wird, wenn der Dialog geschlossen wird.
-   * Sendet das gelöschte ActivityBO as Parameter oder null, wenn Abbrechen aufgerufen worden ist.
-   */
-  onClose: PropTypes.func.isRequired,
-}
 
 export default ActivityDeleteDialog;

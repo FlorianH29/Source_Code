@@ -135,14 +135,5 @@ class ProjectCreateDialog extends Component {
     }
 }
 
-/** PropTypes*/
-ProjectCreateDialog.propTypes = {
-
-    onClose: PropTypes.func.isRequired,
-
-    show: PropTypes.bool.isRequired
-
-}
-
 
 export default ProjectCreateDialog;

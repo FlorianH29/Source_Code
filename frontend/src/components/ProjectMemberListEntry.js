@@ -70,13 +70,8 @@ class ProjectMemberListEntry extends Component {
 }
 
 ProjectMemberListEntry.propTypes = {
-  /** Das ActivityBO welches gerendert werden soll */
   projectMember: PropTypes.object.isRequired,
   project: PropTypes.object.isRequired,
-  person: PropTypes.object.isRequired,
-  /** Event Handler Funktion, welche aufgerufen wird, nachdem eine Projektarbeit erfolgreich gelöscht wurde. */
-  onActivityDeleted: PropTypes.func.isRequired,
-  show: PropTypes.bool.isRequired
 }
 
 export default ProjectMemberListEntry;

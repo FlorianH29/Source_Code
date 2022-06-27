@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
 import {Box, Divider, Grid, TextField, Typography} from "@mui/material";
 import TimeIntervalTransactionListEntry from "./TimeIntervalTransactionListEntry"
-import {DatePicker, LocalizationProvider} from '@mui/lab';
+import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 
 class TimeIntervalTransactionList extends Component {

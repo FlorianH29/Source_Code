@@ -92,8 +92,6 @@ class PersonDeleteDialog extends Component {
 PersonDeleteDialog.propTypes = {
     /** Das ProjectWorkBO, das gelöscht werden soll */
     person: PropTypes.object.isRequired,
-    /** Wenn show true ist, wird der Dialog gerendert */
-    show: PropTypes.bool.isRequired,
     /**
      * Handler Funktion, die aufgerufen wird, wenn der Dialog geschlossen wird.
      * Sendet das gelöschte ProjectWorkBO as Parameter oder null, wenn Abbrechen aufgerufen worden ist.

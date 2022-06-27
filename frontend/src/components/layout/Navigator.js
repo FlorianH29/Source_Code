@@ -33,7 +33,8 @@ class Navigator extends Component {
             person: null,
             showPersonDelete: false,
             disableStartButton: false,
-            disableEndButton: true
+            disableEndButton: true,
+            eventT: 0,
         };
     };
 
@@ -120,7 +121,7 @@ class Navigator extends Component {
     }
 
     render() {
-        const {showPersonDeleteDialog, showPersonEditDialog, person, disableStartButton, disableEndButton} = this.state;
+        const {showPersonDeleteDialog, showPersonEditDialog, person, disableStartButton, disableEndButton, eventT} = this.state;
         const drawerWidth = 200;
         const lel = 0;
         const boxWidth = 200;
@@ -225,13 +226,15 @@ class Navigator extends Component {
                                     </ListItemButton>
                                 </ListItem>
 
+                                <Divider></Divider>
+
                                 <ListItem>
-                                    <EventManager disabled={disableStartButton} eventType={3} onClose={this.handleClose}>
+                                    <EventManager disabled={disableStartButton} eventT={3} onClose={this.handleClose}>
                                     </EventManager>
                                 </ListItem>
 
                                 <ListItem>
-                                    <EventManager disabled={disableEndButton} eventType={4} onClose={this.handleClose}>
+                                    <EventManager disabled={disableEndButton} eventT={4} onClose={this.handleClose}>
                                     </EventManager>
                                 </ListItem>
                                 <Departure></Departure>
