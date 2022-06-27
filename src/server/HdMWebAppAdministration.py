@@ -415,6 +415,11 @@ class HdMWebAppAdministration(object):
         with TimeIntervalTransactionMapper() as mapper:
             return mapper.find_by_key(number)
 
+    def get_time_interval_transaction_by_project_work(self, project_work):
+        """Die TimeIntervalTransaction mit der gegebenen TimeIntervalTransaction-ID auslesen."""
+        with TimeIntervalTransactionMapper() as mapper:
+            return mapper.find_by_project_work(project_work)
+
     def get_all_time_interval_transactions(self):
         """Alle in der Datenbank gespeicherten TimeIntervalTransactions auslesen."""
         with TimeIntervalTransactionMapper() as mapper:
@@ -783,6 +788,7 @@ class HdMWebAppAdministration(object):
                 person = self.get_person_by_id(person_id)
                 time_interval = self.create_time_interval(start_event, end_event)
                 self.create_time_interval_transaction(person, time_interval, None, None)
+                tit = self.get_time_interval_transaction_by_project_work(project_work.get_id())
             return mapper.delete(project_work)
 
     def save_project_work(self, project_work):
@@ -833,7 +839,6 @@ class HdMWebAppAdministration(object):
         """ Projektarbeiten werden anhand der eindeutigen ID der Aktivität ausgelesen, der sie zugeordnet sind."""
         with ProjectMemberMapper() as mapper:
             return mapper.find_project_members_by_project_id(project.get_id())
-
 
     def create_project_member_for_project(self, project, person):
         """Erstellen eines neuen Projekts"""
@@ -1273,7 +1278,7 @@ class HdMWebAppAdministration(object):
                 datetime_now = datetime.now()
                 working_time = datetime_now - arrive
                 last_event = self.get_last_event_by_affiliated_person(person)
-                if working_time >= timedelta(minutes=2):
+                if working_time >= timedelta(hours=10):
                     event_type = last_event.get_event_type()
                     if event_type == 1:
                         self.create_event_and_check_type(2, person)
