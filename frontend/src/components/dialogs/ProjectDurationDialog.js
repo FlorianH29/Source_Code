@@ -176,6 +176,7 @@ class ProjectDurationDialog extends Component {
                                         disabled={disableStartButton}
                                         label={"Start Date"}
                                         value={startDate}
+                                        inputFormat="dd/MM/yyyy"
                                         onChange={(date) => {
                                             this.setState({eventType: 7, startDate: date.getTime()});
                                         }}
@@ -187,6 +188,7 @@ class ProjectDurationDialog extends Component {
                                         disabled={disableEndButton}
                                         label={"End Date"}
                                         value={endDate}
+                                        inputFormat="dd/MM/yyyy"
                                         onChange={(date) => {
                                             this.setState({eventType: 8, endDate: date.getTime()});
                                         }}
