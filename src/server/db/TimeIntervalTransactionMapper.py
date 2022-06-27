@@ -45,6 +45,44 @@ class TimeIntervalTransactionMapper (Mapper):
 
         return result
 
+    def find_by_project_work(self, key):
+        """Suchen einer Zeitintervall-Buchung mit vorgegebener Nummer. Da diese eindeutig ist,
+        wird genau ein Objekt zurückgegeben.
+
+        :param key Primärschlüsselattribut (->DB)
+        :return TimeIntervalTransaction-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+            nicht vorhandenem DB-Tupel.
+        """
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM timeintervaltransaction WHERE affiliated_projectwork_id={} AND deleted=0".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        if tuples is not None \
+                and len(tuples) > 0 \
+                and tuples[0] is not None:
+            (timeintervaltransaction_id, last_edit, affiliated_work_time_account_id, affiliated_time_interval_id,
+             affiliated_break_id, affiliated_projectwork_id, deleted) = tuples[0]
+            time_interval_transaction = tit.TimeIntervalTransaction()
+            time_interval_transaction.set_id(timeintervaltransaction_id)
+            time_interval_transaction.set_last_edit(last_edit)
+            time_interval_transaction.set_affiliated_work_time_account(affiliated_work_time_account_id)
+            time_interval_transaction.set_affiliated_time_interval(affiliated_time_interval_id)
+            time_interval_transaction.set_affiliated_break(affiliated_break_id)
+            time_interval_transaction.set_affiliated_projectwork(affiliated_projectwork_id)
+            time_interval_transaction.set_deleted(deleted)
+
+            result = time_interval_transaction
+        else:
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
     def find_all(self):
         """Auslesen aller TimeIntervalTransactions.
 
@@ -179,7 +217,7 @@ class TimeIntervalTransactionMapper (Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE timeintervaltransaction SET deleted=1 " \
-                  "WHERE timeintervaltransaction_id={}".format(time_interval_transaction.get_id())
+                  "WHERE timeintervaltransaction_id={} ".format(time_interval_transaction.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

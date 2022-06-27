@@ -79,7 +79,7 @@ class EventMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT * FROM event WHERE time_stamp = (SELECT MAX(time_stamp) FROM event " \
+        command = "SELECT * FROM event WHERE event_id = (SELECT MAX(event_id) FROM event " \
                   "WHERE affiliated_person_id = {} AND deleted=0)".format(person_id)
         cursor.execute(command)
         tuples = cursor.fetchall()

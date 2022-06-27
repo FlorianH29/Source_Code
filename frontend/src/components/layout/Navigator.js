@@ -12,7 +12,7 @@ import 'firebase/compat/firestore';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import CardTravelIcon from '@mui/icons-material/CardTravel';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import AssessmentRoundedIcon from '@mui/icons-material/AssessmentRounded';
 import {Link as RouterLink} from "react-router-dom";
@@ -201,7 +201,7 @@ class Navigator extends Component {
                                     <ListItemButton component={RouterLink}
                                                     to={`/eventtransactionsandtimeintervaltransactions`}>
                                         <ListItemIcon>
-                                            <AccountCircleIcon/>
+                                            <AccessTimeIcon/>
                                         </ListItemIcon>
                                         <ListItemText primary="Arbeitszeiten"/>
                                     </ListItemButton>
@@ -210,7 +210,7 @@ class Navigator extends Component {
                                 <ListItem>
                                     <ListItemButton component={RouterLink} to={`/projects`}>
                                         <ListItemIcon>
-                                            <AccessTimeIcon/>
+                                            <CardTravelIcon/>
                                         </ListItemIcon>
                                         <ListItemText primary="Projekte"/>
                                     </ListItemButton>

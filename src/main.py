@@ -626,7 +626,9 @@ class ProjectWorkOperations(Resource):
         """
         hwa = HdMWebAppAdministration()
         pw = hwa.get_project_work_by_id(id)
-        hwa.delete_project_work(pw)
+        tit = hwa.get_time_interval_transaction_by_project_work(pw.get_id())
+        hwa.delete_time_interval_transaction(tit)
+        # Zeitintervalltransaktion löschen löst auch Projektarbeit löschen aus
         return '', 200
 
 
@@ -939,6 +941,8 @@ sub_thread.setDaemon(True)
 sub_thread.start()
 
 
+h = HdMWebAppAdministration()
+pe = h.get_person_by_id(1)
 
 
 

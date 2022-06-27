@@ -86,7 +86,7 @@ class TimeIntervalTransactionListEntry extends Component {
                             <Button color='primary' size='small' startIcon={<EditIcon/>}
                                     onClick={this.editEventAndTimeIntervalButtonClicked}> </Button>
                             {
-                                event.name != 'Kommen' && event.name != 'Gehen' ? (
+                                event.name != 'Kommen' && event.name != 'Gehen' && event.name != 'Arbeitszeit' ? (
                                     <>
                                         <Button color='secondary' size='small' startIcon={<RemoveCircleOutlineRoundedIcon/>}
                                                 onClick={this.deleteEventAndTimeIntervalButtonClicked}> </Button>

@@ -135,7 +135,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `SoPraTestDB`.`projectmembers` ;
 
 CREATE TABLE IF NOT EXISTS `SoPraTestDB`.`projectmembers` (
-  `projectmember_id` INT NOT NULL,
+  `projectmember_id` INT NOT NULL auto_increment,
   `project_id` INT NOT NULL,
   `person_id` INT NOT NULL,
    `last_edit` DATETIME NULL,
