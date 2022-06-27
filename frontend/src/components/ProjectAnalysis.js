@@ -48,6 +48,7 @@ class ProjectAnalysis extends Component {
                             <DatePicker
                                 label={"Start Date"}
                                 value={startDate}
+                                inputFormat="dd/MM/yyyy"
                                 onChange={(date) => {
                                     this.setState({startDate: date.getTime()});
 
@@ -59,6 +60,7 @@ class ProjectAnalysis extends Component {
                             <DatePicker
                                 label={"End Date"}
                                 value={endDate}
+                                inputFormat="dd/MM/yyyy"
                                 onChange={(date) => {
                                     this.setState({endDate: date.getTime()});
 

@@ -48,8 +48,9 @@ class TimeIntervalTransactionList extends Component {
                     <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
-                                label={"Start Date"}
+                                label={"Start Datum"}
                                 value={startDate}
+                                inputFormat="dd/MM/yyyy"
                                 onChange={(date) => {
                                     this.setState({startDate: date.getTime()});
                                     this.getEventForTimeIntervalTransactions(date.getTime(), this.state.endDate)
@@ -59,8 +60,9 @@ class TimeIntervalTransactionList extends Component {
                         </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
-                                label={"End Date"}
+                                label={"End Datum"}
                                 value={endDate}
+                                inputFormat="dd/MM/yyyy"
                                 onChange={(date) => {
                                     this.setState({endDate: date.getTime()});
                                     console.log(date.getTime())
