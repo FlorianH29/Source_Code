@@ -774,6 +774,15 @@ class HdMWebAppAdministration(object):
     def delete_project_work(self, project_work):
         """Löschen einer Projektarbeit"""
         with ProjectWorkMapper() as mapper:
+            if project_work is not None:
+                start_event_id = project_work.get_start_event()
+                end_event_id = project_work.get_end_event()
+                start_event = self.get_event_by_id(start_event_id)
+                end_event = self.get_event_by_id(end_event_id)
+                person_id = end_event.get_affiliated_person()
+                person = self.get_person_by_id(person_id)
+                time_interval = self.create_time_interval(start_event, end_event)
+                self.create_time_interval_transaction(person, time_interval, None, None)
             return mapper.delete(project_work)
 
     def save_project_work(self, project_work):
