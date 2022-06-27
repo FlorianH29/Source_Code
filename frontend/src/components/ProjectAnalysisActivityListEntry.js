@@ -62,7 +62,7 @@ class ActivityListEntry extends Component {
                             </Grid>
                             <Grid item xs={4} align={"center"}>
                                 <Typography variant={"h5"} component={"div"}>
-                                    {activity.getActivityCapacity()}h
+                                    {activity.getActivityCapacity()} h
                                 </Typography>
                             </Grid>
                             <Grid item xs={4} align={"center"}>

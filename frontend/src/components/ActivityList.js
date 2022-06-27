@@ -55,8 +55,8 @@ class ActivityList extends Component {
             } else {
                 this.setState({
                     disableButton: true
-            })
-        }
+                })
+            }
         }
     }
 
@@ -87,8 +87,7 @@ class ActivityList extends Component {
         if (this.props.location.pro) {
             this.getActivitiesForProject();
             this.handleDisableButton();
-        }
-        else if (this.props.location.expandedProject) {
+        } else if (this.props.location.expandedProject) {
             this.getActivitiesForProject();
             this.handleDisableButton();
         }
@@ -146,77 +145,98 @@ class ActivityList extends Component {
             return (<Redirect to='/'/>);
         }
 
-         //console.log(pro.project)
+        //console.log(pro.project)
 
-         let per = null;
-         if (this.props.location.per) {
+        let per = null;
+        if (this.props.location.per) {
             // PersonBO existiert
             per = this.props.location.per;
-         } else if (this.props.location.expandedPerson){
-             console.log(this.props.location.expandedPerson)
+        } else if (this.props.location.expandedPerson) {
+            console.log(this.props.location.expandedPerson)
             // in Projektarbeitsliste wurde Zurück geklickt
             per = this.props.location.expandedPerson
         }
 
         return (
             <div>
-                <Box mt={18} ml={18} mr={5} mb={10} pl={8}>
-                    <Card>
-                    <Typography component='div' color={"primary"}>
-                        <Link component={RouterLink} to={{
-                            pathname: '/projects'
-                        }}>
-                            <Grid container spacing={1} justify='flex-start' alignItems='stretch'>
-                                <Grid item>
-                                    <ArrowCircleLeftRoundedIcon color={"primary"}/>
+                <Box mt={18} ml={18} mr={2} mb={2} pl={8}>
+                    <Box>
+                        <Card>
+                            <Typography p={1} component='div' color={"primary"}>
+                                <Link component={RouterLink} to={{
+                                    pathname: '/projects'
+                                }}>
+                                    <Grid container spacing={1} justify='flex-start' alignItems='stretch'>
+                                        <Grid item>
+                                            <ArrowCircleLeftRoundedIcon color={"primary"}/>
+                                        </Grid>
+                                        <Grid item> zurück zur Projektübersicht
+                                        </Grid>
+                                    </Grid>
+                                </Link>
+                            </Typography>
+                            <Grid container mt={2} alignItems='stretch' spacing={1}>
+                                <Grid item xs={4} align={"center"}>
+                                    <Typography variant={"h4"} algin={"center"} component={"div"}>
+                                        Projekt: {projectName}
+                                    </Typography>
                                 </Grid>
-                                <Grid item> zurück zur Projektübersicht
+                                <Grid item xs={3} align={"right"}>
+                                    <Button disabled={disableButton} variant='contained' align={"center"}
+                                            color='primary'
+                                            startIcon={<AddIcon/>}
+                                            onClick={this.handleAddActivityButtonClicked}>
+                                        Aktivität anlegen
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4} align={"center"}>
+                                    <Typography variant={"h4"} algin={"center"} component={"div"}>
+                                        Projektmitglieder
+                                    </Typography>
                                 </Grid>
                             </Grid>
-                        </Link>
-                    </Typography>
-                        <Grid container mt={2}  alignItems='stretch' spacing={1}>
-                            <Grid item md={3}/>
-                            <Grid item md={3} align={"center"}>
-                                <Typography variant={"h4"} algin={"center"} component={"div"}>
-                                    Projekt: {projectName}
-                                </Typography>
-                            </Grid>
-                            <Grid item md={3} align={"right"}>
-                                <Button disabled={disableButton} variant='contained' align={"center"} color='primary' startIcon={<AddIcon/>}
-                                onClick={this.handleAddActivityButtonClicked}>
-                                    Aktivität anlegen
-                                </Button>
-                            </Grid>
-                        </Grid>
 
-                    <Grid container mt={3}>
-                        <Grid item md={12} align={"center"}>
-                            <Grid container>
-                                <Grid item md={3} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Aktivitäten </Typography>
-                                </Grid>
-                                <Grid item md={3} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Kapazität h </Typography>
-                                </Grid>
-                                <Grid item md={3} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Dauer h </Typography>
+                            <Grid container mt={4} pb={1}>
+                                <Grid item xs={7} align={"center"}>
+
+                                    <Grid container>
+                                        <Grid item xs={3} align={"flex-end"}>
+                                            <Typography variant={"h5"} component={"div"}> Aktivitäten </Typography>
+                                        </Grid>
+                                        <Grid item xs={3} align={"flex-end"}>
+                                            <Typography variant={"h5"} component={"div"}> Kapazität </Typography>
+                                        </Grid>
+                                        <Grid item xs={3} align={"flex-end"}>
+                                            <Typography variant={"h5"} component={"div"}> Dauer </Typography>
+                                        </Grid>
+                                    </Grid>
+
+                                    <Divider/>
+                                    {activities.map(ac =>
+                                        <ActivityListEntry key={ac.getID()} activity={ac} project={pro.project}
+                                                           person={per.person}
+                                                           onActivityDeleted={this.activityDeleted}/>)
+                                    }
                                 </Grid>
 
+
+                            <ProjectMemberList project={pro.project} show={ProjectMemberList}></ProjectMemberList>
+
+
+
                             </Grid>
-                            <Divider/>
-                            {activities.map(ac =>
-                                <ActivityListEntry key={ac.getID()} activity={ac} project={pro.project}
-                                                   person={per.person}
-                                                   onActivityDeleted={this.activityDeleted}/>)
-                            }
-                        </Grid>
-                    </Grid>
-                <ActivityForm onClose={this.activityFormClosed} show={showActivityForm} project={pro.project}></ActivityForm>
+                            <ActivityForm onClose={this.activityFormClosed} show={showActivityForm}
+                                          project={pro.project}></ActivityForm>
+
                         </Card>
+                    </Box>
+
+
+
                 </Box>
-                <ProjectMemberList project={pro.project} show={ProjectMemberList}></ProjectMemberList>
             </div>
+
+
         )
     }
 }

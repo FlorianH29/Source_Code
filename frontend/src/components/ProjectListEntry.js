@@ -152,6 +152,7 @@ class ProjectListEntry extends Component {
             <div>
                 <ListItem>
                     <Grid container alignItems={"center"}>
+                        <Grid item xs={2} align={"center"}>
                         <ListItemButton component={RouterLink} to={{
                             pathname: `/activities`,
                             pro: {
@@ -161,19 +162,20 @@ class ProjectListEntry extends Component {
                                 person: person
                             }
                         }}>
-                            <Grid item xs={3} align={"center"}>
+
                                 <Typography variant={"h5"} component={"div"}>
                                     {project.getProjectName()}
                                 </Typography>
-                            </Grid>
+
                         </ListItemButton>
+                        </Grid>
                         <Grid item xs={2} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 {project.getClient()}
                             </Typography>
                         </Grid>
                         { person.id === project.owner ? (
-                        <Grid item xs={3} align={"center"}>
+                        <Grid item xs={4} align={"center"}>
                             <ListItemButton onClick={this.editProjectDurationButtonClicked}>
                                 <Typography align={"center"} variant={"h5"} component={"div"}>
                                     Vom {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
@@ -186,7 +188,7 @@ class ProjectListEntry extends Component {
                             </ListItemButton>
                         </Grid>)
                             :
-                        <Grid item xs={3} align={"center"}>
+                        <Grid item xs={2} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 Vom {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
                                 dateStyle: "long",

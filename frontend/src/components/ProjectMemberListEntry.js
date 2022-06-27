@@ -42,18 +42,18 @@ class ProjectMemberListEntry extends Component {
         return (
             <div>
                 <ListItem>
-                    <Grid container alignItems='center'>
-                        <Grid item xs={2} align={"center"}>
+                    <Grid container  alignItems='center'>
+                        <Grid item xs={5} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 {projectMember.getFirstName()}
                             </Typography>
                         </Grid>
-                        <Grid item xs={2} align={"center"}>
+                        <Grid item xs={5} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 {projectMember.getLastName()}
                             </Typography>
                         </Grid>
-                        <Grid item xs={3} align={"center"}>
+                        <Grid item xs={2} align={"center"}>
                             <Button color='secondary' size='small' startIcon={<PersonRemoveRoundedIcon/>}
                                     onClick={this.deleteProjectMemberButtonClicked}> </Button>
                         </Grid>
@@ -69,14 +69,5 @@ class ProjectMemberListEntry extends Component {
 
 }
 
-ProjectMemberListEntry.propTypes = {
-  /** Das ActivityBO welches gerendert werden soll */
-  projectMember: PropTypes.object.isRequired,
-  project: PropTypes.object.isRequired,
-  person: PropTypes.object.isRequired,
-  /** Event Handler Funktion, welche aufgerufen wird, nachdem eine Projektarbeit erfolgreich gelöscht wurde. */
-  onActivityDeleted: PropTypes.func.isRequired,
-  show: PropTypes.bool.isRequired
-}
 
 export default ProjectMemberListEntry;
