@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 import ActivityList from "./components/ActivityList";
 import Navigator from './components/layout/Navigator';
 import ProjectList from "./components/ProjectList";
@@ -148,7 +148,6 @@ class App extends React.Component {
                                 <Navigator person={currentPerson}/>
                                 <Switch>
 
-
                                     <Route exact path='/projects'>
                                         <ProjectList/>
                                     </Route>
@@ -165,7 +164,7 @@ class App extends React.Component {
                                         <ProjectAnalysis/>
                                     </Route>
                                     <Route path='*'>
-                                        <NotFound/>
+                                        <TimeIntervalTransactionList/>
                                     </Route>
                                 </Switch>
                             </>
