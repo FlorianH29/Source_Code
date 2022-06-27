@@ -177,12 +177,12 @@ class ActivityList extends Component {
                     </Typography>
                         <Grid container mt={2}  alignItems='stretch' spacing={1}>
                             <Grid item md={3}/>
-                            <Grid item md={5} align={"center"}>
+                            <Grid item md={3} align={"center"}>
                                 <Typography variant={"h4"} algin={"center"} component={"div"}>
                                     Projekt: {projectName}
                                 </Typography>
                             </Grid>
-                            <Grid item md={4} align={"right"}>
+                            <Grid item md={3} align={"right"}>
                                 <Button disabled={disableButton} variant='contained' align={"center"} color='primary' startIcon={<AddIcon/>}
                                 onClick={this.handleAddActivityButtonClicked}>
                                     Aktivität anlegen
@@ -190,17 +190,17 @@ class ActivityList extends Component {
                             </Grid>
                         </Grid>
 
-                    <Grid container mt={4}>
+                    <Grid container mt={3}>
                         <Grid item md={12} align={"center"}>
                             <Grid container>
-                                <Grid item md={4} align={"flex-end"}>
+                                <Grid item md={3} align={"flex-end"}>
                                     <Typography variant={"h5"} component={"div"}> Aktivitäten </Typography>
                                 </Grid>
-                                <Grid item md={4} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Kapazität </Typography>
+                                <Grid item md={3} align={"flex-end"}>
+                                    <Typography variant={"h5"} component={"div"}> Kapazität h </Typography>
                                 </Grid>
-                                <Grid item md={4} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Dauer </Typography>
+                                <Grid item md={3} align={"flex-end"}>
+                                    <Typography variant={"h5"} component={"div"}> Dauer h </Typography>
                                 </Grid>
 
                             </Grid>

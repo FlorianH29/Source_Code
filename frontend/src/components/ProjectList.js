@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {Box, Button, Divider, Grid, Typography} from '@mui/material';
+import {Box, Button, Divider, Grid, Typography, Card} from '@mui/material';
 import ProjectListEntry from "./ProjectListEntry";
 import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
 import PropTypes from "prop-types";
@@ -85,47 +85,49 @@ class ProjectList extends Component {
         //console.log(this.state)
         return (
             <div>
-                <Box m={22} pl={1}>
-                <Grid container mt={14}  alignItems='stretch' spacing={1}>
-                    <Grid item xs={3}/>
-                    <Grid item xs={5} align={"center"}>
-                        <Typography variant={"h4"} algin={"center"} component={"div"}>
-                            Meine Projekte:
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={4}  align={"right"}>
-                        <Button variant='contained' color='primary'
-                                onClick={this.handleCreateProjectButtonClicked}>
-                            Projekt erstellen
-                        </Button>
-                    </Grid>
-                </Grid>
-                <Grid container mt={3}>
-                    <Grid item xs={12}  align={"center"}>
-                        <Grid container>
-                            <Grid item xs={3} align={"flex-end"}>
-                                <Typography variant={"h5"} component={"div"}> Projektname: </Typography>
+                <Box mt={18} ml={18} mr={5} mb={10} pl={8}>
+                    <Card>
+                        <Grid container mt={14} alignItems='stretch' spacing={1}>
+                            <Grid item xs={3}/>
+                            <Grid item xs={5} align={"center"}>
+                                <Typography variant={"h4"} algin={"center"} component={"div"}>
+                                    Meine Projekte:
+                                </Typography>
                             </Grid>
-                            <Grid item xs={2} align={"flex-end"}>
-                                <Typography variant={"h5"} component={"div"}> Klient: </Typography>
-                            </Grid>
-                            <Grid item xs={3} align={"flex-end"}>
-                                <Typography variant={"h5"} component={"div"}> Projektlaufzeit: </Typography>
-                            </Grid>
-                            <Grid item xs={2} align={"flex-end"}>
-                                <Typography variant={"h5"} component={"div"}> Arbeitsleistung: </Typography>
+                            <Grid item xs={4} align={"right"}>
+                                <Button variant='contained' color='primary'
+                                        onClick={this.handleCreateProjectButtonClicked}>
+                                    Projekt erstellen
+                                </Button>
                             </Grid>
                         </Grid>
-                        <Divider/>
-                        {projects.map(pro =>
-                            <ProjectListEntry key={pro.getID()} project={pro}
-                                              onProjectDeleted={this.projectDeleted}/>)}
-                    </Grid>
-                </Grid>
-                <ProjectCreateDialog onClose={this.projectCreateDialogClosed} show={showProjectCreateDialog}/>
-                <ProjectDurationDialog openProjectDurationDialog={this.handleShowProjectCreation}
-                                       onClose={this.handleDurationClose} show={showProjectDurationDialog}/>
-            </Box>
+                        <Grid container mt={3}>
+                            <Grid item xs={12} align={"center"}>
+                                <Grid container>
+                                    <Grid item xs={3} align={"flex-end"}>
+                                        <Typography variant={"h5"} component={"div"}> Projektname: </Typography>
+                                    </Grid>
+                                    <Grid item xs={2} align={"flex-end"}>
+                                        <Typography variant={"h5"} component={"div"}> Klient: </Typography>
+                                    </Grid>
+                                    <Grid item xs={3} align={"flex-end"}>
+                                        <Typography variant={"h5"} component={"div"}> Projektlaufzeit: </Typography>
+                                    </Grid>
+                                    <Grid item xs={2} align={"flex-end"}>
+                                        <Typography variant={"h5"} component={"div"}> Arbeitsleistung: </Typography>
+                                    </Grid>
+                                </Grid>
+                                <Divider/>
+                                {projects.map(pro =>
+                                    <ProjectListEntry key={pro.getID()} project={pro}
+                                                      onProjectDeleted={this.projectDeleted}/>)}
+                            </Grid>
+                        </Grid>
+                        <ProjectCreateDialog onClose={this.projectCreateDialogClosed} show={showProjectCreateDialog}/>
+                        <ProjectDurationDialog openProjectDurationDialog={this.handleShowProjectCreation}
+                                               onClose={this.handleDurationClose} show={showProjectDurationDialog}/>
+                    </Card>
+                </Box>
             </div>
         );
     }
