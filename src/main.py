@@ -310,7 +310,6 @@ class EventOperations(Resource):
             return '', 500
 
 
-
 @hdmwebapp.route('/breaks')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class BreakOperations(Resource):
@@ -327,7 +326,7 @@ class BreakOperations(Resource):
         result = None
 
         if pe is not None:
-            result = hwa.check_break(pe)
+            result = hwa.check_break_started(pe)
             return result, 200
         else:
             return '', 500

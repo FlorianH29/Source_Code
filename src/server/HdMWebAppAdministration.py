@@ -42,16 +42,19 @@ class HdMWebAppAdministration(object):
             return mapper.find_by_key(number)
 
     def get_person_by_name(self, lastname):
+        # wird nicht verwendet
         """Alle Kunden mit übergebenem Nachnamen auslesen."""
         with PersonMapper() as mapper:
             return mapper.find_by_lastname(lastname)
 
     def get_person_by_username(self, username):
+        # wird nicht verwendet
         """Alle Kunden mit übergebenem Nachnamen auslesen."""
         with PersonMapper() as mapper:
             return mapper.find_by_username(username)
 
     def get_all_persons(self):
+        # wird nicht verwendet
         """Alle in der Datenbank gespeicherten Personen auslesen."""
         with PersonMapper() as mapper:
             return mapper.find_all()
@@ -82,7 +85,7 @@ class HdMWebAppAdministration(object):
         # noch Projektarbeiten und Buchungen von davon, die auf Arbeitszeitkonto sind löschen?
         with PersonMapper() as mapper:
             if person is not None:
-                projects = self.get_projectmember_by_person(person)
+                projects = self.get_project_member_by_person(person)
                 worktimeaccount = self.get_work_time_account_of_owner(person)
 
                 for project in projects:
@@ -1055,12 +1058,16 @@ class HdMWebAppAdministration(object):
             with BreakMapper() as mapper:
                 return mapper.find_by_start_event_id(start_event.get_id())
 
+    def check_break(self, person):
+        """Überprüfen, ob eine Person genug Pause gemacht hat."""
+
+
     def save_break(self, value):
         value.set_last_edit(datetime.now())
         with BreakMapper() as mapper:
             return mapper.update(value)
 
-    def check_break(self, person):
+    def check_break_started(self, person):
         """Überprüfen, ob eine Pause begonnen wurde."""
         if person is not None:
             last_event = self.get_last_event_by_affiliated_person(person)
