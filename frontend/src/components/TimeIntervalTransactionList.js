@@ -52,7 +52,7 @@ class TimeIntervalTransactionList extends Component {
                                 <Grid item xs={5} align={"right"}>
                                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                                         <DatePicker
-                                            label={"Start Datum"}
+                                            label={"Start-Datum"}
                                             value={startDate}
                                             inputFormat="dd/MM/yyyy"
                                             onChange={(date) => {
@@ -66,7 +66,7 @@ class TimeIntervalTransactionList extends Component {
                                 <Grid item xs={7} align={"left"}>
                                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                                         <DatePicker
-                                            label={"End Datum"}
+                                            label={"End-Datum"}
                                             value={endDate}
                                             inputFormat="dd/MM/yyyy"
                                             onChange={(date) => {

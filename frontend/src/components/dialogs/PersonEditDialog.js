@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Dialog, DialogActions, DialogTitle, IconButton, TextField} from '@material-ui/core';
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import {HdMWebAppAPI, PersonBO} from '../../api';
 
@@ -75,6 +75,7 @@ class PersonEditDialog extends Component {
                             <CloseIcon/>
                         </IconButton>
                     </DialogTitle>
+                    <DialogContent>
                     <form noValidate autoComplete='off'>
                         <TextField autoFocus type='text' required fullWidth margin='normal' id='firstname'
                                    label='Vorname:' value={firstname}
@@ -85,6 +86,7 @@ class PersonEditDialog extends Component {
                                    onChange={this.textFieldValueChange} error={lastnameValidationFailed}
                                    helperText={lastnameValidationFailed ? 'Bitte geben Sie Ihren Nachnamen an' : ' '}/>
                     </form>
+                    </DialogContent>
                     <DialogActions>
                         <Button align="left" onClick={this.handleClose} color='secondary'>
                             Abbrechen

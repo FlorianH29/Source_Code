@@ -64,16 +64,15 @@ class HdMWebAppAdministration(object):
     def delete_person(self, person):
         """Gegebene Person aus System löschen, gleichzeitig Person als Mitarbeiter in den Projekten streichen, in denen
          sie beteiligt war und ihr Arbeitszeitkonto löschen."""
-        # noch Projektarbeiten und Buchungen von davon, die auf Arbeitszeitkonto sind löschen?
         with PersonMapper() as mapper:
             if person is not None:
                 projects = self.get_project_members_by_person(person)
-                worktimeaccount = self.get_work_time_account_of_owner(person)
+                # worktimeaccount = self.get_work_time_account_of_owner(person)
 
                 for project in projects:
                     self.delete_project_member(project)
 
-                self.delete_work_time_account(worktimeaccount)
+                # self.delete_work_time_account(worktimeaccount)
 
             mapper.delete(person)
 
@@ -925,7 +924,9 @@ class HdMWebAppAdministration(object):
                 interval.set_start_event(start_event.get_id())
                 if end_event is not None:
                     interval.set_end_event(end_event.get_id())
-                    interval.set_time_period(self.calculate_period(interval))
+                    if end_event.get_event_type() != 8:
+                        # wenn Zeitintervall für Projektzeit angelegt wird, keine Dauer berechnen, Zeitpunkte reichen
+                        interval.set_time_period(self.calculate_period(interval))
 
                 return mapper.insert(interval)
             else:
@@ -1294,10 +1295,9 @@ class HdMWebAppAdministration(object):
                     event_type = last_event.get_event_type()
                     if event_type == 1:
                         self.create_event_and_check_type(2, person)
-                        self.create_event(2, person)
                         project_work = self.get_project_work_by_start_event(last_event)
                         self.add_end_event_to_project_work(project_work, person)
                     if event_type == 3:
                         self.create_event_and_check_type(4, person)
                         self.create_break(person)
-                    self.create_departure_event(person)
+                    self.check_break(person)

@@ -183,7 +183,7 @@ class ProjectDurationDialog extends Component {
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
                                         disabled={disableStartButton}
-                                        label={"Start Date"}
+                                        label={"Start-Datum"}
                                         value={startDate}
                                         inputFormat="dd/MM/yyyy"
                                         onChange={(date) => {
@@ -197,7 +197,7 @@ class ProjectDurationDialog extends Component {
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
                                         disabled={disableEndButton}
-                                        label={"End Date"}
+                                        label={"End-Datum"}
                                         value={endDate}
                                         inputFormat="dd/MM/yyyy"
                                         onChange={(date) => {

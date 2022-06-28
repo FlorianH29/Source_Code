@@ -107,7 +107,7 @@ class ProjectMemberList extends Component {
                     <Card>
                         <Grid container p={1} alignItems='stretch' spacing={1}>
                             <Grid item xs={8}>
-                                <Typography variant={"h1"} algin={"left"} component={"div"} fontWeight={'bold'}>
+                                <Typography variant={"h3"} algin={"left"} component={"div"} fontWeight={'bold'}>
                                     Projektmitglieder
                                 </Typography>
                             </Grid>

@@ -37,6 +37,11 @@ const theme = createTheme({
             fontSize: 26,
         },
 
+        h3: {
+          fontWeight: 580,
+            fontSize: 35,
+        },
+
     fontFamily: [
       "Avenir next",
         "sans serif"

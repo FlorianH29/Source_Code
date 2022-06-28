@@ -67,7 +67,7 @@ class PersonDeleteDialog extends Component {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Möchte sie Ihr Profil wirklich löschen?
+                            Möchten Sie Ihr Profil wirklich löschen?
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
