@@ -941,11 +941,6 @@ sub_thread.setDaemon(True)
 sub_thread.start()
 
 
-h = HdMWebAppAdministration()
-pe = h.get_person_by_id(1)
-
-
-
 if __name__ == '__main__':
     app.run(debug=False)
 
