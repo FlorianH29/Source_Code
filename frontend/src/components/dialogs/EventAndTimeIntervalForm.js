@@ -162,8 +162,8 @@ class EventAndTimeIntervalForm extends Component {
                                     }}
                                     renderInput={(params) => <TextField{...params}/>}
                                 />
-
                             </LocalizationProvider>
+                            {"    "}
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DateTimePicker
                                     label={"Ende wählen"}

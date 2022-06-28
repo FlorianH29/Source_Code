@@ -86,7 +86,7 @@ class ProjectList extends Component {
         const {projects, showProjectCreateDialog, showProjectDurationDialog} = this.state
 
         return (
-            <div style={{display: "flex"}}>
+            <div>
                 <Box mt={18} ml={21} mr={2} mb={10} pl={8}>
                     <Card>
                         <Grid container p={1} alignItems='stretch' spacing={1}>

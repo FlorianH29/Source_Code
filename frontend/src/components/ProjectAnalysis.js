@@ -46,7 +46,7 @@ class ProjectAnalysis extends Component {
                         <Card>
                             <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
                                 <Grid container spacing={3}>
-                                    <Grid item xs={6} align={"right"}>
+                                    <Grid item xs={5} align={"right"}>
 
                                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                                             <DatePicker
@@ -60,7 +60,7 @@ class ProjectAnalysis extends Component {
                                             />
                                         </LocalizationProvider>
                                     </Grid>
-                                    <Grid item xs={6} align={"left"}>
+                                    <Grid item xs={7} align={"left"}>
                                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                                             <DatePicker
                                                 label={"End-Datum"}

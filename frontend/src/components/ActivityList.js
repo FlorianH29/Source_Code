@@ -165,7 +165,7 @@ class ActivityList extends Component {
                             <Link component={RouterLink} to={{
                                 pathname: '/projects'
                             }}>
-                                <Grid container spacing={1} justify='flex-start' alignItems='stretch'>
+                                <Grid container p={1} spacing={1} justify='flex-start' alignItems='stretch'>
                                     <Grid item>
                                         <ArrowCircleLeftRoundedIcon color={"#008A59"}/>
                                     </Grid>

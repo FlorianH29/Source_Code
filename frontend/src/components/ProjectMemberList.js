@@ -103,7 +103,7 @@ class ProjectMemberList extends Component {
 
         return (
             <div>
-                <Box mt={3} ml={21} mr={50} mb={2} pl={8}>
+                <Box mt={3} ml={21} mr={60} mb={2} pl={8} display={"flex"}>
                     <Card>
                         <Grid container p={1} alignItems='stretch' spacing={1}>
                             <Grid item xs={8}>
