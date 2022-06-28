@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
-import {Button, Grid, Typography} from '@material-ui/core';
+import {Button} from '@material-ui/core';
 import {HdMWebAppAPI} from '../api';
-import {Box, Card, Divider} from "@mui/material";
+import {Box, Card, Divider, Grid, Typography} from "@mui/material";
 import ProjectMemberListEntry from "./ProjectMemberListEntry";
 import CheckboxForm from "./dialogs/CheckboxForm";
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
-import EditIcon from "@mui/icons-material/Edit";
-import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
 
 
 class ProjectMemberList extends Component {
@@ -78,7 +76,6 @@ class ProjectMemberList extends Component {
         this.setState({
             showCheckboxForm: true
         });
-        this.getPotentialMembersForProject();
     }
 
     projectMemberDeleted = projectMember => {
@@ -100,17 +97,17 @@ class ProjectMemberList extends Component {
 
 
     render() {
-        const {project} = this.props;
+        const {project, person} = this.props;
         const {projectMembers, showCheckboxForm, onProjectMemberDeleted, disableButton} = this.state;
 
 
         return (
             <div>
-                <Box mt={3} ml={18} mr={2} mb={2} pl={8}>
+                <Box mt={3} ml={21} mr={50} mb={2} pl={8}>
                     <Card>
                         <Grid container p={1} alignItems='stretch' spacing={1}>
-                            <Grid item xs={8} align={"center"}>
-                                <Typography variant={"h4"} algin={"center"} component={"div"}>
+                            <Grid item xs={8}>
+                                <Typography variant={"h1"} algin={"left"} component={"div"} fontWeight={'bold'}>
                                     Projektmitglieder
                                 </Typography>
                             </Grid>
@@ -122,13 +119,13 @@ class ProjectMemberList extends Component {
                                 </Button>
                             </Grid>
                         </Grid>
-                        <Grid item xs={12} align={"center"} p={4}>
+                        <Grid item xs={12} align={"center"} pt={3}>
                             <Grid container>
                                 <Grid item xs={4} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Vorname </Typography>
+                                    <Typography variant={"h2"} component={"div"}> Vorname </Typography>
                                 </Grid>
                                 <Grid item xs={4} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Nachname </Typography>
+                                    <Typography variant={"h2"} component={"div"}> Nachname </Typography>
                                 </Grid>
                             </Grid>
 

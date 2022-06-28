@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {Box, Button, Divider, Grid, Typography, Vard} from '@material-ui/core';
+import {Box, Button, Divider, Typography, Card} from '@material-ui/core';
+import {Grid} from '@mui/material';
 import ProjectListEntry from "./ProjectListEntry";
 import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
-import PropTypes from "prop-types";
 import ProjectDurationDialog from "./dialogs/ProjectDurationDialog";
 import AddIcon from "@material-ui/icons/Add";
 import {withStyles} from "@mui/styles";
@@ -84,15 +84,15 @@ class ProjectList extends Component {
 
     render() {
         const {projects, showProjectCreateDialog, showProjectDurationDialog} = this.state
-        //console.log(this.state)
+
         return (
             <div>
-                <Box mt={18} ml={18} mr={2} mb={10} pl={8}>
+                <Box mt={18} ml={21} mr={2} mb={10} pl={8}>
                     <Card>
-                        <Grid container mt={14} p={1} alignItems='stretch' spacing={1}>
+                        <Grid container p={1} alignItems='stretch' spacing={1}>
 
                             <Grid item xs={9} align={"center"}>
-                                <Typography variant={"h4"} algin={"center"} component={"div"}>
+                                <Typography variant={"h1"} algin={"center"} component={"div"}>
                                     Meine Projekte
                                 </Typography>
                             </Grid>
@@ -107,16 +107,16 @@ class ProjectList extends Component {
                             <Grid item xs={12} align={"center"}>
                                 <Grid container>
                                     <Grid item xs={2} align={"flex-end"}>
-                                        <Typography variant={"h5"} component={"div"}> Projektname </Typography>
+                                        <Typography variant={"h2"} component={"div"}> Projektname </Typography>
                                     </Grid>
                                     <Grid item xs={2} align={"flex-end"}>
-                                        <Typography variant={"h5"} component={"div"}> Auftraggeber </Typography>
+                                        <Typography variant={"h2"} component={"div"}> Auftraggeber </Typography>
                                     </Grid>
                                     <Grid item xs={4} align={"flex-end"}>
-                                        <Typography variant={"h5"} component={"div"}> Projektlaufzeit </Typography>
+                                        <Typography variant={"h2"} component={"div"}> Projektlaufzeit </Typography>
                                     </Grid>
                                     <Grid item xs={2} align={"flex-end"}>
-                                        <Typography variant={"h5"} component={"div"}> Arbeitsleistung </Typography>
+                                        <Typography variant={"h2"} component={"div"}> Arbeitsleistung </Typography>
                                     </Grid>
 
                                 </Grid>

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {Divider, Grid, Typography, withStyles} from '@material-ui/core';
-import {Button, ListItem} from '@material-ui/core';
+import {Divider, Typography, withStyles, Button, ListItem} from '@material-ui/core';
+import {Grid} from '@mui/material';
 import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
 import EditIcon from '@mui/icons-material/Edit';
 import ProjectDeleteDialog from "./dialogs/ProjectDeleteDialog";
@@ -141,7 +141,6 @@ class ProjectListEntry extends Component {
 
     /** Rendert die Komponente*/
     render() {
-        const {classes} = this.props;
         const {project, showProjectCreateDialog, showProjectDeleteDialog, showProjectDurationDialog, startEvent, endEvent, person } = this.state;
 
 
@@ -185,7 +184,7 @@ class ProjectListEntry extends Component {
                             </ListItemButton>
                         </Grid>)
                             :
-                        <Grid item xs={2} align={"center"}>
+                        <Grid item xs={4} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 Vom {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
                                 dateStyle: "long",

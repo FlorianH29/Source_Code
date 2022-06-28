@@ -45,6 +45,7 @@ class CheckboxForm extends Component {
     addSelectedPersonsToProject = () => {
         HdMWebAppAPI.getAPI().addPersonAsProjectMember(this.state.selectedPerson, this.props.project.getID());
             this.props.onClose(null);
+            this.getPotentialMembersForProject();
     }
 
     componentDidMount() {

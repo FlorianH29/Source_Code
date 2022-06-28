@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from "../api";
-import {Button, Grid, Typography, Divider, Box, Link, Card} from '@material-ui/core';
+import {Button, Divider, Box, Link, Card, Typography,} from '@material-ui/core';
+import {Grid} from "@mui/material";
 import AddIcon from '@material-ui/icons/Add';
 import ActivityForm from "./dialogs/ActivityForm";
 import ActivityListEntry from "./ActivityListEntry";
@@ -158,7 +159,7 @@ class ActivityList extends Component {
 
         return (
             <div>
-                <Box mt={18} ml={22} mr={2} mb={2} pl={8}>
+                <Box mt={18} ml={21} mr={2} mb={2} pl={8}>
                     <Card>
                         <Typography p={1} component='div' color={"primary"}>
                             <Link component={RouterLink} to={{
@@ -173,13 +174,13 @@ class ActivityList extends Component {
                                 </Grid>
                             </Link>
                         </Typography>
-                        <Grid container p={1} alignItems='stretch' spacing={1}>
-                            <Grid item xs={8} align={"center"}>
-                                <Typography variant={"h4"} algin={"center"} component={"div"}>
+                        <Grid container pr={1} pl={1} alignItems='stretch' spacing={1}>
+                            <Grid item xs={9} align={"left"}>
+                                <Typography variant={"h1"} algin={"center"} component={"div"} fontWeight={'bold'}>
                                     Projekt: {projectName}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={4} align={"right"}>
+                            <Grid item xs={3} align={"right"}>
                                 <Button disabled={disableButton} variant='contained' align={"center"}
                                         color='primary'
                                         startIcon={<AddIcon/>}
@@ -188,16 +189,16 @@ class ActivityList extends Component {
                                 </Button>
                             </Grid>
                         </Grid>
-                        <Grid item xs={12} align={"center"} mt={6}>
+                        <Grid item xs={12} align={"center"} pt={3}>
                             <Grid container>
                                 <Grid item xs={3} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Aktivitäten </Typography>
+                                    <Typography variant={"h2"} component={"div"}> Aktivitäten </Typography>
                                 </Grid>
                                 <Grid item xs={3} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Kapazität </Typography>
+                                    <Typography variant={"h2"} component={"div"}> Kapazität </Typography>
                                 </Grid>
                                 <Grid item xs={3} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Dauer </Typography>
+                                    <Typography variant={"h2"} component={"div"}> Dauer </Typography>
                                 </Grid>
                             </Grid>
                             <Divider/>
