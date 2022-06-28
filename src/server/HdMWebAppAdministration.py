@@ -27,7 +27,6 @@ from .db.ProjectWorkMapper import ProjectWorkMapper
 from .db.ProjectMemberMapper import ProjectMemberMapper
 from .db.TimeIntervalMapper import TimeIntervalMapper
 from .db.EventMapper import EventMapper
-import pytz
 
 
 class HdMWebAppAdministration(object):
@@ -51,7 +50,7 @@ class HdMWebAppAdministration(object):
         """Person anlegen, nach Anlegen der Person Anlegen eines Arbeitszeitkontos für sie."""
         person = Person()
         person.set_id(1)
-        person.set_last_edit(datetime.now(pytz.timezone('Europe/London')))
+        person.set_last_edit(datetime.now())
         person.set_firstname("Vorname noch nachtragen")
         person.set_lastname("Nachname noch nachtragen")
         person.set_username(username)
