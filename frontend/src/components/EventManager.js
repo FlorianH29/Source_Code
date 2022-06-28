@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {EventBO, HdMWebAppAPI} from '../api';
-import {Button} from '@material-ui/core';
+import {Box, Button} from '@material-ui/core';
 import {Grid} from '@mui/material';
 
 
@@ -79,11 +79,13 @@ class EventManager extends Component {
 
         return (
             <div>
-                <Grid container justifyContent={'center'}ml={1}>
-                    <Grid item align={'center'}>
-                        <Button variant='contained' color='primary' disabled={disabled}
+                <Grid container >
+                    <Grid  >
+
+                        <Button variant='contained' color='primary' disabled={disabled} ml={3}
                                 onClick={this.handleCreateEventButtonClicked}> {buttonName}
                         </Button>
+
                     </Grid>
                 </Grid>
             </div>

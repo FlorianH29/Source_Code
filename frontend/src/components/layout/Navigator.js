@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Component} from 'react';
-import {Box, CssBaseline, Divider, IconButton, Popover, AppBar, Drawer, Toolbar, Grid} from '@mui/material';
+import {Box, CssBaseline, Divider, IconButton, Popover, AppBar, Drawer, Toolbar, Grid, Button} from '@mui/material';
 import {Typography} from '@material-ui/core'
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -20,6 +20,7 @@ import {Link as RouterLink} from "react-router-dom";
 import {HdMWebAppAPI} from "../../api";
 import EventManager from "../EventManager";
 import Departure from "../Departure";
+import MenuIcon from '@mui/icons-material/Menu';
 
 
 class Navigator extends Component {
@@ -35,6 +36,8 @@ class Navigator extends Component {
             showPersonDelete: false,
             disableStartButton: false,
             disableEndButton: true,
+            showDrawer: false,
+            showMenu: true,
             eventT: 0,
         };
     };
@@ -87,6 +90,20 @@ class Navigator extends Component {
         });
     }
 
+    handleBurger = () => {
+        this.setState({
+            showDrawer: true,
+            showMenu: false,
+
+        })
+    }
+
+    handleAntiBurger = () => {
+        this.setState({
+            showDrawer: false
+        })
+    }
+
     handleEdit = () => {
         this.setState({
             showPersonEditDialog: true
@@ -122,10 +139,11 @@ class Navigator extends Component {
     }
 
     render() {
-        const {showPersonDeleteDialog, showPersonEditDialog, person, disableStartButton, disableEndButton, eventT} = this.state;
+        const {showPersonDeleteDialog, showPersonEditDialog, person, disableStartButton, disableEndButton, showDrawer, showMenu} = this.state;
         const drawerWidth = 220;
         const lel = 0;
         const boxWidth = 200;
+
 
         return (
             <Box sx={{display: 'flex'}}>
@@ -139,18 +157,17 @@ class Navigator extends Component {
                 }}>
 
                     <Toolbar>
-                        <Typography variant="h3" component="div" sx={{flexGrow: 1}}>
+
+                        <Typography variant="h3">
                             HdM Zeiterfassung
                         </Typography>
                         {person ? (<>
-
                             <IconButton
                                 size="large"
                                 onClick={this.handleOpenUserMenu}
                                 color="inherit">
                                 <ManageAccountsIcon/>
                             </IconButton>
-
                             <Popover
                                 anchorEl={this.state.anchorEl}
                                 anchorOrigin={{
@@ -173,17 +190,18 @@ class Navigator extends Component {
                                                   onClose={this.personEditClosed}>
                                 </PersonEditDialog>
 
-                                <Typography variant='h6' component='div' align='left'>
+
                                     <IconButton onClick={this.handleEdit}>
-                                        <DriveFileRenameOutlineIcon/>
-                                        Profil bearbeiten
+                                        <DriveFileRenameOutlineIcon style={{maxWidth: '20px', maxHeight: '20px',
+                                            color: '#294F66'}}/>
+                                       <Typography style={{fontWeight: '520', fontSize: '20'}}> Profil bearbeiten</Typography>
                                     </IconButton>
                                     <Divider sx={{p: 0}}/>
-                                    <IconButton onClick={this.handleDelete}>
-                                        <NoAccountsIcon/>
-                                        Profil löschen
+                                    <IconButton onClick={this.handleDelete} >
+                                        <NoAccountsIcon style={{maxWidth: '21px', maxHeight: '21px', color: '#294F66'}}/>
+                                       <Typography style={{fontWeight: '520', fontSize: '20'}}>Profil löschen</Typography>
                                     </IconButton>
-                                </Typography>
+
                             </Popover>
                         </>) : null
                         }
@@ -205,42 +223,45 @@ class Navigator extends Component {
                                 <ListItem>
                                     <ListItemButton component={RouterLink}
                                                     to={`/eventtransactionsandtimeintervaltransactions`}>
-                                        <ListItemIcon>
+                                        <ListItemIcon style={{color: '#294F66' }}>
                                             <AccessTimeIcon/>
                                         </ListItemIcon>
-                                        <ListItemText primary="Arbeitszeiten"/>
+                                        <ListItemText disableTypography primary={<Typography style={{fontWeight: 520}}>
+                                            Arbeitszeiten</Typography>}/>
                                     </ListItemButton>
                                 </ListItem>
 
                                 <ListItem>
                                     <ListItemButton component={RouterLink} to={`/projects`}>
-                                        <ListItemIcon>
+                                        <ListItemIcon style={{color: '#294F66' }}>
                                             <CardTravelIcon/>
                                         </ListItemIcon>
-                                        <ListItemText primary="Projekte"/>
+                                        <ListItemText disableTypography primary={<Typography style={{fontWeight: 520}}>
+                                            Projekte</Typography>}/>
                                     </ListItemButton>
                                 </ListItem>
 
                                 <ListItem>
                                     <ListItemButton component={RouterLink} to={`/projectanalysis`}>
-                                        <ListItemIcon>
+                                        <ListItemIcon style={{color: '#294F66' }}>
                                             <AssessmentRoundedIcon/>
                                         </ListItemIcon>
-                                        <ListItemText primary="Projektanalyse"/>
+                                        <ListItemText disableTypography primary={<Typography style={{fontWeight: 520}}>
+                                            Projektanalyse</Typography>}/>
                                     </ListItemButton>
                                 </ListItem>
 
                                 <Divider></Divider>
 
-                                <ListItem>
-                                    <EventManager disabled={disableStartButton} eventT={3} onClose={this.handleClose}>
+                                <ListItem style={{display:'flex', justifyContent:'center'}}>
+                                    <EventManager  disabled={disableStartButton} eventT={3} onClose={this.handleClose}>
+                                    </EventManager>
+                                </ListItem>
+                                <ListItem style={{display:'flex', justifyContent:'center'}}>
+                                    <EventManager align={'center'} disabled={disableEndButton} eventT={4} onClose={this.handleClose}>
                                     </EventManager>
                                 </ListItem>
 
-                                <ListItem>
-                                    <EventManager disabled={disableEndButton} eventT={4} onClose={this.handleClose}>
-                                    </EventManager>
-                                </ListItem>
                                 <Departure></Departure>
                             </Typography>
                         </Drawer>
