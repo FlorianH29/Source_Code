@@ -27,6 +27,7 @@ from .db.ProjectWorkMapper import ProjectWorkMapper
 from .db.ProjectMemberMapper import ProjectMemberMapper
 from .db.TimeIntervalMapper import TimeIntervalMapper
 from .db.EventMapper import EventMapper
+import pytz
 
 
 class HdMWebAppAdministration(object):
@@ -50,7 +51,7 @@ class HdMWebAppAdministration(object):
         """Person anlegen, nach Anlegen der Person Anlegen eines Arbeitszeitkontos für sie."""
         person = Person()
         person.set_id(1)
-        person.set_last_edit(datetime.now())
+        person.set_last_edit(datetime.now(pytz.timezone('Europe/London')))
         person.set_firstname("Vorname noch nachtragen")
         person.set_lastname("Nachname noch nachtragen")
         person.set_username(username)
@@ -92,15 +93,16 @@ class HdMWebAppAdministration(object):
 
     def create_arrive_event(self, person):
         """Arrive-Ereignis anlegen"""
-        arrive = Arrive()
-        arrive.set_id(1)
-        arrive.set_deleted(0)
-        arrive.set_time_stamp(datetime.now())
-        arrive.set_last_edit(datetime.now())
-        arrive.set_affiliated_person(person.get_id())
+        if self.check_arrive_and_departure_for_person(person):
+            arrive = Arrive()
+            arrive.set_id(1)
+            arrive.set_deleted(0)
+            arrive.set_time_stamp(datetime.now())
+            arrive.set_last_edit(datetime.now())
+            arrive.set_affiliated_person(person.get_id())
 
-        with ArriveMapper() as mapper:
-            return mapper.insert(arrive), self.create_event_transaction(None, arrive, None)
+            with ArriveMapper() as mapper:
+                return mapper.insert(arrive), self.create_event_transaction(None, arrive, None)
 
     def delete_arrive_event(self, arrive):
         """Das gegebene Kommen Ereignis aus dem System löschen."""
