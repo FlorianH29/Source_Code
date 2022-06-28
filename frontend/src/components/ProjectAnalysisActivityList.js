@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from "../api";
-import {Typography} from '@material-ui/core';
+import {Divider, Typography} from '@material-ui/core';
 import {Grid} from '@mui/material';
 import ProjectAnalysisActivityListEntry from "./ProjectAnalysisActivityListEntry";
 
@@ -35,7 +35,7 @@ class ProjectAnalysisActivityList extends Component {
         const {activities} = this.state;
 
         return (
-            <div style={{width: "100%", p: 0, m: 0}}>
+            <div style={{width: "100%"}}>
                 <Grid container spacing={2}>
                     <Grid item xs={4} align={"center"}>
                         <Typography variant={"h2"} component={"div"}> Aktivitätsname </Typography>
@@ -47,6 +47,7 @@ class ProjectAnalysisActivityList extends Component {
                         <Typography variant={"h2"} component={"div"}> Ist </Typography>
                     </Grid>
                 </Grid>
+                <Divider/>
                 {activities.map(ac =>
                     <ProjectAnalysisActivityListEntry key={ac.getID()} activity={ac} startDate={this.props.startDate}
                                                       endDate={this.props.endDate}/>)

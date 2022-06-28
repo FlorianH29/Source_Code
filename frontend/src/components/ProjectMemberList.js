@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {Button} from '@material-ui/core';
+import {Button, Typography} from '@material-ui/core';
 import {HdMWebAppAPI} from '../api';
-import {Box, Card, Divider, Grid, Typography} from "@mui/material";
+import {Box, Card, Divider, Grid} from "@mui/material";
 import ProjectMemberListEntry from "./ProjectMemberListEntry";
 import CheckboxForm from "./dialogs/CheckboxForm";
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';

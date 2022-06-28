@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {Divider, Grid, Typography} from '@material-ui/core';
+import {Divider, Typography} from '@material-ui/core';
+import {Grid} from '@mui/material';
 import ProjectAnalysisProjectWorkListEntry from "./ProjectAnalysisProjectWorkListEntry";
 
 class ProjectAnalysisProjectWorkList extends Component {
@@ -35,14 +36,14 @@ class ProjectAnalysisProjectWorkList extends Component {
             <div style={{width: "100%", p: 0, m: 0}}>
                 <Grid container spacing={2}>
                     <Grid item xs={4} align={"center"}>
-                        <Typography variant={"h5"} component={"div"}
-                                    style={{fontWeight: 600}}> Projektarbeit </Typography>
+                        <Typography variant={"h2"} component={"div"}
+                                    > Projektarbeit </Typography>
                     </Grid>
                     <Grid item xs={4} align={"center"}>
-                        <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Bearbeiter </Typography>
+                        <Typography variant={"h2"} component={"div"}> Bearbeiter </Typography>
                     </Grid>
                     <Grid item xs={4} align={"center"}>
-                        <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Dauer </Typography>
+                        <Typography variant={"h2"} component={"div"}> Dauer </Typography>
                     </Grid>
                 </Grid>
                 <Divider/>

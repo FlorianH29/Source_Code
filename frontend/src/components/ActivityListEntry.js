@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {Button, Divider, Grid, Typography} from '@material-ui/core';
+import {Button, Divider, Typography} from '@material-ui/core';
+import {Grid} from '@mui/material';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import EditIcon from '@mui/icons-material/Edit';
 import ListItem from "@mui/material/ListItem";

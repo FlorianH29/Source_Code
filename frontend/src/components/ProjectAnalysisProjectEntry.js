@@ -59,8 +59,8 @@ class ProjectAnalysisProjectEntry extends Component {
     render() {
         const {project, workTimeProject} = this.state;
         return (
-            <div style={{width: "100%", p: 0, m: 0}}>
-                <Accordion style={{width: "100%", p: 0, m: 0}}>
+            <div style={{width: "100%"}}>
+                <Accordion style={{width: "100%"}}>
                     <AccordionSummary>
                         <Grid container alignItems={"center"} spacing={2}>
                             <Grid item xs={4} align={"center"}>

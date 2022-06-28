@@ -47,64 +47,63 @@ class TimeIntervalTransactionList extends Component {
             <div>
                 <Box mt={18} ml={21} mr={2} mb={10} pl={8}>
                     <Card>
-                    <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
-                    <Grid container direction={'row'} mt={2} alignItems='stretch' spacing={1}>
-                        <Grid item xs={3}/>
-
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <DatePicker
-                                label={"Start Datum"}
-                                value={startDate}
-                                inputFormat="dd/MM/yyyy"
-                                onChange={(date) => {
-                                    this.setState({startDate: date.getTime()});
-                                    this.getEventForTimeIntervalTransactions(date.getTime(), this.state.endDate)
-                                }}
-                                renderInput={(params) => <TextField {...params} />}
-                            />
-                        </LocalizationProvider>
-
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <DatePicker
-                                label={"End Datum"}
-                                value={endDate}
-                                inputFormat="dd/MM/yyyy"
-                                onChange={(date) => {
-                                    this.setState({endDate: date.getTime()});
-                                    console.log(date.getTime())
-                                    this.getEventForTimeIntervalTransactions(this.state.startDate, date.getTime())
-                                }}
-                                renderInput={(params) => <TextField {...params} />}
-                            />
-                        </LocalizationProvider>
-
-                        </Grid>
-
-                    </div>
-                    <Grid container pt={1}>
-                        <Grid item xs={12} align={"center"}>
-                            <Grid container pt={3}>
-                                <Grid item xs={2} align={"flex-end"}>
-                                    <Typography variant={"h2"} component={"div"}> Name </Typography>
+                        <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
+                            <Grid container spacing={3}>
+                                <Grid item xs={6} align={"right"}>
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        <DatePicker
+                                            label={"Start Datum"}
+                                            value={startDate}
+                                            inputFormat="dd/MM/yyyy"
+                                            onChange={(date) => {
+                                                this.setState({startDate: date.getTime()});
+                                                this.getEventForTimeIntervalTransactions(date.getTime(), this.state.endDate)
+                                            }}
+                                            renderInput={(params) => <TextField {...params} />}
+                                        />
+                                    </LocalizationProvider>
                                 </Grid>
-                                <Grid item xs={3} align={"flex-end"}>
-                                    <Typography variant={"h2"} component={"div"}> Start </Typography>
-                                </Grid>
-                                <Grid item xs={3} align={"flex-end"}>
-                                    <Typography variant={"h2"} component={"div"}> Ende </Typography>
-                                </Grid>
-                                <Grid item xs={2} align={"flex-end"}>
-                                    <Typography variant={"h2"} component={"div"}> Dauer </Typography>
+                                <Grid item xs={6} align={"left"}>
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        <DatePicker
+                                            label={"End Datum"}
+                                            value={endDate}
+                                            inputFormat="dd/MM/yyyy"
+                                            onChange={(date) => {
+                                                this.setState({endDate: date.getTime()});
+                                                console.log(date.getTime())
+                                                this.getEventForTimeIntervalTransactions(this.state.startDate, date.getTime())
+                                            }}
+                                            renderInput={(params) => <TextField {...params} />}
+                                        />
+                                    </LocalizationProvider>
                                 </Grid>
                             </Grid>
-                            <Divider/>
-                            {events.map(e =>
-                                <TimeIntervalTransactionListEntry key={e} event={e}
-                                                                  onClose={this.timeIntervalRefresh}/>)
-                            }
+                        </div>
+                        <Grid container pt={1}>
+                            <Grid item xs={12} align={"center"}>
+                                <Grid container pt={3}>
+                                    <Grid item xs={2} align={"flex-end"}>
+                                        <Typography variant={"h2"} component={"div"}> Name </Typography>
+                                    </Grid>
+                                    <Grid item xs={3} align={"flex-end"}>
+                                        <Typography variant={"h2"} component={"div"}> Start </Typography>
+                                    </Grid>
+                                    <Grid item xs={3} align={"flex-end"}>
+                                        <Typography variant={"h2"} component={"div"}> Ende </Typography>
+                                    </Grid>
+                                    <Grid item xs={2} align={"flex-end"}>
+                                        <Typography variant={"h2"} component={"div"}> Dauer </Typography>
+                                    </Grid>
+                                </Grid>
+                                <Divider/>
+                                {events.map(e =>
+                                    <TimeIntervalTransactionListEntry key={e} event={e}
+                                                                      onClose={this.timeIntervalRefresh}/>)
+                                }
+                            </Grid>
                         </Grid>
-                    </Grid>
-                        </Card>
+                    </Card>
                 </Box>
             </div>
         );

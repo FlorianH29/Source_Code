@@ -107,13 +107,13 @@ class ProjectList extends Component {
                             <Grid item xs={12} align={"center"}>
                                 <Grid container>
                                     <Grid item xs={2} align={"flex-end"}>
-                                        <Typography variant={"h2"} component={"div"}> Projektname </Typography>
+                                        <Typography variant={"h2"} component={"div"}> Name </Typography>
                                     </Grid>
                                     <Grid item xs={2} align={"flex-end"}>
                                         <Typography variant={"h2"} component={"div"}> Auftraggeber </Typography>
                                     </Grid>
                                     <Grid item xs={4} align={"flex-end"}>
-                                        <Typography variant={"h2"} component={"div"}> Projektlaufzeit </Typography>
+                                        <Typography variant={"h2"} component={"div"}> Laufzeit </Typography>
                                     </Grid>
                                     <Grid item xs={2} align={"flex-end"}>
                                         <Typography variant={"h2"} component={"div"}> Arbeitsleistung </Typography>

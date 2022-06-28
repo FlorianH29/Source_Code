@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {Accordion, AccordionDetails, AccordionSummary, Grid, Typography, withStyles} from '@material-ui/core';
+import {Accordion, AccordionDetails, AccordionSummary, Divider, Typography, withStyles} from '@material-ui/core';
+import {Grid} from '@mui/material';
 import ProjectAnalysisProjectWorkList from "./ProjectAnalysisProjectWorkList";
 import {HdMWebAppAPI} from "../api";
 
-class ActivityListEntry extends Component {
+class ProjectAnalysisActivityListEntry extends Component {
 
     constructor(props) {
         super(props);
@@ -51,8 +52,8 @@ class ActivityListEntry extends Component {
         const {activity, workTimeActivity} = this.state;
 
         return (
-            <div style={{width: "100%", p: 0, m: 0}}>
-                <Accordion sx={{width: "100%", p: 0, m: 0}}>
+            <div style={{width: "100%"}}>
+                <Accordion sx={{width: "100%"}}>
                     <AccordionSummary>
                         <Grid container alignItems='center' spacing={2}>
                             <Grid item xs={4} align={"center"}>
@@ -73,6 +74,7 @@ class ActivityListEntry extends Component {
                         </Grid>
                     </AccordionSummary>
                     <AccordionDetails>
+                        <Divider/>
                         <ProjectAnalysisProjectWorkList activity={activity}></ProjectAnalysisProjectWorkList>
                     </AccordionDetails>
                 </Accordion>
@@ -87,4 +89,4 @@ const styles = theme => ({
     },
 });
 
-export default withStyles(styles)(ActivityListEntry);
+export default withStyles(styles)(ProjectAnalysisActivityListEntry);

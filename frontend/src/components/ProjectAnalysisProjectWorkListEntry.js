@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Grid, Typography, withStyles} from '@material-ui/core';
+import {Divider, Typography, withStyles} from '@material-ui/core';
+import {Grid} from '@mui/material';
 import {HdMWebAppAPI} from "../api";
 
 
@@ -50,7 +51,7 @@ class ProjectAnalysisProjectWorkListEntry extends Component {
     const { projectWork, owner } = this.state;
     return (
         <div style={ {width: "100%", p: 0, m:0}}>
-            <Grid container alignItems='center' spacing={2}>
+            <Grid container alignItems='center' spacing={2} p={1}>
                 <Grid item xs={4} align={"center"}>
                     <Typography variant={"h5"} component={"div"}>
                         {projectWork.getProjectWorkName()}
@@ -68,6 +69,7 @@ class ProjectAnalysisProjectWorkListEntry extends Component {
                     </Typography>
                 </Grid>
             </Grid>
+            <Divider/>
       </div>
     );
   }
