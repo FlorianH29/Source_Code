@@ -175,7 +175,7 @@ class ActivityList extends Component {
                                     </Grid>
                                 </Link>
                             </Typography>
-                            <Grid container mt={2} alignItems='stretch' spacing={1}>
+                            <Grid container alignItems='stretch' spacing={1}>
                                 <Grid item xs={4} align={"center"}>
                                     <Typography variant={"h4"} algin={"center"} component={"div"}>
                                         Projekt: {projectName}
@@ -218,12 +218,7 @@ class ActivityList extends Component {
                                                            onActivityDeleted={this.activityDeleted}/>)
                                     }
                                 </Grid>
-
-
-                            <ProjectMemberList project={pro.project} show={ProjectMemberList}></ProjectMemberList>
-
-
-
+                              <ProjectMemberList project={pro.project} show={ProjectMemberList}></ProjectMemberList>
                             </Grid>
                             <ActivityForm onClose={this.activityFormClosed} show={showActivityForm}
                                           project={pro.project}></ActivityForm>

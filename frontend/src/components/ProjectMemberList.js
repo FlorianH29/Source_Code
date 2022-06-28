@@ -95,7 +95,7 @@ class ProjectMemberList extends Component {
 
                 <Grid container>
                     <Grid item xs={12} align={"center"}>
-                        <Grid container mt={4} >
+                        <Grid container>
                             <Grid item xs={5} align={"flex-end"}>
                                 <Typography variant={"h5"} component={"div"}> Vorname </Typography>
                             </Grid>
