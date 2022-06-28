@@ -25,6 +25,25 @@ const theme = createTheme({
 
 
   },
+
+    typography: {
+
+      h1: {
+      fontWeight: 600,
+          fontSize: 41,
+    },
+        h2: {
+          fontWeight: 500,
+            fontSize: 26,
+        },
+
+    fontFamily: [
+      "Avenir next",
+        "sans serif"
+    ].join(",")
+  }
+
+
 });
 
 

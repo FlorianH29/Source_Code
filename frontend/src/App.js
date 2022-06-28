@@ -20,9 +20,10 @@ import {
     DialogContentText,
     DialogTitle,
     Grid,
-    ThemeProvider
+    ThemeProvider,
+    Button
 } from "@material-ui/core";
-import Button from "@mui/material/Button";
+
 import {ArriveBO, HdMWebAppAPI} from "./api";
 import ProjectAnalysis from "./components/ProjectAnalysis";
 import theme from "./components/Theme";
@@ -102,6 +103,7 @@ class App extends React.Component {
     addNewArriveEvent = () => {
         // Umschalten des Status der Knöpfe
         this.setState({});
+
         // Erstellen eines Gehen-Ereignis
         let newArriveEvent = new ArriveBO(this.state.firebase_id)
         HdMWebAppAPI.getAPI().addArrive().then(arrive => {
@@ -139,7 +141,7 @@ class App extends React.Component {
                               </DialogContent>
                               <DialogActions>
                                   <Grid container justifyContent={'center'}>
-                                    <Button variant='contained' onClick={() => {this.addNewArriveEvent()}} color='primary'>
+                                    <Button color='primary' variant='contained' onClick={() => {this.addNewArriveEvent()}} >
                                         Kommen bestätigen
                                     </Button>
                                 </Grid>
@@ -172,10 +174,7 @@ class App extends React.Component {
                         }
 
                             :
-
                         </>
-
-
                     :
                         <>
                             <SignInHeader person={currentPerson}/>

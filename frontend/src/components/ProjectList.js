@@ -91,17 +91,15 @@ class ProjectList extends Component {
                 <Grid container mt={14}  alignItems='stretch' spacing={1}>
                     <Grid item xs={3}/>
                     <Grid item xs={5} align={"center"}>
-                        <Typography variant={"h4"} algin={"center"} component={"div"}>
+                        <Typography variant={"h1"} algin={"center"} component={"div"} >
                             Meine Projekte:
                         </Typography>
                     </Grid>
                     <Grid item xs={4}  align={"right"}>
-
                         <Button variant='contained' color='primary'
                                 onClick={this.handleCreateProjectButtonClicked}>
                             Projekt erstellen
                         </Button>
-
                     </Grid>
                 </Grid>
                 <Grid container mt={3}>
@@ -111,7 +109,7 @@ class ProjectList extends Component {
                                 <Typography variant={"h5"} component={"div"}> Projektname: </Typography>
                             </Grid>
                             <Grid item xs={2} align={"flex-end"}>
-                                <Typography variant={"h5"} component={"div"}> Auftraggeber: </Typography>
+                                <Typography variant={"h2"} component={"div"}> Auftraggeber: </Typography>
                             </Grid>
                             <Grid item xs={3} align={"flex-end"}>
                                 <Typography variant={"h5"} component={"div"}> Projektlaufzeit: </Typography>
@@ -131,8 +129,6 @@ class ProjectList extends Component {
                                        onClose={this.handleDurationClose} show={showProjectDurationDialog}/>
             </Box>
             </div>
-
-
         );
     }
 }
