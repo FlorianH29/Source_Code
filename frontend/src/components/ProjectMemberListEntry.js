@@ -42,18 +42,18 @@ class ProjectMemberListEntry extends Component {
             <div>
                 <ListItem>
                     <Grid container alignItems='center'>
-                        <Grid item xs={2} align={"center"}>
+                        <Grid item xs={4} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 {projectMember.getFirstName()}
                             </Typography>
                         </Grid>
-                        <Grid item xs={2} align={"center"}>
+                        <Grid item xs={4} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 {projectMember.getLastName()}
                             </Typography>
                         </Grid>
                         { person.getID() === project.owner ? (
-                        <Grid item xs={3} align={"center"}>
+                        <Grid item xs={4} align={"center"}>
                             <Button color='secondary' size='small' startIcon={<PersonRemoveRoundedIcon/>}
                                     onClick={this.deleteProjectMemberButtonClicked}> </Button>
                         </Grid>):
@@ -71,9 +71,5 @@ class ProjectMemberListEntry extends Component {
 
 }
 
-ProjectMemberListEntry.propTypes = {
-  projectMember: PropTypes.object.isRequired,
-  project: PropTypes.object.isRequired,
-}
 
 export default ProjectMemberListEntry;

@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
-import {Box, Button, Divider, Grid, Typography} from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import {Button} from '@material-ui/core';
 import {HdMWebAppAPI} from '../api';
+import {Box, Card, Divider, Grid, Typography} from "@mui/material";
 import ProjectMemberListEntry from "./ProjectMemberListEntry";
-import Card from "@mui/material/Card";
 import CheckboxForm from "./dialogs/CheckboxForm";
-import EditIcon from "@mui/icons-material/Edit";
-import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
+import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 
 
 class ProjectMemberList extends Component {
@@ -25,15 +23,15 @@ class ProjectMemberList extends Component {
     }
 
     getProjectMembersOfProject = () => {
-        this.setState({projectMembers: [] }, () => {
-        HdMWebAppAPI.getAPI().getProjectMembers(this.props.project.getID())
-            .then(personBOs =>
+        this.setState({projectMembers: []}, () => {
+            HdMWebAppAPI.getAPI().getProjectMembers(this.props.project.getID())
+                .then(personBOs =>
+                    this.setState({
+                        projectMembers: personBOs
+                    })).catch(e =>
                 this.setState({
-                    projectMembers: personBOs
-                })).catch(e =>
-            this.setState({
-                projectMembers: []
-            }));
+                    projectMembers: []
+                }));
         });
     }
 
@@ -59,7 +57,7 @@ class ProjectMemberList extends Component {
     }
 
     getPotentialMembersForProject = () => {
-        this.setState({potentialProjectMembers: [] }, () => {
+        this.setState({potentialProjectMembers: []}, () => {
             HdMWebAppAPI.getAPI().getPersonsNotProjectMembersOfProject(this.props.project.getID())
                 .then(personBOs => {
                     this.setState({
@@ -78,7 +76,6 @@ class ProjectMemberList extends Component {
         this.setState({
             showCheckboxForm: true
         });
-        this.getPotentialMembersForProject();
     }
 
     projectMemberDeleted = projectMember => {
@@ -100,51 +97,49 @@ class ProjectMemberList extends Component {
 
 
     render() {
-        const { project, person } = this.props;
+        const {project, person} = this.props;
         const {projectMembers, showCheckboxForm, onProjectMemberDeleted, disableButton} = this.state;
 
 
         return (
             <div>
-                <Box m={25} pl={1}>
+                <Box mt={3} ml={21} mr={50} mb={2} pl={8}>
                     <Card>
-                        <Grid container mt={14}  alignItems='stretch' spacing={1}>
-                            <Grid item xs={3}/>
-                            <Grid item xs={5} align={"center"}>
-                                <Typography variant={"h4"} algin={"center"} component={"div"}>
+                        <Grid container p={1} alignItems='stretch' spacing={1}>
+                            <Grid item xs={8}>
+                                <Typography variant={"h1"} algin={"left"} component={"div"} fontWeight={'bold'}>
                                     Projektmitglieder
                                 </Typography>
                             </Grid>
-                            <Grid item xs={4}  align={"right"}>
-                                <Button disabled={disableButton} variant='contained' color='primary' startIcon={<AddIcon/>} onClick={this.handleAddProjectMemberButtonClicked}>
-                                    Mitarbeiter Hinzufügen
+                            <Grid item xs={4} align={"right"}>
+                                <Button disabled={disableButton} size="large" color='primary' startIcon={<AddCircleOutlinedIcon/>}
+                                        algin={"center"}
+                                        onClick={this.handleAddProjectMemberButtonClicked}>
+                                    Mitarbeiter
                                 </Button>
                             </Grid>
                         </Grid>
-
+                        <Grid item xs={12} align={"center"} pt={3}>
                             <Grid container>
-                                <Grid item xs={12} align={"center"}>
-                                    <Grid container>
-                                        <Grid item xs={2} align={"flex-end"}>
-                                            <Typography variant={"h5"} component={"div"}> Vorname </Typography>
-                                        </Grid>
-                                        <Grid item xs={2} align={"flex-end"}>
-                                            <Typography variant={"h5"} component={"div"}> Nachname </Typography>
-                                        </Grid>
-                                    </Grid>
-                                    <Divider/>
-                                    {projectMembers.map(pm =>
-                                        <ProjectMemberListEntry key={pm.getID()} projectMember={pm} project={project} person={person}
-                                                                onProjectMemberDeleted={this.projectMemberDeleted}
-                                                                getProjectMembersOfProject={this.getProjectMembersOfProject}/>)
-                                    }
+                                <Grid item xs={4} align={"flex-end"}>
+                                    <Typography variant={"h2"} component={"div"}> Vorname </Typography>
+                                </Grid>
+                                <Grid item xs={4} align={"flex-end"}>
+                                    <Typography variant={"h2"} component={"div"}> Nachname </Typography>
                                 </Grid>
                             </Grid>
-                            <CheckboxForm onClose={this.checkboxFormClosed} show={showCheckboxForm} project={project}
-                                            getProjectMembersOfProject={this.getProjectMembersOfProject}
-                                            getPotentialMembersForProject={this.getPotentialMembersForProject}
-                                            potentialProjectMembers={this.state.potentialProjectMembers}></CheckboxForm>
 
+                            <Divider/>
+                            {projectMembers.map(pm =>
+                                <ProjectMemberListEntry key={pm.getID()} projectMember={pm} project={project} person={person}
+                                                        onProjectMemberDeleted={this.projectMemberDeleted}
+                                                        getProjectMembersOfProject={this.getProjectMembersOfProject}/>)
+                            }
+                        </Grid>
+                        <CheckboxForm onClose={this.checkboxFormClosed} show={showCheckboxForm} project={project}
+                                      getProjectMembersOfProject={this.getProjectMembersOfProject}
+                                      getPotentialMembersForProject={this.getPotentialMembersForProject}
+                                      potentialProjectMembers={this.state.potentialProjectMembers}></CheckboxForm>
                     </Card>
                 </Box>
             </div>

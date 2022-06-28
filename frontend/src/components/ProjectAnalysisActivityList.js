@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from "../api";
-import {Grid, Typography,} from '@material-ui/core';
+import {Typography} from '@material-ui/core';
+import {Grid} from '@mui/material';
 import ProjectAnalysisActivityListEntry from "./ProjectAnalysisActivityListEntry";
 
 
@@ -37,14 +38,13 @@ class ProjectAnalysisActivityList extends Component {
             <div style={{width: "100%", p: 0, m: 0}}>
                 <Grid container spacing={2}>
                     <Grid item xs={4} align={"center"}>
-                        <Typography variant={"h5"} component={"div"}
-                                    style={{fontWeight: 600}}> Aktivitätsname: </Typography>
+                        <Typography variant={"h2"} component={"div"}> Aktivitätsname </Typography>
                     </Grid>
                     <Grid item xs={4} align={"center"}>
-                        <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Soll: </Typography>
+                        <Typography variant={"h2"} component={"div"}> Soll </Typography>
                     </Grid>
                     <Grid item xs={4} align={"center"}>
-                        <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}> Ist: </Typography>
+                        <Typography variant={"h2"} component={"div"}> Ist </Typography>
                     </Grid>
                 </Grid>
                 {activities.map(ac =>

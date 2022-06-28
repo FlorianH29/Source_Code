@@ -35,19 +35,19 @@ class ActivityListEntry extends Component {
         });
     }
 
-      /** Behandelt das onClose Event von ActivityForm */
+    /** Behandelt das onClose Event von ActivityForm */
     activityFormClosed = (activity) => {
-    // activity ist nicht null und wurde dementsprechend geändert
-    if (activity) {
-      this.setState({
-        activity: activity,
-        showActivityForm: false
-      });
-    } else {
-      this.setState({
-        showActivityForm: false
-      });
-    }
+        // activity ist nicht null und wurde dementsprechend geändert
+        if (activity) {
+            this.setState({
+                activity: activity,
+                showActivityForm: false
+            });
+        } else {
+            this.setState({
+                showActivityForm: false
+            });
+        }
     }
 
     /** Behandelt das onClose Event von ActivityDeleteDialog*/
@@ -70,55 +70,59 @@ class ActivityListEntry extends Component {
 
     /** Rendert die Componente*/
     render() {
-    const { project, person } = this.props;
-    const { activity, showActivityForm, showActivityDeleteDialog } = this.state;
+        const {project, person} = this.props;
+        const {activity, showActivityForm, showActivityDeleteDialog} = this.state;
 
-      // console.log(this.state);
-      return (
-        <div>
-           <ListItem>
-             <Grid container alignItems='center'>
-                 <ListItemButton component={RouterLink} to={{
-                pathname: `/projectworks`,
-                owner: {
-                     activity: activity,
-                     project: project
-                    },
-                 per: {
-                    person: person
-                 }
-                    }}>
-               <Grid item xs={3} align={"center"}>
-                 <Typography variant={"h5"} component={"div"}>
-                     {activity.getActivityName()}
-                 </Typography>
-               </Grid>
-              </ListItemButton>
-               <Grid item xs={3} align={"center"}>
-                 <Typography variant={"h5"} component={"div"}>
-                   {activity.getActivityCapacity()}
-                 </Typography>
-               </Grid>
-               <Grid item xs={3} align={"center"}>
-                 <Typography variant={"h5"} component={"div"}>
-                   {activity.getActivityWorkTime()}
-                 </Typography>
-               </Grid>
-                 { person.getID() === project.owner ? (
-                  <Grid item xs={3} align={"center"}>
-                    <Button color='primary' size='small' startIcon={<EditIcon />} onClick={this.editActivityButtonClicked}> </Button>
-                    <Button color='secondary' size='small' startIcon={<RemoveCircleOutlineRoundedIcon />} onClick={this.deleteActivityButtonClicked}> </Button>
-                  </Grid>
-                     ):
-                 <Grid item xs={3} align={"center"}>
-                </Grid>}
-             </Grid>
-           </ListItem>
-           <Divider/>
-          <ActivityDeleteDialog show={showActivityDeleteDialog} activity={activity} onClose={this.deleteActivityDialogClosed} />
-          <ActivityForm show={showActivityForm} activity={activity} onClose={this.activityFormClosed} />
-        </div>
-      );
+        // console.log(this.state);
+        return (
+            <div>
+                <ListItem>
+                    <Grid container alignItems='center'>
+                        <Grid item xs={3} align={"center"}>
+                            <ListItemButton component={RouterLink} to={{
+                                pathname: `/projectworks`,
+                                owner: {
+                                    activity: activity,
+                                    project: project
+                                },
+                                per: {
+                                    person: person
+                                }
+                            }}>
+
+                                <Typography variant={"h5"} component={"div"}>
+                                    {activity.getActivityName()}
+                                </Typography>
+                            </ListItemButton>
+                        </Grid>
+                        <Grid item xs={3} align={"center"}>
+                            <Typography variant={"h5"} component={"div"}>
+                                {activity.getActivityCapacity()} h
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={3} align={"center"}>
+                            <Typography variant={"h5"} component={"div"}>
+                                {activity.getActivityWorkTime()} h
+                            </Typography>
+                        </Grid>
+                        {person.getID() === project.owner ? (
+                                <Grid item xs={3} align={"center"}>
+                                    <Button color='primary' size='small' startIcon={<EditIcon/>}
+                                            onClick={this.editActivityButtonClicked}> </Button>
+                                    <Button color='secondary' size='small' startIcon={<RemoveCircleOutlineRoundedIcon/>}
+                                            onClick={this.deleteActivityButtonClicked}> </Button>
+                                </Grid>
+                            ) :
+                            <Grid xs align={"center"}>
+                            </Grid>}
+                    </Grid>
+                </ListItem>
+                <Divider/>
+                <ActivityDeleteDialog show={showActivityDeleteDialog} activity={activity}
+                                      onClose={this.deleteActivityDialogClosed}/>
+                <ActivityForm show={showActivityForm} activity={activity} onClose={this.activityFormClosed}/>
+            </div>
+        );
     }
 }
 
@@ -128,12 +132,5 @@ const styles = theme => ({
     },
 });
 
-ActivityListEntry.propTypes = {
-  /** Das ActivityBO welches gerendert werden soll */
-  activity: PropTypes.object.isRequired,
-  project: PropTypes.object.isRequired,
-  /** Event Handler Funktion, welche aufgerufen wird, nachdem eine Projektarbeit erfolgreich gelöscht wurde. */
-  onActivityDeleted: PropTypes.func.isRequired,
-}
 
 export default withRouter(ActivityListEntry);

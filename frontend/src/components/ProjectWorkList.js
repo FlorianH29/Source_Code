@@ -1,18 +1,8 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Divider,
-    Grid,
-    IconButton,
-    Link,
-    Typography
-} from '@material-ui/core';
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider,
+        IconButton, Link, Typography} from '@material-ui/core';
+import {Card, Grid} from '@mui/material';
 import Box from "@mui/material/Box";
 import ProjectWorkListEntry from "./ProjectWorkListEntry";
 import EventManager from "./EventManager";
@@ -133,15 +123,16 @@ class ProjectWorkList extends Component {
 
     return (
         <div>
-        <Box m={18}  pl={8}>
+        <Box mt={18} ml={21} mr={2} mb={2} pl={8}>
+            <Card>
             <Typography component='div'>
                 <Link component={RouterLink} to={{
                     pathname: '/activities',
                     expandedProject: owner,
                     expandedPerson: per}}>
-                    <Grid container spacing={1} justify='flex-start' alignItems='stretch'>
+                    <Grid container p={1} spacing={1} justify='flex-start' alignItems='stretch'>
                         <Grid item>
-                            <ArrowCircleLeftRoundedIcon color={'primary'}/>
+                            <ArrowCircleLeftRoundedIcon color={'#008A59'}/>
                         </Grid>
                         <Grid item> zurück zu {owner.project.getProjectName()}
                         </Grid>
@@ -149,10 +140,10 @@ class ProjectWorkList extends Component {
                 </Link>
             </Typography>
 
-            <Grid container direction={'row'} mt={2} alignItems='stretch' spacing={1}>
+            <Grid container direction={'row'} pr={1} alignItems='stretch' spacing={1}>
                 <Grid item xs={3}/>
                 <Grid item xs={5} align={'center'}>
-                    <Typography variant={"h4"} algin={"center"} component={"div"}>
+                    <Typography variant={"h1"} algin={"center"} component={"div"}>
                        Aktivität: {owner.activity.getActivityName()}
                     </Typography>
                  </Grid>
@@ -169,17 +160,17 @@ class ProjectWorkList extends Component {
             </Grid>
 
 
-          <Grid container mt={3}>
+          <Grid container pt={3}>
             <Grid item xs={12} align={"center"}>
                 <Grid container>
                     <Grid item xs={3} align={"flex-end"}>
-                        <Typography variant={"h5"} component={"div"}> Projektarbeit </Typography>
+                        <Typography variant={"h2"} component={"div"}> Projektarbeit </Typography>
                     </Grid>
                     <Grid item xs={3} align={"flex-end"}>
-                        <Typography variant={"h5"} component={"div"}> Bearbeiter </Typography>
+                        <Typography variant={"h2"} component={"div"}> Bearbeiter </Typography>
                     </Grid>
                     <Grid item xs={3} align={"flex-end"}>
-                        <Typography variant={"h5"} component={"div"}> Dauer </Typography>
+                        <Typography variant={"h2"} component={"div"}> Dauer </Typography>
                     </Grid>
                 </Grid>
                 <Divider/>
@@ -209,6 +200,7 @@ class ProjectWorkList extends Component {
                     </EventManager>
                 </DialogActions>
             </Dialog>
+                </Card>
             </Box>
             <ProjectWorkForm activity={owner.activity} onClose={this.projectWorkFormClosed} show={showProjectWorkForm}></ProjectWorkForm>
         </div>
