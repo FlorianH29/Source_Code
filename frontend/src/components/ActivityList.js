@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from "../api";
-import {Button, Grid, Typography, Divider, Box, Link, Card} from '@material-ui/core';
+import {Button, Divider, Box, Link, Card, Typography,} from '@material-ui/core';
+import {Grid} from "@mui/material";
 import AddIcon from '@material-ui/icons/Add';
 import ActivityForm from "./dialogs/ActivityForm";
 import ActivityListEntry from "./ActivityListEntry";
@@ -55,8 +56,8 @@ class ActivityList extends Component {
             } else {
                 this.setState({
                     disableButton: true
-            })
-        }
+                })
+            }
         }
     }
 
@@ -87,8 +88,7 @@ class ActivityList extends Component {
         if (this.props.location.pro) {
             this.getActivitiesForProject();
             this.handleDisableButton();
-        }
-        else if (this.props.location.expandedProject) {
+        } else if (this.props.location.expandedProject) {
             this.getActivitiesForProject();
             this.handleDisableButton();
         }
@@ -148,8 +148,8 @@ class ActivityList extends Component {
 
          //console.log(pro.project)
 
-         let per = null;
-         if (this.props.location.per) {
+        let per = null;
+        if (this.props.location.per) {
             // PersonBO existiert
             per = this.props.location.per;
          } else if (this.props.location.expandedPerson){
@@ -159,47 +159,46 @@ class ActivityList extends Component {
 
         return (
             <div>
-                <Box mt={18} ml={22} mr={5} mb={10} pl={8}>
+                <Box mt={18} ml={21} mr={2} mb={2} pl={8}>
                     <Card>
-                    <Typography component='div' color={"primary"}>
-                        <Link component={RouterLink} to={{
-                            pathname: '/projects'
-                        }}>
-                            <Grid container spacing={1} justify='flex-start' alignItems='stretch'>
-                                <Grid item>
-                                    <ArrowCircleLeftRoundedIcon color={"primary"}/>
+                        <Typography p={1} component='div' color={"primary"}>
+                            <Link component={RouterLink} to={{
+                                pathname: '/projects'
+                            }}>
+                                <Grid container spacing={1} justify='flex-start' alignItems='stretch'>
+                                    <Grid item>
+                                        <ArrowCircleLeftRoundedIcon color={"#008A59"}/>
+                                    </Grid>
+                                    <Grid item> zurück zur Projektübersicht
+                                    </Grid>
                                 </Grid>
-                                <Grid item> zurück zur Projektübersicht
-                                </Grid>
-                            </Grid>
-                        </Link>
-                    </Typography>
-                        <Grid container mt={2}  alignItems='stretch' spacing={1}>
-                            <Grid item md={3}/>
-                            <Grid item md={5} align={"center"}>
-                                <Typography variant={"h4"} algin={"center"} component={"div"}>
+                            </Link>
+                        </Typography>
+                        <Grid container pr={1} pl={1} alignItems='stretch' spacing={1}>
+                            <Grid item xs={9} align={"left"}>
+                                <Typography variant={"h1"} algin={"center"} component={"div"} fontWeight={'bold'}>
                                     Projekt: {projectName}
                                 </Typography>
                             </Grid>
-                            <Grid item md={4} align={"right"}>
-                                <Button disabled={disableButton} variant='contained' align={"center"} color='primary' startIcon={<AddIcon/>}
-                                onClick={this.handleAddActivityButtonClicked}>
+                            <Grid item xs={3} align={"right"}>
+                                <Button disabled={disableButton} variant='contained' align={"center"}
+                                        color='primary'
+                                        startIcon={<AddIcon/>}
+                                        onClick={this.handleAddActivityButtonClicked}>
                                     Aktivität anlegen
                                 </Button>
                             </Grid>
                         </Grid>
-
-                    <Grid container mt={4}>
-                        <Grid item md={12} align={"center"}>
+                        <Grid item xs={12} align={"center"} pt={3}>
                             <Grid container>
-                                <Grid item md={4} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Aktivitäten </Typography>
+                                <Grid item xs={3} align={"flex-end"}>
+                                    <Typography variant={"h2"} component={"div"}> Aktivitäten </Typography>
                                 </Grid>
-                                <Grid item md={4} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Kapazität </Typography>
+                                <Grid item xs={3} align={"flex-end"}>
+                                    <Typography variant={"h2"} component={"div"}> Kapazität </Typography>
                                 </Grid>
-                                <Grid item md={4} align={"flex-end"}>
-                                    <Typography variant={"h5"} component={"div"}> Dauer </Typography>
+                                <Grid item xs={3} align={"flex-end"}>
+                                    <Typography variant={"h2"} component={"div"}> Dauer </Typography>
                                 </Grid>
                             </Grid>
                             <Divider/>
@@ -209,9 +208,9 @@ class ActivityList extends Component {
                                                    onActivityDeleted={this.activityDeleted}/>)
                             }
                         </Grid>
-                    </Grid>
-                <ActivityForm onClose={this.activityFormClosed} show={showActivityForm} project={pro.project}></ActivityForm>
-                        </Card>
+                        <ActivityForm onClose={this.activityFormClosed} show={showActivityForm}
+                                      project={pro.project}></ActivityForm>
+                    </Card>
                 </Box>
                 <ProjectMemberList project={pro.project} person={per.person} show={ProjectMemberList}></ProjectMemberList>
             </div>

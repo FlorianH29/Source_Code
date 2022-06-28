@@ -122,10 +122,8 @@ export default class HdMWebAppAPI {
         }).then((responseJSON) => {
             /** Wir erhalten immer ein Array von PersonBO.fromJSON */
             let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
-            console.info(personBO);
             return new Promise(function (resolve) {
                 resolve(responsePersonBO);
-                console.log(responsePersonBO)
             })
         })
     }
@@ -136,10 +134,8 @@ export default class HdMWebAppAPI {
     getDepartureBiggerArrive() {
         return this.#fetchAdvanced(this.#getDepartureBiggerArriveURL())
             .then(responseJSON => {
-                //console.log(responseJSON)
                 return new Promise(function (resolve) {
                     resolve(responseJSON);
-                    // console.log(responseJSON);
                 })
             })
     }
@@ -150,7 +146,6 @@ export default class HdMWebAppAPI {
     getPerson() {
         return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
             let personBOs = PersonBO.fromJSON(responseJSON)[0];
-            //console.log(responseJSON);
             return new Promise(function (resolve) {
                 resolve(personBOs);
             })
@@ -165,7 +160,6 @@ export default class HdMWebAppAPI {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
-            console.log(responsePersonBO)
             return new Promise(function (resolve) {
                 resolve(responsePersonBO);
             })
@@ -189,7 +183,6 @@ export default class HdMWebAppAPI {
             body: JSON.stringify(eventBO)
         }).then((responseJSON) => {
             let responseEventBO = EventBO.fromJSON(responseJSON)[0];
-            console.log(responseEventBO);
             return new Promise(function (resolve) {
                 resolve(responseEventBO);
             })
@@ -210,7 +203,6 @@ export default class HdMWebAppAPI {
             body: JSON.stringify("")
         }).then((responseJSON) => {
             let responseEventBO = EventBO.fromJSON(responseJSON)[0];
-            console.log(responseEventBO);
             return new Promise(function (resolve) {
                 resolve(responseEventBO);
             })
@@ -231,7 +223,6 @@ export default class HdMWebAppAPI {
             body: JSON.stringify("")
         }).then((responseJSON) => {
             let responseEventBO = EventBO.fromJSON(responseJSON)[0];
-            console.log(responseEventBO);
             return new Promise(function (resolve) {
                 resolve(responseEventBO);
             })
@@ -244,7 +235,6 @@ export default class HdMWebAppAPI {
     getActivities(id) {
         return this.#fetchAdvanced(this.#getActivitiesForProjectURL(id)).then((responseJSON) => {
             let activityBOs = ActivityBO.fromJSON(responseJSON);
-            //console.log(activityBOs);
             return new Promise(function (resolve) {
                 resolve(activityBOs);
             })
@@ -257,7 +247,6 @@ export default class HdMWebAppAPI {
     getProject(id) {
         return this.#fetchAdvanced(this.#getProjectsURL(id)).then((responseJSON) => {
             let projectBOs = ProjectBO.fromJSON(responseJSON);
-            //console.log(responseJSON);
             return new Promise(function (resolve) {
                 resolve(projectBOs);
             })
@@ -270,7 +259,6 @@ export default class HdMWebAppAPI {
     getProjectsByOwner() {
         return this.#fetchAdvanced(this.#getProjectByOwnerURL()).then((responseJSON) => {
             let projectBOs = ProjectBO.fromJSON(responseJSON);
-            //console.log(responseJSON);
             return new Promise(function (resolve) {
                 resolve(projectBOs);
             })
@@ -294,7 +282,6 @@ export default class HdMWebAppAPI {
         }).then((responseJSON) => {
             /** Wir bekommen immer ein Array aus ProjectBOs.fromJSON*/
             let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
-            console.log(responseProjectBO)
             return new Promise(function (resolve) {
                 resolve(responseProjectBO);
             })
@@ -317,7 +304,6 @@ export default class HdMWebAppAPI {
             body: JSON.stringify(projectBO)
         }).then((responseJSON) => {
             let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
-            // console.info(projectBOs);
             return new Promise(function (resolve) {
                 resolve(responseProjectBO);
             })
@@ -335,7 +321,6 @@ export default class HdMWebAppAPI {
     getProjectWorkTime(projectID, start, end) {
         return this.#fetchAdvanced(this.#getProjectWorkTimeURL(projectID, start, end))
             .then(responseJSON => {
-                //console.log(responseJSON)
                 return new Promise(function (resolve) {
                     resolve(responseJSON);
                 })
@@ -356,7 +341,6 @@ export default class HdMWebAppAPI {
             body: JSON.stringify(eventBO)
         }).then((responseJSON) => {
             let responseEventBO = EventBO.fromJSON(responseJSON)[0];
-            console.log(responseEventBO);
             return new Promise(function (resolve) {
                 resolve(responseEventBO);
             })
@@ -377,7 +361,6 @@ export default class HdMWebAppAPI {
             body: JSON.stringify(eventBO)
         }).then((responseJSON) => {
             let responseEventBO = EventBO.fromJSON(responseJSON)[0];
-            console.log(responseEventBO);
             return new Promise(function (resolve) {
                 resolve(responseEventBO);
             })
@@ -391,7 +374,6 @@ export default class HdMWebAppAPI {
      * @public
      */
     updateProjectDurationStart(eventBO) {
-        console.log(eventBO)
         return this.#fetchAdvanced(this.#updateStartEventURL((eventBO.getID())), {
             method: 'PUT',
             headers: {
@@ -402,7 +384,6 @@ export default class HdMWebAppAPI {
         }).then((responseJSON) => {
             // Wir bekommen immer ein Array aus ProjectBOs.fromJSON
             let responseEventBO = EventBO.fromJSON(responseJSON)[0];
-            console.log(responseEventBO)
             return new Promise(function (resolve) {
                 resolve(responseEventBO);
             })
@@ -426,7 +407,6 @@ export default class HdMWebAppAPI {
         }).then((responseJSON) => {
             // Wir bekommen immer ein Array aus ProjectBOs.fromJSON
             let responseEventBO = EventBO.fromJSON(responseJSON)[0];
-            console.log(responseEventBO)
             return new Promise(function (resolve) {
                 resolve(responseEventBO);
             })
@@ -444,7 +424,6 @@ export default class HdMWebAppAPI {
             .then(responseJSON => {
                 return new Promise(function (resolve) {
                     resolve(responseJSON);
-                    //console.log(responseJSON)
                 })
             })
     }
@@ -460,7 +439,6 @@ export default class HdMWebAppAPI {
             .then(responseJSON => {
                 return new Promise(function (resolve) {
                     resolve(responseJSON);
-                    //console.log(responseJSON)
                 })
             })
     }
@@ -477,7 +455,6 @@ export default class HdMWebAppAPI {
         }).then((responseJSON) => {
             /**Wir bekommen immer ein Array mit ProjectBOs.fromJSON*/
             let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
-            //console.log(responseProjectBO)
             return new Promise(function (resolve) {
                 resolve(responseProjectBO);
             })
@@ -490,7 +467,6 @@ export default class HdMWebAppAPI {
     getEventsForTimeIntervalTransactions(startDate, endDate) {
         return this.#fetchAdvanced(this.#getEventTransactionsAndTimeIntervalTransactionsURL(startDate, endDate)).then((responseJSON) => {
             let eventBOs = EventBO.fromJSON(responseJSON);
-            //console.log(responseJSON);
             return new Promise(function (resolve) {
                 resolve(eventBOs);
             })
@@ -503,7 +479,6 @@ export default class HdMWebAppAPI {
     getProjectWorks(id) {
         return this.#fetchAdvanced(this.#getProjectWorksForActivityURL(id)).then((responseJSON) => {
             let projectworkBOs = ProjectWorkBO.fromJSON(responseJSON);
-            // console.log(projectworkBOs);
             return new Promise(function (resolve) {
                 resolve(projectworkBOs);
             })
@@ -549,7 +524,6 @@ export default class HdMWebAppAPI {
         }).then((responseJSON) => {
             //Wir bekommen immer ein Array aus ProkectWorkBos.fromJSON
             let responseProjectWorkBO = ProjectWorkBO.fromJSON(responseJSON)[0];
-            console.log(responseProjectWorkBO)
             return new Promise(function (resolve) {
                 resolve(responseProjectWorkBO);
             })
@@ -570,7 +544,6 @@ export default class HdMWebAppAPI {
         }).then((responseJSON) => {
             //Wir bekommen immer ein Array aus ProjektWorkBos.fromJSON
             let responseProjectWorkBO = ProjectWorkBO.fromJSON(responseJSON)[0];
-            console.log(responseProjectWorkBO)
             return new Promise(function (resolve) {
                 resolve(responseProjectWorkBO);
             })
@@ -590,7 +563,6 @@ export default class HdMWebAppAPI {
             body: JSON.stringify({id: id, date: date})
         }).then((responseJSON) => {
             let responseEventBO = EventBO.fromJSON(responseJSON)[0];
-            console.log(responseEventBO)
             return new Promise(function (resolve) {
                 resolve(responseEventBO);
             })
@@ -610,7 +582,6 @@ export default class HdMWebAppAPI {
             body: JSON.stringify({id: id, date: date})
         }).then((responseJSON) => {
             let responseEventBO = EventBO.fromJSON(responseJSON)[0];
-            console.log(responseEventBO)
             return new Promise(function (resolve) {
                 resolve(responseEventBO);
             })
@@ -630,7 +601,6 @@ export default class HdMWebAppAPI {
             body: JSON.stringify({id: id, date: date})
         }).then((responseJSON) => {
             let responseEventBO = EventBO.fromJSON(responseJSON)[0];
-            console.log(responseEventBO)
             return new Promise(function (resolve) {
                 resolve(responseEventBO);
             })
@@ -646,7 +616,6 @@ export default class HdMWebAppAPI {
         }).then((responseJSON) => {
             // Wir bekommen immer ein Array aus TimeIntervalBos.fromJSON
             let responseEventBO = EventBO.fromJSON(responseJSON)[0];
-            console.log(responseEventBO)
             return new Promise(function (resolve) {
                 resolve(responseEventBO);
             })
@@ -665,7 +634,6 @@ export default class HdMWebAppAPI {
         }).then((responseJSON) => {
             // Wir bekommen immer ein Array aus ProkectWorkBos.fromJSON
             let responseProjectWorkBO = ProjectWorkBO.fromJSON(responseJSON)[0];
-            console.log(responseProjectWorkBO)
             return new Promise(function (resolve) {
                 resolve(responseProjectWorkBO);
             })
@@ -683,7 +651,6 @@ export default class HdMWebAppAPI {
             .then(responseJSON => {
                 return new Promise(function (resolve) {
                     resolve(responseJSON);
-                    // console.log(responseJSON)
                 })
             })
     }
@@ -706,7 +673,6 @@ export default class HdMWebAppAPI {
     }).then((responseJSON) => {
       // We always get an array of CustomerBOs.fromJSON, but only need one object
       let responseActivityBO = ActivityBO.fromJSON(responseJSON)[0];
-      console.info(responseActivityBO);
       return new Promise(function (resolve) {
         resolve(responseActivityBO);
       })
@@ -723,13 +689,10 @@ export default class HdMWebAppAPI {
      * @public
      */
     getActivityWorkTime(activityID, start, end) {
-        //console.log(activityID)
         return this.#fetchAdvanced(this.#getActivityWorkTimeURL(activityID, start, end))
             .then(responseJSON => {
-                //console.log(responseJSON)
                 return new Promise(function (resolve) {
                     resolve(responseJSON);
-                    // console.log(responseJSON);
                 })
             })
     }
@@ -750,7 +713,6 @@ export default class HdMWebAppAPI {
         }).then((responseJSON) => {
           // Wir bekommen immer ein Array aus ActivityBos.fromJSON
           let responseActivityBO = ActivityBO.fromJSON(responseJSON)[0];
-          console.log(responseActivityBO)
           return new Promise(function (resolve) {
             resolve(responseActivityBO);
           })
@@ -781,17 +743,14 @@ export default class HdMWebAppAPI {
     getBreakStarted() {
         return this.#fetchAdvanced(this.#getBreakStartedURL())
             .then(responseJSON => {
-                //console.log(responseJSON)
                 return new Promise(function (resolve) {
                     resolve(responseJSON);
-                    // console.log(responseJSON);
                 })
             })
     }
   getProjectMembers(id) {
       return this.#fetchAdvanced(this.#getProjectMembersURL(id)).then((responseJSON) => {
           let projectmembers = PersonBO.fromJSON(responseJSON);
-          //console.log(projectmembers);
           return new Promise(function (resolve) {
               resolve(projectmembers);
           })
@@ -801,7 +760,6 @@ export default class HdMWebAppAPI {
   getPersonsNotProjectMembersOfProject(id) {
       return this.#fetchAdvanced(this.#getNotProjectMembersURL(id)).then((responseJSON) => {
           let notprojectmembers = PersonBO.fromJSON(responseJSON);
-          console.log(notprojectmembers);
           return new Promise(function (resolve) {
               resolve(notprojectmembers);
           })
@@ -832,8 +790,6 @@ export default class HdMWebAppAPI {
               body: JSON.stringify(person.getID(), projectID)
           }).then((responseJSON) => {
               // We always get an array of CustomerBOs.fromJSON, but only need one object
-              //let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
-              //console.info(responsePersonBO);
               return new Promise(function (resolve) {
                   resolve();
               })

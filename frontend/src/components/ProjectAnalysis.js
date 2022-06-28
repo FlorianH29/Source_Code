@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from "../api";
-import {Box, Divider, Grid, TextField, Typography} from '@material-ui/core';
+import {Divider, TextField} from '@material-ui/core';
+import {Card, Grid, Box, Typography} from '@mui/material'
 import ProjectAnalysisProjectEntry from "./ProjectAnalysisProjectEntry";
-import {DatePicker, LocalizationProvider} from "@mui/lab";
+import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 
 class ProjectAnalysis extends Component {
@@ -37,17 +38,17 @@ class ProjectAnalysis extends Component {
 
     render() {
         const {startDate, endDate, projects} = this.state
-        console.log(startDate)
 
         return (
             <div>
                 { projects.length != 0 ? (
-                <Box m={18} pl={8}>
+                <Box mt={18} ml={21} mr={2} mb={10} pl={8}>
+                    <Card>
                     <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
 
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
-                                label={"Start Date"}
+                                label={"Start-Datum"}
                                 value={startDate}
                                 inputFormat="dd/MM/yyyy"
                                 onChange={(date) => {
@@ -56,11 +57,10 @@ class ProjectAnalysis extends Component {
                                 renderInput={(params) => <TextField {...params} />}
                             />
                         </LocalizationProvider>
-
-
+                        {"  "}
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
-                                label={"End Date"}
+                                label={"End-Datum"}
                                 value={endDate}
                                 inputFormat="dd/MM/yyyy"
                                 onChange={(date) => {
@@ -72,26 +72,27 @@ class ProjectAnalysis extends Component {
                         </LocalizationProvider>
 
                     </div>
-                    <Grid container spacing={2}>
+                    <Grid container spacing={2} pt={3}>
 
                         <Grid item xs={4} align={"center"}>
-                            <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}>
-                                Projekte: </Typography>
+                            <Typography variant={"h2"} component={"div"}>
+                                Projekte </Typography>
                         </Grid>
                         <Grid item xs={4} align={"center"}>
-                            <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}>
-                                Klient: </Typography>
+                            <Typography variant={"h2"} component={"div"}>
+                                Klient </Typography>
                         </Grid>
                         <Grid item xs={4} align={"center"}>
-                            <Typography variant={"h5"} component={"div"} style={{fontWeight: 600}}>
-                                Arbeitsleistung: </Typography>
+                            <Typography variant={"h2"} component={"div"}>
+                                Arbeitsleistung </Typography>
                         </Grid>
                     </Grid>
                     <Divider/>
                     {projects.map(pro =>
                         <ProjectAnalysisProjectEntry key={pro.getID()} project={pro}
                                                      startDate={startDate} endDate={endDate}/>)}
-                </Box>) : (
+                </Card>
+                    </Box>) : (
                     <Box m={25} pl={15}>
                     <Typography variant={"h5"} >
                         Info: Da Sie in kein Projekt leiten, können Sie keine Projekte analysieren.

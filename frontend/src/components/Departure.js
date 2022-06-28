@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Button, Divider, Grid} from '@material-ui/core';
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
-import PropTypes from "prop-types";
 import DepartureDialog from "./dialogs/DepartureDialog";
 
 class Departure extends Component {

@@ -9,22 +9,41 @@ const theme = createTheme({
   palette: {
 
      primary: {
-       main: '#315A65',
+       main: '#294F66',
          dark:'#05353f',
          light:'#AED8E5'
 
 
      },
      secondary: {
-       main: '#C498C0',
+       main: '#D23232',
      },
 
      success: {
-         main: '#facac0'
+         main: '#008A59'
      }
 
 
   },
+
+    typography: {
+
+      h1: {
+      fontWeight: 600,
+          fontSize: 41,
+    },
+        h2: {
+          fontWeight: 500,
+            fontSize: 26,
+        },
+
+    fontFamily: [
+      "Avenir next",
+        "sans serif"
+    ].join(",")
+  }
+
+
 });
 
 

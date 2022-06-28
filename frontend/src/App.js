@@ -10,16 +10,22 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import firebaseConfig from './firebaseconfig';
-import {Person} from "@mui/icons-material";
 import TimeIntervalTransactionList from "./components/TimeIntervalTransactionList";
 import SignInHeader from "./components/layout/SignInHeader";
-import DepartureDialog from "./components/dialogs/DepartureDialog";
-import { Dialog, Grid} from "@mui/material";
-import {DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
-import Button from "@mui/material/Button";
+import {
+    CssBaseline,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Grid,
+    ThemeProvider,
+    Button
+} from "@material-ui/core";
+
 import {ArriveBO, HdMWebAppAPI} from "./api";
 import ProjectAnalysis from "./components/ProjectAnalysis";
-import {ThemeProvider, CssBaseline} from '@material-ui/core';
 import theme from "./components/Theme";
 
 
@@ -74,10 +80,10 @@ class App extends React.Component {
             .then(value => this.setState({
                 arrived: value,
             })).catch(e =>
-                this.setState({ // bei Fehler den state zurücksetzen
-                    arrived: true,
-                })
-            );
+            this.setState({ // bei Fehler den state zurücksetzen
+                arrived: true,
+            })
+        );
     }
 
     componentDidMount() {
@@ -88,36 +94,33 @@ class App extends React.Component {
     }
 
     handleCloseArriveDialog = () => {
-      this.setState({
-          arrived: this.getDepartureBiggerArrive
-      })
+        this.setState({
+            arrived: this.getDepartureBiggerArrive
+        })
     }
 
     /* Erstellen eines Kommen-Events durch den Button im ArriveDialog**/
     addNewArriveEvent = () => {
-      // Umschalten des Status der Knöpfe
-      this.setState({
+        // Umschalten des Status der Knöpfe
+        this.setState({});
 
-      });
-      // Erstellen eines Gehen-Ereignis
-      let newArriveEvent = new ArriveBO(this.state.firebase_id)
-      HdMWebAppAPI.getAPI().addArrive().then(arrive => {
-        //this.setState(this.baseState);
-        //this.onClose(arrive); // call the parent with the departure object from backend
-        console.log("test")
-        this.setState({
-            arrived: false
-        })
-      }).catch(e =>
-        console.log(e)
-      );
+        // Erstellen eines Gehen-Ereignis
+        let newArriveEvent = new ArriveBO(this.state.firebase_id)
+        HdMWebAppAPI.getAPI().addArrive().then(arrive => {
+            //this.setState(this.baseState);
+            //this.onClose(arrive); // call the parent with the departure object from backend
+            this.setState({
+                arrived: false
+            })
+        }).catch(e =>
+            console.log(e)
+        );
     }
 
 
     render() {
         const {currentPerson, authError, arrived} = this.state;
 
-        console.log(this.state)
         return (
             <ThemeProvider theme={theme}>
                 <CssBaseline/>
@@ -138,7 +141,7 @@ class App extends React.Component {
                               </DialogContent>
                               <DialogActions>
                                   <Grid container justifyContent={'center'}>
-                                    <Button variant='contained' onClick={() => {this.addNewArriveEvent()}} color='primary'>
+                                    <Button color='primary' variant='contained' onClick={() => {this.addNewArriveEvent()}} >
                                         Kommen bestätigen
                                     </Button>
                                 </Grid>
@@ -171,10 +174,7 @@ class App extends React.Component {
                         }
 
                             :
-
                         </>
-
-
                     :
                         <>
                             <SignInHeader person={currentPerson}/>
@@ -189,7 +189,5 @@ class App extends React.Component {
         );
     }
 }
-
-console.log(Person);
 
 export default App;

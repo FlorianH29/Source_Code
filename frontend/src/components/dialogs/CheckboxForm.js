@@ -43,9 +43,9 @@ class CheckboxForm extends Component {
 
 
     addSelectedPersonsToProject = () => {
-        console.log(this.state.selectedPerson)
         HdMWebAppAPI.getAPI().addPersonAsProjectMember(this.state.selectedPerson, this.props.project.getID());
             this.props.onClose(null);
+            this.getPotentialMembersForProject();
     }
 
     componentDidMount() {
@@ -65,8 +65,6 @@ class CheckboxForm extends Component {
 
     render() {
         const {projectMember, person, show, project} = this.props;
-        console.log(this.props.potentialProjectMembers);
-
         let title = 'Mitarbeiter zu dem Projekt hinzufügen';
         let header = 'Mitartbeiter die bis jetzt noch nicht im Projekt sind:';
 

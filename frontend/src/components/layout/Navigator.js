@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Component} from 'react';
-import {Box, CssBaseline, Divider,  IconButton, Popover, Typography, AppBar, Drawer, Toolbar} from '@mui/material';
-
+import {Box, CssBaseline, Divider, IconButton, Popover, AppBar, Drawer, Toolbar, Grid} from '@mui/material';
+import {Typography} from '@material-ui/core'
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -126,29 +126,31 @@ class Navigator extends Component {
         const drawerWidth = 220;
         const lel = 0;
         const boxWidth = 200;
-        console.log(this.state)
 
         return (
             <Box sx={{display: 'flex'}}>
                 <CssBaseline/>
                 <AppBar position="fixed" sx={{
                     width: `calc(100% - ${lel}px)`,
-                    bgcolor: "primary",
+                    bgcolor: "#05353f",
                     ml: `${boxWidth}px`,
                     p: 4,
                     zIndex: (theme) => theme.zIndex.drawer + 1
                 }}>
+
                     <Toolbar>
                         <Typography variant="h3" component="div" sx={{flexGrow: 1}}>
                             HdM Zeiterfassung
                         </Typography>
                         {person ? (<>
+
                             <IconButton
                                 size="large"
                                 onClick={this.handleOpenUserMenu}
                                 color="inherit">
                                 <ManageAccountsIcon/>
                             </IconButton>
+
                             <Popover
                                 anchorEl={this.state.anchorEl}
                                 anchorOrigin={{
@@ -186,6 +188,7 @@ class Navigator extends Component {
                         </>) : null
                         }
                     </Toolbar>
+
                 </AppBar>
 
                 {person ? (

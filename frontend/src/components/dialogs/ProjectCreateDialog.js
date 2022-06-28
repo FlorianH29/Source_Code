@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Dialog, DialogContent, DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import {HdMWebAppAPI, ProjectBO} from '../../api';
-import {Button, DialogActions, TextField} from "@mui/material";
+import {Button, DialogActions, TextField} from "@material-ui/core";
 import PropTypes from "prop-types";
 
 class ProjectCreateDialog extends Component {

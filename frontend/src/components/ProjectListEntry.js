@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {Divider, Grid, Typography, withStyles} from '@material-ui/core';
-import {Button, ListItem} from '@material-ui/core';
+import {Divider, Typography, withStyles, Button, ListItem} from '@material-ui/core';
+import {Grid} from '@mui/material';
 import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
 import EditIcon from '@mui/icons-material/Edit';
 import ProjectDeleteDialog from "./dialogs/ProjectDeleteDialog";
@@ -142,16 +141,14 @@ class ProjectListEntry extends Component {
 
     /** Rendert die Komponente*/
     render() {
-        const {classes} = this.props;
         const {project, showProjectCreateDialog, showProjectDeleteDialog, showProjectDurationDialog, startEvent, endEvent, person } = this.state;
 
-        //console.log(startEvent)
-        console.log (this.state)
 
         return (
             <div>
                 <ListItem>
                     <Grid container alignItems={"center"}>
+                        <Grid item xs={2} align={"center"}>
                         <ListItemButton component={RouterLink} to={{
                             pathname: `/activities`,
                             pro: {
@@ -161,19 +158,20 @@ class ProjectListEntry extends Component {
                                 person: person
                             }
                         }}>
-                            <Grid item xs={2} align={"center"}>
+
                                 <Typography variant={"h5"} component={"div"}>
                                     {project.getProjectName()}
                                 </Typography>
-                            </Grid>
+
                         </ListItemButton>
+                        </Grid>
                         <Grid item xs={2} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 {project.getClient()}
                             </Typography>
                         </Grid>
                         { person.id === project.owner ? (
-                        <Grid item xs={3} align={"center"}>
+                        <Grid item xs={4} align={"center"}>
                             <ListItemButton onClick={this.editProjectDurationButtonClicked}>
                                 <Typography align={"center"} variant={"h5"} component={"div"}>
                                     Vom {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
@@ -186,7 +184,7 @@ class ProjectListEntry extends Component {
                             </ListItemButton>
                         </Grid>)
                             :
-                        <Grid item xs={3} align={"center"}>
+                        <Grid item xs={4} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 Vom {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
                                 dateStyle: "long",
@@ -233,12 +231,5 @@ const styles = theme => ({
     },
 });
 
-/** PropTypes */
-ProjectListEntry.propTypes = {
-    /** Das ProjectBO welches gerendert werden soll */
-    project: PropTypes.object.isRequired,
-    /** Event Handler Funktion, welche aufgerufen wird, nachdem ein Projekt erfolgreich gelöscht wurde. */
-    onProjectDeleted: PropTypes.func.isRequired
-}
 
 export default withRouter(withStyles(styles)(ProjectListEntry));
