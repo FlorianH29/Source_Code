@@ -45,7 +45,7 @@ class TimeIntervalTransactionListEntry extends Component {
     /** Renders the component */
     render() {
         const {event, showEventandTimeIntervalDeleteDialog, showEventandTimeIntervalForm} = this.state;
-        console.log(event)
+        //console.log(event)
         return (
             <div>
                 <ListItem>
