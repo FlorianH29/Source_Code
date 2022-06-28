@@ -153,7 +153,6 @@ class ActivityList extends Component {
             // PersonBO existiert
             per = this.props.location.per;
          } else if (this.props.location.expandedPerson){
-             console.log(this.props.location.expandedPerson)
             // in Projektarbeitsliste wurde Zurück geklickt
             per = this.props.location.expandedPerson
         }
@@ -202,7 +201,6 @@ class ActivityList extends Component {
                                 <Grid item md={4} align={"flex-end"}>
                                     <Typography variant={"h5"} component={"div"}> Dauer </Typography>
                                 </Grid>
-
                             </Grid>
                             <Divider/>
                             {activities.map(ac =>
@@ -215,7 +213,7 @@ class ActivityList extends Component {
                 <ActivityForm onClose={this.activityFormClosed} show={showActivityForm} project={pro.project}></ActivityForm>
                         </Card>
                 </Box>
-                <ProjectMemberList project={pro.project} show={ProjectMemberList}></ProjectMemberList>
+                <ProjectMemberList project={pro.project} person={per.person} show={ProjectMemberList}></ProjectMemberList>
             </div>
         )
     }

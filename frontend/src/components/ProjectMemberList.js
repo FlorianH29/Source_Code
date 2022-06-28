@@ -5,6 +5,8 @@ import {HdMWebAppAPI} from '../api';
 import ProjectMemberListEntry from "./ProjectMemberListEntry";
 import Card from "@mui/material/Card";
 import CheckboxForm from "./dialogs/CheckboxForm";
+import EditIcon from "@mui/icons-material/Edit";
+import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
 
 
 class ProjectMemberList extends Component {
@@ -16,7 +18,8 @@ class ProjectMemberList extends Component {
         this.state = {
             projectMembers: [],
             potentialProjectMembers: [],
-            showCheckboxForm: false
+            showCheckboxForm: false,
+            disableButton: ''
         };
         //console.log(this.props.project)
     }
@@ -34,9 +37,25 @@ class ProjectMemberList extends Component {
         });
     }
 
+    /** Ermittelt, ob der Aktivität erstellen Knopf gedrückt werden darf oder nicht, wenn die das Programm bedienende
+     * Person nicht Leiter des Projekts ist, ist er ausgegraut. */
+    handleDisableButton = () => {
+        if (this.props.person) {
+            if (this.props.person.id === this.props.project.owner) {
+                this.setState({
+                    disableButton: false
+                })
+            } else {
+                this.setState({
+                    disableButton: true
+                })
+            }
+        }
+    }
+
     componentDidMount() {
         this.getProjectMembersOfProject();
-        //console.log(this.state)
+        this.handleDisableButton();
     }
 
     getPotentialMembersForProject = () => {
@@ -81,8 +100,9 @@ class ProjectMemberList extends Component {
 
 
     render() {
-        const { project } = this.props;
-        const {projectMembers, showCheckboxForm, onProjectMemberDeleted} = this.state;
+        const { project, person } = this.props;
+        const {projectMembers, showCheckboxForm, onProjectMemberDeleted, disableButton} = this.state;
+
 
         return (
             <div>
@@ -96,8 +116,7 @@ class ProjectMemberList extends Component {
                                 </Typography>
                             </Grid>
                             <Grid item xs={4}  align={"right"}>
-                                <Button variant='contained' color='primary' startIcon={<AddIcon/>}
-                                onClick={this.handleAddProjectMemberButtonClicked}>
+                                <Button disabled={disableButton} variant='contained' color='primary' startIcon={<AddIcon/>} onClick={this.handleAddProjectMemberButtonClicked}>
                                     Mitarbeiter Hinzufügen
                                 </Button>
                             </Grid>
@@ -115,7 +134,7 @@ class ProjectMemberList extends Component {
                                     </Grid>
                                     <Divider/>
                                     {projectMembers.map(pm =>
-                                        <ProjectMemberListEntry key={pm.getID()} projectMember={pm} project={project}
+                                        <ProjectMemberListEntry key={pm.getID()} projectMember={pm} project={project} person={person}
                                                                 onProjectMemberDeleted={this.projectMemberDeleted}
                                                                 getProjectMembersOfProject={this.getProjectMembersOfProject}/>)
                                     }

@@ -35,7 +35,7 @@ class ProjectMemberListEntry extends Component {
     }
 
     render() {
-        const { project } = this.props;
+        const { project, person } = this.props;
         const {projectMember, showProjectMemberDeleteDialog} = this.state;
 
         return (
@@ -52,10 +52,13 @@ class ProjectMemberListEntry extends Component {
                                 {projectMember.getLastName()}
                             </Typography>
                         </Grid>
+                        { person.getID() === project.owner ? (
                         <Grid item xs={3} align={"center"}>
                             <Button color='secondary' size='small' startIcon={<PersonRemoveRoundedIcon/>}
                                     onClick={this.deleteProjectMemberButtonClicked}> </Button>
-                        </Grid>
+                        </Grid>):
+                        <Grid item xs={2}>
+                        </Grid>}
                     </Grid>
                 </ListItem>
                 <Divider/>
