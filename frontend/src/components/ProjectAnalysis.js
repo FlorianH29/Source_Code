@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from "../api";
-import {Box, Divider, Grid, TextField, Typography} from "@mui/material";
+import {Box, Divider, Grid, TextField, Typography} from '@material-ui/core';
 import ProjectAnalysisProjectEntry from "./ProjectAnalysisProjectEntry";
-import {DatePicker, LocalizationProvider} from "@mui/lab";
+import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 
 class ProjectAnalysis extends Component {
@@ -37,28 +37,30 @@ class ProjectAnalysis extends Component {
 
     render() {
         const {startDate, endDate, projects} = this.state
-        console.log(startDate)
 
         return (
             <div>
                 { projects.length != 0 ? (
                 <Box m={18} pl={8}>
                     <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
+
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
-                                label={"Start Date"}
+                                label={"Start-Datum"}
                                 value={startDate}
+                                inputFormat="dd/MM/yyyy"
                                 onChange={(date) => {
                                     this.setState({startDate: date.getTime()});
-
                                 }}
                                 renderInput={(params) => <TextField {...params} />}
                             />
                         </LocalizationProvider>
+                        {"  "}
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
-                                label={"End Date"}
+                                label={"End-Datum"}
                                 value={endDate}
+                                inputFormat="dd/MM/yyyy"
                                 onChange={(date) => {
                                     this.setState({endDate: date.getTime()});
 
@@ -66,6 +68,7 @@ class ProjectAnalysis extends Component {
                                 renderInput={(params) => <TextField {...params} />}
                             />
                         </LocalizationProvider>
+
                     </div>
                     <Grid container spacing={2}>
 

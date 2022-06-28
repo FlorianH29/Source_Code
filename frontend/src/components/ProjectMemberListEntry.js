@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Typography, Grid, Divider,} from '@material-ui/core';
-import {Button} from '@material-ui/core';
+import {Button, Divider, Grid, Typography,} from '@material-ui/core';
 import PersonRemoveRoundedIcon from '@mui/icons-material/PersonRemoveRounded';
 import ListItem from "@mui/material/ListItem";
 import ProjectMemberDeleteDialog from "./dialogs/ProjectMemberDeleteDialog"
@@ -36,13 +35,13 @@ class ProjectMemberListEntry extends Component {
     }
 
     render() {
-        const { project } = this.props;
+        const { project, person } = this.props;
         const {projectMember, showProjectMemberDeleteDialog} = this.state;
 
         return (
             <div>
                 <ListItem>
-                    <Grid container  alignItems='center'>
+                    <Grid container alignItems='center'>
                         <Grid item xs={4} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
                                 {projectMember.getFirstName()}
@@ -53,10 +52,13 @@ class ProjectMemberListEntry extends Component {
                                 {projectMember.getLastName()}
                             </Typography>
                         </Grid>
+                        { person.getID() === project.owner ? (
                         <Grid item xs={4} align={"center"}>
                             <Button color='secondary' size='small' startIcon={<PersonRemoveRoundedIcon/>}
                                     onClick={this.deleteProjectMemberButtonClicked}> </Button>
-                        </Grid>
+                        </Grid>):
+                        <Grid item xs={2}>
+                        </Grid>}
                     </Grid>
                 </ListItem>
                 <Divider/>

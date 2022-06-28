@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {AppBar, Box, IconButton, Menu, MenuList, Toolbar, Typography} from '@mui/material';
+import {AppBar, Box, IconButton, Menu, MenuList, Toolbar, Typography} from '@material-ui/core';
 import PersonIcon from '@mui/icons-material/Person';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
@@ -35,7 +35,7 @@ class Header extends Component {
 
         return (
             <Box sx={{flexGrow: 1}}>
-                <AppBar position={"static"} sx={{bgcolor: "pink", p: 1}}>
+                <AppBar position={"static"} sx={{bgcolor: "primary", p: 1}}>
                     <Toolbar>
                         <Typography variant='h3' component='div' sx={{flexGrow: 1}}>
                             HdM Zeiterfassung

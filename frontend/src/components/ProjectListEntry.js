@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {Divider, Grid, Typography, withStyles} from '@material-ui/core';
-import {Button, ListItem} from "@mui/material";
+import {Button, ListItem} from '@material-ui/core';
 import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
 import EditIcon from '@mui/icons-material/Edit';
 import ProjectDeleteDialog from "./dialogs/ProjectDeleteDialog";
@@ -145,8 +144,6 @@ class ProjectListEntry extends Component {
         const {classes} = this.props;
         const {project, showProjectCreateDialog, showProjectDeleteDialog, showProjectDurationDialog, startEvent, endEvent, person } = this.state;
 
-        //console.log(startEvent)
-        console.log (this.state)
 
         return (
             <div>
@@ -235,12 +232,5 @@ const styles = theme => ({
     },
 });
 
-/** PropTypes */
-ProjectListEntry.propTypes = {
-    /** Das ProjectBO welches gerendert werden soll */
-    project: PropTypes.object.isRequired,
-    /** Event Handler Funktion, welche aufgerufen wird, nachdem ein Projekt erfolgreich gelöscht wurde. */
-    onProjectDeleted: PropTypes.func.isRequired
-}
 
 export default withRouter(withStyles(styles)(ProjectListEntry));

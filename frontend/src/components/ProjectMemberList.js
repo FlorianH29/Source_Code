@@ -5,6 +5,8 @@ import {Box, Card, Divider} from "@mui/material";
 import ProjectMemberListEntry from "./ProjectMemberListEntry";
 import CheckboxForm from "./dialogs/CheckboxForm";
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
+import EditIcon from "@mui/icons-material/Edit";
+import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
 
 
 class ProjectMemberList extends Component {
@@ -16,7 +18,8 @@ class ProjectMemberList extends Component {
         this.state = {
             projectMembers: [],
             potentialProjectMembers: [],
-            showCheckboxForm: false
+            showCheckboxForm: false,
+            disableButton: ''
         };
         //console.log(this.props.project)
     }
@@ -34,16 +37,31 @@ class ProjectMemberList extends Component {
         });
     }
 
+    /** Ermittelt, ob der Aktivität erstellen Knopf gedrückt werden darf oder nicht, wenn die das Programm bedienende
+     * Person nicht Leiter des Projekts ist, ist er ausgegraut. */
+    handleDisableButton = () => {
+        if (this.props.person) {
+            if (this.props.person.id === this.props.project.owner) {
+                this.setState({
+                    disableButton: false
+                })
+            } else {
+                this.setState({
+                    disableButton: true
+                })
+            }
+        }
+    }
+
     componentDidMount() {
         this.getProjectMembersOfProject();
-        //console.log(this.state)
+        this.handleDisableButton();
     }
 
     getPotentialMembersForProject = () => {
         this.setState({potentialProjectMembers: []}, () => {
             HdMWebAppAPI.getAPI().getPersonsNotProjectMembersOfProject(this.props.project.getID())
                 .then(personBOs => {
-                    console.log(personBOs)
                     this.setState({
                         potentialProjectMembers: personBOs
                     })
@@ -74,17 +92,16 @@ class ProjectMemberList extends Component {
     checkboxFormClosed = () => {
         // projectMember ist nicht null und deshalb erstellt/überarbeitet
 
-        this.setState({
-            showCheckboxForm: false
-        });
-        this.getProjectMembersOfProject();
-    }
+            this.setState({
+                showCheckboxForm: false
+            });
+            this.getProjectMembersOfProject();
+        }
 
 
     render() {
         const {project} = this.props;
-        const {projectMembers, showCheckboxForm, onProjectMemberDeleted} = this.state;
-        console.log(this.state.potentialProjectMembers)
+        const {projectMembers, showCheckboxForm, onProjectMemberDeleted, disableButton} = this.state;
 
 
         return (
@@ -98,7 +115,7 @@ class ProjectMemberList extends Component {
                                 </Typography>
                             </Grid>
                             <Grid item xs={4} align={"right"}>
-                                <Button size="large" color='primary' startIcon={<AddCircleOutlinedIcon/>}
+                                <Button disabled={disableButton} size="large" color='primary' startIcon={<AddCircleOutlinedIcon/>}
                                         algin={"center"}
                                         onClick={this.handleAddProjectMemberButtonClicked}>
                                     Mitarbeiter
@@ -117,7 +134,7 @@ class ProjectMemberList extends Component {
 
                             <Divider/>
                             {projectMembers.map(pm =>
-                                <ProjectMemberListEntry key={pm.getID()} projectMember={pm} project={project}
+                                <ProjectMemberListEntry key={pm.getID()} projectMember={pm} project={project} person={person}
                                                         onProjectMemberDeleted={this.projectMemberDeleted}
                                                         getProjectMembersOfProject={this.getProjectMembersOfProject}/>)
                             }

@@ -1,6 +1,15 @@
 import React, {Component} from 'react';
 import {EventBO, HdMWebAppAPI} from "../../api";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField} from "@mui/material";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    IconButton,
+    TextField
+} from '@material-ui/core';
 import {DatePicker, LocalizationProvider} from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import ProjectCreateDialog from "./ProjectCreateDialog";
@@ -155,7 +164,7 @@ class ProjectDurationDialog extends Component {
             title = 'Wann soll das Projekt enden?'
             header = 'Wähle ein End-Datum aus und klicke auf "Fertig"... '
         }
-
+        const color = '#008A59'
         return (
             show ?
                 <div>
@@ -176,21 +185,25 @@ class ProjectDurationDialog extends Component {
                                         disabled={disableStartButton}
                                         label={"Start Date"}
                                         value={startDate}
+                                        inputFormat="dd/MM/yyyy"
                                         onChange={(date) => {
                                             this.setState({eventType: 7, startDate: date.getTime()});
                                         }}
                                         renderInput={(params) => <TextField {...params} />}
                                     />
                                 </LocalizationProvider>
+                                {" "}
+                                {" "}
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
                                         disabled={disableEndButton}
                                         label={"End Date"}
                                         value={endDate}
+                                        inputFormat="dd/MM/yyyy"
                                         onChange={(date) => {
                                             this.setState({eventType: 8, endDate: date.getTime()});
                                         }}
-                                        renderInput={(params) => <TextField {...params} />}
+                                        renderInput={(params) => <TextField {...params}/>}
                                     />
                                 </LocalizationProvider>
                             </div>

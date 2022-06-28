@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {Box, Divider, Grid, TextField, Typography} from "@mui/material";
+import {Box, Divider, Grid, TextField, Typography} from '@material-ui/core';
 import TimeIntervalTransactionListEntry from "./TimeIntervalTransactionListEntry"
-import {DatePicker, LocalizationProvider} from '@mui/lab';
+import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 
 class TimeIntervalTransactionList extends Component {
@@ -44,12 +44,16 @@ class TimeIntervalTransactionList extends Component {
         const {events, startDate, endDate} = this.state;
         return (
             <div>
-                <Box m={20}>
+                <Box m={24}>
                     <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
+                    <Grid container direction={'row'} mt={2} alignItems='stretch' spacing={1}>
+                        <Grid item xs={3}/>
+
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
-                                label={"Start Date"}
+                                label={"Start Datum"}
                                 value={startDate}
+                                inputFormat="dd/MM/yyyy"
                                 onChange={(date) => {
                                     this.setState({startDate: date.getTime()});
                                     this.getEventForTimeIntervalTransactions(date.getTime(), this.state.endDate)
@@ -57,10 +61,12 @@ class TimeIntervalTransactionList extends Component {
                                 renderInput={(params) => <TextField {...params} />}
                             />
                         </LocalizationProvider>
+
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
-                                label={"End Date"}
+                                label={"End Datum"}
                                 value={endDate}
+                                inputFormat="dd/MM/yyyy"
                                 onChange={(date) => {
                                     this.setState({endDate: date.getTime()});
                                     console.log(date.getTime())
@@ -69,6 +75,9 @@ class TimeIntervalTransactionList extends Component {
                                 renderInput={(params) => <TextField {...params} />}
                             />
                         </LocalizationProvider>
+
+                        </Grid>
+
                     </div>
                     <Grid container>
                         <Grid item xs={12} align={"center"}>

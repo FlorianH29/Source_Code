@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Dialog, DialogContent, DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import {HdMWebAppAPI, ProjectBO} from '../../api';
-import {Button, DialogActions, TextField} from "@mui/material";
+import {Button, DialogActions, TextField} from "@material-ui/core";
 import PropTypes from "prop-types";
 
 class ProjectCreateDialog extends Component {
@@ -85,11 +85,11 @@ class ProjectCreateDialog extends Component {
         if (project) {
             // Project definiert, Bearbeitungsdialog wird angezeigt
             title = 'Projekt bearbeiten';
-            header = `Projekt \x22${project.getProjectName()}\x22 des Klienten \x22${project.getClient()}\x22`;
+            header = `Projekt \x22${project.getProjectName()}\x22 des Auftraggebers \x22${project.getClient()}\x22`;
         } else {
             // Project ist nicht definiert, Erstellungsdialog wird angezeigt
             title = 'Neues Projekt anlegen';
-            header = 'Geben Sie bitte Name und Klienten an';
+            header = 'Geben Sie bitte Name und Auftraggeber an';
         }
 
         return (
@@ -109,10 +109,10 @@ class ProjectCreateDialog extends Component {
                                        label='Name:' value={projectName}
                                        onChange={this.textFieldValueChange} error={projectNameValidationFailed}
                                        helperText={projectNameValidationFailed ? 'Bitte geben Sie einen Namen an' : ' '}/>
-                            <TextField type='text' required fullWidth margin='normal' id='client' label='Klient: '
+                            <TextField type='text' required fullWidth margin='normal' id='client' label='Auftraggeber: '
                                        value={client}
                                        onChange={this.textFieldValueChange} error={clientValidationFailed}
-                                       helperText={clientValidationFailed ? 'Bitte geben Sie einen Klienten an' : ' '}/>
+                                       helperText={clientValidationFailed ? 'Bitte geben Sie einen Auftraggeber an' : ' '}/>
                         </form>
                     </DialogContent>
                     <DialogActions>
@@ -133,15 +133,6 @@ class ProjectCreateDialog extends Component {
                 : null
         );
     }
-}
-
-/** PropTypes*/
-ProjectCreateDialog.propTypes = {
-
-    onClose: PropTypes.func.isRequired,
-
-    show: PropTypes.bool.isRequired
-
 }
 
 

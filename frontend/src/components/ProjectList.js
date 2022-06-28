@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {Box, Button, Divider, Grid, Typography, Card} from '@mui/material';
+import {Box, Button, Divider, Grid, Typography, Vard} from '@material-ui/core';
 import ProjectListEntry from "./ProjectListEntry";
 import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
 import PropTypes from "prop-types";
 import ProjectDurationDialog from "./dialogs/ProjectDurationDialog";
 import AddIcon from "@material-ui/icons/Add";
+import {withStyles} from "@mui/styles";
+
 
 class ProjectList extends Component {
 
@@ -42,7 +44,6 @@ class ProjectList extends Component {
     };
 
     handleCreateProjectButtonClicked = (event) => {
-        console.log("test")
         event.stopPropagation();
         this.setState({
             showProjectDurationDialog: true
@@ -109,7 +110,7 @@ class ProjectList extends Component {
                                         <Typography variant={"h5"} component={"div"}> Projektname </Typography>
                                     </Grid>
                                     <Grid item xs={2} align={"flex-end"}>
-                                        <Typography variant={"h5"} component={"div"}> Klient </Typography>
+                                        <Typography variant={"h5"} component={"div"}> Auftraggeber </Typography>
                                     </Grid>
                                     <Grid item xs={4} align={"flex-end"}>
                                         <Typography variant={"h5"} component={"div"}> Projektlaufzeit </Typography>
@@ -135,10 +136,13 @@ class ProjectList extends Component {
     }
 }
 
+/** Kompontenen spezifische Styles*/
+const styles = theme => ({
+    root: {
+        width: '100%',
+    },
 
-ProjectCreateDialog.propTypes = {
-    onClose: PropTypes.func.isRequired,
-    test: PropTypes.func.isRequired
-}
+});
 
-export default ProjectList;
+
+export default withStyles(styles)(ProjectList);

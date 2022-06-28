@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 import ActivityList from "./components/ActivityList";
 import Navigator from './components/layout/Navigator';
 import ProjectList from "./components/ProjectList";
@@ -10,16 +10,22 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import firebaseConfig from './firebaseconfig';
-
-import {Person} from "@mui/icons-material";
 import TimeIntervalTransactionList from "./components/TimeIntervalTransactionList";
 import SignInHeader from "./components/layout/SignInHeader";
-import DepartureDialog from "./components/dialogs/DepartureDialog";
-import {Dialog, Grid} from "@mui/material";
-import {DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
+import {
+    CssBaseline,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Grid,
+    ThemeProvider
+} from "@material-ui/core";
 import Button from "@mui/material/Button";
 import {ArriveBO, HdMWebAppAPI} from "./api";
 import ProjectAnalysis from "./components/ProjectAnalysis";
+import theme from "./components/Theme";
 
 
 class App extends React.Component {
@@ -45,21 +51,15 @@ class App extends React.Component {
                 document.cookie = `token=${token};path=/`;
                 this.setState({
                     currentPerson: person,
-                    authError: null,
-                    authLoading: false
                 });
             }).catch(e => {
-                this.setState({
-                    authError: e,
-                    authLoading: false
-                });
+                console.log(e)
             });
         } else {
             document.cookie = 'token=;path=/';
 
             this.setState({
                 currentPerson: null,
-                authLoading: false
             });
         }
     }
@@ -79,10 +79,10 @@ class App extends React.Component {
             .then(value => this.setState({
                 arrived: value,
             })).catch(e =>
-                this.setState({ // bei Fehler den state zurücksetzen
-                    arrived: true,
-                })
-            );
+            this.setState({ // bei Fehler den state zurücksetzen
+                arrived: true,
+            })
+        );
     }
 
     componentDidMount() {
@@ -93,37 +93,35 @@ class App extends React.Component {
     }
 
     handleCloseArriveDialog = () => {
-      this.setState({
-          arrived: this.getDepartureBiggerArrive
-      })
+        this.setState({
+            arrived: this.getDepartureBiggerArrive
+        })
     }
 
     /* Erstellen eines Kommen-Events durch den Button im ArriveDialog**/
     addNewArriveEvent = () => {
-      // Umschalten des Status der Knöpfe
-      this.setState({
-
-      });
-      // Erstellen eines Gehen-Ereignis
-      let newArriveEvent = new ArriveBO(this.state.firebase_id)
-      HdMWebAppAPI.getAPI().addArrive().then(arrive => {
-        //this.setState(this.baseState);
-        //this.onClose(arrive); // call the parent with the departure object from backend
-        console.log("test")
-        this.setState({
-            arrived: false
-        })
-      }).catch(e =>
-        console.log(e)
-      );
+        // Umschalten des Status der Knöpfe
+        this.setState({});
+        // Erstellen eines Gehen-Ereignis
+        let newArriveEvent = new ArriveBO(this.state.firebase_id)
+        HdMWebAppAPI.getAPI().addArrive().then(arrive => {
+            //this.setState(this.baseState);
+            //this.onClose(arrive); // call the parent with the departure object from backend
+            this.setState({
+                arrived: false
+            })
+        }).catch(e =>
+            console.log(e)
+        );
     }
 
 
     render() {
         const {currentPerson, authError, arrived} = this.state;
 
-        console.log(this.state)
         return (
+            <ThemeProvider theme={theme}>
+                <CssBaseline/>
             <div style={{flex:1}}>
                 <Router>
 
@@ -151,7 +149,6 @@ class App extends React.Component {
                                 <Navigator person={currentPerson}/>
                                 <Switch>
 
-
                                     <Route exact path='/projects'>
                                         <ProjectList/>
                                     </Route>
@@ -168,7 +165,7 @@ class App extends React.Component {
                                         <ProjectAnalysis/>
                                     </Route>
                                     <Route path='*'>
-                                        <NotFound/>
+                                        <TimeIntervalTransactionList/>
                                     </Route>
                                 </Switch>
                             </>
@@ -189,10 +186,9 @@ class App extends React.Component {
 
             </Router>
           </div>
+                </ThemeProvider>
         );
     }
 }
-
-console.log(Person);
 
 export default App;

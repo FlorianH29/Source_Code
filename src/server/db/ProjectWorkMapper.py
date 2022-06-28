@@ -128,31 +128,6 @@ class ProjectWorkMapper (Mapper):
 
         return result
 
-    def find_all(self):
-        all_project_works = []  # Liste mit allen project_works
-        cursor = self._cnx.cursor()
-        cursor.execute("SELECT * FROM projectwork WHERE deleted=0")
-        tuples = cursor.fetchall()
-
-        for (projectwork_id, last_edit, projectwork_name, description, start_event, end_event, time_period,
-             affiliated_activity_id, deleted) in tuples:
-            project_work = pw.ProjectWork()
-            project_work.set_id(projectwork_id)
-            project_work.set_last_edit(last_edit)
-            project_work.set_project_work_name(projectwork_name)
-            project_work.set_description(description)
-            project_work.set_start_event(start_event)
-            project_work.set_end_event(end_event)
-            project_work.set_time_period(time_period)
-            project_work.set_affiliated_activity(affiliated_activity_id)
-            project_work.set_deleted(deleted)
-            all_project_works.append(project_work)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return all_project_works
-
     def insert(self, project_work):
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(projectwork_id) AS maxid FROM projectwork ")

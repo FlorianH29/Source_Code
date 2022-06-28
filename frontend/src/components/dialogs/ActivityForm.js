@@ -161,11 +161,5 @@ class ActivityForm extends Component {
     }
 }
 
-/** PropTypes */
-ActivityForm.propTypes = {
-
-    onClose: PropTypes.func.isRequired,
-    show: PropTypes.bool.isRequired,
-}
 
 export default ActivityForm;

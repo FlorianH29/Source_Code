@@ -7,28 +7,6 @@ class WorkTimeAccountMapper(Mapper):
     def __init__(self):
         super().__init__()
 
-    """Hier werden alle Arbeitszeitkonten ausgelesen."""
-
-    def find_all(self):
-
-        result = []
-        cursor = self._cnx.cursor()  # cursor erlaubt uns SQL befehle hier auszuführen (siehe Verb. Mapper Klasse)
-        cursor.execute("SELECT * FROM worktimeaccount WHERE deleted=0")
-        tuples = cursor.fetchall()
-
-        for (work_time_account_id, last_edit, owner, deleted) in tuples:
-            work_time_account = wta.WorkTimeAccount()
-            work_time_account.set_id(work_time_account_id)
-            work_time_account.set_last_edit(last_edit)
-            work_time_account.set_owner(owner)
-            work_time_account.set_deleted(deleted)
-            result.append(work_time_account)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
-
     """Hier wird das Konto eines Inhabers ausgelesen anhand des Fremdschlüssels.  """
 
     def find_by_owner_id(self, owner_id):

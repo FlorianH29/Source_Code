@@ -1,7 +1,14 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import { withStyles, Typography, Accordion, AccordionSummary, AccordionDetails, Grid, Divider} from '@material-ui/core';
-import { Button } from '@material-ui/core';
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Button,
+    Divider,
+    Grid,
+    Typography,
+    withStyles
+} from '@material-ui/core';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import EditIcon from '@mui/icons-material/Edit';
 import ProjectWorkForm from './dialogs/ProjectWorkForm';
@@ -148,13 +155,5 @@ const styles = theme => ({
         width: '100%',
     },
 });
-
-/** PropTypes */
-ProjectWorkListEntry.propTypes = {
-    /** Das ProjectWorkBO welches gerendert werden soll */
-    projectWork: PropTypes.object.isRequired,
-    /** Event Handler Funktion, welche aufgerufen wird, nachdem eine Projektarbeit erfolgreich gelöscht wurde. */
-    onProjectWorkDeleted: PropTypes.func.isRequired
-}
 
 export default withStyles(styles)(ProjectWorkListEntry);

@@ -98,16 +98,6 @@ class DepartureDialog extends Component {
     }
 }
 
-/** PropTypes */
-DepartureDialog.propTypes = {
-    /** Wenn show true ist, wird der Departure-Dialog gerendert */
-    show: PropTypes.bool.isRequired,
-    /**
-     * Handler Funktion, die aufgerufen wird, wenn der Dialog geschlossen wird.
-     * Sendet das gelöschte ProjectWorkBO as Parameter oder null, wenn Abbrechen aufgerufen worden ist.
-     */
-    onClose: PropTypes.func.isRequired,
-}
 
 
 export default DepartureDialog;

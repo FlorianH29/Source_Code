@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from "../api";
-import {Button, Grid, Typography, Divider, Box, Link, Card} from '@mui/material';
+import {Button, Grid, Typography, Divider, Box, Link, Card} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ActivityForm from "./dialogs/ActivityForm";
 import ActivityListEntry from "./ActivityListEntry";
@@ -145,21 +145,20 @@ class ActivityList extends Component {
             return (<Redirect to='/'/>);
         }
 
-        //console.log(pro.project)
+         //console.log(pro.project)
 
         let per = null;
         if (this.props.location.per) {
             // PersonBO existiert
             per = this.props.location.per;
-        } else if (this.props.location.expandedPerson) {
-            console.log(this.props.location.expandedPerson)
+         } else if (this.props.location.expandedPerson){
             // in Projektarbeitsliste wurde Zurück geklickt
             per = this.props.location.expandedPerson
         }
 
         return (
             <div>
-                <Box mt={18} ml={18} mr={2} mb={2} pl={8}>
+                <Box mt={18} ml={22} mr={2} mb={2} pl={8}>
                     <Card>
                         <Typography p={1} component='div' color={"primary"}>
                             <Link component={RouterLink} to={{
@@ -167,7 +166,7 @@ class ActivityList extends Component {
                             }}>
                                 <Grid container spacing={1} justify='flex-start' alignItems='stretch'>
                                     <Grid item>
-                                        <ArrowCircleLeftRoundedIcon color={"primary"}/>
+                                        <ArrowCircleLeftRoundedIcon color={"#008A59"}/>
                                     </Grid>
                                     <Grid item> zurück zur Projektübersicht
                                     </Grid>
@@ -212,12 +211,8 @@ class ActivityList extends Component {
                                       project={pro.project}></ActivityForm>
                     </Card>
                 </Box>
-
-                <ProjectMemberList project={pro.project} show={ProjectMemberList}></ProjectMemberList>
-
+                <ProjectMemberList project={pro.project} person={per.person} show={ProjectMemberList}></ProjectMemberList>
             </div>
-
-
         )
     }
 }

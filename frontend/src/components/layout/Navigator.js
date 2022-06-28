@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {Component} from 'react';
-import {AppBar, Box, CssBaseline, Divider, Drawer, IconButton, Popover, Toolbar, Typography} from '@mui/material';
+import {Box, CssBaseline, Divider,  IconButton, Popover, Typography, AppBar, Drawer, Toolbar} from '@mui/material';
+
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -33,7 +34,8 @@ class Navigator extends Component {
             person: null,
             showPersonDelete: false,
             disableStartButton: false,
-            disableEndButton: true
+            disableEndButton: true,
+            eventT: 0,
         };
     };
 
@@ -120,11 +122,10 @@ class Navigator extends Component {
     }
 
     render() {
-        const {showPersonDeleteDialog, showPersonEditDialog, person, disableStartButton, disableEndButton} = this.state;
-        const drawerWidth = 200;
+        const {showPersonDeleteDialog, showPersonEditDialog, person, disableStartButton, disableEndButton, eventT} = this.state;
+        const drawerWidth = 220;
         const lel = 0;
         const boxWidth = 200;
-        console.log(this.state)
 
         return (
             <Box sx={{display: 'flex'}}>
@@ -225,13 +226,15 @@ class Navigator extends Component {
                                     </ListItemButton>
                                 </ListItem>
 
+                                <Divider></Divider>
+
                                 <ListItem>
-                                    <EventManager disabled={disableStartButton} eventType={3} onClose={this.handleClose}>
+                                    <EventManager disabled={disableStartButton} eventT={3} onClose={this.handleClose}>
                                     </EventManager>
                                 </ListItem>
 
                                 <ListItem>
-                                    <EventManager disabled={disableEndButton} eventType={4} onClose={this.handleClose}>
+                                    <EventManager disabled={disableEndButton} eventT={4} onClose={this.handleClose}>
                                     </EventManager>
                                 </ListItem>
                                 <Departure></Departure>

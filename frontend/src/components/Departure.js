@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import {Button, Divider, Grid} from '@mui/material';
+import {Button, Divider, Grid} from '@material-ui/core';
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
-import PropTypes from "prop-types";
 import DepartureDialog from "./dialogs/DepartureDialog";
 
 class Departure extends Component {
@@ -61,14 +60,5 @@ class Departure extends Component {
     }
 }
 
-Departure.propTypes = {
-  /** Wenn show true ist, wird der Dialog gerendert */
-  show: PropTypes.bool.isRequired,
-  /**
-   * Handler Funktion, die aufgerufen wird, wenn der Dialog geschlossen wird.
-   * Sendet das gelöschte ProjectWorkBO as Parameter oder null, wenn Abbrechen aufgerufen worden ist.
-   */
-  onClose: PropTypes.func.isRequired,
-}
 
 export default Departure;

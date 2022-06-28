@@ -43,7 +43,9 @@ class ProjectWorkForm extends Component {
       description: de,
       affiliatedActivity: act,
       projectWorkNameValidationFailed: false,
-      descriptionValidationFailed: false
+      descriptionValidationFailed: false,
+      eventT: 1,
+      timeStamp: 0
     };
     // den state speichern, für den Fall, dass abgebrochen wird
     this.baseState = this.state;
@@ -61,7 +63,7 @@ class ProjectWorkForm extends Component {
   * Erstellen eines Ereignisses.
   */
   addEvent = async () => {
-    let newEvent = new EventBO(0, 1);
+    let newEvent = new EventBO(this.state.timeStamp, this.state.eventT);
     // console.log(this.state);
      await HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
         this.props.onClose(event);

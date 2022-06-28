@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from "../api";
-import {Grid, Typography,} from '@mui/material';
+import {Grid, Typography,} from '@material-ui/core';
 import ProjectAnalysisActivityListEntry from "./ProjectAnalysisActivityListEntry";
 
 
