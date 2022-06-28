@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
-import {Button, Grid, Typography} from '@material-ui/core';
+import {Box, Button, Divider, Grid, Typography} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import {HdMWebAppAPI} from '../api';
-import {Box, Divider} from '@material-ui/core';
 import ProjectMemberListEntry from "./ProjectMemberListEntry";
 import Card from "@mui/material/Card";
 import CheckboxForm from "./dialogs/CheckboxForm";
-
 
 
 class ProjectMemberList extends Component {
@@ -45,7 +43,6 @@ class ProjectMemberList extends Component {
         this.setState({potentialProjectMembers: [] }, () => {
             HdMWebAppAPI.getAPI().getPersonsNotProjectMembersOfProject(this.props.project.getID())
                 .then(personBOs => {
-                    console.log(personBOs)
                     this.setState({
                         potentialProjectMembers: personBOs
                     })
@@ -86,8 +83,6 @@ class ProjectMemberList extends Component {
     render() {
         const { project } = this.props;
         const {projectMembers, showCheckboxForm, onProjectMemberDeleted} = this.state;
-        console.log(this.state.potentialProjectMembers)
-
 
         return (
             <div>

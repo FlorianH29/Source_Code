@@ -1,12 +1,22 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {Button, Dialog, DialogActions, DialogContent, Divider, Grid, Link, Typography} from '@material-ui/core';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Divider,
+    Grid,
+    IconButton,
+    Link,
+    Typography
+} from '@material-ui/core';
 import Box from "@mui/material/Box";
 import ProjectWorkListEntry from "./ProjectWorkListEntry";
 import EventManager from "./EventManager";
 import ProjectWorkForm from "./dialogs/ProjectWorkForm";
-import PropTypes from "prop-types";
-import {DialogContentText, DialogTitle, IconButton} from "@material-ui/core";
 import ArrowCircleLeftRoundedIcon from '@mui/icons-material/ArrowCircleLeftRounded';
 import CloseIcon from "@material-ui/icons/Close";
 import {Link as RouterLink, Redirect, withRouter} from "react-router-dom";

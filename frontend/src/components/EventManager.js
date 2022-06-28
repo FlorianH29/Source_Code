@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {EventBO, HdMWebAppAPI} from '../api';
-import PropTypes from "prop-types";
 import {Button, Grid} from '@material-ui/core';
 
 
@@ -35,9 +34,7 @@ class EventManager extends Component {
         // console.log(this.state);
         await HdMWebAppAPI.getAPI().addEvent(newEvent).then(event => {
             // Backend call successfull
-            // reinit the dialogs state for a new empty customer
-            console.log(event)
-            this.props.onClose(event); // call the parent with the customer object from backend
+            this.props.onClose(event);
         }).catch(e =>
             console.log(e));
     }
@@ -70,7 +67,6 @@ class EventManager extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps != this.props) {
-            console.log(this.props.disabled)
             this.setState({disabled: this.props.disabled})
         }
     }
@@ -79,10 +75,6 @@ class EventManager extends Component {
     render() {
         const { eventT } = this.props
         const {buttonName, disabled} = this.state
-
-        console.log(this.props.eventT)
-
-        console.log(this.state)
 
         return (
             <div>

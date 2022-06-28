@@ -126,14 +126,13 @@ class Navigator extends Component {
         const drawerWidth = 220;
         const lel = 0;
         const boxWidth = 200;
-        console.log(this.state)
 
         return (
             <Box sx={{display: 'flex'}}>
                 <CssBaseline/>
                 <AppBar position="fixed" sx={{
                     width: `calc(100% - ${lel}px)`,
-                    bgcolor: "primary",
+                    bgcolor: "#05353f",
                     ml: `${boxWidth}px`,
                     p: 4,
                     zIndex: (theme) => theme.zIndex.drawer + 1

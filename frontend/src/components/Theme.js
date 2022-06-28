@@ -9,18 +9,18 @@ const theme = createTheme({
   palette: {
 
      primary: {
-       main: '#315A65',
+       main: '#294F66',
          dark:'#05353f',
          light:'#AED8E5'
 
 
      },
      secondary: {
-       main: '#C498C0',
+       main: '#D23232',
      },
 
      success: {
-         main: '#facac0'
+         main: '#008A59'
      }
 
 

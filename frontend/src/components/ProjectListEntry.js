@@ -145,8 +145,6 @@ class ProjectListEntry extends Component {
         const {classes} = this.props;
         const {project, showProjectCreateDialog, showProjectDeleteDialog, showProjectDurationDialog, startEvent, endEvent, person } = this.state;
 
-        //console.log(startEvent)
-        console.log (this.state)
 
         return (
             <div>

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {HdMWebAppAPI} from "../api";
 import {Box, Divider, Grid, TextField, Typography} from '@material-ui/core';
 import ProjectAnalysisProjectEntry from "./ProjectAnalysisProjectEntry";
-import {DatePicker, LocalizationProvider} from "@mui/lab";
+import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 
 class ProjectAnalysis extends Component {
@@ -37,7 +37,6 @@ class ProjectAnalysis extends Component {
 
     render() {
         const {startDate, endDate, projects} = this.state
-        console.log(startDate)
 
         return (
             <div>
@@ -47,7 +46,7 @@ class ProjectAnalysis extends Component {
 
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
-                                label={"Start Date"}
+                                label={"Start-Datum"}
                                 value={startDate}
                                 inputFormat="dd/MM/yyyy"
                                 onChange={(date) => {
@@ -56,11 +55,10 @@ class ProjectAnalysis extends Component {
                                 renderInput={(params) => <TextField {...params} />}
                             />
                         </LocalizationProvider>
-
-
+                        {"  "}
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
-                                label={"End Date"}
+                                label={"End-Datum"}
                                 value={endDate}
                                 inputFormat="dd/MM/yyyy"
                                 onChange={(date) => {

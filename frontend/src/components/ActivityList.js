@@ -168,7 +168,7 @@ class ActivityList extends Component {
                         }}>
                             <Grid container spacing={1} justify='flex-start' alignItems='stretch'>
                                 <Grid item>
-                                    <ArrowCircleLeftRoundedIcon color={"primary"}/>
+                                    <ArrowCircleLeftRoundedIcon color={"#008A59"}/>
                                 </Grid>
                                 <Grid item> zurück zur Projektübersicht
                                 </Grid>

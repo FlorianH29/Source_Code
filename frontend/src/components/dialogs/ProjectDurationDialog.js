@@ -164,7 +164,7 @@ class ProjectDurationDialog extends Component {
             title = 'Wann soll das Projekt enden?'
             header = 'Wähle ein End-Datum aus und klicke auf "Fertig"... '
         }
-
+        const color = '#008A59'
         return (
             show ?
                 <div>
@@ -203,7 +203,7 @@ class ProjectDurationDialog extends Component {
                                         onChange={(date) => {
                                             this.setState({eventType: 8, endDate: date.getTime()});
                                         }}
-                                        renderInput={(params) => <TextField {...params} />}
+                                        renderInput={(params) => <TextField {...params}/>}
                                     />
                                 </LocalizationProvider>
                             </div>

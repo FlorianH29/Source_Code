@@ -1,18 +1,11 @@
 import React, {Component} from 'react';
 import {HdMWebAppAPI} from '../api';
-import {Button, CssBaseline, Divider, Grid, Typography} from '@material-ui/core';
+import {Box, Button, Divider, Grid, Typography} from '@material-ui/core';
 import ProjectListEntry from "./ProjectListEntry";
 import ProjectCreateDialog from "./dialogs/ProjectCreateDialog";
 import PropTypes from "prop-types";
 import ProjectDurationDialog from "./dialogs/ProjectDurationDialog";
-import theme from "./Theme";
 import {withStyles} from "@mui/styles";
-import { createTheme, ThemeProvider } from '@material-ui/core'
-import {Box} from '@material-ui/core'
-
-
-
-
 
 
 class ProjectList extends Component {
@@ -50,7 +43,6 @@ class ProjectList extends Component {
     };
 
     handleCreateProjectButtonClicked = (event) => {
-        console.log("test")
         event.stopPropagation();
         this.setState({
             showProjectDurationDialog: true

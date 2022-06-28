@@ -46,7 +46,8 @@ class TimeIntervalTransactionList extends Component {
             <div>
                 <Box m={24}>
                     <div align={"center"} style={{marginBottom: 10, marginTop: 20}}>
-
+                    <Grid container direction={'row'} mt={2} alignItems='stretch' spacing={1}>
+                        <Grid item xs={3}/>
 
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
@@ -60,6 +61,7 @@ class TimeIntervalTransactionList extends Component {
                                 renderInput={(params) => <TextField {...params} />}
                             />
                         </LocalizationProvider>
+
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
                                 label={"End Datum"}
@@ -73,6 +75,9 @@ class TimeIntervalTransactionList extends Component {
                                 renderInput={(params) => <TextField {...params} />}
                             />
                         </LocalizationProvider>
+
+                        </Grid>
+
                     </div>
                     <Grid container>
                         <Grid item xs={12} align={"center"}>
