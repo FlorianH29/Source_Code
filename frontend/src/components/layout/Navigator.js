@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Component} from 'react';
 import {Box, CssBaseline, Divider, IconButton, Popover, AppBar, Drawer, Toolbar, Grid} from '@mui/material';
-import {Typography} from '@material-ui/core'
+import {Typography} from '@material-ui/core';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -122,7 +122,14 @@ class Navigator extends Component {
     }
 
     render() {
-        const {showPersonDeleteDialog, showPersonEditDialog, person, disableStartButton, disableEndButton, eventT} = this.state;
+        const {
+            showPersonDeleteDialog,
+            showPersonEditDialog,
+            person,
+            disableStartButton,
+            disableEndButton,
+            eventT
+        } = this.state;
         const drawerWidth = 220;
         const lel = 0;
         const boxWidth = 200;
@@ -138,56 +145,59 @@ class Navigator extends Component {
                     zIndex: (theme) => theme.zIndex.drawer + 1
                 }}>
 
-                    <Toolbar>
-                        <Typography variant="h3" component="div" sx={{flexGrow: 1}}>
-                            HdM Zeiterfassung
-                        </Typography>
-                        {person ? (<>
+                    <Toolbar sx={{ justifyContent: "space-between" }}>
 
-                            <IconButton
-                                size="large"
-                                onClick={this.handleOpenUserMenu}
-                                color="inherit">
-                                <ManageAccountsIcon/>
-                            </IconButton>
+                            <Typography variant="h3" component="div" sx={{flexGrow: 1}}>
+                                HdM Zeiterfassung
+                            </Typography>
+                            {person ? (<>
 
-                            <Popover
+                                <IconButton
+                                    size="large"
+                                    onClick={this.handleOpenUserMenu}
+                                    color="inherit">
+                                    <ManageAccountsIcon/>
+                                </IconButton>
+
+                                <Popover
                                 anchorEl={this.state.anchorEl}
                                 anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'left',
-                                }}
+                                vertical: 'top',
+                                horizontal: 'left',
+                            }}
                                 keepMounted
                                 transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
                                 open={Boolean(this.state.anchorEl)}
                                 onClose={() => {
-                                    this.handleCloseUserMenu()
-                                }}>
+                                this.handleCloseUserMenu()
+                            }}>
                                 <PersonDeleteDialog person={person} show={showPersonDeleteDialog}
-                                                    onClose={this.persondeleteClosed}>
+                                onClose={this.persondeleteClosed}>
                                 </PersonDeleteDialog>
                                 <PersonEditDialog person={person} show={showPersonEditDialog}
-                                                  onClose={this.personEditClosed}>
+                                onClose={this.personEditClosed}>
                                 </PersonEditDialog>
 
                                 <Typography variant='h6' component='div' align='left'>
-                                    <IconButton onClick={this.handleEdit}>
-                                        <DriveFileRenameOutlineIcon/>
-                                        Profil bearbeiten
-                                    </IconButton>
-                                    <Divider sx={{p: 0}}/>
-                                    <IconButton onClick={this.handleDelete}>
-                                        <NoAccountsIcon/>
-                                        Profil löschen
-                                    </IconButton>
+                                <IconButton onClick={this.handleEdit}>
+                                <DriveFileRenameOutlineIcon/>
+                                Profil bearbeiten
+                                </IconButton>
+                                <Divider sx={{p: 0}}/>
+                                <IconButton onClick={this.handleDelete}>
+                                <NoAccountsIcon/>
+                                Profil löschen
+                                </IconButton>
                                 </Typography>
-                            </Popover>
-                        </>) : null
-                        }
+                                </Popover>
+                                </>) : null
+                            }
+
                     </Toolbar>
+
 
                 </AppBar>
 
@@ -247,8 +257,8 @@ class Navigator extends Component {
                     </>
                 ) : null}
             </Box>
-        )
+    )
     }
-}
+    }
 
-export default Navigator;
+    export default Navigator;
