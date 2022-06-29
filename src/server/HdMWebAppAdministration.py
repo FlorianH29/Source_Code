@@ -271,16 +271,16 @@ class HdMWebAppAdministration(object):
     def delete_activity(self, activity):
         """Die gegebene Aktivität aus unserem System löschen."""
         with ActivityMapper() as mapper:
+
+            work_time_activity = activity.get_work_time()
+            project = self.get_project_by_id(activity.get_affiliated_project())
+            work_time_project = project.get_work_time()
+            new_work_time_project = work_time_project - work_time_activity
+            project.set_work_time(new_work_time_project)
+            self.save_project(project)
+            # die für das Projekt geleistete Arbeitszeit neu berechnen
+
             return mapper.delete(activity)
-            """if activity is not None:
-                project_works = self.get_project_works_of_activity(activity)
-
-                for project_work in project_works:
-                    self.delete_project_work(project_work)
-
-                
-            else:
-                return None"""
 
     def save_activity(self, activity):
         """Eine Aktivitäts-Instanz speichern."""
@@ -796,12 +796,16 @@ class HdMWebAppAdministration(object):
                 time_interval = self.create_time_interval(start_event, end_event)
                 self.create_time_interval_transaction(person, time_interval, None, None)  # neue Arbeitszeit buchen
 
+                activity = self.get_activity_by_id(project_work.get_affiliated_activity())
+                project = self.get_project_by_id(activity.get_affiliated_project())
+
                 tit = self.get_time_interval_transaction_by_project_work(project_work.get_id())
                 if tit is not None:
                     self.delete_time_interval_transaction(tit)
                     # Buchung der Projektarbeit löschen
 
-            return mapper.delete(project_work)
+            return mapper.delete(project_work), self.calculate_work_time_of_activity(activity), \
+                   self.calculate_work_time_of_project(project)
 
     def save_project_work(self, project_work):
         """Eine Projektarbeit speichern"""

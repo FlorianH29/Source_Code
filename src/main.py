@@ -970,11 +970,6 @@ sub_thread.setDaemon(True)
 sub_thread.start()
 
 
-hwa = HdMWebAppAdministration()
-pe = hwa.get_person_by_id(1)
-ac = hwa.get_activity_by_id(1)
-hwa.get_project_works_between_time_stamps(ac, date(2022, 6, 10), date(2022, 6, 30))
-
 if __name__ == '__main__':
     app.run(debug=False)
 
