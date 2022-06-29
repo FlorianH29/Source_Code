@@ -66,7 +66,7 @@ class CheckboxForm extends Component {
     render() {
         const {projectMember, person, show, project} = this.props;
         let title = 'Mitarbeiter zu dem Projekt hinzufügen';
-        let header = 'Mitartbeiter die bis jetzt noch nicht im Projekt sind:';
+        let header = 'Mitarbeiter die bis jetzt noch nicht im Projekt sind:';
 
         return (
             show ?

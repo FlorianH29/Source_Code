@@ -47,18 +47,57 @@ class ProjectWorkMapper (Mapper):
         return result
 
     def find_by_start_event(self, key):
-        """Suchen eines ProjectWorks mit vorgegebener ID. Da diese eindeutig ist,
+        """Suchen eines ProjectWorks mit vorgegebener ID des Start Events. Da diese eindeutig ist,
         wird genau ein Objekt zurückgegeben.
 
-        :param key Primärschlüsselattribut, mit dem das Project_Work eindeutig in DB gefunden werden kann
-        :return ProjectWork-Objekt, das dem übergebenen Schlüssel entspricht, None bei
-            nicht vorhandenem DB-Tupel.
+        :param key Fremdschlüsselattribut, mit dem das Project_Work eindeutig in DB gefunden werden kann
+        :return ProjectWork-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
         """
 
         result = None
 
         cursor = self._cnx.cursor()
         command = "SELECT * FROM projectwork WHERE start_event_id={} AND deleted=0".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (projectwork_id, last_edit, projectwork_name, description, start_event, end_event, time_period,
+             affiliated_activity_id, deleted) = tuples[0]
+            project_work = pw.ProjectWork()
+            project_work.set_id(projectwork_id)
+            project_work.set_last_edit(last_edit)
+            project_work.set_project_work_name(projectwork_name)
+            project_work.set_description(description)
+            project_work.set_start_event(start_event)
+            project_work.set_end_event(end_event)
+            project_work.set_time_period(time_period)
+            project_work.set_affiliated_activity(affiliated_activity_id)
+            project_work.set_deleted(deleted)
+
+            result = project_work
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_by_end_event(self, key):
+        """Suchen eines ProjectWorks mit vorgegebener ID des End Events. Da diese eindeutig ist,
+        wird genau ein Objekt zurückgegeben.
+
+        :param key Fremdschlüsselattribut, mit dem das Project_Work eindeutig in DB gefunden werden kann
+        :return ProjectWork-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandenem DB-Tupel.
+        """
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM projectwork WHERE end_event_id={} AND deleted=0".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
