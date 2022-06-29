@@ -61,7 +61,7 @@ class ProjectMemberDeleteDialog extends Component {
                 <DialogContent>
                     <DialogContentText>
                         Den Mitarbeiter '{projectMember.getFirstName()} {projectMember.getLastName()}'
-                        wirklich aus dem Projekt löschen?
+                        wirklich aus dem Projekt entfernen?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

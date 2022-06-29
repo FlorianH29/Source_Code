@@ -571,6 +571,8 @@ class ProjectWorksOperations(Resource):
 @hdmwebapp.route('/activities/<int:id>/<int:start_date>/<int:end_date>/projectworks')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Aktivität')
+@hdmwebapp.param('start_date', 'Eingegebenes Startdatum')
+@hdmwebapp.param('end_date', 'Eingegebenes Enddatum ')
 class ProjectWorksByActivityAndTimestampOperations(Resource):
     @hdmwebapp.marshal_list_with(projectwork)
     @secured
