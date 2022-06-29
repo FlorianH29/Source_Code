@@ -174,9 +174,9 @@ class ProjectListEntry extends Component {
                         <Grid item xs={4} align={"center"}>
                             <ListItemButton onClick={this.editProjectDurationButtonClicked}>
                                 <Typography align={"center"} variant={"h5"} component={"div"}>
-                                    Vom {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
+                                     {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
                                     dateStyle: "long",
-                                })} bis zum {new Date(endEvent.time_stamp).toLocaleString(
+                                })} - {new Date(endEvent.time_stamp).toLocaleString(
                                     'de-DE', {
                                         dateStyle: "long",
                                     })}
@@ -186,9 +186,9 @@ class ProjectListEntry extends Component {
                             :
                         <Grid item xs={4} align={"center"}>
                             <Typography variant={"h5"} component={"div"}>
-                                Vom {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
+                                {new Date(startEvent.time_stamp).toLocaleString('de-DE', {
                                 dateStyle: "long",
-                            })} bis zum {new Date(endEvent.time_stamp).toLocaleString(
+                            })} - {new Date(endEvent.time_stamp).toLocaleString(
                                 'de-DE', {
                                     dateStyle: "long",
                                 })}

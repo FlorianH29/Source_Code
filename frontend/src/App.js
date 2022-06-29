@@ -167,7 +167,7 @@ class App extends React.Component {
                                         <ProjectAnalysis/>
                                     </Route>
                                     <Route path='*'>
-                                        <TimeIntervalTransactionList/>
+                                        <ProjectList/>
                                     </Route>
                                 </Switch>
                             </>
