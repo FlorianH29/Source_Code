@@ -120,6 +120,7 @@ projectmember = api.inherit('ProjectMember', person, {
     'affiliated_person': fields.Integer(attribute='_affiliated_person', description='ID der Person, die Mitglied ist')
 })
 
+
 @hdmwebapp.route('/person')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class PersonByIDOperations(Resource):
@@ -275,7 +276,7 @@ class ActivitiyWorkTimeOperations(Resource):
             return "Activity not found", 500
 
 
-@hdmwebapp.route('/events/<int:id>')
+@hdmwebapp.route('/events')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class EventOperations(Resource):
     @hdmwebapp.marshal_with(event, code=200)
@@ -830,7 +831,6 @@ class ArrivAndDepartureOperations(Resource):
 
         firebase_id = h.get_firebase_id()
         pe = hwa.get_person_by_firebase_id(firebase_id)
-        result = None
 
         if pe is not None:
             result = hwa.check_arrive_and_departure_for_person(pe)
@@ -861,12 +861,12 @@ class EventsForTimeIntervalTransactions(Resource):
 @hdmwebapp.route('/timeinterval/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID des Zeitintervalls')
-class DeleteTimeInterval(Resource):
+class DeleteTimeIntervalTransaction(Resource):
     @hdmwebapp.marshal_list_with(event_transaction_and_timeintervaltransaction)
     @secured
     def delete(self, id):
         """
-        Löschen eines bestimmten Zeitintervalls. Objekt wird durch die id in dem URI bestimmt.
+        Löschen einer bestimmten Zeitintervall Buchung. Objekt wird durch die id in dem URI bestimmt.
         """
         hwa = HdMWebAppAdministration()
         tit = hwa.get_time_interval_transaction_by_id(id)

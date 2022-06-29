@@ -445,13 +445,12 @@ class HdMWebAppAdministration(object):
 
                 if project_work_id is not None:
                     project_work = self.get_project_work_by_id(project_work_id)
-                    self.delete_project_work(project_work)
 
                 if break_id is not None:
                     br = self.get_break_by_id(break_id)
                     self.delete_break(br)
 
-                mapper.delete(time_interval_transaction)
+                return mapper.delete(time_interval_transaction), self.delete_project_work(project_work)
 
     def create_time_interval_transaction(self, person, time_interval=None, affiliated_break=None,
                                          projectwork=None):
@@ -737,10 +736,13 @@ class HdMWebAppAdministration(object):
                 if not (project_works is None):
                     for project_work in project_works:
                         start_event = self.get_event_by_id(project_work.get_start_event())
-                        end_event = self.get_event_by_id(project_work.get_end_event())
-                        if start_event.get_time_stamp().date() >= start_date and end_event.get_time_stamp().date() <= end_date:
-                            # wenn die Projektarbeit im Zeitintervall liegt, wird sie ausgegeben
-                            result.append(project_work)
+                        end_event_id = project_work.get_end_event()
+                        if end_event_id is not None:
+                            # überprüfen, ob die Projektarbeit ein Ende hat
+                            end_event = self.get_event_by_id(end_event_id)
+                            if start_event.get_time_stamp().date() >= start_date and end_event.get_time_stamp().date() <= end_date:
+                                # wenn die Projektarbeit im Zeitintervall liegt, wird sie ausgegeben
+                                result.append(project_work)
                     return result
 
     def get_project_work_by_start_event(self, start_event):
@@ -783,15 +785,18 @@ class HdMWebAppAdministration(object):
         """Löschen einer Projektarbeit"""
         with ProjectWorkMapper() as mapper:
             if project_work is not None:
-                """start_event_id = project_work.get_start_event()
-                end_event_id = project_work.get_end_event()
-                start_event = self.get_event_by_id(start_event_id)
-                end_event = self.get_event_by_id(end_event_id)
-                person_id = end_event.get_affiliated_person()
-                person = self.get_person_by_id(person_id)
+                start_event = self.get_event_by_id(project_work.get_start_event())
+                end_event = self.get_event_by_id(project_work.get_end_event())
+                person = self.get_person_by_id(end_event.get_affiliated_person())
+                # als Ausgleich für die gelöschte Projektarbeit ein Arbeitszeit-Zeitintervall erstellen
                 time_interval = self.create_time_interval(start_event, end_event)
-                self.create_time_interval_transaction(person, time_interval, None, None)
-                tit = self.get_time_interval_transaction_by_project_work(project_work.get_id())"""
+                self.create_time_interval_transaction(person, time_interval, None, None)  # neue Arbeitszeit buchen
+
+                tit = self.get_time_interval_transaction_by_project_work(project_work.get_id())
+                if tit is not None:
+                    self.delete_time_interval_transaction(tit)
+                    # Buchung der Projektarbeit löschen
+
             return mapper.delete(project_work)
 
     def save_project_work(self, project_work):
@@ -1051,6 +1056,12 @@ class HdMWebAppAdministration(object):
     def delete_break(self, br):
         """Pause löschen"""
         with BreakMapper() as mapper:
+            start_event = self.get_event_by_id(br.get_start_event())
+            self.delete_event(start_event)
+
+            end_event = self.get_event_by_id(br.get_end_event())
+            self.delete_event(end_event)
+
             mapper.delete(br)
 
     def get_break_by_id(self, number):

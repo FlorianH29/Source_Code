@@ -86,7 +86,7 @@ class ProjectAnalysis extends Component {
                                 </Grid>
                                 <Grid item xs={4} align={"center"}>
                                     <Typography variant={"h2"} component={"div"}>
-                                        Klient </Typography>
+                                        Auftraggeber </Typography>
                                 </Grid>
                                 <Grid item xs={4} align={"center"}>
                                     <Typography variant={"h2"} component={"div"}>
