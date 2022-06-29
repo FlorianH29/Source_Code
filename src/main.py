@@ -152,12 +152,14 @@ class PersonByIDOperations(Resource):
         payload = Person.from_dict(api.payload)
         h = Helper()
         firebase_id = h.get_firebase_id()
-        fl = hwa.get_person_by_firebase_id(firebase_id)
+        per = hwa.get_person_by_firebase_id(firebase_id)
 
-        if fl is not None:
-            fl.set_firstname(payload.get_firstname())
-            fl.set_lastname(payload.get_lastname())
-            hwa.save_person(fl)
+        if per is not None:
+            per.set_firstname(payload.get_firstname())
+            per.set_lastname(payload.get_lastname())
+            per.set_mailaddress(payload.get_mailaddress())
+            per.set_username(payload.get_username())
+            hwa.save_person(per)
             return '', 200
         else:
             return '', 500
@@ -444,7 +446,7 @@ class ProjectDurationOperation(Resource):
 @hdmwebapp.route('/projectduration/<int:id>/startevent')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID des ProjectWork-Objekts')
-class ProjectWorkOwnerOperations(Resource):
+class ProjectDurationStartOperations(Resource):
     @hdmwebapp.marshal_list_with(event)
     @secured
     def get(self, id):
@@ -487,11 +489,11 @@ class ProjectWorkOwnerOperations(Resource):
 @hdmwebapp.route('/projectduration/<int:id>/endevent')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID des ProjectWork-Objekts')
-class ProjectWorkOwnerOperations(Resource):
+class ProjectDurationEndOperations(Resource):
     @hdmwebapp.marshal_list_with(event)
     @secured
     def get(self, id):
-        """Auslesen des Start Events eines bestimmten TimeInterval-Objekts.
+        """Auslesen des End Events eines bestimmten TimeInterval-Objekts.
         Das Projekt-Objekt dessen Time_Intervall-Objekt, dessen Start-Event
          ausgelesen werden soll, wird durch die id in dem URI bestimmt.
         """

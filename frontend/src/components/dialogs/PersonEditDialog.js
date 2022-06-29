@@ -10,16 +10,20 @@ class PersonEditDialog extends Component {
     constructor(props) {
         super(props);
 
-        let fn = '', ln = '';
+        let fn = '', ln = '', ma = '', un = '';
         if (props.person) {
             fn = props.person.getFirstName();
             ln = props.person.getLastName();
+            ma = props.person.getMailAddress();
+            un = props.person.getUserName();
         }
 
         // den state initialisieren
         this.state = {
             firstname: fn,
             lastname: ln,
+            mailAdress: ma,
+            userName: un,
             firstnameValidationFailed: false,
             lastnameValidationFailed: false
         };
@@ -31,9 +35,13 @@ class PersonEditDialog extends Component {
         let editedPerson = Object.assign(new PersonBO(), this.props.person);
         editedPerson.setFirstName(this.state.firstname);
         editedPerson.setLastName(this.state.lastname);
+        editedPerson.setMailAddress(this.state.mailAdress);
+        editedPerson.setUserName(this.state.userName);
         HdMWebAppAPI.getAPI().editPerson(editedPerson).then(person => {
             this.baseState.firstname = this.state.firstname;
             this.baseState.lastname = this.state.lastname;
+            this.baseState.mailAdress = this.state.mailAdress;
+            this.baseState.userName = this.state.userName;
             console.log(this.state);
             this.props.onClose(editedPerson);
         });
@@ -45,7 +53,6 @@ class PersonEditDialog extends Component {
         this.setState(this.baseState);
         this.props.onClose(null);
     }
-
 
     textFieldValueChange = (event) => {
         const value = event.target.value;
@@ -65,12 +72,12 @@ class PersonEditDialog extends Component {
     /** Rendert die Komponente */
     render() {
         const {person, show} = this.props;
-        const {firstnameValidationFailed, lastnameValidationFailed, firstname, lastname} = this.state;
+        const {firstnameValidationFailed, lastnameValidationFailed, firstname, lastname, mailAdress, userName} = this.state;
 
         return (
             show ?
                 <Dialog open={show} onClose={this.handleClose} maxWidth='xl'>
-                    <DialogTitle>Person löschen
+                    <DialogTitle>Profil bearbeiten
                         <IconButton onClick={this.handleClose}>
                             <CloseIcon/>
                         </IconButton>
@@ -85,6 +92,14 @@ class PersonEditDialog extends Component {
                                    value={lastname}
                                    onChange={this.textFieldValueChange} error={lastnameValidationFailed}
                                    helperText={lastnameValidationFailed ? 'Bitte geben Sie Ihren Nachnamen an' : ' '}/>
+                         <TextField type='text' required fullWidth margin='normal' id='userName' label='Benutzername:'
+                                   value={userName}
+                                   onChange={this.textFieldValueChange} error={lastnameValidationFailed}
+                                   helperText={lastnameValidationFailed ? 'Bitte geben Sie einen Benutzernamen an' : ' '}/>
+                         <TextField type='text' required fullWidth margin='normal' id='mailAdress' label='E-Mail:'
+                                   value={mailAdress}
+                                   onChange={this.textFieldValueChange} error={lastnameValidationFailed}
+                                   helperText={lastnameValidationFailed ? 'Bitte geben Sie Ihre E-Mail Adresse an' : ' '}/>
                     </form>
                     </DialogContent>
                     <DialogActions>

@@ -141,7 +141,7 @@ class Navigator extends Component {
 
                     <Toolbar sx={{ justifyContent: "space-between" }}>
 
-                            <Typography variant="h3" component="div" sx={{flexGrow: 1}}>
+                            <Typography variant="h1" component="div" sx={{flexGrow: 1}}>
                                 HdM Zeiterfassung
                             </Typography>
                             {person ? (<>

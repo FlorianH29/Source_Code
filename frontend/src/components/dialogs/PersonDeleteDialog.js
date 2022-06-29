@@ -60,14 +60,14 @@ class PersonDeleteDialog extends Component {
         return (
             show ?
                 <Dialog open={show} onClose={this.handleClose}>
-                    <DialogTitle>Person löschen
+                    <DialogTitle>Profil löschen
                         <IconButton onClick={this.handleClose}>
                             <CloseIcon/>
                         </IconButton>
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Möchten Sie Ihr Profil wirklich löschen?
+                            Möchten Sie Ihr Profil '{person.getUserName()}' wirklich löschen?
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
