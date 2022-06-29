@@ -56,5 +56,6 @@ class Project (bo.BusinessObject):
         project.set_last_edit("last_edit")
         project.set_client(dictionary["client"])
         project.set_time_interval_id(dictionary["timeinterval_id"])
+        project.set_owner(dictionary["owner"])
         project.set_work_time(dictionary["work_time"])
         return project

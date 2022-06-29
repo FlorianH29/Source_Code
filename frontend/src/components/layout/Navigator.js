@@ -203,6 +203,15 @@ class Navigator extends Component {
                                 }}>
                             <Divider sx={{p: 7.95, bgcolor: "#05353f"}}/>
                             <Typography variant="h3" component="div" sx={{flexGrow: 1, p: 1}}>
+                               <ListItem>
+                                    <ListItemButton component={RouterLink} to={`/projects`}>
+                                        <ListItemIcon style={{color: '#294F66' }}>
+                                            <CardTravelIcon/>
+                                        </ListItemIcon>
+                                        <ListItemText disableTypography primary={<Typography style={{fontWeight: 520}}>
+                                            Projekte</Typography>}/>
+                                    </ListItemButton>
+                                </ListItem>
                                 <ListItem>
                                     <ListItemButton component={RouterLink}
                                                     to={`/eventtransactionsandtimeintervaltransactions`}>
@@ -213,17 +222,6 @@ class Navigator extends Component {
                                             Arbeitszeiten</Typography>}/>
                                     </ListItemButton>
                                 </ListItem>
-
-                                <ListItem>
-                                    <ListItemButton component={RouterLink} to={`/projects`}>
-                                        <ListItemIcon style={{color: '#294F66' }}>
-                                            <CardTravelIcon/>
-                                        </ListItemIcon>
-                                        <ListItemText disableTypography primary={<Typography style={{fontWeight: 520}}>
-                                            Projekte</Typography>}/>
-                                    </ListItemButton>
-                                </ListItem>
-
                                 <ListItem>
                                     <ListItemButton component={RouterLink} to={`/projectanalysis`}>
                                         <ListItemIcon style={{color: '#294F66' }}>
