@@ -18,7 +18,6 @@ class ProjectAnalysisActivityListEntry extends Component {
 
     /** Gibt die Arbeitsleistung für eine Aktivität in einen gegebenen Zeitraum zurück */
     getWorkTimeActivity = () => {
-        console.log(this.props.startDate)
         if (this.props.activity.getID() > 0) {
             HdMWebAppAPI.getAPI().getActivityWorkTime(this.props.activity.getID(), this.props.startDate, this.props.endDate).then(workTimeActivity => this.setState({
                 workTimeActivity: workTimeActivity,
@@ -49,6 +48,7 @@ class ProjectAnalysisActivityListEntry extends Component {
     }
 
     render() {
+        const { startDate, endDate} = this.props
         const {activity, workTimeActivity} = this.state;
 
         return (
@@ -75,7 +75,8 @@ class ProjectAnalysisActivityListEntry extends Component {
                     </AccordionSummary>
                     <AccordionDetails>
                         <Divider/>
-                        <ProjectAnalysisProjectWorkList activity={activity}></ProjectAnalysisProjectWorkList>
+                        <ProjectAnalysisProjectWorkList activity={activity} startDate={startDate} endDate={endDate}>
+                        </ProjectAnalysisProjectWorkList>
                     </AccordionDetails>
                 </Accordion>
             </div>

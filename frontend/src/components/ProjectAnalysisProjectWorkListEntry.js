@@ -18,11 +18,13 @@ class ProjectAnalysisProjectWorkListEntry extends Component {
     this.state = {
       projectWork: this.props.projectWork,
       owner: '',
+      event: null
     };
   }
 
   componentDidMount() {
     this.getProjectWorkOwner();
+    this.getEvent();
   }
 
   /** Gibt den Ersteller einer Projektarbeit zurück */
@@ -38,6 +40,19 @@ class ProjectAnalysisProjectWorkListEntry extends Component {
       );}
   }
 
+  /** Gibt das Start Event der Projektarbeit zurück */
+  getEvent = () => {
+    if (this.props.projectWork.getID() > 0) {
+      HdMWebAppAPI.getAPI().getEventByProjectWork(this.props.projectWork.getID()).then(event =>
+      this.setState({
+        event: event,
+      })).catch(e =>
+        this.setState({ // bei Fehler den state zurücksetzen
+          event: null,
+        })
+      );}
+  }
+
   timedeltaToTimeFormat(timedelta){
       if (timedelta != null) {
           const timeSplits = timedelta.split(":");
@@ -48,24 +63,35 @@ class ProjectAnalysisProjectWorkListEntry extends Component {
 
   /** Renders the component */
   render() {
-    const { projectWork, owner } = this.state;
+    const { projectWork, owner, event } = this.state;
+
+    let timeStamp = '';
+    if (event !== null) {
+        timeStamp = event[0].getTimeStamp()
+    }
+
     return (
         <div style={ {width: "100%", p: 0, m:0}}>
             <Grid container alignItems='center' spacing={2} p={1}>
-                <Grid item xs={4} align={"center"}>
+                <Grid item xs={3} align={"center"}>
                     <Typography variant={"h5"} component={"div"}>
                         {projectWork.getProjectWorkName()}
                     </Typography>
                 </Grid>
-                <Grid item xs={4} align={"center"}>
+                <Grid item xs={3} align={"center"}>
                     <Typography variant={"h5"} component={"div"}>
                         {owner.firstname} {owner.lastname}
                     </Typography>
                 </Grid>
-                <Grid item xs={4} align={"center"}>
+                <Grid item xs={3} align={"center"}>
                     <Typography variant={"h5"} component={"div"}>
-                        {
-                        this.timedeltaToTimeFormat(projectWork.getTimeIPeriod())} h
+                        {new Date(timeStamp).toLocaleString('de-DE', {
+                                dateStyle: "long"})}
+                    </Typography>
+                </Grid>
+                <Grid item xs={3} align={"center"}>
+                    <Typography variant={"h5"} component={"div"}>
+                        {this.timedeltaToTimeFormat(projectWork.getTimeIPeriod())} h
                     </Typography>
                 </Grid>
             </Grid>

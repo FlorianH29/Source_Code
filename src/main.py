@@ -145,6 +145,7 @@ class PersonByIDOperations(Resource):
         hwa.delete_person(per)
         return '', 200
 
+    @hdmwebapp.marshal_list_with(person)
     @secured
     def put(self):
 
@@ -250,7 +251,6 @@ class ActivityOperations(Resource):
         return '', 200
 
 
-
 @hdmwebapp.route('/activities/<int:id>/<int:start_date>/<int:end_date>/work_time')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ActivitiyWorkTimeOperations(Resource):
@@ -270,25 +270,14 @@ class ActivitiyWorkTimeOperations(Resource):
 
         if act is not None:
             result = hwa.get_work_time_of_activity_between_two_dates(act, start_date, end_date).seconds
-            print(result)
             return result
         else:
             return "Activity not found", 500
 
 
-@hdmwebapp.route('/events')
+@hdmwebapp.route('/events/<int:id>')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class EventOperations(Resource):
-    @hdmwebapp.marshal_list_with(event)
-    @secured
-    def get(self, id):
-        """
-        Auslesen eines bestimmten Eventobjektes, das nach der id in der URI bestimmt wird.
-        """
-        hwa = HdMWebAppAdministration()
-        ev = hwa.get_event_by_id(id)
-        return ev
-
     @hdmwebapp.marshal_with(event, code=200)
     @secured
     def post(self):
@@ -441,8 +430,6 @@ class ProjectDurationOperation(Resource):
             return '', 500
 
 
-@hdmwebapp.route('/projects/<int:id>')
-
 @hdmwebapp.route('/projectduration/<int:id>/startevent')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID des ProjectWork-Objekts')
@@ -581,6 +568,28 @@ class ProjectWorksOperations(Resource):
             return '', 500
 
 
+@hdmwebapp.route('/activities/<int:id>/<int:start_date>/<int:end_date>/projectworks')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID der Aktivität')
+class ProjectWorksByActivityAndTimestampOperations(Resource):
+    @hdmwebapp.marshal_list_with(projectwork)
+    @secured
+    def get(self, id, start_date, end_date):
+        hwa = HdMWebAppAdministration()
+        act = hwa.get_activity_by_id(id)
+        # Die durch die id gegebene Aktivität als Objekt speichern.
+
+        start_date = datetime.fromtimestamp(start_date / 1000.0).date()
+        end_date = datetime.fromtimestamp(end_date / 1000.0).date()
+
+        if act is not None:
+            projectwork_list = hwa.get_project_works_between_time_stamps(act, start_date, end_date)
+            # Auslesen der Projektarbeiten, die der Aktivität untergliedert sind und im gegebene Zeitraum liegen.
+            return projectwork_list
+        else:
+            return "Activity not found", 500
+
+
 @hdmwebapp.route('/activities/<int:id>/projectworks')
 @hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @hdmwebapp.param('id', 'Die ID der Aktivität')
@@ -653,6 +662,22 @@ class ProjectWorkOwnerOperations(Resource):
             return owner
         else:
             return 0, 500
+
+
+@hdmwebapp.route('/projectworks/<int:id>/event')
+@hdmwebapp.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@hdmwebapp.param('id', 'Die ID der Projektarbeit')
+class ProjectWorkUpdateNameOperations(Resource):
+    @hdmwebapp.marshal_list_with(event)
+    @secured
+    def get(self, id):
+        """
+        Auslesen eines bestimmten Eventobjektes, das nach der id in der URI bestimmt wird.
+        """
+        hwa = HdMWebAppAdministration()
+        pw = hwa.get_project_work_by_id(id)
+        ev = hwa.get_event_by_id(pw.get_start_event())
+        return ev, 200
 
 
 @hdmwebapp.route('/projectworks/<int:id>/<string:name>')
@@ -943,8 +968,13 @@ sub_thread.setDaemon(True)
 sub_thread.start()
 
 
+hwa = HdMWebAppAdministration()
+pe = hwa.get_person_by_id(1)
+ac = hwa.get_activity_by_id(1)
+hwa.get_project_works_between_time_stamps(ac, date(2022, 6, 10), date(2022, 6, 30))
+
 if __name__ == '__main__':
     app.run(debug=False)
 
-hwa = HdMWebAppAdministration()
+
 

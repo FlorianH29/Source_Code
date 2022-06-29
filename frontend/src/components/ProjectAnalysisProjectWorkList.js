@@ -14,10 +14,10 @@ class ProjectAnalysisProjectWorkList extends Component {
         }
     }
 
-    getProjectWorksForActivity = () => {
+    getProjectWorksForActivityBetweenTimestamps = () => {
         this.setState({projectWorks: []});
-        HdMWebAppAPI.getAPI().getProjectWorks(this.props.activity.getID())
-            .then(projectWorkBOs =>
+        HdMWebAppAPI.getAPI().getProjectWorksBetweenTimestamps(this.props.activity.getID(), this.props.startDate,
+            this.props.endDate).then(projectWorkBOs =>
                 this.setState({
                     projectWorks: projectWorkBOs
                 })).catch(e =>
@@ -27,7 +27,13 @@ class ProjectAnalysisProjectWorkList extends Component {
     }
 
     componentDidMount() {
-        this.getProjectWorksForActivity();
+        this.getProjectWorksForActivityBetweenTimestamps();
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props != prevProps) {
+            this.getProjectWorksForActivityBetweenTimestamps();
+        }
     }
 
     render() {
@@ -35,14 +41,16 @@ class ProjectAnalysisProjectWorkList extends Component {
         return (
             <div style={{width: "100%", p: 0, m: 0}}>
                 <Grid container spacing={2}>
-                    <Grid item xs={4} align={"center"}>
-                        <Typography variant={"h2"} component={"div"}
-                                    > Projektarbeit </Typography>
+                    <Grid item xs={3} align={"center"}>
+                        <Typography variant={"h2"} component={"div"}> Projektarbeit </Typography>
                     </Grid>
-                    <Grid item xs={4} align={"center"}>
+                    <Grid item xs={3} align={"center"}>
                         <Typography variant={"h2"} component={"div"}> Bearbeiter </Typography>
                     </Grid>
-                    <Grid item xs={4} align={"center"}>
+                    <Grid item xs={3} align={"center"}>
+                        <Typography variant={"h2"} component={"div"}> Datum </Typography>
+                    </Grid>
+                    <Grid item xs={3} align={"center"}>
                         <Typography variant={"h2"} component={"div"}> Dauer </Typography>
                     </Grid>
                 </Grid>

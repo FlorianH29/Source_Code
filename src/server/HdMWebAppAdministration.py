@@ -726,6 +726,23 @@ class HdMWebAppAdministration(object):
                     result.extend(project_works)
             return result
 
+    def get_project_works_between_time_stamps(self, activity, start_date, end_date):
+        """ Projektarbeiten innerhalb eines gegebenen Zeitraums werden anhand der eindeutigen ID der Aktivität
+        ausgelesen, der sie zugeordnet sind."""
+        with ProjectWorkMapper() as mapper:
+            result = []
+
+            if not (activity is None):
+                project_works = mapper.find_by_activity(activity.get_id())
+                if not (project_works is None):
+                    for project_work in project_works:
+                        start_event = self.get_event_by_id(project_work.get_start_event())
+                        end_event = self.get_event_by_id(project_work.get_end_event())
+                        if start_event.get_time_stamp().date() >= start_date and end_event.get_time_stamp().date() <= end_date:
+                            # wenn die Projektarbeit im Zeitintervall liegt, wird sie ausgegeben
+                            result.append(project_work)
+                    return result
+
     def get_project_work_by_start_event(self, start_event):
         """Projektarbeit anhand der ID des Start Events ausgeben"""
         if start_event is not None:

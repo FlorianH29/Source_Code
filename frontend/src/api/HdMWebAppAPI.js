@@ -41,6 +41,8 @@ export default class HdMWebAppAPI {
     #updateProjectWorkByNameURL = (id, name) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}/${name}`;
     #addProjectWorkURL = () => `${this.#hdmwebappServerBaseURL}/projectworks`;
     #getOwnerOfProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}/owner`;
+    #getProjectWorksBetweenTimestampsURL = (id, startDate, endDate) =>
+        `${this.#hdmwebappServerBaseURL}/activities/${id}/${startDate}/${endDate}/projectworks`;
 
     //Projectbeteiligte bezogen
     #getProjectMembersURL = (id) =>  `${this.#hdmwebappServerBaseURL}/projects/${id}/projectmembers`;
@@ -62,6 +64,7 @@ export default class HdMWebAppAPI {
         `${this.#hdmwebappServerBaseURL}/eventtransactionsandtimeintervaltransactions/${startDate}/${endDate}`;
     #updateEventURL = (id, date) => `${this.#hdmwebappServerBaseURL}/events/${id}/${date}`;
     #getBreakStartedURL = () => `${this.#hdmwebappServerBaseURL}/breaks`;
+    #getEventByProjectWorkURL = (id) => `${this.#hdmwebappServerBaseURL}/projectworks/${id}/event`;
 
     /** TimeIntervalTransaction bezogen */
     #getTimeIntervalTransactionsURL = () => `${this.#hdmwebappServerBaseURL}/timeintervaltransactions`;
@@ -391,6 +394,18 @@ export default class HdMWebAppAPI {
     }
 
     /**
+     * Gibt ein Event einer Projektarbeit zurück.
+     */
+    getEventByProjectWork(projectWorkId) {
+        return this.#fetchAdvanced(this.#getEventByProjectWorkURL(projectWorkId)).then((responseJSON) => {
+            let eventBO = EventBO.fromJSON(responseJSON);
+            return new Promise(function (resolve) {
+                resolve(eventBO);
+            })
+        })
+    }
+
+    /**
      * Updated ein EventBO, bzw. ein Projekt-End-Event
      *
      * @param {EventBO} eventBO das geupdated werden soll
@@ -474,10 +489,23 @@ export default class HdMWebAppAPI {
     }
 
     /**
-     * Gibt Projektarbeiten zurück.
+     * Gibt Projektarbeiten einer Aktivität zurück.
      */
     getProjectWorks(id) {
         return this.#fetchAdvanced(this.#getProjectWorksForActivityURL(id)).then((responseJSON) => {
+            let projectworkBOs = ProjectWorkBO.fromJSON(responseJSON);
+            return new Promise(function (resolve) {
+                resolve(projectworkBOs);
+            })
+        })
+    }
+
+    /**
+     * Gibt Projektarbeiten einer Aktivität in einem gegebenen Zeitraum zurück.
+     */
+    getProjectWorksBetweenTimestamps(id, startDate, endDate) {
+        return this.#fetchAdvanced(this.#getProjectWorksBetweenTimestampsURL(id, startDate, endDate))
+            .then((responseJSON) => {
             let projectworkBOs = ProjectWorkBO.fromJSON(responseJSON);
             return new Promise(function (resolve) {
                 resolve(projectworkBOs);
