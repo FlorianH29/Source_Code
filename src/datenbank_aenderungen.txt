@@ -1,3 +1,0 @@
-In timeintervalltransaction time_interval in affiliated_time_interval umbenannt
-
-In timeinterval time_interval in time_period umbennant
