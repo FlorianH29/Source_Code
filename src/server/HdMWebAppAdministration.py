@@ -1200,14 +1200,21 @@ class HdMWebAppAdministration(object):
                             work_time = self.create_time_interval(work_time_start, work_time_end)
                             self.create_time_interval_transaction(person, work_time)
                     else:
-                        time_stamp = last_arrive.get_time_stamp()
-                        time_difference = datetime.now() - time_stamp
-                        if time_difference > timedelta(minutes=2):
-                            work_time_start = self.create_event_with_time_stamp(5, time_stamp, person)
-                            self.create_event_transaction(work_time_start, None, None)
-                            work_time_end = self.create_event(6, person)[0]
-                            work_time = self.create_time_interval(work_time_start, work_time_end)
-                            self.create_time_interval_transaction(person, work_time)
+                        self.calculate_first_work_time_of_day(person)
+                else:
+                    self.calculate_first_work_time_of_day(person)
+
+    def calculate_first_work_time_of_day(self, person):
+        """Die Arbeitszeit zwischen Kommen und der ersten Projektarbeit berechnen"""
+        last_arrive = self.get_last_arrive_by_person(person)
+        time_stamp = last_arrive.get_time_stamp()
+        time_difference = datetime.now() - time_stamp
+        if time_difference > timedelta(minutes=2):
+            work_time_start = self.create_event_with_time_stamp(5, time_stamp, person)
+            self.create_event_transaction(work_time_start, None, None)
+            work_time_end = self.create_event(6, person)[0]
+            work_time = self.create_time_interval(work_time_start, work_time_end)
+            self.create_time_interval_transaction(person, work_time)
 
     def create_event(self, event_type, person):
         """Event anlegen"""
@@ -1229,6 +1236,7 @@ class HdMWebAppAdministration(object):
         last_event = self.get_last_event_by_affiliated_person(person)
         if last_event is None:
             if event_type == 1 or event_type == 3:  # anlegen wenn Start einer Projektarbeit oder Pause, sonst nicht
+                self.check_time_difference_events(event_type, person)
                 self.create_event(event_type, person)
             else:
                 return None

@@ -96,8 +96,15 @@ class ProjectWorkListEntry extends Component {
 
     /** Renders the component */
     render() {
-        const {classes, person, project} = this.props;
+        const { person, project} = this.props;
         const {projectWork, showProjectWorkForm, showProjectWorkDeleteDialog, owner} = this.state;
+
+    let projectWorkOwnerFN = '';
+    let projectWorkOwnerLN = '';
+    if (owner !== null) {
+        projectWorkOwnerFN = owner.firstname;
+        projectWorkOwnerLN = owner.lastname;
+    }
 
     // console.log(this.state);
     return (
@@ -113,7 +120,7 @@ class ProjectWorkListEntry extends Component {
                 </Grid>
                 <Grid item xs={3} align={"center"}>
                     <Typography variant={"h5"} component={"div"}>
-                        {owner.firstname} {owner.lastname}
+                        {projectWorkOwnerFN} {projectWorkOwnerLN}
                     </Typography>
                 </Grid>
                 <Grid item xs={3} align={"center"}>
@@ -144,7 +151,7 @@ class ProjectWorkListEntry extends Component {
         <ProjectWorkDeleteDialog show={showProjectWorkDeleteDialog} projectWork={projectWork} onClose={this.deleteProjectWorkDialogClosed} />
         <ProjectWorkForm show={showProjectWorkForm} projectWork={projectWork} onClose={this.projectWorkFormClosed} />
       </div>
-        : null
+    : null
     );
   }
 }

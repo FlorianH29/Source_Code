@@ -65,6 +65,13 @@ class ProjectAnalysisProjectWorkListEntry extends Component {
   render() {
     const { projectWork, owner, event } = this.state;
 
+    let projectWorkOwnerFN = '';
+    let projectWorkOwnerLN = '';
+    if (owner) {
+        projectWorkOwnerFN = owner.firstname;
+        projectWorkOwnerLN = owner.lastname;
+    }
+
     let timeStamp = '';
     if (event !== null) {
         timeStamp = event[0].getTimeStamp()
@@ -80,7 +87,7 @@ class ProjectAnalysisProjectWorkListEntry extends Component {
                 </Grid>
                 <Grid item xs={3} align={"center"}>
                     <Typography variant={"h5"} component={"div"}>
-                        {owner.firstname} {owner.lastname}
+                        {projectWorkOwnerFN} {projectWorkOwnerLN}
                     </Typography>
                 </Grid>
                 <Grid item xs={3} align={"center"}>
